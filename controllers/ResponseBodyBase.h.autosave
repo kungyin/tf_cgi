@@ -1,0 +1,18 @@
+#ifndef RESPONSEBODYBASE_H
+#define RESPONSEBODYBASE_H
+
+class Pu {
+public:
+
+	virtual std::string xmlOut() = 0;
+	virtual ~PureView() {}
+
+protected:
+	cppcms::http::request *m_pReq;
+
+
+private:
+
+};
+
+#endif // RESPONSEBODYBASE_H

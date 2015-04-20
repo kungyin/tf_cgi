@@ -1,0 +1,13 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23	VBird	First release
+[ $2 == 'build_in_language' ] && echo -e "1"
+[ $2 == 'cgi_get_user_language' ] && echo -e "TC,TC.xml"
+[ $2 == 'ssl_info' ] && echo -e "0,443"
+[ $2 == 'ui_check_wto' ] && echo -e "success"
+[ $2 == 'fw_status' ] && echo -e "1"
+[ $2 == 'login' ] && echo -e "1"
+[ $2 == 'logout' ] && echo -e "1"
+

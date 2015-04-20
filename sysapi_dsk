@@ -1,0 +1,9 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23	VBird	First release
+[ $2 == 'volume_status' ] && echo -e "1,1"
+[ $2 == 'sync_state' ] && echo -e "1,1"
+[ $2 == 'auto_sync' ] && echo -e "0"
+[ $2 == 'scandsk_info' ] && echo -e "a,All Volume(s)" && echo -e "Volume_1,Volume_1" && echo -e "Volume_2,Volume_2"

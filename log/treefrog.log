@@ -1,0 +1,565 @@
+2015-04-13 15:34:02 INFO  [21504] TreeFrog Framework version 1.8.0
+2015-04-13 15:34:02 INFO  [21504] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:34:02 ERROR [21504] Listen failed  port:8800
+2015-04-13 15:34:02 ERROR [21504] Failed to create listening socket
+2015-04-13 15:34:02 ERROR [21504] TreeFrog application server startup failed
+2015-04-13 15:34:14 INFO  [21511] TreeFrog Framework version 1.8.0
+2015-04-13 15:34:14 INFO  [21511] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:34:14 INFO  [21511] TreeFrog application servers start up.  port:8800
+2015-04-13 15:35:34 WARN  [21544] Recieved a tampered cookie or that of other web application.
+2015-04-13 15:35:50 INFO  [21511] TreeFrog application servers shutting down
+2015-04-13 15:35:50 INFO  [21511] TreeFrog application servers shutdown completed
+2015-04-13 15:38:10 INFO  [21644] TreeFrog Framework version 1.8.0
+2015-04-13 15:38:10 INFO  [21644] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:38:10 INFO  [21644] TreeFrog application servers start up.  port:8800
+2015-04-13 15:38:26 INFO  [21644] TreeFrog application servers shutting down
+2015-04-13 15:38:27 INFO  [21644] TreeFrog application servers shutdown completed
+2015-04-13 15:41:21 INFO  [21879] TreeFrog Framework version 1.8.0
+2015-04-13 15:41:21 INFO  [21879] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:41:21 INFO  [21879] TreeFrog application servers start up.  port:8800
+2015-04-13 15:41:33 INFO  [21879] TreeFrog application servers shutting down
+2015-04-13 15:41:34 INFO  [21879] TreeFrog application servers shutdown completed
+2015-04-13 15:50:14 INFO  [22538] TreeFrog Framework version 1.8.0
+2015-04-13 15:50:14 INFO  [22538] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:50:14 INFO  [22538] TreeFrog application servers start up.  port:8800
+2015-04-13 15:50:26 INFO  [22538] TreeFrog application servers shutting down
+2015-04-13 15:50:28 INFO  [22538] TreeFrog application servers shutdown completed
+2015-04-13 15:53:35 INFO  [22679] TreeFrog Framework version 1.8.0
+2015-04-13 15:53:35 INFO  [22679] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 15:53:35 INFO  [22679] TreeFrog application servers start up.  port:8800
+2015-04-13 15:55:51 INFO  [22679] TreeFrog application servers shutting down
+2015-04-13 15:55:51 INFO  [22679] TreeFrog application servers shutdown completed
+2015-04-13 16:19:35 INFO  [23520] TreeFrog Framework version 1.8.0
+2015-04-13 16:19:35 INFO  [23520] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:19:35 INFO  [23520] TreeFrog application servers start up.  port:8800
+2015-04-13 16:19:46 WARN  [23527] Recieved a tampered cookie or that of other web application.
+2015-04-13 16:20:15 INFO  [23520] TreeFrog application servers shutting down
+2015-04-13 16:20:15 INFO  [23520] TreeFrog application servers shutdown completed
+2015-04-13 16:20:37 INFO  [23542] TreeFrog Framework version 1.8.0
+2015-04-13 16:20:37 INFO  [23542] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:20:37 INFO  [23542] TreeFrog application servers start up.  port:8800
+2015-04-13 16:21:00 INFO  [23542] TreeFrog application servers shutting down
+2015-04-13 16:21:00 INFO  [23542] TreeFrog application servers shutdown completed
+2015-04-13 16:21:47 INFO  [23568] TreeFrog Framework version 1.8.0
+2015-04-13 16:21:47 INFO  [23568] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:21:47 INFO  [23568] TreeFrog application servers start up.  port:8800
+2015-04-13 16:22:29 INFO  [23568] TreeFrog application servers shutting down
+2015-04-13 16:22:29 INFO  [23568] TreeFrog application servers shutdown completed
+2015-04-13 16:23:02 INFO  [23592] TreeFrog Framework version 1.8.0
+2015-04-13 16:23:02 INFO  [23592] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:23:02 INFO  [23592] TreeFrog application servers start up.  port:8800
+2015-04-13 16:23:12 INFO  [23592] TreeFrog application servers shutting down
+2015-04-13 16:23:12 INFO  [23592] TreeFrog application servers shutdown completed
+2015-04-13 16:23:49 INFO  [23616] TreeFrog Framework version 1.8.0
+2015-04-13 16:23:49 INFO  [23616] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:23:49 INFO  [23616] TreeFrog application servers start up.  port:8800
+2015-04-13 16:25:47 INFO  [23616] TreeFrog application servers shutting down
+2015-04-13 16:25:47 INFO  [23616] TreeFrog application servers shutdown completed
+2015-04-13 16:26:04 INFO  [23665] TreeFrog Framework version 1.8.0
+2015-04-13 16:26:04 INFO  [23665] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:26:04 INFO  [23665] TreeFrog application servers start up.  port:8800
+2015-04-13 16:26:25 INFO  [23665] TreeFrog application servers shutting down
+2015-04-13 16:26:26 INFO  [23665] TreeFrog application servers shutdown completed
+2015-04-13 16:26:56 INFO  [23683] TreeFrog Framework version 1.8.0
+2015-04-13 16:26:56 INFO  [23683] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:26:56 INFO  [23683] TreeFrog application servers start up.  port:8800
+2015-04-13 16:27:09 INFO  [23683] TreeFrog application servers shutting down
+2015-04-13 16:27:09 INFO  [23683] TreeFrog application servers shutdown completed
+2015-04-13 16:27:27 INFO  [23698] TreeFrog Framework version 1.8.0
+2015-04-13 16:27:27 INFO  [23698] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:27:27 INFO  [23698] TreeFrog application servers start up.  port:8800
+2015-04-13 16:28:05 INFO  [23698] TreeFrog application servers shutting down
+2015-04-13 16:28:05 INFO  [23698] TreeFrog application servers shutdown completed
+2015-04-13 16:28:33 INFO  [23719] TreeFrog Framework version 1.8.0
+2015-04-13 16:28:33 INFO  [23719] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:28:33 INFO  [23719] TreeFrog application servers start up.  port:8800
+2015-04-13 16:29:00 INFO  [23719] TreeFrog application servers shutting down
+2015-04-13 16:29:02 INFO  [23719] TreeFrog application servers shutdown completed
+2015-04-13 16:29:16 INFO  [23738] TreeFrog Framework version 1.8.0
+2015-04-13 16:29:16 INFO  [23738] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:29:16 INFO  [23738] TreeFrog application servers start up.  port:8800
+2015-04-13 16:29:59 INFO  [23738] TreeFrog application servers shutting down
+2015-04-13 16:30:00 INFO  [23738] TreeFrog application servers shutdown completed
+2015-04-13 16:32:40 INFO  [23791] TreeFrog Framework version 1.8.0
+2015-04-13 16:32:40 INFO  [23791] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:32:40 INFO  [23791] TreeFrog application servers start up.  port:8800
+2015-04-13 16:32:48 INFO  [23791] TreeFrog application servers shutting down
+2015-04-13 16:32:48 INFO  [23791] TreeFrog application servers shutdown completed
+2015-04-13 16:33:10 INFO  [23812] TreeFrog Framework version 1.8.0
+2015-04-13 16:33:10 INFO  [23812] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:33:10 INFO  [23812] TreeFrog application servers start up.  port:8800
+2015-04-13 16:33:20 INFO  [23812] TreeFrog application servers shutting down
+2015-04-13 16:33:21 INFO  [23812] TreeFrog application servers shutdown completed
+2015-04-13 16:33:37 INFO  [23827] TreeFrog Framework version 1.8.0
+2015-04-13 16:33:37 INFO  [23827] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:33:37 INFO  [23827] TreeFrog application servers start up.  port:8800
+2015-04-13 16:35:25 INFO  [23827] TreeFrog application servers shutting down
+2015-04-13 16:35:25 INFO  [23827] TreeFrog application servers shutdown completed
+2015-04-13 16:35:42 INFO  [23860] TreeFrog Framework version 1.8.0
+2015-04-13 16:35:42 INFO  [23860] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:35:42 INFO  [23860] TreeFrog application servers start up.  port:8800
+2015-04-13 16:36:00 INFO  [23860] TreeFrog application servers shutting down
+2015-04-13 16:36:01 INFO  [23860] TreeFrog application servers shutdown completed
+2015-04-13 16:36:29 INFO  [23880] TreeFrog Framework version 1.8.0
+2015-04-13 16:36:29 INFO  [23880] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:36:29 INFO  [23880] TreeFrog application servers start up.  port:8800
+2015-04-13 16:36:46 INFO  [23880] TreeFrog application servers shutting down
+2015-04-13 16:36:46 INFO  [23880] TreeFrog application servers shutdown completed
+2015-04-13 16:37:26 INFO  [23897] TreeFrog Framework version 1.8.0
+2015-04-13 16:37:26 INFO  [23897] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:37:26 INFO  [23897] TreeFrog application servers start up.  port:8800
+2015-04-13 16:37:37 INFO  [23897] TreeFrog application servers shutting down
+2015-04-13 16:37:37 INFO  [23897] TreeFrog application servers shutdown completed
+2015-04-13 16:38:06 INFO  [23912] TreeFrog Framework version 1.8.0
+2015-04-13 16:38:06 INFO  [23912] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:38:06 INFO  [23912] TreeFrog application servers start up.  port:8800
+2015-04-13 16:38:27 INFO  [23912] TreeFrog application servers shutting down
+2015-04-13 16:38:28 INFO  [23912] TreeFrog application servers shutdown completed
+2015-04-13 16:59:54 INFO  [24519] TreeFrog Framework version 1.8.0
+2015-04-13 16:59:54 INFO  [24519] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 16:59:54 INFO  [24519] TreeFrog application servers start up.  port:8800
+2015-04-13 17:00:41 WARN  [24536] Recieved a tampered cookie or that of other web application.
+2015-04-13 17:05:22 INFO  [24519] TreeFrog application servers shutting down
+2015-04-13 17:05:22 INFO  [24519] TreeFrog application servers shutdown completed
+2015-04-13 17:13:35 INFO  [25081] TreeFrog Framework version 1.8.0
+2015-04-13 17:13:35 INFO  [25081] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 17:13:35 INFO  [25081] TreeFrog application servers start up.  port:8800
+2015-04-13 17:31:06 INFO  [25081] TreeFrog application servers shutting down
+2015-04-13 17:31:07 INFO  [25081] TreeFrog application servers shutdown completed
+2015-04-13 17:50:01 INFO  [26281] TreeFrog Framework version 1.8.0
+2015-04-13 17:50:01 INFO  [26281] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-13 17:50:01 INFO  [26281] TreeFrog application servers start up.  port:8800
+2015-04-13 19:10:34 INFO  [26281] TreeFrog application servers shutting down
+2015-04-13 19:10:35 INFO  [26281] TreeFrog application servers shutdown completed
+2015-04-14 08:50:01 INFO  [31008] TreeFrog Framework version 1.8.0
+2015-04-14 08:50:01 INFO  [31008] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 08:50:01 INFO  [31008] TreeFrog application servers start up.  port:8800
+2015-04-14 08:50:06 WARN  [31008] treefrog stderr: /usr/bin/tadpole: symbol lookup error: ./libcontroller.so: undefined symbol: _ZN14RenderResponseC1ER17TActionController11CGI_COMMAND
+
+2015-04-14 08:51:35 INFO  [31114] TreeFrog Framework version 1.8.0
+2015-04-14 08:51:35 INFO  [31114] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 08:51:35 INFO  [31114] TreeFrog application servers start up.  port:8800
+2015-04-14 08:53:13 INFO  [31114] TreeFrog application servers shutting down
+2015-04-14 08:53:14 INFO  [31114] TreeFrog application servers shutdown completed
+2015-04-14 08:53:19 INFO  [31237] TreeFrog Framework version 1.8.0
+2015-04-14 08:53:19 INFO  [31237] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 08:53:19 INFO  [31237] TreeFrog application servers start up.  port:8800
+2015-04-14 09:51:54 INFO  [31237] TreeFrog application servers shutting down
+2015-04-14 09:51:54 INFO  [31237] TreeFrog application servers shutdown completed
+2015-04-14 10:10:41 INFO  [304] TreeFrog Framework version 1.8.0
+2015-04-14 10:10:41 INFO  [304] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 10:10:41 INFO  [304] TreeFrog application servers start up.  port:8800
+2015-04-14 10:16:18 INFO  [304] TreeFrog application servers shutting down
+2015-04-14 10:16:18 INFO  [304] TreeFrog application servers shutdown completed
+2015-04-14 10:16:24 INFO  [491] TreeFrog Framework version 1.8.0
+2015-04-14 10:16:24 INFO  [491] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 10:16:24 INFO  [491] TreeFrog application servers start up.  port:8800
+2015-04-14 10:23:59 INFO  [491] TreeFrog application servers shutting down
+2015-04-14 10:24:00 INFO  [491] TreeFrog application servers shutdown completed
+2015-04-14 10:45:08 INFO  [1161] TreeFrog Framework version 1.8.0
+2015-04-14 10:45:08 INFO  [1161] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 10:45:08 INFO  [1161] TreeFrog application servers start up.  port:8800
+2015-04-14 10:53:37 INFO  [1161] TreeFrog application servers shutting down
+2015-04-14 10:53:38 INFO  [1161] TreeFrog application servers shutdown completed
+2015-04-14 10:53:44 INFO  [1404] TreeFrog Framework version 1.8.0
+2015-04-14 10:53:44 INFO  [1404] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 10:53:44 INFO  [1404] TreeFrog application servers start up.  port:8800
+2015-04-14 10:57:34 INFO  [1404] TreeFrog application servers shutting down
+2015-04-14 10:57:34 INFO  [1404] TreeFrog application servers shutdown completed
+2015-04-14 10:57:39 INFO  [1548] TreeFrog Framework version 1.8.0
+2015-04-14 10:57:39 INFO  [1548] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 10:57:39 INFO  [1548] TreeFrog application servers start up.  port:8800
+2015-04-14 11:01:56 INFO  [1548] TreeFrog application servers shutting down
+2015-04-14 11:01:56 INFO  [1548] TreeFrog application servers shutdown completed
+2015-04-14 11:02:02 INFO  [1725] TreeFrog Framework version 1.8.0
+2015-04-14 11:02:02 INFO  [1725] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:02:02 INFO  [1725] TreeFrog application servers start up.  port:8800
+2015-04-14 11:05:51 INFO  [1725] TreeFrog application servers shutting down
+2015-04-14 11:05:52 INFO  [1725] TreeFrog application servers shutdown completed
+2015-04-14 11:06:02 INFO  [1929] TreeFrog Framework version 1.8.0
+2015-04-14 11:06:02 INFO  [1929] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:06:02 INFO  [1929] TreeFrog application servers start up.  port:8800
+2015-04-14 11:08:57 INFO  [1929] TreeFrog application servers shutting down
+2015-04-14 11:08:57 INFO  [1929] TreeFrog application servers shutdown completed
+2015-04-14 11:09:03 INFO  [2069] TreeFrog Framework version 1.8.0
+2015-04-14 11:09:03 INFO  [2069] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:09:03 INFO  [2069] TreeFrog application servers start up.  port:8800
+2015-04-14 11:12:07 INFO  [2069] TreeFrog application servers shutting down
+2015-04-14 11:12:08 INFO  [2069] TreeFrog application servers shutdown completed
+2015-04-14 11:12:20 INFO  [2271] TreeFrog Framework version 1.8.0
+2015-04-14 11:12:20 INFO  [2271] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:12:20 INFO  [2271] TreeFrog application servers start up.  port:8800
+2015-04-14 11:22:47 INFO  [2271] TreeFrog application servers shutting down
+2015-04-14 11:22:47 INFO  [2271] TreeFrog application servers shutdown completed
+2015-04-14 11:22:59 INFO  [2484] TreeFrog Framework version 1.8.0
+2015-04-14 11:22:59 INFO  [2484] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:22:59 INFO  [2484] TreeFrog application servers start up.  port:8800
+2015-04-14 11:23:22 INFO  [2484] TreeFrog application servers shutting down
+2015-04-14 11:23:23 INFO  [2484] TreeFrog application servers shutdown completed
+2015-04-14 11:23:29 INFO  [2600] TreeFrog Framework version 1.8.0
+2015-04-14 11:23:29 INFO  [2600] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:23:29 INFO  [2600] TreeFrog application servers start up.  port:8800
+2015-04-14 11:24:16 INFO  [2600] TreeFrog application servers shutting down
+2015-04-14 11:24:16 INFO  [2600] TreeFrog application servers shutdown completed
+2015-04-14 11:24:22 INFO  [2696] TreeFrog Framework version 1.8.0
+2015-04-14 11:24:22 INFO  [2696] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 11:24:22 INFO  [2696] TreeFrog application servers start up.  port:8800
+2015-04-14 12:27:51 INFO  [2696] TreeFrog application servers shutting down
+2015-04-14 12:27:52 INFO  [2696] TreeFrog application servers shutdown completed
+2015-04-14 12:27:58 INFO  [3479] TreeFrog Framework version 1.8.0
+2015-04-14 12:27:58 INFO  [3479] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:27:58 INFO  [3479] TreeFrog application servers start up.  port:8800
+2015-04-14 12:33:19 INFO  [3479] TreeFrog application servers shutting down
+2015-04-14 12:33:20 INFO  [3479] TreeFrog application servers shutdown completed
+2015-04-14 12:33:52 INFO  [3692] TreeFrog Framework version 1.8.0
+2015-04-14 12:33:52 INFO  [3692] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:33:52 INFO  [3692] TreeFrog application servers start up.  port:8800
+2015-04-14 12:35:36 INFO  [3692] TreeFrog application servers shutting down
+2015-04-14 12:35:36 INFO  [3692] TreeFrog application servers shutdown completed
+2015-04-14 12:35:49 INFO  [3792] TreeFrog Framework version 1.8.0
+2015-04-14 12:35:49 INFO  [3792] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:35:49 INFO  [3792] TreeFrog application servers start up.  port:8800
+2015-04-14 12:36:40 INFO  [3792] TreeFrog application servers shutting down
+2015-04-14 12:36:40 INFO  [3792] TreeFrog application servers shutdown completed
+2015-04-14 12:36:46 INFO  [3882] TreeFrog Framework version 1.8.0
+2015-04-14 12:36:46 INFO  [3882] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:36:46 INFO  [3882] TreeFrog application servers start up.  port:8800
+2015-04-14 12:38:49 INFO  [3882] TreeFrog application servers shutting down
+2015-04-14 12:38:49 INFO  [3882] TreeFrog application servers shutdown completed
+2015-04-14 12:38:54 INFO  [3993] TreeFrog Framework version 1.8.0
+2015-04-14 12:38:54 INFO  [3993] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:38:54 INFO  [3993] TreeFrog application servers start up.  port:8800
+2015-04-14 12:47:44 INFO  [3993] TreeFrog application servers shutting down
+2015-04-14 12:47:44 INFO  [3993] TreeFrog application servers shutdown completed
+2015-04-14 12:47:53 INFO  [4237] TreeFrog Framework version 1.8.0
+2015-04-14 12:47:53 INFO  [4237] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:47:53 INFO  [4237] TreeFrog application servers start up.  port:8800
+2015-04-14 12:51:14 INFO  [4237] TreeFrog application servers shutting down
+2015-04-14 12:51:15 INFO  [4237] TreeFrog application servers shutdown completed
+2015-04-14 12:51:20 INFO  [4375] TreeFrog Framework version 1.8.0
+2015-04-14 12:51:20 INFO  [4375] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 12:51:20 INFO  [4375] TreeFrog application servers start up.  port:8800
+2015-04-14 13:06:57 INFO  [4375] TreeFrog application servers shutting down
+2015-04-14 13:06:57 INFO  [4375] TreeFrog application servers shutdown completed
+2015-04-14 13:09:02 INFO  [4826] TreeFrog Framework version 1.8.0
+2015-04-14 13:09:02 INFO  [4826] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 13:09:02 INFO  [4826] TreeFrog application servers start up.  port:8800
+2015-04-14 13:24:33 INFO  [4826] TreeFrog application servers shutting down
+2015-04-14 13:24:33 INFO  [4826] TreeFrog application servers shutdown completed
+2015-04-14 13:38:49 INFO  [5994] TreeFrog Framework version 1.8.0
+2015-04-14 13:38:49 INFO  [5994] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 13:38:49 INFO  [5994] TreeFrog application servers start up.  port:8800
+2015-04-14 13:59:22 INFO  [5994] TreeFrog application servers shutting down
+2015-04-14 13:59:22 INFO  [5994] TreeFrog application servers shutdown completed
+2015-04-14 14:11:12 INFO  [7185] TreeFrog Framework version 1.8.0
+2015-04-14 14:11:12 INFO  [7185] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 14:11:12 INFO  [7185] TreeFrog application servers start up.  port:8800
+2015-04-14 14:17:03 INFO  [7185] TreeFrog application servers shutting down
+2015-04-14 14:17:04 INFO  [7185] TreeFrog application servers shutdown completed
+2015-04-14 14:17:09 INFO  [7373] TreeFrog Framework version 1.8.0
+2015-04-14 14:17:09 INFO  [7373] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 14:17:09 INFO  [7373] TreeFrog application servers start up.  port:8800
+2015-04-14 14:18:53 INFO  [7373] TreeFrog application servers shutting down
+2015-04-14 14:18:54 INFO  [7373] TreeFrog application servers shutdown completed
+2015-04-14 14:18:58 INFO  [7495] TreeFrog Framework version 1.8.0
+2015-04-14 14:18:58 INFO  [7495] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 14:18:58 INFO  [7495] TreeFrog application servers start up.  port:8800
+2015-04-14 14:19:32 WARN  [7510] Invalid descriptor (disconnected) : -1
+2015-04-14 14:20:44 INFO  [7495] TreeFrog application servers shutting down
+2015-04-14 14:20:45 INFO  [7495] TreeFrog application servers shutdown completed
+2015-04-14 14:20:52 INFO  [7600] TreeFrog Framework version 1.8.0
+2015-04-14 14:20:52 INFO  [7600] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 14:20:52 INFO  [7600] TreeFrog application servers start up.  port:8800
+2015-04-14 16:24:03 INFO  [7600] TreeFrog application servers shutting down
+2015-04-14 16:24:03 INFO  [7600] TreeFrog application servers shutdown completed
+2015-04-14 16:24:11 INFO  [9105] TreeFrog Framework version 1.8.0
+2015-04-14 16:24:11 INFO  [9105] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 16:24:11 INFO  [9105] TreeFrog application servers start up.  port:8800
+2015-04-14 16:32:53 INFO  [9105] TreeFrog application servers shutting down
+2015-04-14 16:32:54 INFO  [9105] TreeFrog application servers shutdown completed
+2015-04-14 16:33:02 INFO  [9317] TreeFrog Framework version 1.8.0
+2015-04-14 16:33:02 INFO  [9317] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 16:33:02 INFO  [9317] TreeFrog application servers start up.  port:8800
+2015-04-14 16:52:03 INFO  [9317] TreeFrog application servers shutting down
+2015-04-14 16:52:04 INFO  [9317] TreeFrog application servers shutdown completed
+2015-04-14 17:03:20 INFO  [10024] TreeFrog Framework version 1.8.0
+2015-04-14 17:03:20 INFO  [10024] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 17:03:20 INFO  [10024] TreeFrog application servers start up.  port:8800
+2015-04-14 17:18:55 INFO  [10024] TreeFrog application servers shutting down
+2015-04-14 17:18:56 INFO  [10024] TreeFrog application servers shutdown completed
+2015-04-14 17:22:47 INFO  [10759] TreeFrog Framework version 1.8.0
+2015-04-14 17:22:47 INFO  [10759] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 17:22:47 INFO  [10759] TreeFrog application servers start up.  port:8800
+2015-04-14 17:23:05 ERROR [10768] view null pointer.  action:index
+2015-04-14 17:23:13 ERROR [10772] view null pointer.  action:index
+2015-04-14 17:23:57 ERROR [10783] view null pointer.  action:index
+2015-04-14 17:24:55 ERROR [10804] view null pointer.  action:index
+2015-04-14 17:25:04 ERROR [10807] view null pointer.  action:index
+2015-04-14 17:25:13 ERROR [10811] view null pointer.  action:index
+2015-04-14 17:27:25 INFO  [10759] TreeFrog application servers shutting down
+2015-04-14 17:27:26 INFO  [10759] TreeFrog application servers shutdown completed
+2015-04-14 17:27:30 INFO  [10929] TreeFrog Framework version 1.8.0
+2015-04-14 17:27:30 INFO  [10929] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 17:27:30 INFO  [10929] TreeFrog application servers start up.  port:8800
+2015-04-14 17:27:35 ERROR [10934] view null pointer.  action:index
+2015-04-14 17:28:17 ERROR [10943] view null pointer.  action:index
+2015-04-14 17:29:36 INFO  [10929] TreeFrog application servers shutting down
+2015-04-14 17:29:36 INFO  [10929] TreeFrog application servers shutdown completed
+2015-04-14 17:29:45 INFO  [11029] TreeFrog Framework version 1.8.0
+2015-04-14 17:29:45 INFO  [11029] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-14 17:29:45 INFO  [11029] TreeFrog application servers start up.  port:8800
+2015-04-15 08:38:42 INFO  [11029] TreeFrog application servers shutting down
+2015-04-15 08:38:42 INFO  [11029] TreeFrog application servers shutdown completed
+2015-04-15 10:08:30 INFO  [13581] TreeFrog Framework version 1.8.0
+2015-04-15 10:08:30 INFO  [13581] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:08:30 INFO  [13581] TreeFrog application servers start up.  port:8800
+2015-04-15 10:17:30 INFO  [13581] TreeFrog application servers shutting down
+2015-04-15 10:17:31 INFO  [13581] TreeFrog application servers shutdown completed
+2015-04-15 10:17:50 INFO  [13878] TreeFrog Framework version 1.8.0
+2015-04-15 10:17:50 INFO  [13878] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:17:50 INFO  [13878] TreeFrog application servers start up.  port:8800
+2015-04-15 10:35:48 INFO  [13878] TreeFrog application servers shutting down
+2015-04-15 10:35:48 INFO  [13878] TreeFrog application servers shutdown completed
+2015-04-15 10:35:54 INFO  [14190] TreeFrog Framework version 1.8.0
+2015-04-15 10:35:54 INFO  [14190] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:35:54 INFO  [14190] TreeFrog application servers start up.  port:8800
+2015-04-15 10:36:46 INFO  [14190] TreeFrog application servers shutting down
+2015-04-15 10:36:47 INFO  [14190] TreeFrog application servers shutdown completed
+2015-04-15 10:36:52 INFO  [14288] TreeFrog Framework version 1.8.0
+2015-04-15 10:36:52 INFO  [14288] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:36:52 INFO  [14288] TreeFrog application servers start up.  port:8800
+2015-04-15 10:38:39 INFO  [14288] TreeFrog application servers shutting down
+2015-04-15 10:38:40 INFO  [14288] TreeFrog application servers shutdown completed
+2015-04-15 10:38:43 INFO  [14401] TreeFrog Framework version 1.8.0
+2015-04-15 10:38:43 INFO  [14401] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:38:43 INFO  [14401] TreeFrog application servers start up.  port:8800
+2015-04-15 10:39:41 INFO  [14401] TreeFrog application servers shutting down
+2015-04-15 10:39:41 INFO  [14401] TreeFrog application servers shutdown completed
+2015-04-15 10:39:49 INFO  [14503] TreeFrog Framework version 1.8.0
+2015-04-15 10:39:49 INFO  [14503] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:39:49 INFO  [14503] TreeFrog application servers start up.  port:8800
+2015-04-15 10:40:09 INFO  [14503] TreeFrog application servers shutting down
+2015-04-15 10:40:09 INFO  [14503] TreeFrog application servers shutdown completed
+2015-04-15 10:40:48 INFO  [14549] TreeFrog Framework version 1.8.0
+2015-04-15 10:40:48 INFO  [14549] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 10:40:48 INFO  [14549] TreeFrog application servers start up.  port:8800
+2015-04-15 11:19:24 INFO  [14549] TreeFrog application servers shutting down
+2015-04-15 11:19:24 INFO  [14549] TreeFrog application servers shutdown completed
+2015-04-15 12:54:32 INFO  [16854] TreeFrog Framework version 1.8.0
+2015-04-15 12:54:32 INFO  [16854] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 12:54:32 INFO  [16854] TreeFrog application servers start up.  port:8800
+2015-04-15 12:54:50 WARN  [16862] Invalid descriptor (disconnected) : -1
+2015-04-15 12:58:13 INFO  [16854] TreeFrog application servers shutting down
+2015-04-15 12:58:14 INFO  [16854] TreeFrog application servers shutdown completed
+2015-04-15 12:58:24 INFO  [17013] TreeFrog Framework version 1.8.0
+2015-04-15 12:58:24 INFO  [17013] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 12:58:24 INFO  [17013] TreeFrog application servers start up.  port:8800
+2015-04-15 12:58:33 WARN  [17018] Invalid descriptor (disconnected) : -1
+2015-04-15 13:00:01 INFO  [17013] TreeFrog application servers shutting down
+2015-04-15 13:00:02 INFO  [17013] TreeFrog application servers shutdown completed
+2015-04-15 13:00:07 INFO  [17125] TreeFrog Framework version 1.8.0
+2015-04-15 13:00:07 INFO  [17125] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 13:00:07 INFO  [17125] TreeFrog application servers start up.  port:8800
+2015-04-15 13:04:42 INFO  [17125] TreeFrog application servers shutting down
+2015-04-15 13:04:42 INFO  [17125] TreeFrog application servers shutdown completed
+2015-04-15 13:04:47 INFO  [17239] TreeFrog Framework version 1.8.0
+2015-04-15 13:04:47 INFO  [17239] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 13:04:47 INFO  [17239] TreeFrog application servers start up.  port:8800
+2015-04-15 13:05:23 INFO  [17239] TreeFrog application servers shutting down
+2015-04-15 13:05:24 INFO  [17239] TreeFrog application servers shutdown completed
+2015-04-15 13:05:28 INFO  [17341] TreeFrog Framework version 1.8.0
+2015-04-15 13:05:28 INFO  [17341] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 13:05:28 INFO  [17341] TreeFrog application servers start up.  port:8800
+2015-04-15 13:07:02 INFO  [17341] TreeFrog application servers shutting down
+2015-04-15 13:07:03 INFO  [17341] TreeFrog application servers shutdown completed
+2015-04-15 13:07:07 INFO  [17457] TreeFrog Framework version 1.8.0
+2015-04-15 13:07:07 INFO  [17457] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 13:07:07 INFO  [17457] TreeFrog application servers start up.  port:8800
+2015-04-15 13:12:43 WARN  [17541] Invalid descriptor (disconnected) : -1
+2015-04-15 13:13:33 WARN  [17555] Invalid descriptor (disconnected) : -1
+2015-04-15 13:15:34 INFO  [17457] TreeFrog application servers shutting down
+2015-04-15 13:15:34 INFO  [17457] TreeFrog application servers shutdown completed
+2015-04-15 14:33:55 INFO  [20445] TreeFrog Framework version 1.8.0
+2015-04-15 14:33:55 INFO  [20445] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-15 14:33:55 INFO  [20445] TreeFrog application servers start up.  port:8800
+2015-04-15 14:33:55 ERROR [20448] Cannot load library libcontroller.so: (libcontroller.so: 無法開啟共用目的檔: 沒有此一檔案或目錄)
+2015-04-15 14:33:55 ERROR [20448] Cannot load library libview.so: (libview.so: 無法開啟共用目的檔: 沒有此一檔案或目錄)
+2015-04-15 14:33:55 WARN  [20448] QSqlDatabase: QMYSQL driver not loaded (kernel/qsqldatabase.cpp:785 void QSqlDatabasePrivate::init(const QString&))
+2015-04-15 14:33:55 WARN  [20448] QSqlDatabase: available drivers: QSQLITE (kernel/qsqldatabase.cpp:786 void QSqlDatabasePrivate::init(const QString&))
+2015-04-15 14:33:55 WARN  [20450] No such method: staticInitialize() of ApplicationController
+2015-04-15 14:34:01 INFO  [20445] TreeFrog application servers shutting down
+2015-04-15 14:34:02 INFO  [20445] TreeFrog application servers shutdown completed
+2015-04-16 10:14:31 ERROR [1878] Invalid socket descriptor: 0
+2015-04-16 10:16:08 ERROR [1893] Invalid socket descriptor: 0
+2015-04-16 10:16:12 ERROR [1896] Invalid socket descriptor: 0
+2015-04-16 10:16:15 ERROR [1898] Invalid socket descriptor: 0
+2015-04-17 13:38:51 INFO  [15341] TreeFrog Framework version 1.8.0
+2015-04-17 13:38:51 INFO  [15341] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:38:51 INFO  [15341] TreeFrog application servers start up.  port:8800
+2015-04-17 13:38:57 WARN  [15341] treefrog stderr: sh: 1: .sysapi_home: not found
+
+2015-04-17 13:39:30 INFO  [15341] TreeFrog application servers shutting down
+2015-04-17 13:39:30 INFO  [15341] TreeFrog application servers shutdown completed
+2015-04-17 13:39:38 INFO  [15439] TreeFrog Framework version 1.8.0
+2015-04-17 13:39:38 INFO  [15439] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:39:38 INFO  [15439] TreeFrog application servers start up.  port:8800
+2015-04-17 13:39:43 ERROR [15445] Aborted at 1429249183 (unix time) try "date -d @1429249183" if you are using GNU date
+SIGABRT (@0x3c52) received by PID 15442 (TID 15445) ; stack trace:
+PC: @ 0xb774c424  (unknown)
+    @ 0x20646574  (unknown)
+
+2015-04-17 13:39:44 ERROR [15439] tfserver error detected(1). [/usr/bin/tadpole]
+2015-04-17 13:40:00 INFO  [15439] TreeFrog application servers shutting down
+2015-04-17 13:40:00 INFO  [15439] TreeFrog application servers shutdown completed
+2015-04-17 13:47:24 INFO  [15612] TreeFrog Framework version 1.8.0
+2015-04-17 13:47:24 INFO  [15612] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:47:24 INFO  [15612] TreeFrog application servers start up.  port:8800
+2015-04-17 13:48:11 INFO  [15612] TreeFrog application servers shutting down
+2015-04-17 13:48:12 INFO  [15612] TreeFrog application servers shutdown completed
+2015-04-17 13:48:49 INFO  [15640] TreeFrog Framework version 1.8.0
+2015-04-17 13:48:49 INFO  [15640] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:48:49 INFO  [15640] TreeFrog application servers start up.  port:8800
+2015-04-17 13:49:03 INFO  [15640] TreeFrog application servers shutting down
+2015-04-17 13:49:03 INFO  [15640] TreeFrog application servers shutdown completed
+2015-04-17 13:50:28 ERROR [15663] Invalid socket descriptor: 0
+2015-04-17 13:50:36 INFO  [15666] TreeFrog Framework version 1.8.0
+2015-04-17 13:50:36 INFO  [15666] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:50:36 INFO  [15666] TreeFrog application servers start up.  port:8800
+2015-04-17 13:50:48 INFO  [15666] TreeFrog application servers shutting down
+2015-04-17 13:50:48 INFO  [15666] TreeFrog application servers shutdown completed
+2015-04-17 13:52:48 INFO  [15873] TreeFrog Framework version 1.8.0
+2015-04-17 13:52:48 INFO  [15873] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:52:48 INFO  [15873] TreeFrog application servers start up.  port:8800
+2015-04-17 13:53:26 INFO  [15873] TreeFrog application servers shutting down
+2015-04-17 13:53:26 INFO  [15873] TreeFrog application servers shutdown completed
+2015-04-17 13:54:51 INFO  [15981] TreeFrog Framework version 1.8.0
+2015-04-17 13:54:51 INFO  [15981] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:54:51 INFO  [15981] TreeFrog application servers start up.  port:8800
+2015-04-17 13:56:53 INFO  [15981] TreeFrog application servers shutting down
+2015-04-17 13:56:54 INFO  [15981] TreeFrog application servers shutdown completed
+2015-04-17 13:58:23 INFO  [16144] TreeFrog Framework version 1.8.0
+2015-04-17 13:58:23 INFO  [16144] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 13:58:23 INFO  [16144] TreeFrog application servers start up.  port:8800
+2015-04-17 13:58:45 INFO  [16144] TreeFrog application servers shutting down
+2015-04-17 13:58:46 INFO  [16144] TreeFrog application servers shutdown completed
+2015-04-17 14:03:05 INFO  [2838] TreeFrog Framework version 1.8.0
+2015-04-17 14:03:05 INFO  [2838] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:03:05 INFO  [2838] TreeFrog application servers start up.  port:8800
+2015-04-17 14:17:37 INFO  [2838] TreeFrog application servers shutting down
+2015-04-17 14:17:38 INFO  [2838] TreeFrog application servers shutdown completed
+2015-04-17 14:19:10 INFO  [4314] TreeFrog Framework version 1.8.0
+2015-04-17 14:19:10 INFO  [4314] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:19:10 INFO  [4314] TreeFrog application servers start up.  port:8800
+2015-04-17 14:23:32 INFO  [4314] TreeFrog application servers shutting down
+2015-04-17 14:23:32 INFO  [4314] TreeFrog application servers shutdown completed
+2015-04-17 14:23:34 INFO  [4470] TreeFrog Framework version 1.8.0
+2015-04-17 14:23:34 INFO  [4470] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:23:34 INFO  [4470] TreeFrog application servers start up.  port:8800
+2015-04-17 14:24:32 INFO  [4470] TreeFrog application servers shutting down
+2015-04-17 14:24:32 INFO  [4470] TreeFrog application servers shutdown completed
+2015-04-17 14:24:39 INFO  [4571] TreeFrog Framework version 1.8.0
+2015-04-17 14:24:39 INFO  [4571] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:24:39 INFO  [4571] TreeFrog application servers start up.  port:8800
+2015-04-17 14:26:03 INFO  [4571] TreeFrog application servers shutting down
+2015-04-17 14:26:03 INFO  [4571] TreeFrog application servers shutdown completed
+2015-04-17 14:26:28 INFO  [4834] TreeFrog Framework version 1.8.0
+2015-04-17 14:26:28 INFO  [4834] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:26:28 INFO  [4834] TreeFrog application servers start up.  port:8800
+2015-04-17 14:26:32 ERROR [4834] tfserver error detected(1). [/usr/bin/tadpole]
+2015-04-17 14:27:22 INFO  [4834] TreeFrog application servers shutting down
+2015-04-17 14:27:22 INFO  [4834] TreeFrog application servers shutdown completed
+2015-04-17 14:27:30 INFO  [4947] TreeFrog Framework version 1.8.0
+2015-04-17 14:27:30 INFO  [4947] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:27:30 INFO  [4947] TreeFrog application servers start up.  port:8800
+2015-04-17 14:29:38 INFO  [4947] TreeFrog application servers shutting down
+2015-04-17 14:29:38 INFO  [4947] TreeFrog application servers shutdown completed
+2015-04-17 14:29:40 INFO  [5073] TreeFrog Framework version 1.8.0
+2015-04-17 14:29:40 INFO  [5073] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:29:40 INFO  [5073] TreeFrog application servers start up.  port:8800
+2015-04-17 14:29:58 INFO  [5073] TreeFrog application servers shutting down
+2015-04-17 14:29:58 INFO  [5073] TreeFrog application servers shutdown completed
+2015-04-17 14:30:51 INFO  [5089] TreeFrog Framework version 1.8.0
+2015-04-17 14:30:51 INFO  [5089] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:30:51 INFO  [5089] TreeFrog application servers start up.  port:8800
+2015-04-17 14:33:11 INFO  [5089] TreeFrog application servers shutting down
+2015-04-17 14:33:12 INFO  [5089] TreeFrog application servers shutdown completed
+2015-04-17 14:37:23 INFO  [5534] TreeFrog Framework version 1.8.0
+2015-04-17 14:37:23 INFO  [5534] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:37:23 INFO  [5534] TreeFrog application servers start up.  port:8800
+2015-04-17 14:38:33 INFO  [5534] TreeFrog application servers shutting down
+2015-04-17 14:38:34 INFO  [5534] TreeFrog application servers shutdown completed
+2015-04-17 14:38:41 INFO  [5761] TreeFrog Framework version 1.8.0
+2015-04-17 14:38:41 INFO  [5761] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:38:41 INFO  [5761] TreeFrog application servers start up.  port:8800
+2015-04-17 14:40:43 INFO  [5761] TreeFrog application servers shutting down
+2015-04-17 14:40:43 INFO  [5761] TreeFrog application servers shutdown completed
+2015-04-17 14:40:45 INFO  [5788] TreeFrog Framework version 1.8.0
+2015-04-17 14:40:45 INFO  [5788] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:40:45 INFO  [5788] TreeFrog application servers start up.  port:8800
+2015-04-17 14:41:16 INFO  [5788] TreeFrog application servers shutting down
+2015-04-17 14:41:16 INFO  [5788] TreeFrog application servers shutdown completed
+2015-04-17 14:42:35 INFO  [5900] TreeFrog Framework version 1.8.0
+2015-04-17 14:42:35 INFO  [5900] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:42:35 INFO  [5900] TreeFrog application servers start up.  port:8800
+2015-04-17 14:42:46 INFO  [5900] TreeFrog application servers shutting down
+2015-04-17 14:42:46 INFO  [5900] TreeFrog application servers shutdown completed
+2015-04-17 14:43:30 INFO  [5922] TreeFrog Framework version 1.8.0
+2015-04-17 14:43:30 INFO  [5922] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:43:30 INFO  [5922] TreeFrog application servers start up.  port:8800
+2015-04-17 14:43:39 INFO  [5922] TreeFrog application servers shutting down
+2015-04-17 14:43:40 INFO  [5922] TreeFrog application servers shutdown completed
+2015-04-17 14:44:28 INFO  [5944] TreeFrog Framework version 1.8.0
+2015-04-17 14:44:28 INFO  [5944] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:44:28 INFO  [5944] TreeFrog application servers start up.  port:8800
+2015-04-17 14:45:12 INFO  [5944] TreeFrog application servers shutting down
+2015-04-17 14:45:12 INFO  [5944] TreeFrog application servers shutdown completed
+2015-04-17 14:46:01 INFO  [6045] TreeFrog Framework version 1.8.0
+2015-04-17 14:46:01 INFO  [6045] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:46:01 INFO  [6045] TreeFrog application servers start up.  port:8800
+2015-04-17 14:47:46 INFO  [6045] TreeFrog application servers shutting down
+2015-04-17 14:47:46 INFO  [6045] TreeFrog application servers shutdown completed
+2015-04-17 14:47:54 INFO  [6152] TreeFrog Framework version 1.8.0
+2015-04-17 14:47:54 INFO  [6152] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 14:47:54 INFO  [6152] TreeFrog application servers start up.  port:8800
+2015-04-17 14:57:37 INFO  [6152] TreeFrog application servers shutting down
+2015-04-17 14:57:37 INFO  [6152] TreeFrog application servers shutdown completed
+2015-04-17 15:01:58 INFO  [6396] TreeFrog Framework version 1.8.0
+2015-04-17 15:01:58 INFO  [6396] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 15:01:58 INFO  [6396] TreeFrog application servers start up.  port:8800
+2015-04-17 15:10:28 INFO  [6396] TreeFrog application servers shutting down
+2015-04-17 15:10:28 INFO  [6396] TreeFrog application servers shutdown completed
+2015-04-17 15:30:55 INFO  [6723] TreeFrog Framework version 1.8.0
+2015-04-17 15:30:55 INFO  [6723] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 15:30:55 INFO  [6723] TreeFrog application servers start up.  port:8800
+2015-04-17 15:32:21 INFO  [6723] TreeFrog application servers shutting down
+2015-04-17 15:32:22 INFO  [6723] TreeFrog application servers shutdown completed
+2015-04-17 15:32:25 INFO  [6766] TreeFrog Framework version 1.8.0
+2015-04-17 15:32:25 INFO  [6766] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 15:32:25 INFO  [6766] TreeFrog application servers start up.  port:8800
+2015-04-17 15:59:26 INFO  [6766] TreeFrog application servers shutting down
+2015-04-17 15:59:27 INFO  [6766] TreeFrog application servers shutdown completed
+2015-04-17 16:25:32 INFO  [8310] TreeFrog Framework version 1.8.0
+2015-04-17 16:25:32 INFO  [8310] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 16:25:32 INFO  [8310] TreeFrog application servers start up.  port:8800
+2015-04-17 16:29:31 INFO  [8310] TreeFrog application servers shutting down
+2015-04-17 16:29:31 INFO  [8310] TreeFrog application servers shutdown completed
+2015-04-17 16:29:38 INFO  [8492] TreeFrog Framework version 1.8.0
+2015-04-17 16:29:38 INFO  [8492] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 16:29:38 INFO  [8492] TreeFrog application servers start up.  port:8800
+2015-04-17 16:34:53 INFO  [8492] TreeFrog application servers shutting down
+2015-04-17 16:34:54 INFO  [8492] TreeFrog application servers shutdown completed
+2015-04-17 16:35:01 INFO  [8645] TreeFrog Framework version 1.8.0
+2015-04-17 16:35:01 INFO  [8645] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 16:35:01 INFO  [8645] TreeFrog application servers start up.  port:8800
+2015-04-17 17:41:17 INFO  [8645] TreeFrog application servers shutting down
+2015-04-17 17:41:17 INFO  [8645] TreeFrog application servers shutdown completed
+2015-04-17 17:41:24 INFO  [9441] TreeFrog Framework version 1.8.0
+2015-04-17 17:41:24 INFO  [9441] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 17:41:24 INFO  [9441] TreeFrog application servers start up.  port:8800
+2015-04-17 18:04:54 INFO  [9441] TreeFrog application servers shutting down
+2015-04-17 18:04:54 INFO  [9441] TreeFrog application servers shutdown completed
+2015-04-17 18:05:14 INFO  [10034] TreeFrog Framework version 1.8.0
+2015-04-17 18:05:14 INFO  [10034] Qt 5.2.1 / Linux 3.13.0-48-generic
+2015-04-17 18:05:14 INFO  [10034] TreeFrog application servers start up.  port:8800
+2015-04-20 13:17:32 INFO  [10034] TreeFrog application servers shutting down
+2015-04-20 13:17:32 INFO  [10034] TreeFrog application servers shutdown completed
