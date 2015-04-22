@@ -129,26 +129,6 @@ RENDER_TYPE RenderResponse::preRender() {
     return m_renderType;
 }
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd) {
-    QStringList ret;
-    char *buff;
-    size_t len = 0;
-    FILE *fd = popen(apiCmd.toLocal8Bit(), "r");
-    while((getline(&buff, &len, fd)) != -1)
-        ret << buff;
-    pclose(fd);
-
-    return ret;
-}
-
-QString RenderResponse::getAPIStdOutOneLine(QString apiCmd) {
-    QString firstLine;
-    QStringList list = getAPIStdOut(apiCmd);
-    if(!list.isEmpty())
-        firstLine = list.at(0);
-    return firstLine;
-}
-
 void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
 //    QString paraFlag;
 //    if(m_pMap->contains("f_flag"))
@@ -164,7 +144,7 @@ void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("flag");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(fields.at(0));
+    QDomText t1 = doc.createTextNode(fields[0]);
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("state");
     root.appendChild(tag2);
@@ -221,6 +201,33 @@ void RenderResponse::generateAJAXPlorerStop(QDomDocument &doc) {
     tag1.appendChild(t1);
 }
 
+FMT_ARGS RenderResponse::getFMTArgs(QStringList &fmtArgs) {
+    FMT_ARGS args;
+    args.volNameArg = fmtArgs.at(0).toUpper();
+    args.raidModeArg = "M1";
+    if(fmtArgs.at(1).compare("standard") == 0)
+        args.raidModeArg = "M1";
+    else if (fmtArgs.at(1).compare("linar") == 0)
+        args.raidModeArg ="M2";
+    else if (fmtArgs.at(1).compare("raid0") == 0)
+        args.raidModeArg ="M3";
+    else if (fmtArgs.at(1).compare("raid1") == 0)
+        args.raidModeArg ="M4";
+
+    args.fileSystemTypeArg = "F2";
+    if(fmtArgs.at(2).compare("ext3") == 0)
+        args.fileSystemTypeArg = "F2";
+    else if(fmtArgs.at(2).compare("ext4") == 0)
+        args.fileSystemTypeArg ="F3";
+
+    args.volSizeArg = "S" + fmtArgs.at(3);
+    args.devNameArg = "K" + fmtArgs.at(4);
+
+    args.partition3Arg;
+    if(fmtArgs.at(6).compare("1"))
+        args.partition3Arg = "3";
+}
+
 /* todo */
 void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
     if(!m_pMap)
@@ -237,20 +244,39 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
     if(m_pMap->contains("f_auto_sync"))
         paraAutoSync = m_pMap->value("f_auto_sync").toString();
 
+    QString apiOut;
     QStringList paraList = paraCreateVolumeInfo.split("%2C");
     if(paraList.size() != 30) {
         return;
     }
     else {
+        FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
         QStringList paraSubList2 = paraList.mid(15, 15);
+        args1 = getFMTArgs(paraSubList1);
+        args2 = getFMTArgs(paraSubList2);
+
+        apiOut = getAPIStdOutOneLine(API_PATH + "diskmgr " +
+                                         "-" + args1.volNameArg + " " +
+                                         "-" + args1.raidModeArg + " " +
+                                         "-" + args1.fileSystemTypeArg + " " +
+                                         "-" + args1.volSizeArg + " " +
+                                         "-" + args1.devNameArg + " " +
+                                         "-" + args1.partition3Arg + " " +
+                                         "-" + args2.volNameArg + " " +
+                                         "-" + args2.raidModeArg + " " +
+                                         "-" + args2.fileSystemTypeArg + " " +
+                                         "-" + args2.volSizeArg + " " +
+                                         "-" + args2.devNameArg + " " +
+                                         "-" + args2.partition3Arg
+                                     );
     }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode("1");
+    QDomText t1 = doc.createTextNode(apiOut);
     tag1.appendChild(t1);
 }
 

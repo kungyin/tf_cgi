@@ -22,6 +22,10 @@ public:
     QString &getStr() { return m_str; }
 
 protected:
+
+    QStringList getAPIStdOut(QString);
+    QString getAPIStdOutOneLine(QString);
+
     CGI_COMMAND m_cmd;
     RENDER_TYPE m_renderType;
     QDomDocument m_doc;

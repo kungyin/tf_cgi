@@ -3,6 +3,15 @@
 
 #include "RenderResponseBase.h"
 
+typedef struct {
+    QString volNameArg;
+    QString raidModeArg;
+    QString fileSystemTypeArg;
+    QString volSizeArg;
+    QString devNameArg;
+    QString partition3Arg;
+}FMT_ARGS;
+
 class T_CONTROLLER_EXPORT RenderResponse : public RenderResponseBase {
     Q_OBJECT
 public:
@@ -18,8 +27,7 @@ public:
 
 private:
 
-    QStringList getAPIStdOut(QString);
-    QString getAPIStdOutOneLine(QString);
+    FMT_ARGS getFMTArgs(QStringList &);
 
     void generateVolumeStatus(QDomDocument &);
     void generateFMTGetSyncState(QDomDocument &);

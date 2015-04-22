@@ -1,6 +1,7 @@
 #include "CgiController.h"
 #include "ParseCmd.h"
 #include "RenderResponse.h"
+#include "RenderResponseNetwork.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -10,6 +11,8 @@ CgiController::CgiController(const CgiController &other)
 
 void CgiController::index()
 {
+
+#ifdef SIMULATOR_MODE
     if(!httpRequest().header().path().startsWith("/cgi-bin/login_mgr.cgi")) {
         //std::string user = my_cookie.value();
         if(httpRequest().cookie("username").isEmpty()) {
@@ -17,6 +20,7 @@ void CgiController::index()
             return;
         }
     }
+#endif
 
     QVariantMap parasMap = httpRequest().allParameters();
     if(parasMap.contains(CGI_PARA_CMD_NAME)) {
@@ -26,11 +30,14 @@ void CgiController::index()
         ParseCmd c(paraCmd);
         CGI_COMMAND cmd = c.getCGICmd();
 
-        RenderResponse rrep(parasMap, cmd);
-        RENDER_TYPE type = rrep.preRender();
+        RenderResponseBase *pRrep = NULL;
+        pRrep = getRenderResponseBaseInstance(parasMap, cmd);
+        if(!pRrep)
+            return;
+        RENDER_TYPE type = pRrep->preRender();
 
         if(paraCmd.compare("login") == 0) {
-            QString name = rrep.getUsername();
+            QString name = static_cast<RenderResponse *>(pRrep)->getUsername();
             QDateTime age = QDateTime::currentDateTime();;
             if(!name.isEmpty())
                 age = age.addSecs(31536000);
@@ -41,7 +48,7 @@ void CgiController::index()
             if(parasMap.contains("pwd"))
                 addCookie("password", parasMap["pwd"].toByteArray(), age, "/");
 
-            int status = rrep.getLoginStatus();
+            int status = static_cast<RenderResponse *>(pRrep)->getLoginStatus();
             if(status == 1) {
                 if(parasMap.contains("username")) {
                     TCookie cookie("username", parasMap["username"].toByteArray());
@@ -61,10 +68,10 @@ void CgiController::index()
         /* render */
         switch(type) {
         case RENDER_TYPE_STRING:
-            renderText(rrep.getStr());
+            renderText(pRrep->getStr());
             break;
         case RENDER_TYPE_XML:
-            renderXml(rrep.getDoc());
+            renderXml(pRrep->getDoc());
             break;
         case RENDER_TYPE_JOSEN:
             // todo: renderJson();
@@ -73,8 +80,26 @@ void CgiController::index()
             break;
         }
 
-        tDebug("GGG: %s", httpRequest().header().path().data());
+        if(pRrep)
+            delete pRrep;
     }
+}
+
+RenderResponseBase *CgiController::getRenderResponseBaseInstance(QVariantMap &map, CGI_COMMAND cmd)
+{
+    if(cmd <= CMD_NONE)
+        return NULL;
+
+    RenderResponseBase *pRrep = NULL;
+    if(cmd < CMD_DISK_END)
+        pRrep = new RenderResponse(map, cmd);
+    else if(cmd < CMD_LONGIN_END)
+        pRrep = new RenderResponse(map, cmd);
+    else if(cmd < CMD_NETWORK_END)
+        pRrep = new RenderResponseNetwork(map, cmd);
+
+    return pRrep;
+
 }
 
 T_REGISTER_CONTROLLER(cgicontroller);
