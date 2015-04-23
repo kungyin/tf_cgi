@@ -25,10 +25,12 @@ void CgiController::index()
     QVariantMap parasMap = httpRequest().allParameters();
     if(parasMap.contains(CGI_PARA_CMD_NAME)) {
         QString paraCmd = parasMap[CGI_PARA_CMD_NAME].toString();
-        tDebug("command: %s", paraCmd.toLocal8Bit().data());
+        tDebug("CgiController::index(): command: %s", paraCmd.toLocal8Bit().data());
 
         ParseCmd c(paraCmd);
         CGI_COMMAND cmd = c.getCGICmd();
+        if(cmd == CMD_NONE)
+            return;
 
         RenderResponseBase *pRrep = NULL;
         pRrep = getRenderResponseBaseInstance(parasMap, cmd);

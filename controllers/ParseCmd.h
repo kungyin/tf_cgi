@@ -8,7 +8,7 @@ class T_CONTROLLER_EXPORT ParseCmd : public QObject {
     Q_OBJECT
 public:
     ParseCmd(QString);
-    virtual ~ParseCmd();
+    virtual ~ParseCmd() {}
 
     CGI_COMMAND getCGICmd();
     int getCmdNumber() { return iCmdNumber; }
