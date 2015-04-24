@@ -25,6 +25,9 @@ protected:
 
     QStringList getAPIStdOut(QString);
     QString getAPIStdOutOneLine(QString);
+    bool setNasCfg(QString, QString, QString);
+    bool setNasCfg(QString, QMap<QString, QString> &);
+    QMap<QString, QString> getNasCfg(QString);
 
     CGI_COMMAND m_cmd;
     RENDER_TYPE m_renderType;

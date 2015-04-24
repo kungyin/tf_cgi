@@ -1,3 +1,5 @@
+#include <QProcess>
+
 #include "RenderResponseNetwork.h"
 #include "AppDefine.h"
 
@@ -42,6 +44,18 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
         break;
     case CMD_SETIP_LOCK:
         generateSetIPLock(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_IP:
+        generateIP(doc);
+        m_renderType = RENDER_TYPE_UNKNOWN;
+        break;
+    case CMD_SPEED:
+        generateSpeed(doc);
+        m_renderType = RENDER_TYPE_UNKNOWN;
+        break;
+    case CMD_LLTD:
+        generateLLTD(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_DDNS:
@@ -104,103 +118,113 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
 }
 
 void RenderResponseNetwork::generateGetLLTD(QDomDocument &doc) {
+    QMap<QString, QString> lltdIndo = getNasCfg("lltd");
+
     QDomElement root = doc.createElement("lltd");
     doc.appendChild(root);
-    QDomElement enable = doc.createElement("enable");
-    root.appendChild(enable);
-    QDomText text = doc.createTextNode("0");
-    enable.appendChild(text);
+    QDomElement enableElement = doc.createElement("enable");
+    root.appendChild(enableElement);
+    QDomText text = doc.createTextNode(lltdIndo.value("enable"));
+    enableElement.appendChild(text);
 }
 
 void RenderResponseNetwork::generateLanXml(QDomDocument &doc) {
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
+
+    QMap<QString, QString> bondingInfo = getNasCfg("bonding");
+    QMap<QString, QString> networkInfo = getNasCfg("network");
+
     QDomElement bondingEnableElement = doc.createElement("bonding_enable");
     root.appendChild(bondingEnableElement);
-    QDomText bondingEnableValue = doc.createTextNode("1");
+    QDomText bondingEnableValue = doc.createTextNode(bondingInfo.value("enable"));
     bondingEnableElement.appendChild(bondingEnableValue);
     QDomElement bondingModeElement = doc.createElement("bonding_mode");
     root.appendChild(bondingModeElement);
-    QDomText bondingModeValue = doc.createTextNode("0");
+    QDomText bondingModeValue = doc.createTextNode(bondingInfo.value("mode"));
     bondingModeElement.appendChild(bondingModeValue);
     QDomElement defaultGatewayElement = doc.createElement("default_gw");
     root.appendChild(defaultGatewayElement);
-    QDomText defaultGatewayValue = doc.createTextNode("lan0");
+    QDomText defaultGatewayValue = doc.createTextNode(networkInfo.value("default_gw"));
     defaultGatewayElement.appendChild(defaultGatewayValue);
+
+    QMap<QString, QString> lanInfo = getNasCfg("lan0");
+    if(lanInfo.isEmpty())
+        return;
 
     QDomElement lanElement = doc.createElement("lan");
     root.appendChild(lanElement);
-    for(int i=0; i<2; i++) {
-        QDomElement speedElement = doc.createElement("speed");
-        lanElement.appendChild(speedElement);
-        QDomText speedValue = doc.createTextNode("0");
-        speedElement.appendChild(speedValue);
 
-        QDomElement dhcpEnableElement = doc.createElement("dhcp_enable");
-        lanElement.appendChild(dhcpEnableElement);
-        QDomText dhcpEnableValue = doc.createTextNode("1");
-        dhcpEnableElement.appendChild(dhcpEnableValue);
+    QDomElement speedElement = doc.createElement("speed");
+    lanElement.appendChild(speedElement);
+    QDomText speedValue = doc.createTextNode(lanInfo.value("speed"));
+    speedElement.appendChild(speedValue);
 
-        QDomElement dnsManualElement = doc.createElement("dns_manual");
-        lanElement.appendChild(dnsManualElement);
-        QDomText dnsManualValue = doc.createTextNode("0");
-        dnsManualElement.appendChild(dnsManualValue);
+    QDomElement dhcpEnableElement = doc.createElement("dhcp_enable");
+    lanElement.appendChild(dhcpEnableElement);
+    QDomText dhcpEnableValue = doc.createTextNode(lanInfo.value("dhcp_enable"));
+    dhcpEnableElement.appendChild(dhcpEnableValue);
 
-        QDomElement ipElement = doc.createElement("ip");
-        lanElement.appendChild(ipElement);
-        QDomText ipValue = doc.createTextNode("192.168.100.203");
-        ipElement.appendChild(ipValue);
+    QDomElement dnsManualElement = doc.createElement("dns_manual");
+    lanElement.appendChild(dnsManualElement);
+    QDomText dnsManualValue = doc.createTextNode(lanInfo.value("dns_manual"));
+    dnsManualElement.appendChild(dnsManualValue);
 
-        QDomElement netmaskElement = doc.createElement("netmask");
-        lanElement.appendChild(netmaskElement);
-        QDomText netmaskValue = doc.createTextNode("255.255.255.0");
-        netmaskElement.appendChild(netmaskValue);
+    QDomElement ipElement = doc.createElement("ip");
+    lanElement.appendChild(ipElement);
+    QDomText ipValue = doc.createTextNode(lanInfo.value("ip"));
+    ipElement.appendChild(ipValue);
 
-        QDomElement gatewayElement = doc.createElement("gateway");
-        lanElement.appendChild(gatewayElement);
-        QDomText gatewayValue = doc.createTextNode("192.168.100.5");
-        gatewayElement.appendChild(gatewayValue);
+    QDomElement netmaskElement = doc.createElement("netmask");
+    lanElement.appendChild(netmaskElement);
+    QDomText netmaskValue = doc.createTextNode(lanInfo.value("netmask"));
+    netmaskElement.appendChild(netmaskValue);
 
-        QDomElement jumboEnableElement = doc.createElement("jumbo_enable");
-        lanElement.appendChild(jumboEnableElement);
-        QDomText jumboEnableValue = doc.createTextNode("0");
-        jumboEnableElement.appendChild(jumboEnableValue);
+    QDomElement gatewayElement = doc.createElement("gateway");
+    lanElement.appendChild(gatewayElement);
+    QDomText gatewayValue = doc.createTextNode(lanInfo.value("gateway"));
+    gatewayElement.appendChild(gatewayValue);
 
-        QDomElement jumboMtuElement = doc.createElement("jumbo_mtu");
-        lanElement.appendChild(jumboMtuElement);
-        QDomText jumboMtuValue = doc.createTextNode("1500");
-        jumboMtuElement.appendChild(jumboMtuValue);
+    QDomElement jumboEnableElement = doc.createElement("jumbo_enable");
+    lanElement.appendChild(jumboEnableElement);
+    QDomText jumboEnableValue = doc.createTextNode(lanInfo.value("jumbo_enable"));
+    jumboEnableElement.appendChild(jumboEnableValue);
 
-        QDomElement lanSpeedElement = doc.createElement("lan_speed");
-        lanElement.appendChild(lanSpeedElement);
-        QDomText lanSpeedValue = doc.createTextNode("100");
-        lanSpeedElement.appendChild(lanSpeedValue);
+    QDomElement jumboMtuElement = doc.createElement("jumbo_mtu");
+    lanElement.appendChild(jumboMtuElement);
+    QDomText jumboMtuValue = doc.createTextNode(lanInfo.value("jumbo_mtu"));
+    jumboMtuElement.appendChild(jumboMtuValue);
 
-        QDomElement partenerSpeedElement = doc.createElement("partener_speed");
-        lanElement.appendChild(partenerSpeedElement);
-        QDomText partenerSpeedValue = doc.createTextNode("100");
-        partenerSpeedElement.appendChild(partenerSpeedValue);
+    QDomElement lanSpeedElement = doc.createElement("lan_speed");
+    lanElement.appendChild(lanSpeedElement);
+    QDomText lanSpeedValue = doc.createTextNode(lanInfo.value("lan_speed"));
+    lanSpeedElement.appendChild(lanSpeedValue);
 
-        QDomElement dns1Element = doc.createElement("dns1");
-        lanElement.appendChild(dns1Element);
-        QDomText dns1Value = doc.createTextNode("192.168.100.5");
-        dns1Element.appendChild(dns1Value);
+    QDomElement partenerSpeedElement = doc.createElement("partener_speed");
+    lanElement.appendChild(partenerSpeedElement);
+    QDomText partenerSpeedValue = doc.createTextNode(lanInfo.value("partener_speed"));
+    partenerSpeedElement.appendChild(partenerSpeedValue);
 
-        QDomElement dns2Element = doc.createElement("dns2");
-        lanElement.appendChild(dns2Element);
-        QDomText dns2Value = doc.createTextNode("8.8.8.8");
-        dns2Element.appendChild(dns2Value);
+    QDomElement dns1Element = doc.createElement("dns1");
+    lanElement.appendChild(dns1Element);
+    QDomText dns1Value = doc.createTextNode(lanInfo.value("dns1"));
+    dns1Element.appendChild(dns1Value);
 
-        QDomElement vlanEnableElement = doc.createElement("vlan_enable");
-        lanElement.appendChild(vlanEnableElement);
-        QDomText vlanEnableValue = doc.createTextNode("0");
-        vlanEnableElement.appendChild(vlanEnableValue);
+    QDomElement dns2Element = doc.createElement("dns2");
+    lanElement.appendChild(dns2Element);
+    QDomText dns2Value = doc.createTextNode(lanInfo.value("dns2"));
+    dns2Element.appendChild(dns2Value);
 
-        QDomElement vlanIDElement = doc.createElement("vlan_id");
-        lanElement.appendChild(vlanIDElement);
-        QDomText vlanIDValue = doc.createTextNode("1");
-        vlanIDElement.appendChild(vlanIDValue);
-    }
+    QDomElement vlanEnableElement = doc.createElement("vlan_enable");
+    lanElement.appendChild(vlanEnableElement);
+    QDomText vlanEnableValue = doc.createTextNode(lanInfo.value("vlan_enable"));
+    vlanEnableElement.appendChild(vlanEnableValue);
+
+    QDomElement vlanIDElement = doc.createElement("vlan_id");
+    lanElement.appendChild(vlanIDElement);
+    QDomText vlanIDValue = doc.createTextNode(lanInfo.value("vlan_id"));
+    vlanIDElement.appendChild(vlanIDValue);
+
 }
 
 /* todo */
@@ -209,29 +233,31 @@ void RenderResponseNetwork::generateIPV6(QDomDocument &doc) {
 }
 
 void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
+    QMap<QString, QString> lanInfo = getNasCfg("lan0");
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement speed1 = doc.createElement("lan1_speed");
     root.appendChild(speed1);
-    QDomText value1 = doc.createTextNode("100");
+    QDomText value1 = doc.createTextNode(lanInfo.value("speed"));
     speed1.appendChild(value1);
-    QDomElement speed2 = doc.createElement("lan2_speed");
-    root.appendChild(speed2);
-    QDomText value2 = doc.createTextNode("0");
-    speed2.appendChild(value2);
+//    QDomElement speed2 = doc.createElement("lan2_speed");
+//    root.appendChild(speed2);
+//    QDomText value2 = doc.createTextNode("0");
+//    speed2.appendChild(value2);
 }
 
 void RenderResponseNetwork::generateLanXml2(QDomDocument &doc) {
+    QMap<QString, QString> lanInfo = getNasCfg("lan0");
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement ip1 = doc.createElement("ip1");
     root.appendChild(ip1);
-    QDomText value1 = doc.createTextNode("169.254.153.61");
+    QDomText value1 = doc.createTextNode(lanInfo.value("ip"));
     ip1.appendChild(value1);
-    QDomElement ip2 = doc.createElement("ip2");
-    root.appendChild(ip2);
-    QDomText value2 = doc.createTextNode("192.168.100.220");
-    ip2.appendChild(value2);
+//    QDomElement ip2 = doc.createElement("ip2");
+//    root.appendChild(ip2);
+//    QDomText value2 = doc.createTextNode("192.168.100.220");
+//    ip2.appendChild(value2);
 }
 
 /* todo */
@@ -243,7 +269,6 @@ void RenderResponseNetwork::generateSetIPLock(QDomDocument &doc) {
         paraLan = m_pMap->value("lan").toString();
 }
 
-/* todo */
 void RenderResponseNetwork::generateIP(QDomDocument &doc) {
 
     QString paraDhcpEnable, paraIP, paraGateway,
@@ -271,39 +296,96 @@ void RenderResponseNetwork::generateIP(QDomDocument &doc) {
         paraDnsManual = m_pMap->value("f_dns_manual").toString();
     if(m_pMap->contains("lan"))
         paraLan = m_pMap->value("lan").toString();
+
+    if(paraLan.compare("0") == 0) {
+        QMap<QString, QString> map;
+        map.insert("dhcp_enable", paraDhcpEnable);
+        map.insert("ip", paraIP);
+        map.insert("gateway", paraGateway);
+        map.insert("netmask", paraNetmask);
+
+        if(paraDnsManual.compare("1") == 0) {
+            map.insert("dns1", paraDns1);
+            map.insert("dns2", paraDns1);
+        }
+        map.insert("dns_manual", paraDnsManual);
+        map.insert("vlan_enable", paraVlanEnable);
+        map.insert("vlan_id", paraVlanID);
+
+        if(setNasCfg("lan0", map)) {
+#ifndef SIMULATOR_MODE
+            QProcess process;
+            QStringList arg;
+            arg << "restart";
+            process.start(NETWORK_SCRIPT, arg);
+#endif
+        }
+    }
 }
 
+void RenderResponseNetwork::generateSpeed(QDomDocument &doc) {
+    QString paraSpeed;
 
-/* todo */
+    if(m_pMap->contains("lan0"))
+        paraSpeed = m_pMap->value("lan0").toString();
+
+    setNasCfg("lan0", "speed", paraSpeed);
+}
+
 void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
 
     QString paraEnable;
 
     if(m_pMap->contains("f_enable"))
         paraEnable = m_pMap->value("f_enable").toString();
+
+    if(setNasCfg("lltd", "enable", paraEnable)) {
+#ifndef SIMULATOR_MODE
+        QProcess process;
+        QStringList arg;
+        arg << "start";
+        process.start(LLTD_SCRIPT, arg);
+#endif
+    }
 }
 
 void RenderResponseNetwork::generateGetDdns(QDomDocument &doc) {
+    QMap<QString, QString> ddnsInfo = getNasCfg("ddns");
+
     QDomElement root = doc.createElement("ddns");
     doc.appendChild(root);
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    QDomText enableValue = doc.createTextNode("0");
+    QDomText enableValue = doc.createTextNode(ddnsInfo.value("enable"));
     enableElement.appendChild(enableValue);
+
     QDomElement usernameElement = doc.createElement("username");
     root.appendChild(usernameElement);
+    QDomText usernameValue = doc.createTextNode(ddnsInfo.value("username"));
+    usernameElement.appendChild(usernameValue);
+
     QDomElement pwdElement = doc.createElement("pwd");
     root.appendChild(pwdElement);
+    QDomText pwdValue = doc.createTextNode(ddnsInfo.value("pwd"));
+    pwdElement.appendChild(pwdValue);
+
     QDomElement domainElement = doc.createElement("domain");
     root.appendChild(domainElement);
+    QDomText domainValue = doc.createTextNode(ddnsInfo.value("domain"));
+    domainElement.appendChild(domainValue);
+
     QDomElement serverElement = doc.createElement("server");
     root.appendChild(serverElement);
+    QDomText serverValue = doc.createTextNode(ddnsInfo.value("server"));
+    serverElement.appendChild(serverValue);
+
     QDomElement timeoutElement = doc.createElement("timeout");
     root.appendChild(timeoutElement);
-    QDomText timeoutValue = doc.createTextNode("576");
+    QDomText timeoutValue = doc.createTextNode(QString::number(ddnsInfo.value("timeout").toInt()/60/60));
     timeoutElement.appendChild(timeoutValue);
 }
 
+/* todo */
 void RenderResponseNetwork::generateGetDdnsStatus(QDomDocument &doc) {
     QDomElement root = doc.createElement("ddns");
     doc.appendChild(root);
@@ -317,6 +399,7 @@ void RenderResponseNetwork::generateGetDdnsStatus(QDomDocument &doc) {
     root.appendChild(nexttimeElement);
 }
 
+/* todo */
 void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
     QString paraEnable, paraDdnsServer, paraDdnsDomain,
             paraDdnsUsername, paraPassword, paraRePassword;
@@ -355,6 +438,7 @@ void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
     timeoutElement.appendChild(timeoutValue);
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
     QString paraPage, paraRp, paraSortname,
             paraSortOrder, paraQuery, paraQType,
@@ -418,18 +502,22 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
     }
 }
 
+/* todo */
 void RenderResponseNetwork::generateUpnpTest(QString &str) {
     str = "Not Found";
 }
 
+/* todo */
 void RenderResponseNetwork::generateUpnpTestResult(QString &str) {
     str = "Found";
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortForwardingTotal(QString &str) {
     str = "23";
 }
 
+/* todo */
 void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
 
     QDomElement root = doc.createElement("root");
@@ -452,6 +540,7 @@ void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
     }
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
     QString paraService, paraEnable, paraProtocol,
             paraPPort, paraEPort;
@@ -470,6 +559,7 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
     str = "error";
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
     QString paraService, paraEnable, paraProtocol,
             paraPPort, paraEPort;
@@ -488,6 +578,7 @@ void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
     str = "OK1";
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
     QString paraService, paraEnable, paraProtocol,
             paraPPort, paraEPort, paraScan,
@@ -511,6 +602,7 @@ void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
     str = "OK1";
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
     QString paraService, paraProtocol,
             paraPPort, paraEPort, paraScan;

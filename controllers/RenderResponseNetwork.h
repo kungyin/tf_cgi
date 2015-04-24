@@ -21,6 +21,7 @@ private:
     void generateLanXml2(QDomDocument &);
     void generateSetIPLock(QDomDocument &);
     void generateIP(QDomDocument &);
+    void generateSpeed(QDomDocument &);
     void generateLLTD(QDomDocument &);
     void generateGetDdns(QDomDocument &);
     void generateGetDdnsStatus(QDomDocument &);

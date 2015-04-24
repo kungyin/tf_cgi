@@ -40,6 +40,8 @@ enum CGI_COMMAND {
     CMD_LAN_XML2,                   /* cgi_get_lan_xml2 */
     CMD_SETIP_LOCK,                 /* cgi_setip_lock */
     CMD_IP,                         /* cgi_ip */
+    CMD_SPEED,                      /* cgi_speed */
+    CMD_LLTD,                       /* cgi_lltd */
     CMD_GET_DDNS,                   /* cgi_get_ddns */
     CMD_GET_DDNS_STATUS,            /* cgi_get_ddns_status */
     CMD_DDNS,                       /* cgi_ddns */
@@ -96,6 +98,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_lan_xml2",
     "cgi_setip_lock",
     "cgi_ip",
+    "cgi_speed",
+    "cgi_lltd",
     "cgi_get_ddns",
     "cgi_get_ddns_status",
     "cgi_ddns",
