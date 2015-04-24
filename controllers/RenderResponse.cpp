@@ -134,7 +134,7 @@ void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
 //    if(m_pMap->contains("f_flag"))
 //        paraFlag = m_pMap->value("f_flag").toString();
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_dsk -g volume_status");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g volume_status");
 
     QStringList fields = apiOut.split(",");
     if(fields.size() < 2)
@@ -144,7 +144,7 @@ void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("flag");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(fields[0]);
+    QDomText t1 = doc.createTextNode(fields.at(0));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("state");
     root.appendChild(tag2);
@@ -154,7 +154,7 @@ void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
 
 void RenderResponse::generateFMTGetSyncState(QDomDocument &doc) {
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_dsk -g sync_state");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g sync_state");
 
     QStringList fields = apiOut.split(",");
     if(fields.size() < 2)
@@ -174,7 +174,7 @@ void RenderResponse::generateFMTGetSyncState(QDomDocument &doc) {
 
 void RenderResponse::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_dsk -g auto_sync");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g auto_sync");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -188,7 +188,7 @@ void RenderResponse::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
 void RenderResponse::generateAJAXPlorerStop(QDomDocument &doc) {
 
 //#ifndef SIMULATOR_MODE
-//    QString apiOut = getAPIStdOut(API_PATH + "sysapi_dsk -s ajaxplorer stop");
+//    QString apiOut = getAPIStdOut(API_PATH + DISK_API_SCRIPT + " -s ajaxplorer stop");
 //#else
 //    QString apiOut = "1";
 //#endif
@@ -250,13 +250,14 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
         return;
     }
     else {
+#ifndef SIMULATOR_MODE
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
         QStringList paraSubList2 = paraList.mid(15, 15);
         args1 = getFMTArgs(paraSubList1);
         args2 = getFMTArgs(paraSubList2);
 
-        apiOut = getAPIStdOutOneLine(API_PATH + "diskmgr " +
+        apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_MANAGER + " " +
                                          "-" + args1.volNameArg + " " +
                                          "-" + args1.raidModeArg + " " +
                                          "-" + args1.fileSystemTypeArg + " " +
@@ -270,6 +271,7 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
                                          "-" + args2.devNameArg + " " +
                                          "-" + args2.partition3Arg
                                      );
+#endif
     }
 
     QDomElement root = doc.createElement("config");
@@ -534,7 +536,7 @@ void RenderResponse::generateSmartTestStart(QDomDocument &doc) {
 }
 
 void RenderResponse::generateScanDiskInfo(QDomDocument &doc) {
-    QStringList apiOutList = getAPIStdOut(API_PATH + "sysapi_dsk -g scandsk_info");
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g scandsk_info");
 
     QStringList line1 = apiOutList.at(0).split(",");
     QStringList line2 = apiOutList.at(1).split(",");
@@ -565,7 +567,7 @@ void RenderResponse::generateScanDiskInfo(QDomDocument &doc) {
 }
 
 void RenderResponse::generateCheckDiskRemountState(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_dsk -g dsk_remount_state");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g dsk_remount_state");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -580,7 +582,7 @@ void RenderResponse::generateScanDiskRunE2fsck(QDomDocument &doc) {
 }
 
 void RenderResponse::generateScanDiskFinish(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_dsk -g scandsk_finish");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g scandsk_finish");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -595,7 +597,7 @@ void RenderResponse::generateIsBuildInLanguage(QDomDocument &doc) {
     QDomElement root = doc.createElement("flag");
     doc.appendChild(root);
 
-    QString val = getAPIStdOutOneLine(API_PATH + "sysapi_home -g build_in_language");
+    QString val = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g build_in_language");
 
     root.appendChild(doc.createTextNode(val));
 }
@@ -604,13 +606,13 @@ void RenderResponse::generateGetUserLanguage(QDomDocument &doc) {
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);
 
-    QString val = getAPIStdOutOneLine(API_PATH + "sysapi_home -g cgi_get_user_language");
+    QString val = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g cgi_get_user_language");
 
     root.appendChild(doc.createTextNode(val));
 }
 
 void RenderResponse::generateGetSslInfo(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_home -g ssl_info");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g ssl_info");
 
     QStringList fields = apiOut.split(",");
     if(fields.size() < 2)
@@ -627,12 +629,12 @@ void RenderResponse::generateGetSslInfo(QDomDocument &doc) {
 }
 
 void RenderResponse::generateUICheckWto(QString &str) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_home -g ui_check_wto");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto");
     str = apiOut;
 }
 
 void RenderResponse::generateFWStatus(QString &str) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_home -g fw_status");
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g fw_status");
     str = apiOut;
 }
 
@@ -669,15 +671,18 @@ void RenderResponse::generateLogin(QString &str) {
     if(m_pMap->contains("ssl_port"))
         paraSslPort = m_pMap->value("ssl_port").toString();
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_home -g login " + paraUsername + " " + paraPwd);
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g login " + paraUsername + " " + paraPwd);
 
-    if(paraSsl.compare("1") == 0) {
+    QMap<QString, QString> map;
+    map.insert("ssl_enable", paraSsl);
+    map.insert("ssl_port", paraSslPort);
+
+    if(setNasCfg("web", map)) {
+        //if(paraSsl.compare("1") == 0) {
 #ifndef SIMULATOR_MODE
-        QString sslEnableOut = getAPIStdOutOneLine("nas_cfg -s web ssl_enable 1");
-        QString sslPortOut = getAPIStdOutOneLine("nas_cfg -s web ssl_port 443");
-
         //todo: restart.
 #endif
+        //}
     }
 
     if(paraC1.compare("ON") == 0) {
@@ -701,7 +706,7 @@ void RenderResponse::generateLogout(QString &str) {
     if(m_pMap->contains("os"))
         paraOS = m_pMap->value("os").toString();
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + "sysapi_home -s logout " + paraUsername);
+    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -s logout " + paraUsername);
     m_loginStatus = -1;
 
 }
