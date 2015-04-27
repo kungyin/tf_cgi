@@ -1,6 +1,7 @@
 #include "CgiController.h"
 #include "ParseCmd.h"
-#include "RenderResponse.h"
+#include "RenderResponseDisk.h"
+#include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
@@ -39,7 +40,7 @@ void CgiController::index()
         RENDER_TYPE type = pRrep->preRender();
 
         if(paraCmd.compare("login") == 0) {
-            QString name = static_cast<RenderResponse *>(pRrep)->getUsername();
+            QString name = static_cast<RenderResponseHome *>(pRrep)->getUsername();
             QDateTime age = QDateTime::currentDateTime();;
             if(!name.isEmpty())
                 age = age.addSecs(31536000);
@@ -50,7 +51,7 @@ void CgiController::index()
             if(parasMap.contains("pwd"))
                 addCookie("password", parasMap["pwd"].toByteArray(), age, "/");
 
-            int status = static_cast<RenderResponse *>(pRrep)->getLoginStatus();
+            int status = static_cast<RenderResponseHome *>(pRrep)->getLoginStatus();
             if(status == 1) {
                 if(parasMap.contains("username")) {
                     TCookie cookie("username", parasMap["username"].toByteArray());
@@ -94,9 +95,9 @@ RenderResponseBase *CgiController::getRenderResponseBaseInstance(QVariantMap &ma
 
     RenderResponseBase *pRrep = NULL;
     if(cmd < CMD_DISK_END)
-        pRrep = new RenderResponse(map, cmd);
+        pRrep = new RenderResponseDisk(map, cmd);
     else if(cmd < CMD_LONGIN_END)
-        pRrep = new RenderResponse(map, cmd);
+        pRrep = new RenderResponseHome(map, cmd);
     else if(cmd < CMD_NETWORK_END)
         pRrep = new RenderResponseNetwork(map, cmd);
 

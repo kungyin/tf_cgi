@@ -1,19 +1,17 @@
-#include "RenderResponse.h"
+#include "RenderResponseDisk.h"
 #include "AppDefine.h"
 
-RenderResponse::RenderResponse(QVariantMap &map, CGI_COMMAND cmd)
-    : m_session("")
-    , m_loginStatus(0)
+RenderResponseDisk::RenderResponseDisk(QVariantMap &map, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
     m_pMap = &map;
 }
 
-RenderResponse::~RenderResponse() {
+RenderResponseDisk::~RenderResponseDisk() {
 }
 
-RENDER_TYPE RenderResponse::preRender() {
+RENDER_TYPE RenderResponseDisk::preRender() {
 
     if(!m_pMap)
         return RENDER_TYPE_UNKNOWN;
@@ -90,34 +88,6 @@ RENDER_TYPE RenderResponse::preRender() {
         generateScanDiskFinish(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
-    case CMD_CGI_IS_BUILD_IN_LANGUAGE:
-        generateIsBuildInLanguage(doc);
-        m_renderType = RENDER_TYPE_XML;
-        break;
-    case CMD_CGI_GET_USER_LANGUAGE:
-        generateGetUserLanguage(doc);
-        m_renderType = RENDER_TYPE_XML;
-        break;
-    case CMD_CGI_GET_SSL_INFO:
-        generateGetSslInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
-        break;
-    case CMD_UI_CHECK_WTO:
-        generateUICheckWto(str);
-        m_renderType = RENDER_TYPE_STRING;
-        break;
-    case CMD_FW_STATUS:
-        generateFWStatus(str);
-        m_renderType = RENDER_TYPE_STRING;
-        break;
-    case CMD_LOGIN:
-        generateLogin(str);
-        m_renderType = RENDER_TYPE_STRING;
-        break;
-    case CMD_LOGOUT:
-        generateLogout(str);
-        m_renderType = RENDER_TYPE_STRING;
-        break;
     case CMD_NONE:
     default:
         break;
@@ -129,63 +99,60 @@ RENDER_TYPE RenderResponse::preRender() {
     return m_renderType;
 }
 
-void RenderResponse::generateVolumeStatus(QDomDocument &doc) {
+void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
 //    QString paraFlag;
 //    if(m_pMap->contains("f_flag"))
 //        paraFlag = m_pMap->value("f_flag").toString();
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g volume_status");
-
-    QStringList fields = apiOut.split(",");
-    if(fields.size() < 2)
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g volume_status", true);
+    if(apiOut.size() < 2)
         return;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("flag");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(fields.at(0));
+    QDomText t1 = doc.createTextNode(apiOut.at(0));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("state");
     root.appendChild(tag2);
-    QDomText t2 = doc.createTextNode(fields.at(1));
+    QDomText t2 = doc.createTextNode(apiOut.at(1));
     tag2.appendChild(t2);
 }
 
-void RenderResponse::generateFMTGetSyncState(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTGetSyncState(QDomDocument &doc) {
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g sync_state");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g sync_state", true);
 
-    QStringList fields = apiOut.split(",");
-    if(fields.size() < 2)
+    if(apiOut.size() < 2)
         return;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(fields.at(0));
+    QDomText t1 = doc.createTextNode(apiOut.at(0));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("wait_sync");
     root.appendChild(tag2);
-    QDomText t2 = doc.createTextNode(fields.at(1));
+    QDomText t2 = doc.createTextNode(apiOut.at(1));
     tag2.appendChild(t2);
 }
 
-void RenderResponse::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
 
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g auto_sync");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g auto_sync", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("auto_sync");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut);
+    QDomText t1 = doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0));
     tag1.appendChild(t1);
 }
 
 /* todo */
-void RenderResponse::generateAJAXPlorerStop(QDomDocument &doc) {
+void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
 
 //#ifndef SIMULATOR_MODE
 //    QString apiOut = getAPIStdOut(API_PATH + DISK_API_SCRIPT + " -s ajaxplorer stop");
@@ -201,7 +168,7 @@ void RenderResponse::generateAJAXPlorerStop(QDomDocument &doc) {
     tag1.appendChild(t1);
 }
 
-FMT_ARGS RenderResponse::getFMTArgs(QStringList &fmtArgs) {
+FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
     FMT_ARGS args;
     args.volNameArg = fmtArgs.at(0).toUpper();
     args.raidModeArg = "M1";
@@ -229,7 +196,7 @@ FMT_ARGS RenderResponse::getFMTArgs(QStringList &fmtArgs) {
 }
 
 /* todo */
-void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     if(!m_pMap)
         return;
 
@@ -244,7 +211,7 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
     if(m_pMap->contains("f_auto_sync"))
         paraAutoSync = m_pMap->value("f_auto_sync").toString();
 
-    QString apiOut;
+    QStringList apiOut;
     QStringList paraList = paraCreateVolumeInfo.split("%2C");
     if(paraList.size() != 30) {
         return;
@@ -257,7 +224,7 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
         args1 = getFMTArgs(paraSubList1);
         args2 = getFMTArgs(paraSubList2);
 
-        apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_MANAGER + " " +
+        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
                                          "-" + args1.volNameArg + " " +
                                          "-" + args1.raidModeArg + " " +
                                          "-" + args1.fileSystemTypeArg + " " +
@@ -270,6 +237,7 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
                                          "-" + args2.volSizeArg + " " +
                                          "-" + args2.devNameArg + " " +
                                          "-" + args2.partition3Arg
+                                         , true
                                      );
 #endif
     }
@@ -278,12 +246,12 @@ void RenderResponse::generateFMTCreateDiskMGR(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut);
+    QDomText t1 = doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0));
     tag1.appendChild(t1);
 }
 
 /* todo */
-void RenderResponse::generateSmartHDList(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
 
     if(!m_pMap)
         return;
@@ -377,7 +345,7 @@ void RenderResponse::generateSmartHDList(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateCreateTestList(QDomDocument &doc) {
+void RenderResponseDisk::generateCreateTestList(QDomDocument &doc) {
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement sendElement = doc.createElement("send_mail");
@@ -389,7 +357,7 @@ void RenderResponse::generateCreateTestList(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateSmartScheduleList(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
 
     if(!m_pMap)
         return;
@@ -445,7 +413,7 @@ void RenderResponse::generateSmartScheduleList(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateGetTestStatus(QDomDocument &doc) {
+void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
     QDomElement stateElement = doc.createElement("State");
@@ -454,7 +422,7 @@ void RenderResponse::generateGetTestStatus(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateSmartSetSchedule(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
 
     if(!m_pMap)
         return;
@@ -496,7 +464,7 @@ void RenderResponse::generateSmartSetSchedule(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateSmartDelSchedule(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartDelSchedule(QDomDocument &doc) {
     if(!m_pMap)
         return;
 
@@ -512,7 +480,7 @@ void RenderResponse::generateSmartDelSchedule(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponse::generateSmartTestStart(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
 
     if(!m_pMap)
         return;
@@ -535,7 +503,7 @@ void RenderResponse::generateSmartTestStart(QDomDocument &doc) {
     resElement.appendChild(doc.createTextNode("1"));
 }
 
-void RenderResponse::generateScanDiskInfo(QDomDocument &doc) {
+void RenderResponseDisk::generateScanDiskInfo(QDomDocument &doc) {
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g scandsk_info");
 
     QStringList line1 = apiOutList.at(0).split(",");
@@ -566,147 +534,27 @@ void RenderResponse::generateScanDiskInfo(QDomDocument &doc) {
     }
 }
 
-void RenderResponse::generateCheckDiskRemountState(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g dsk_remount_state");
+void RenderResponseDisk::generateCheckDiskRemountState(QDomDocument &doc) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g dsk_remount_state", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
 }
 
-void RenderResponse::generateScanDiskRunE2fsck(QDomDocument &doc) {
+void RenderResponseDisk::generateScanDiskRunE2fsck(QDomDocument &doc) {
     QDomElement root = doc.createElement("script");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode("location.href='/web/dsk_mgr/hd_scandisk_state.html'"));
 }
 
-void RenderResponse::generateScanDiskFinish(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_DISK_API + " -g scandsk_finish");
+void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g scandsk_finish", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
 }
 
-/***** Login/Logout *****/
-
-void RenderResponse::generateIsBuildInLanguage(QDomDocument &doc) {
-
-    QDomElement root = doc.createElement("flag");
-    doc.appendChild(root);
-
-    QString val = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g build_in_language");
-
-    root.appendChild(doc.createTextNode(val));
-}
-
-void RenderResponse::generateGetUserLanguage(QDomDocument &doc) {
-    QDomElement root = doc.createElement("language");
-    doc.appendChild(root);
-
-    QString val = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g cgi_get_user_language");
-
-    root.appendChild(doc.createTextNode(val));
-}
-
-void RenderResponse::generateGetSslInfo(QDomDocument &doc) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g ssl_info");
-
-    QStringList fields = apiOut.split(",");
-    if(fields.size() < 2)
-        return;
-
-    QDomElement root = doc.createElement("ssl_info");
-    doc.appendChild(root);
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode(fields.at(0)));
-    QDomElement portElement = doc.createElement("port");
-    root.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode(fields.at(1)));
-}
-
-void RenderResponse::generateUICheckWto(QString &str) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto");
-    str = apiOut;
-}
-
-void RenderResponse::generateFWStatus(QString &str) {
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g fw_status");
-    str = apiOut;
-}
-
-void RenderResponse::generateLogin(QString &str) {
-    if(!m_pMap)
-        return;
-
-    QString paraUsername;
-    QString paraPwd;
-    QString paraPort;
-    QString paraType;
-    QString paraFUsername;
-    QString paraPrePwd;
-    QString paraSsl;
-    QString paraC1;
-    QString paraSslPort;
-
-    if(m_pMap->contains("username"))
-        paraUsername = m_pMap->value("username").toString();
-    if(m_pMap->contains("pwd"))
-        paraPwd = m_pMap->value("pwd").toString();
-    if(m_pMap->contains("port"))
-        paraPort = m_pMap->value("port").toString();
-    if(m_pMap->contains("f_type"))
-        paraType = m_pMap->value("f_type").toString();
-    if(m_pMap->contains("f_username"))
-        paraFUsername = m_pMap->value("f_username").toString();
-    if(m_pMap->contains("pre_pwd"))
-        paraPrePwd = m_pMap->value("pre_pwd").toString();
-    if(m_pMap->contains("ssl"))
-        paraSsl = m_pMap->value("ssl").toString();
-    if(m_pMap->contains("C1"))
-        paraC1 = m_pMap->value("C1").toString();
-    if(m_pMap->contains("ssl_port"))
-        paraSslPort = m_pMap->value("ssl_port").toString();
-
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -g login " + paraUsername + " " + paraPwd);
-
-    QMap<QString, QString> map;
-    map.insert("ssl_enable", paraSsl);
-    map.insert("ssl_port", paraSslPort);
-
-    if(setNasCfg("web", map)) {
-        //if(paraSsl.compare("1") == 0) {
-#ifndef SIMULATOR_MODE
-        //todo: restart.
-#endif
-        //}
-    }
-
-    if(paraC1.compare("ON") == 0) {
-        m_session = paraUsername;
-    }
-
-    if(apiOut.compare("1") == 0) {
-        m_loginStatus = 1;
-    }
-}
-
-void RenderResponse::generateLogout(QString &str) {
-    if(!m_pMap)
-        return;
-
-    QString paraUsername;
-    QString paraOS;
-
-    if(m_pMap->contains("name"))
-        paraUsername = m_pMap->value("name").toString();
-    if(m_pMap->contains("os"))
-        paraOS = m_pMap->value("os").toString();
-
-    QString apiOut = getAPIStdOutOneLine(API_PATH + SCRIPT_HOME_API + " -s logout " + paraUsername);
-    m_loginStatus = -1;
-
-}

@@ -340,12 +340,7 @@ void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
         paraEnable = m_pMap->value("f_enable").toString();
 
     if(setNasCfg("lltd", "enable", paraEnable)) {
-#ifndef SIMULATOR_MODE
-        QProcess process;
-        QStringList arg;
-        arg << "start";
-        process.start(LLTD_SCRIPT, arg);
-#endif
+        getAPIStdOut(API_PATH + SCRIPT_LLTD_CTL + " start");
     }
 }
 
@@ -381,26 +376,55 @@ void RenderResponseNetwork::generateGetDdns(QDomDocument &doc) {
 
     QDomElement timeoutElement = doc.createElement("timeout");
     root.appendChild(timeoutElement);
-    QDomText timeoutValue = doc.createTextNode(QString::number(ddnsInfo.value("timeout").toInt()/60/60));
+
+    bool ok = false;
+    int iTimeout = ddnsInfo.value("timeout").toInt(&ok);
+    QDomText timeoutValue;
+    if(ok)
+        timeoutValue = doc.createTextNode(QString::number(iTimeout/60/60));
     timeoutElement.appendChild(timeoutValue);
 }
 
-/* todo */
 void RenderResponseNetwork::generateGetDdnsStatus(QDomDocument &doc) {
+
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -S");
+    if(apiOutList.size() < 5)
+        return;
+
     QDomElement root = doc.createElement("ddns");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    QDomText statusValue = doc.createTextNode("continue");
+    QDomText statusValue = doc.createTextNode(apiOutList.at(1));
     statusElement.appendChild(statusValue);
+
     QDomElement updatetimeElement = doc.createElement("updatetime");
     root.appendChild(updatetimeElement);
+
+    bool ok = false;
+    QDomText updateTimeValue;
+    uint iUpdateTime = apiOutList.at(2).toInt(&ok);
+    if(ok) {
+        QDateTime update = QDateTime::fromTime_t(iUpdateTime);
+        updateTimeValue = doc.createTextNode(update.toString("yyyy/M/d h:m:s"));
+    }
+    updatetimeElement.appendChild(updateTimeValue);
+
     QDomElement nexttimeElement = doc.createElement("nexttime");
     root.appendChild(nexttimeElement);
+
+    ok = false;
+    QDomText nextTimeValue;
+    uint iNextTime = apiOutList.at(3).toInt(&ok);
+    if(ok) {
+        QDateTime next = QDateTime::fromTime_t(iNextTime);
+        nextTimeValue = doc.createTextNode(next.toString("yyyy/M/d h:m:s"));
+    }
+    nexttimeElement.appendChild(nextTimeValue);
 }
 
-/* todo */
 void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
+
     QString paraEnable, paraDdnsServer, paraDdnsDomain,
             paraDdnsUsername, paraPassword, paraRePassword;
 
@@ -417,25 +441,21 @@ void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
     if(m_pMap->contains("f_ddns_re_password"))
         paraRePassword = m_pMap->value("f_ddns_re_password").toString();
 
+    if(paraPassword.compare(paraRePassword) != 0)
+        return;
 
-    QDomElement root = doc.createElement("ddns");
-    doc.appendChild(root);
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    QDomText enableValue = doc.createTextNode("0");
-    enableElement.appendChild(enableValue);
-    QDomElement usernameElement = doc.createElement("username");
-    root.appendChild(usernameElement);
-    QDomElement pwdElement = doc.createElement("pwd");
-    root.appendChild(pwdElement);
-    QDomElement domainElement = doc.createElement("domain");
-    root.appendChild(domainElement);
-    QDomElement serverElement = doc.createElement("server");
-    root.appendChild(serverElement);
-    QDomElement timeoutElement = doc.createElement("timeout");
-    root.appendChild(timeoutElement);
-    QDomText timeoutValue = doc.createTextNode("576");
-    timeoutElement.appendChild(timeoutValue);
+    QMap<QString, QString> map;
+    map.insert("enable", paraEnable);
+    map.insert("server", paraDdnsServer);
+    map.insert("domain", paraDdnsDomain);
+    map.insert("username", paraDdnsUsername);
+    map.insert("pwd", paraPassword);
+
+    if(setNasCfg("ddns", map)) {
+        getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -T");
+    }
+
+    generateGetDdns(doc);
 }
 
 /* todo */
@@ -620,4 +640,3 @@ void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
 
     str = "ok";
 }
-

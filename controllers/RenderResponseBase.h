@@ -23,8 +23,7 @@ public:
 
 protected:
 
-    QStringList getAPIStdOut(QString);
-    QString getAPIStdOutOneLine(QString);
+    QStringList getAPIStdOut(QString, bool bOneLine = false);
     bool setNasCfg(QString, QString, QString);
     bool setNasCfg(QString, QMap<QString, QString> &);
     QMap<QString, QString> getNasCfg(QString);

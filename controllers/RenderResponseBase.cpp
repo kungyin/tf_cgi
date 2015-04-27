@@ -1,24 +1,30 @@
-#include "RenderResponse.h"
+#include <QProcess>
+
+#include "RenderResponseBase.h"
 #include "AppDefine.h"
 
-QStringList RenderResponseBase::getAPIStdOut(QString apiCmd) {
+QStringList RenderResponseBase::getAPIStdOut(QString apiCmd, bool bOneLine) {
     QStringList ret;
-    char *buff;
-    size_t len = 0;
-    FILE *fd = popen(apiCmd.toLocal8Bit(), "r");
-    while((getline(&buff, &len, fd)) != -1)
-        ret << buff;
-    pclose(fd);
+    QStringList input = apiCmd.split(" ");
+    if(input.isEmpty())
+        return ret;
+
+    QString cmd = input.at(0);
+    input.removeFirst();
+
+    QProcess process;
+    process.start(cmd, input);
+    process.waitForFinished();
+    ret = QString(process.readAllStandardOutput()).split("\n");
+
+    if(bOneLine) {
+        if(!ret.isEmpty())
+            ret = ret.at(0).split(",");
+        else
+            ret = QStringList();
+    }
 
     return ret;
-}
-
-QString RenderResponseBase::getAPIStdOutOneLine(QString apiCmd) {
-    QString firstLine;
-    QStringList list = getAPIStdOut(apiCmd);
-    if(!list.isEmpty())
-        firstLine = list.at(0);
-    return firstLine;
 }
 
 bool RenderResponseBase::setNasCfg(QString title, QString key, QString value) {
@@ -84,7 +90,6 @@ bool RenderResponseBase::setNasCfg(QString title, QMap<QString, QString> &map) {
     file.close();
     return true;
 }
-
 
 QMap<QString, QString> RenderResponseBase::getNasCfg(QString title) {
     QMap<QString, QString> ret;
