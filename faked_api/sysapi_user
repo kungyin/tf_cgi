@@ -1,0 +1,11 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23	VBird	First release
+[ $2 == 'get_user_list' ] && echo -e "jerry,users" && echo -e "aaa,users"
+[ $2 == 'get_user_info' ] && echo -e "jerry,users" && echo -e "aaa,users"
+[ $2 == 'get_smb_list' ] && echo -e "Volume_1,Volume_2"
+[ $2 == 'user_add' ] && echo -e "Volume_1"
+
+

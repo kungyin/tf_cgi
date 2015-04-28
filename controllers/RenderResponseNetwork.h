@@ -1,9 +1,9 @@
 #ifndef RENDERRESPONSENETWORK_H
 #define RENDERRESPONSENETWORK_H
 
-#include "RenderResponseBase.h"
+#include "RenderResponse.h"
 
-class T_CONTROLLER_EXPORT RenderResponseNetwork : public RenderResponseBase {
+class T_CONTROLLER_EXPORT RenderResponseNetwork : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseNetwork(QVariantMap &, CGI_COMMAND);

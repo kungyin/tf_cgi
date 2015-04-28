@@ -1,9 +1,9 @@
 #ifndef RENDERRESPONSEHOME_H
 #define RENDERRESPONSEHOME_H
 
-#include "RenderResponseBase.h"
+#include "RenderResponse.h"
 
-class T_CONTROLLER_EXPORT RenderResponseHome : public RenderResponseBase {
+class T_CONTROLLER_EXPORT RenderResponseHome : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseHome(QVariantMap &, CGI_COMMAND);

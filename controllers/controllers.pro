@@ -15,15 +15,17 @@ HEADERS += applicationcontroller.h \
     CgiController.h \
     ParseCmd.h \
     CommandDefine.h \
-    RenderResponseBase.h \
     AppDefine.h \
     RenderResponseNetwork.h \
     RenderResponseHome.h \
-    RenderResponseDisk.h
+    RenderResponseDisk.h \
+    RenderResponseAccount.h \
+    RenderResponse.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
-    RenderResponseBase.cpp \
     RenderResponseNetwork.cpp \
     RenderResponseHome.cpp \
-    RenderResponseDisk.cpp
+    RenderResponseDisk.cpp \
+    RenderResponseAccount.cpp \
+    RenderResponse.cpp

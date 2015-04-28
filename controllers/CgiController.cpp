@@ -3,6 +3,7 @@
 #include "RenderResponseDisk.h"
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
+#include "RenderResponseAccount.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -33,7 +34,7 @@ void CgiController::index()
         if(cmd == CMD_NONE)
             return;
 
-        RenderResponseBase *pRrep = NULL;
+        RenderResponse *pRrep = NULL;
         pRrep = getRenderResponseBaseInstance(parasMap, cmd);
         if(!pRrep)
             return;
@@ -43,7 +44,7 @@ void CgiController::index()
             QString name = static_cast<RenderResponseHome *>(pRrep)->getUsername();
             QDateTime age = QDateTime::currentDateTime();;
             if(!name.isEmpty())
-                age = age.addSecs(31536000);
+                age = age.addSecs(31536000);    // 1 year in seconds.
 
             if(parasMap.contains("username"))
                 addCookie("uname", parasMap["username"].toByteArray(), age, "/");
@@ -88,18 +89,20 @@ void CgiController::index()
     }
 }
 
-RenderResponseBase *CgiController::getRenderResponseBaseInstance(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, CGI_COMMAND cmd)
 {
     if(cmd <= CMD_NONE)
         return NULL;
 
-    RenderResponseBase *pRrep = NULL;
+    RenderResponse *pRrep = NULL;
     if(cmd < CMD_DISK_END)
         pRrep = new RenderResponseDisk(map, cmd);
     else if(cmd < CMD_LONGIN_END)
         pRrep = new RenderResponseHome(map, cmd);
     else if(cmd < CMD_NETWORK_END)
         pRrep = new RenderResponseNetwork(map, cmd);
+    else if(cmd < CMD_ACCOUNT_END)
+        pRrep = new RenderResponseAccount(map, cmd);
 
     return pRrep;
 

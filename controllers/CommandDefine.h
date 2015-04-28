@@ -56,6 +56,31 @@ enum CGI_COMMAND {
     CMD_PORTFORWARDING_DEL,         /* cgi_portforwarding_del */
     CMD_NETWORK_END,
 
+    /**** Account ****/
+    CMD_CHANGE_ADMIN_PWD,               /* cgi_chg_admin_pw */
+    CMD_GET_USER_LIST,                  /* cgi_get_user_list */
+    CMD_GET_USER_INFO,                  /* cgi_get_user_info */
+    CMD_GET_SMB_LIST,                   /* cgi_get_smb_list */
+    CMD_USER_ADD,                       /* cgi_user_add */
+    CMD_RESTART_SERVICE,                /* cgi_restart_service */
+    CMD_USER_SET_QUOTA,                 /* cgi_user_set_quota */
+    CMD_ADDUSER_TO_SESSION,             /* cgi_adduser_to_session */
+    CMD_CREATE_FTP_LINK,                /* cgi_create_ftp_link */
+    CMD_FTP_SERVICE,                    /* cgi_ftp_service */
+    CMD_WEBDAV_ACCOUNT_MERGE,           /* Webdav_Account_merge */
+    CMD_USER_BATCH_CREATE,              /* cgi_user_batch_create */
+    CMD_GET_MODIFY_USER_INFO,           /* cgi_get_modify_user_info */
+    CMD_USER_MODIFY,                    /* cgi_user_modify */
+    CMD_USER_DEL,                       /* cgi_user_del */
+    CMD_MYFAVORITE_DEL_USER,            /* cgi_myfavorite_del_user */
+    CMD_DWONLOAD_IMPORT_SAMPLE,         /* cgi_download_import_sample */
+    CMD_GET_ALL_SESSION,                /* cgi_get_all_session */
+    CMD_GET_IMPORT_USERS,               /* cgi_get_import_uesrs */
+    CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE, /* cgi_adduser_get_user_quota_maxsize */
+    CMD_CREATE_IMPORT_USERS,            /* cgi_create_import_users */
+    CMD_GET_CREATE_STATUS,              /* cgi_get_create_status */
+    CMD_ACCOUNT_END,
+
     CMD_SIZE,
 
 };
@@ -112,6 +137,31 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_portforwarding_add",
     "cgi_portforwarding_modify",
     "cgi_portforwarding_del",
+    "",
+
+    /**** Account ****/
+    "cgi_chg_admin_pw",
+    "cgi_get_user_list",
+    "cgi_get_user_info",
+    "cgi_get_smb_list",
+    "cgi_user_add",
+    "cgi_restart_service",
+    "cgi_user_set_quota",
+    "cgi_adduser_to_session",
+    "cgi_create_ftp_link",
+    "cgi_ftp_service",
+    "Webdav_Account_merge",
+    "cgi_user_batch_create",
+    "cgi_get_modify_user_info",
+    "cgi_user_modify",
+    "cgi_user_del",
+    "cgi_myfavorite_del_user",
+    "cgi_download_import_sample",
+    "cgi_get_all_session",
+    "cgi_get_import_uesrs",
+    "cgi_adduser_get_user_quota_maxsize",
+    "cgi_create_import_users",
+    "cgi_get_create_status",
     ""
 
 };

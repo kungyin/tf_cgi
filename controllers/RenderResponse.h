@@ -1,5 +1,5 @@
-#ifndef RESPONSEBODYBASE_H
-#define RESPONSEBODYBASE_H
+#ifndef RENDERRESPONSE_H
+#define RENDERRESPONSE_H
 
 #include "applicationcontroller.h"
 #include "CommandDefine.h"
@@ -11,12 +11,12 @@ enum RENDER_TYPE {
     RENDER_TYPE_JOSEN
 };
 
-class T_CONTROLLER_EXPORT RenderResponseBase : public QObject {
+class T_CONTROLLER_EXPORT RenderResponse : public QObject {
     Q_OBJECT
 public:
 
     virtual RENDER_TYPE preRender() = 0;
-    virtual ~RenderResponseBase() {}
+    virtual ~RenderResponse() {}
 
     QDomDocument &getDoc() { return m_doc; }
     QString &getStr() { return m_str; }
@@ -39,4 +39,4 @@ private:
 
 };
 
-#endif // RESPONSEBODYBASE_H
+#endif // RENDERRESPONSE_H

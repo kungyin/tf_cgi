@@ -1,9 +1,9 @@
 #include <QProcess>
 
-#include "RenderResponseBase.h"
+#include "RenderResponse.h"
 #include "AppDefine.h"
 
-QStringList RenderResponseBase::getAPIStdOut(QString apiCmd, bool bOneLine) {
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine) {
     QStringList ret;
     QStringList input = apiCmd.split(" ");
     if(input.isEmpty())
@@ -27,7 +27,7 @@ QStringList RenderResponseBase::getAPIStdOut(QString apiCmd, bool bOneLine) {
     return ret;
 }
 
-bool RenderResponseBase::setNasCfg(QString title, QString key, QString value) {
+bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
     QString sectionTitle =  QString("[%1]").arg(title);
 
     QByteArray data;
@@ -59,7 +59,7 @@ bool RenderResponseBase::setNasCfg(QString title, QString key, QString value) {
     return true;
 }
 
-bool RenderResponseBase::setNasCfg(QString title, QMap<QString, QString> &map) {
+bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
     QString sectionTitle =  QString("[%1]").arg(title);
 
     QByteArray data;
@@ -91,7 +91,7 @@ bool RenderResponseBase::setNasCfg(QString title, QMap<QString, QString> &map) {
     return true;
 }
 
-QMap<QString, QString> RenderResponseBase::getNasCfg(QString title) {
+QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
     QMap<QString, QString> ret;
     QString sectionTitle =  QString("[%1]").arg(title);
 

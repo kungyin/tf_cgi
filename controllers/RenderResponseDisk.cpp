@@ -187,15 +187,14 @@ FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
     else if(fmtArgs.at(2).compare("ext4") == 0)
         args.fileSystemTypeArg ="F3";
 
-    args.volSizeArg = "S" + fmtArgs.at(3);
+    args.volSizeArg = "S" + fmtArgs.at(8);
     args.devNameArg = "K" + fmtArgs.at(4);
 
-    args.partition3Arg;
-    if(fmtArgs.at(6).compare("1"))
-        args.partition3Arg = "3";
+    args.createVolume = false;
+    if(fmtArgs.at(7).compare("1"))
+        args.createVolume = true;
 }
 
-/* todo */
 void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     if(!m_pMap)
         return;
@@ -223,21 +222,24 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
         QStringList paraSubList2 = paraList.mid(15, 15);
         args1 = getFMTArgs(paraSubList1);
         args2 = getFMTArgs(paraSubList2);
+        QString strArg1 =   "-" + args1.volNameArg + " " +
+                            "-" + args1.raidModeArg + " " +
+                            "-" + args1.fileSystemTypeArg + " " +
+                            "-" + args1.volSizeArg + " " +
+                            "-" + args1.devNameArg;
+
+        QString strArg2 =  args2.createVolume ?
+                            "-" + args2.volNameArg + " " +
+                            "-" + args2.raidModeArg + " " +
+                            "-" + args2.fileSystemTypeArg + " " +
+                            "-" + args2.volSizeArg + " " +
+                            "-" + args2.devNameArg
+                            : "";
 
         apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
-                                         "-" + args1.volNameArg + " " +
-                                         "-" + args1.raidModeArg + " " +
-                                         "-" + args1.fileSystemTypeArg + " " +
-                                         "-" + args1.volSizeArg + " " +
-                                         "-" + args1.devNameArg + " " +
-                                         "-" + args1.partition3Arg + " " +
-                                         "-" + args2.volNameArg + " " +
-                                         "-" + args2.raidModeArg + " " +
-                                         "-" + args2.fileSystemTypeArg + " " +
-                                         "-" + args2.volSizeArg + " " +
-                                         "-" + args2.devNameArg + " " +
-                                         "-" + args2.partition3Arg
-                                         , true
+                                         strArg1 + " " +
+                                         strArg2
+                                         ,true
                                      );
 #endif
     }

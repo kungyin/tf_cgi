@@ -5,6 +5,7 @@
 
 const QString SCRIPT_DISK_API = "sysapi_dsk";
 const QString SCRIPT_HOME_API = "sysapi_home";
+const QString SCRIPT_USER_API = "sysapi_user";
 const QString SCRIPT_DDNS_CTL = "ddnsctl";
 const QString SCRIPT_LLTD_CTL = "lltdctl";
 
