@@ -1,48 +1,48 @@
 [quota]
-enable=0
+enable = 0
 
 [samba]
-workgroup=workgroup
-netbios_name=dlink-8B21F7
-server_string=DNS-340L
-dfs_enable=0
-ads_enable=0
-ads_workgroup=0
-ads_username=0
-ads_password=0
-ads_realm=0
-ads_pwd_server=
+workgroup = workgroup
+netbios_name = dlink-8B21F7
+server_string = DNS-340L
+dfs_enable = 0
+ads_enable = 0
+ads_workgroup = 0
+ads_username = 0
+ads_password = 0
+ads_realm = 0
+ads_pwd_server =
 
 [afp]
-enable=0
+enable = 0
 
 [iso_mount]
-enable=00000
+enable = 00000
 
 [nfs]
-enable=0
+enable = 0
 
 [crond]
-list_count=3
+list_count = 3
 id_1=user.log
-id_2=stime
+id_2=:stime
 id_3=mdn
 
 [lan0]                      
 speed=0                                  
-dhcp_enable=0
-dns_manual=1
-ip=192.168.100.2
-netmask=255.255.255.0
-gateway=192.168.100.5
+dhcp_enable= 1
+dns_manual= 1
+ip= 192.168.100.202
+netmask= 255.255.255.0
+gateway= 192.168.100.54
 jumbo_enable=0                          
 jumbo_mtu=1500                          
 lan_speed=100                           
 partener_speed=100                      
-dns1=192.168.100.5
-dns2=192.168.100.5
-vlan_enable=1
-vlan_id=22
+dns1= 192.168.100.9
+dns2= 192.168.100.9
+vlan_enable= 1
+vlan_id= 22
 
 [ddns]                                   
 enable=1
@@ -54,6 +54,7 @@ timeout=2073600
 timestamp=
 ip=
 
-
+[upnp] 
+upnp_test = Not Found  
 
 

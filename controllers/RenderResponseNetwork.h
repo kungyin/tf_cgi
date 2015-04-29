@@ -27,7 +27,7 @@ private:
     void generateGetDdnsStatus(QDomDocument &);
     void generateDdns(QDomDocument &);
     void generatePortForwardingGet(QDomDocument &);
-    void generateUpnpTest(QString &);
+    void generateUpnpTest();
     void generateUpnpTestResult(QString &);
     void generatePortForwardingTotal(QString &);
     void generateGetPortTable(QDomDocument &);

@@ -51,7 +51,7 @@ bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
     }
 
     int idxToSetValue = fileData.indexOf("=", idxKey + 1) + 1;
-    fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, value);
+    fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, " " + value);
 
     file.reset();
     file.write(fileData.toUtf8());
@@ -82,7 +82,7 @@ bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
             continue;
 
         int idxToSetValue = fileData.indexOf("=", idxKey + 1) + 1;
-        fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, map.value(entry));
+        fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, " " + map.value(entry));
     }
 
     file.reset();
@@ -115,7 +115,7 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
             break;
         QStringList fields = line.split("=");
         if(fields.size() == 2)
-            ret.insert(fields.at(0), fields.at(1));
+            ret.insert(fields.at(0).trimmed(), fields.at(1).trimmed());
     }
     file.close();
     return ret;

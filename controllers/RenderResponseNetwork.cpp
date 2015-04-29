@@ -75,8 +75,8 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
         m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_TEST:
-        generateUpnpTest(str);
-        m_renderType = RENDER_TYPE_STRING;
+        generateUpnpTest();
+        m_renderType = RENDER_TYPE_UNKNOWN;
         break;
     case CMD_UPNP_TEST_RESULT:
         generateUpnpTestResult(str);
@@ -306,7 +306,7 @@ void RenderResponseNetwork::generateIP(QDomDocument &doc) {
 
         if(paraDnsManual.compare("1") == 0) {
             map.insert("dns1", paraDns1);
-            map.insert("dns2", paraDns1);
+            map.insert("dns2", paraDns2);
         }
         map.insert("dns_manual", paraDnsManual);
         map.insert("vlan_enable", paraVlanEnable);
@@ -458,14 +458,10 @@ void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
     generateGetDdns(doc);
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
     QString paraPage, paraRp, paraSortname,
             paraSortOrder, paraQuery, paraQType,
             paraField, paraUser;
-
-    QString strCheckboxEnable = "&lt;input type='checkbox' checked disabled class='scan'&gt";
-    QString strCheckboxDisable = "&lt;input type='checkbox' disabled class='scan'&gt";
 
     if(m_pMap->contains("page"))
         paraPage = m_pMap->value("page").toString();
@@ -484,159 +480,189 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
     if(m_pMap->contains("user"))
         paraUser = m_pMap->value("user").toString();
 
-    for(int i=0; i<3; i++) {
-        QDomElement root = doc.createElement("rows");
-        doc.appendChild(root);
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -L");
+
+    //apiOutList
+    /* ****** output ********
+     *
+        FTP,TCP,6990,6990,1,OK
+        FTP,UDP,6991,6991,0,ERROR
+
+     ********************** */
+
+    QString strCheckboxEnable = "&lt;input type='checkbox' checked disabled class='scan'&gt";
+    QString strCheckboxDisable = "&lt;input type='checkbox' disabled class='scan'&gt";
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    for(int i=0; i<apiOutList.size(); i++) {
+        if(apiOutList.at(i).isEmpty())
+            continue;
+        QStringList line = apiOutList.at(i).split(",");
+        if(line.size() < 6)
+            continue;
+
         QDomElement rowElement1 = doc.createElement("row");
         root.appendChild(rowElement1);
-        rowElement1.setAttribute("id", "0");
+        rowElement1.setAttribute("id", QString::number(i));
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        QDomText cellValue1 = doc.createTextNode(strCheckboxEnable);
+        QDomText cellValue1 = doc.createTextNode((line.at(4).compare("1") == 0) ?
+                                                 strCheckboxEnable : strCheckboxDisable);
         cellElement1.appendChild(cellValue1);
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
-        QDomText cellValue2 = doc.createTextNode("OK");
+        QDomText cellValue2 = doc.createTextNode(line.at(5));
         cellElement2.appendChild(cellValue2);
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        QDomText cellValue3 = doc.createTextNode("BitTorrent");
+        QDomText cellValue3 = doc.createTextNode(line.at(0));
         cellElement3.appendChild(cellValue3);
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
-        QDomText cellValue4 = doc.createTextNode("TCP");
+        QDomText cellValue4 = doc.createTextNode(line.at(1));
         cellElement4.appendChild(cellValue4);
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);
-        QDomText cellValue5 = doc.createTextNode("6882");
+        QDomText cellValue5 = doc.createTextNode(line.at(2));
         cellElement5.appendChild(cellValue5);
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);
-        QDomText cellValue6 = doc.createTextNode("6882");
+        QDomText cellValue6 = doc.createTextNode(line.at(3));
         cellElement6.appendChild(cellValue6);
     }
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOutList.size())));
 }
 
-/* todo */
-void RenderResponseNetwork::generateUpnpTest(QString &str) {
-    str = "Not Found";
+void RenderResponseNetwork::generateUpnpTest() {
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -T", true);
 }
 
-/* todo */
+
 void RenderResponseNetwork::generateUpnpTestResult(QString &str) {
-    str = "Found";
+    QMap<QString, QString> upnpInfo = getNasCfg("upnp");
+    str = upnpInfo.value("upnp_test");
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortForwardingTotal(QString &str) {
-    str = "23";
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
+    str = apiOutList.isEmpty() ? "" : apiOutList.at(0);
 }
 
-/* todo */
 void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
+
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -D");
 
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    for(int i=0; i<5; i++) {
+    for(int i=0; i<apiOutList.size(); i++) {
+        if(apiOutList.at(i).isEmpty())
+            continue;
+        QStringList line = apiOutList.at(i).split(",");
+        if(line.size() < 3)
+            continue;
+
         QDomElement portElement = doc.createElement("port");
         root.appendChild(portElement);
         QDomElement serviceElement = doc.createElement("service");
         portElement.appendChild(serviceElement);
-        QDomText serviceValue = doc.createTextNode("BitTorrent");
+        QDomText serviceValue = doc.createTextNode(line.at(0));
         serviceElement.appendChild(serviceValue);
         QDomElement protocolElement = doc.createElement("protocol");
         portElement.appendChild(protocolElement);
-        QDomText protocolValue = doc.createTextNode("TCP");
+        QDomText protocolValue = doc.createTextNode(line.at(1));
         protocolElement.appendChild(protocolValue);
         QDomElement localPortElement = doc.createElement("local_port");
         portElement.appendChild(localPortElement);
-        QDomText portValue = doc.createTextNode("6883");
+        QDomText portValue = doc.createTextNode(line.at(2));
         localPortElement.appendChild(portValue);
     }
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
-    QString paraService, paraEnable, paraProtocol,
-            paraPPort, paraEPort;
+    QString paraService = m_pMap->value("service").toString();
+    QString paraEnable = m_pMap->value("enable").toString();
+    QString paraProtocol = m_pMap->value("protocol").toString();
+    QString paraPPort = m_pMap->value("p_port").toString();
+    QString paraEPort = m_pMap->value("e_port").toString();
+    if(paraService.isEmpty() || paraEnable.isEmpty()
+            || paraProtocol.isEmpty() || paraPPort.isEmpty()
+            || paraEPort.isEmpty()) {
+        tDebug("service: %s", paraService.toLocal8Bit().data());
+        str = "error";
+        return;
+    }
 
-    if(m_pMap->contains("service"))
-        paraService = m_pMap->value("service").toString();
-    if(m_pMap->contains("enable"))
-        paraEnable = m_pMap->value("enable").toString();
-    if(m_pMap->contains("protocol"))
-        paraProtocol = m_pMap->value("protocol").toString();
-    if(m_pMap->contains("p_port"))
-        paraPPort = m_pMap->value("p_port").toString();
-    if(m_pMap->contains("e_port"))
-        paraEPort = m_pMap->value("e_port").toString();
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -a -p " + paraProtocol +
+                                                                        " -e " + paraEPort +
+                                                                        " -i " + paraPPort +
+                                                                        " -s " + paraService +
+                                                                        " -b " + paraEnable
+                                                                        , true);
 
-    str = "error";
+    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
+    if(str.compare("ok1") == 0 || str.compare("OK") == 0)
+        str = "ok1";
+    else
+        str = "error";
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
-    QString paraService, paraEnable, paraProtocol,
-            paraPPort, paraEPort;
-
-    if(m_pMap->contains("enable"))
-        paraEnable = m_pMap->value("enable").toString();
-    if(m_pMap->contains("protocol"))
-        paraProtocol = m_pMap->value("protocol").toString();
-    if(m_pMap->contains("p_port"))
-        paraPPort = m_pMap->value("p_port").toString();
-    if(m_pMap->contains("e_port"))
-        paraEPort = m_pMap->value("e_port").toString();
-    if(m_pMap->contains("service"))
-        paraService = m_pMap->value("service").toString();
-
-    str = "OK1";
+    generatePortFrowardingAddScan(str);
+    str = str.compare("ok1") == 0 ? "OK1" : "ERROR1";
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
-    QString paraService, paraEnable, paraProtocol,
-            paraPPort, paraEPort, paraScan,
-            paraOldEPort;
 
-    if(m_pMap->contains("enable"))
-        paraEnable = m_pMap->value("enable").toString();
-    if(m_pMap->contains("protocol"))
-        paraProtocol = m_pMap->value("protocol").toString();
-    if(m_pMap->contains("p_port"))
-        paraPPort = m_pMap->value("p_port").toString();
-    if(m_pMap->contains("e_port"))
-        paraEPort = m_pMap->value("e_port").toString();
-    if(m_pMap->contains("service"))
-        paraService = m_pMap->value("service").toString();
-    if(m_pMap->contains("scan"))
-        paraScan = m_pMap->value("scan").toString();
-    if(m_pMap->contains("old_e_port"))
-        paraOldEPort = m_pMap->value("old_e_port").toString();
+    QString paraEnable = m_pMap->value("enable").toString();
+    QString paraProtocol = m_pMap->value("protocol").toString();
+    QString paraPPort = m_pMap->value("p_port").toString();
+    QString paraEPort = m_pMap->value("e_port").toString();
+    QString paraService = m_pMap->value("service").toString();
+    QString paraScan = m_pMap->value("scan").toString();
+    QString paraOldEPort = m_pMap->value("old_e_port").toString();
 
-    str = "OK1";
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -m -p " + paraProtocol +
+                                                                        " -e " + paraEPort +
+                                                                        " -i " + paraPPort +
+                                                                        " -s " + paraService +
+                                                                        " -b " + paraEnable +
+                                                                        " -o " + paraOldEPort
+                                                                        , true);
+    str = apiOutList.isEmpty() ? "ERROR1" : apiOutList.at(0);
+    if(str.compare("OK1") == 0 || str.compare("OK") == 0)
+        str = "OK1";
+    else
+        str = "ERROR1";
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
-    QString paraService, paraProtocol,
-            paraPPort, paraEPort, paraScan;
 
-    if(m_pMap->contains("protocol"))
-        paraProtocol = m_pMap->value("protocol").toString();
-    if(m_pMap->contains("p_port"))
-        paraPPort = m_pMap->value("p_port").toString();
-    if(m_pMap->contains("e_port"))
-        paraEPort = m_pMap->value("e_port").toString();
-    if(m_pMap->contains("service"))
-        paraService = m_pMap->value("service").toString();
-    if(m_pMap->contains("scan"))
-        paraScan = m_pMap->value("scan").toString();
+    QString paraProtocol = m_pMap->value("protocol").toString();
+    QString paraPPort = m_pMap->value("p_port").toString();
+    QString paraEPort = m_pMap->value("e_port").toString();
+    QString paraService = m_pMap->value("service").toString();
+    QString paraScan = m_pMap->value("scan").toString();
 
-    str = "ok";
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -d -p " + paraProtocol +
+                                                                        " -e " + paraEPort +
+                                                                        " -i " + paraPPort +
+                                                                        " -s " + paraService
+                                                                        , true);
+    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
+    if(str.compare("OK") == 0 || str.compare("ok") == 0)
+        str = "ok";
+    else
+        str = "error";
 }
