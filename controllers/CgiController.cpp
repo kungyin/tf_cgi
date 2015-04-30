@@ -4,6 +4,7 @@
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
 #include "RenderResponseAccount.h"
+#include "RenderResponseGroup.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -103,6 +104,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, C
         pRrep = new RenderResponseNetwork(map, cmd);
     else if(cmd < CMD_ACCOUNT_END)
         pRrep = new RenderResponseAccount(map, cmd);
+    else if(cmd < CMD_GROUP_END)
+        pRrep = new RenderResponseGroup(map, cmd);
 
     return pRrep;
 

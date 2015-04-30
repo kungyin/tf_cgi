@@ -1,0 +1,14 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == '-L' ] && echo -e "FTP,TCP,6990,6990,1,OK" && echo -e "FTP,UDP,6991,6991,0,ERROR"
+[ $1 == '-T' ] && echo -e "Not Found"
+[ $1 == '-C' ] && echo -e "23"
+[ $1 == '-D' ] && echo -e "BitTorrent,TCP,6881" && echo -e "FTP,TCP,21" && echo -e "aMule,TCP,4662"
+[ $1 == '-a' ] && echo -e "OK"
+[ $1 == '-m' ] && echo -e "OK"
+[ $1 == '-d' ] && echo -e "OK"
+

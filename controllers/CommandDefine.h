@@ -81,7 +81,19 @@ enum CGI_COMMAND {
     CMD_GET_CREATE_STATUS,              /* cgi_get_create_status */
     CMD_ACCOUNT_END,
 
-    CMD_SIZE,
+    /**** Group ****/
+    CMD_GET_GROUP_LIST,                     /* cgi_get_group_list */
+    CMD_GET_GROUP_INFO,                     /* cgi_get_group_info */
+    CMD_GROUP_ADD,                          /* cgi_group_add */
+    CMD_ADDGROUP_GET_GROUP_QUOTA_MINSIZE,   /* cgi_addgroup_get_group_quota_minsize */
+    CMD_GROUP_SET_QUOTA,                    /* cgi_group_set_quota */
+    CMD_GET_MODIFY_GROUP_INFO,              /* cgi_get_modify_group_info */
+    //CMD_WEBDAV_ACCOUNT_MERGE,               /* Webdav_Account_merge */
+    CMD_GROUP_MODIFY,                       /* cgi_group_modify */
+    CMD_GROUP_DEL,                          /* cgi_group_del */
+    CMD_GROUP_END,
+
+    CMD_SIZE
 
 };
 
@@ -162,6 +174,18 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_adduser_get_user_quota_maxsize",
     "cgi_create_import_users",
     "cgi_get_create_status",
+    "",
+
+    /**** Group ****/
+    "cgi_get_group_list",
+    "cgi_get_group_info",
+    "cgi_group_add",
+    "cgi_addgroup_get_group_quota_minsize",
+    "cgi_group_set_quota",
+    "cgi_get_modify_group_info",
+    //"Webdav_Account_merge",
+    "cgi_group_modify",
+    "cgi_group_del",
     ""
 
 };

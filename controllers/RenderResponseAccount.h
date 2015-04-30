@@ -25,6 +25,17 @@ private:
     void generateCreateFtpLink();
     void generateFtpService();
     void generateWebdavAccountMerge(QDomDocument &);
+    void generateUserBatchCreate();
+    void generateGetModifyUserInfo(QDomDocument &);
+    void generateUserModify(QDomDocument &);
+    void generateUserDel();
+    void generateMyFavDelUser(QDomDocument &);
+    void generateDownloadImportSample();
+    void generateGetAllSession(QDomDocument &);
+    void generateGetImportUsers(QDomDocument &);
+    void generateAddUserGetUserQuotaMaxsize(QDomDocument &);
+    void generateCreateImportUsers();
+    void generateCreateStatus(QDomDocument &);
 };
 
 #endif // RENDERRESPONSEACCOUNT_H
