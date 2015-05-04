@@ -79,7 +79,6 @@ enum CGI_COMMAND {
     CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE, /* cgi_adduser_get_user_quota_maxsize */
     CMD_CREATE_IMPORT_USERS,            /* cgi_create_import_users */
     CMD_GET_CREATE_STATUS,              /* cgi_get_create_status */
-    CMD_ACCOUNT_END,
 
     /**** Group ****/
     CMD_GET_GROUP_LIST,                     /* cgi_get_group_list */
@@ -91,7 +90,16 @@ enum CGI_COMMAND {
     //CMD_WEBDAV_ACCOUNT_MERGE,               /* Webdav_Account_merge */
     CMD_GROUP_MODIFY,                       /* cgi_group_modify */
     CMD_GROUP_DEL,                          /* cgi_group_del */
-    CMD_GROUP_END,
+
+    /**** Quota ****/
+    CMD_GET_QUOTA_INFO,                     /* cgi_get_quota_info */
+    CMD_GET_HD_MAPPING_INFO,                /* cgi_get_HD_Mapping_Info */
+    CMD_GET_USER_QUOTA_LIST,                /* cgi_get_user_quota_list */
+    CMD_GET_GROUP_QUOTA_LIST,               /* cgi_get_group_quota_list */
+    CMD_GET_USER_QUOTA_MAXSIZE,             /* cgi_get_user_quota_maxsize */
+    CMD_GET_GROUP_QUOTA_MINSIZE,            /* cgi_get_group_quota_minsize */
+    CMD_SET_QUOTA_ONOFF,                    /* cgi_set_quota_onoff */
+    CMD_ACCOUNT_END,
 
     CMD_SIZE
 
@@ -174,7 +182,6 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_adduser_get_user_quota_maxsize",
     "cgi_create_import_users",
     "cgi_get_create_status",
-    "",
 
     /**** Group ****/
     "cgi_get_group_list",
@@ -186,6 +193,15 @@ const char CGI_PARA_COMMANDS[][255] = {
     //"Webdav_Account_merge",
     "cgi_group_modify",
     "cgi_group_del",
+
+    /**** Quota ****/
+    "cgi_get_quota_info",
+    "cgi_get_HD_Mapping_Info",
+    "cgi_get_user_quota_list",
+    "cgi_get_group_quota_list",
+    "cgi_get_user_quota_maxsize",
+    "cgi_get_group_quota_minsize",
+    "cgi_set_quota_onoff",
     ""
 
 };

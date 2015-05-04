@@ -1,10 +1,10 @@
+#include "AppDefine.h"
 #include "CgiController.h"
 #include "ParseCmd.h"
 #include "RenderResponseDisk.h"
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
 #include "RenderResponseAccount.h"
-#include "RenderResponseGroup.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -15,7 +15,7 @@ CgiController::CgiController(const CgiController &other)
 void CgiController::index()
 {
 
-#ifdef SIMULATOR_MODE
+#ifndef SIMULATOR_MODE
     if(!httpRequest().header().path().startsWith("/cgi-bin/login_mgr.cgi")) {
         //std::string user = my_cookie.value();
         if(httpRequest().cookie("username").isEmpty()) {
@@ -104,8 +104,6 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, C
         pRrep = new RenderResponseNetwork(map, cmd);
     else if(cmd < CMD_ACCOUNT_END)
         pRrep = new RenderResponseAccount(map, cmd);
-    else if(cmd < CMD_GROUP_END)
-        pRrep = new RenderResponseGroup(map, cmd);
 
     return pRrep;
 

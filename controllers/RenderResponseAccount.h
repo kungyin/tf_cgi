@@ -7,7 +7,6 @@ class T_CONTROLLER_EXPORT RenderResponseAccount : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseAccount(QVariantMap &, CGI_COMMAND);
-    RenderResponseAccount(const RenderResponseAccount &other) {}
     virtual ~RenderResponseAccount();
 
     virtual RENDER_TYPE preRender();
@@ -36,6 +35,24 @@ private:
     void generateAddUserGetUserQuotaMaxsize(QDomDocument &);
     void generateCreateImportUsers();
     void generateCreateStatus(QDomDocument &);
+
+    void generateGetGroupList(QDomDocument &);
+    void generateGetGroupInfo(QDomDocument &);
+    void generateGroupAdd();
+    void generateAddGroupGetGroupQuotaMinsize(QDomDocument &);
+    void generateGroupSetQuota();
+    void generateGetModifyGroupInfo(QDomDocument &);
+    void generateGroupModify();
+    void generateGroupDel();
+
+    void generateGetQuotaInfo(QDomDocument &);
+    void generateGetHDMappingInfo(QDomDocument &);
+    void generateGetUserQuotaList(QDomDocument &);
+    void generateGetGroupQuotaList(QDomDocument &);
+    void generateGetUserQuotaMaxSize(QDomDocument &);
+    void generateGetGroupQuotaMinSize(QDomDocument &);
+    void generateSetQuotaOnOff();
+
 };
 
 #endif // RENDERRESPONSEACCOUNT_H

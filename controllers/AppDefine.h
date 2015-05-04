@@ -1,6 +1,8 @@
 #ifndef APPDEFINE_H
 #define APPDEFINE_H
 
+#include <QString>
+
 //#define SIMULATOR_MODE
 
 const QString SCRIPT_DISK_API = "sysapi_dsk";
@@ -9,6 +11,7 @@ const QString SCRIPT_USER_API = "sysapi_user";
 const QString SCRIPT_DDNS_CTL = "ddnsctl";
 const QString SCRIPT_LLTD_CTL = "lltdctl";
 const QString SCRIPT_UPNP_CTL = "upnpctl";
+const QString SCRIPT_USER_MGR = "ccUsermgr";
 
 #ifndef SIMULATOR_MODE
 

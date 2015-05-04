@@ -7,7 +7,6 @@ class T_CONTROLLER_EXPORT RenderResponseHome : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseHome(QVariantMap &, CGI_COMMAND);
-    RenderResponseHome(const RenderResponseHome &other) {}
     virtual ~RenderResponseHome();
 
     virtual RENDER_TYPE preRender();

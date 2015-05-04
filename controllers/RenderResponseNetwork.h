@@ -7,7 +7,6 @@ class T_CONTROLLER_EXPORT RenderResponseNetwork : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseNetwork(QVariantMap &, CGI_COMMAND);
-    RenderResponseNetwork(const RenderResponseNetwork &other) {}
     virtual ~RenderResponseNetwork();
 
     virtual RENDER_TYPE preRender();

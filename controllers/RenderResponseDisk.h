@@ -38,7 +38,6 @@ class T_CONTROLLER_EXPORT RenderResponseDisk : public RenderResponse {
     Q_OBJECT
 public:
     RenderResponseDisk(QVariantMap &, CGI_COMMAND);
-    RenderResponseDisk(const RenderResponseDisk &other) {}
     virtual ~RenderResponseDisk();
 
     virtual RENDER_TYPE preRender();
