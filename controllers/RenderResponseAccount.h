@@ -53,6 +53,15 @@ private:
     void generateGetGroupQuotaMinSize(QDomDocument &);
     void generateSetQuotaOnOff();
 
+    void generateModuleGetInfo(QDomDocument &);
+    void generateGetAdsInfo(QDomDocument &);
+    void generateGetSession(QDomDocument &);
+    void generateGetIsoShare(QDomDocument &);
+    void generateGetAfpInfo(QDomDocument &);
+    void generateGetNfsInfo(QDomDocument &);
+    void generateIsoPrecentage(QString &);
+    void generateUserList(QDomDocument &);
+
 };
 
 #endif // RENDERRESPONSEACCOUNT_H

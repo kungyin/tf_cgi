@@ -5,6 +5,7 @@
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
 #include "RenderResponseAccount.h"
+#include "RenderResponseAppMngm.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -23,7 +24,7 @@ void CgiController::index()
             return;
         }
     }
-#endif
+#endif   
 
     QVariantMap parasMap = httpRequest().allParameters();
     if(parasMap.contains(CGI_PARA_CMD_NAME)) {
@@ -72,6 +73,9 @@ void CgiController::index()
 
         /* render */
         switch(type) {
+        case RENDER_TYPE_NULL:
+            renderErrorResponse(Tf::OK);
+            break;
         case RENDER_TYPE_STRING:
             renderText(pRrep->getStr());
             break;
@@ -104,6 +108,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, C
         pRrep = new RenderResponseNetwork(map, cmd);
     else if(cmd < CMD_ACCOUNT_END)
         pRrep = new RenderResponseAccount(map, cmd);
+    else if(cmd < CMD_APP_MNGM_END)
+        pRrep = new RenderResponseAppMngm(map, cmd);
 
     return pRrep;
 

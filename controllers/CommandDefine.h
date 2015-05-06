@@ -99,7 +99,40 @@ enum CGI_COMMAND {
     CMD_GET_USER_QUOTA_MAXSIZE,             /* cgi_get_user_quota_maxsize */
     CMD_GET_GROUP_QUOTA_MINSIZE,            /* cgi_get_group_quota_minsize */
     CMD_SET_QUOTA_ONOFF,                    /* cgi_set_quota_onoff */
+
+    /**** Network Share ****/
+    CMD_MODULE_GET_INFO,                    /* Module_Get_Info */
+    CMD_GET_ADS_INFO,                       /* cgi_get_ads_info */
+    CMD_GET_SESSION,                        /* cgi_get_session */
+    CMD_GET_ISO_SHARE,                      /* cgi_get_iso_share */
+    //CMD_GET_HD_MAPPING_INFO,                /* cgi_get_HD_Mapping_Info */
+    CMD_GET_AFP_INFO,                       /* cgi_get_afp_info */
+    CMD_GET_NFS_INFO,                       /* cgi_get_nfs_info */
+    CMD_ISO_PERCENTAGE,                     /* cgi_iso_percentage */
+    CMD_CLEAR_ISO_CREATE,                   /* cgi_clear_iso_create */
+    CMD_USER_LIST,                          /* cgi_user_list */
+    CMD_GROUP_LIST,                         /* cgi_group_list */
+    //CMD_GET_ALL_SESSION,                    /* cgi_get_all_session */
+    CMD_GET_ALL_ISO_SHARE,                  /* cgi_get_all_iso_share */
+    CMD_OPEN_TREE,                          /* cgi_open_tree */
+    CMD_OPEN_NEW_FOLDER,                    /* cgi_open_new_folder */
+    //CMD_FTP_SERVICE,                        /* cgi_ftp_service */
+    CMD_ADD_SESSION,                        /* cgi_add_session */
+    CMD_SET_NFS_SHARE,                      /* cgi_set_nfs_share */
+    //CMD_RESTART_SERVICE,                    /* cgi_restart_service */
+    CMD_GET_MODIFY_SESSION,                 /* cgi_get_modify_session */
+    CMD_MODIFY_SESSION,                     /* cgi_modify_session */
+    CMD_MODIFY_NFS_SHARE,                   /* cgi_modify_nfs_share */
+    CMD_WEBDAV_ACCOUNT_ADD,                 /* Webdav_Account_add */
+    CMD_DEL_SESSION,                        /* cgi_del_session */
+    CMD_ACCOUNT_DEL,                        /* Webdav_Account_Del */
+    CMD_RESET_SESSION,                      /* cgi_reset_session */
     CMD_ACCOUNT_END,
+
+    /**** Application Management ****/
+    CMD_SET_AFP,                            /* cgi_set_afp */
+    CMD_NFS_ENABLE,                         /* cgi_nfs_enable */
+    CMD_APP_MNGM_END,
 
     CMD_SIZE
 
@@ -202,6 +235,39 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_user_quota_maxsize",
     "cgi_get_group_quota_minsize",
     "cgi_set_quota_onoff",
+
+    /**** Network Share ****/
+    "Module_Get_Info",
+    "cgi_get_ads_info",
+    "cgi_get_session",
+    "cgi_get_iso_share",
+    //"cgi_get_HD_Mapping_Info",
+    "cgi_get_afp_info",
+    "cgi_get_nfs_info",
+    "cgi_iso_percentage",
+    "cgi_clear_iso_create",
+    "cgi_user_list",
+    "cgi_group_list",
+    //"cgi_get_all_session",
+    "cgi_get_all_iso_share",
+    "cgi_open_tree",
+    "cgi_open_new_folder",
+    //"cgi_ftp_service",
+    "cgi_add_session",
+    "cgi_set_nfs_share",
+    //"cgi_restart_service",
+    "cgi_get_modify_session",
+    "cgi_modify_session",
+    "cgi_modify_nfs_share",
+    "Webdav_Account_add",
+    "cgi_del_session",
+    "Webdav_Account_Del",
+    "cgi_reset_session",
+    "",
+
+    /**** Application Management ****/
+    "cgi_set_afp",
+    "cgi_nfs_enable",
     ""
 
 };

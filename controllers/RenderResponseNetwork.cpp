@@ -43,16 +43,16 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
         m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SETIP_LOCK:
-        generateSetIPLock(doc);
-        m_renderType = RENDER_TYPE_XML;
+        generateSetIPLock();
+        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_IP:
-        generateIP(doc);
-        m_renderType = RENDER_TYPE_UNKNOWN;
+        generateIP();
+        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_SPEED:
-        generateSpeed(doc);
-        m_renderType = RENDER_TYPE_UNKNOWN;
+        generateSpeed();
+        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_LLTD:
         generateLLTD(doc);
@@ -76,7 +76,7 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
         break;
     case CMD_UPNP_TEST:
         generateUpnpTest();
-        m_renderType = RENDER_TYPE_UNKNOWN;
+        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_UPNP_TEST_RESULT:
         generateUpnpTestResult(str);
@@ -261,7 +261,7 @@ void RenderResponseNetwork::generateLanXml2(QDomDocument &doc) {
 }
 
 /* todo */
-void RenderResponseNetwork::generateSetIPLock(QDomDocument &doc) {
+void RenderResponseNetwork::generateSetIPLock() {
 
     QString paraLan;
 
@@ -269,7 +269,7 @@ void RenderResponseNetwork::generateSetIPLock(QDomDocument &doc) {
         paraLan = m_pMap->value("lan").toString();
 }
 
-void RenderResponseNetwork::generateIP(QDomDocument &doc) {
+void RenderResponseNetwork::generateIP() {
 
     QString paraDhcpEnable, paraIP, paraGateway,
             paraNetmask, paraDns1, paraDns2,
@@ -323,7 +323,7 @@ void RenderResponseNetwork::generateIP(QDomDocument &doc) {
     }
 }
 
-void RenderResponseNetwork::generateSpeed(QDomDocument &doc) {
+void RenderResponseNetwork::generateSpeed() {
     QString paraSpeed;
 
     if(m_pMap->contains("lan0"))
