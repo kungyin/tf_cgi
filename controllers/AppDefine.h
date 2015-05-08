@@ -13,6 +13,7 @@ const QString SCRIPT_LLTD_CTL = "lltdctl";
 const QString SCRIPT_UPNP_CTL = "upnpctl";
 const QString SCRIPT_USER_MGR = "ccUsermgr";
 const QString SCRIPT_GET_IP = "GetIP";
+const QString SCRIPT_QUOTA_MGR = "quotamgr";
 
 #ifndef SIMULATOR_MODE
 

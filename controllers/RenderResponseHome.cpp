@@ -26,7 +26,11 @@ RENDER_TYPE RenderResponseHome::preRender() {
         generateIsBuildInLanguage(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
-    case CMD_CGI_GET_USER_LANGUAGE:
+    case CMD_SET_USER_LANGUAGE:
+        generateSetUserLanguage(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_GET_USER_LANGUAGE:
         generateGetUserLanguage(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
@@ -71,13 +75,23 @@ void RenderResponseHome::generateIsBuildInLanguage(QDomDocument &doc) {
     root.appendChild(doc.createTextNode(val.isEmpty() ? "" : val.at(0)));
 }
 
+void RenderResponseHome::generateSetUserLanguage(QDomDocument &doc) {
+    QString paraLang = m_pMap->value("language").toString();
+    QString ret = setNasCfg("web", "language", paraLang) ? "1" : "0";
+
+    QDomElement root = doc.createElement("status");
+    doc.appendChild(root);
+    root.appendChild(doc.createTextNode(ret));
+}
+
 void RenderResponseHome::generateGetUserLanguage(QDomDocument &doc) {
+
+    QMap<QString, QString> webInfo = getNasCfg("web");
+    QString ret = webInfo.value("language").isEmpty() ? "" : QString("%1,%1.xml").arg(webInfo.value("language"));
+
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);
-
-    QStringList val = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g cgi_get_user_language", true);
-
-    root.appendChild(doc.createTextNode(val.isEmpty() ? "" : val.at(0)));
+    root.appendChild(doc.createTextNode(ret));
 }
 
 void RenderResponseHome::generateGetSslInfo(QDomDocument &doc) {

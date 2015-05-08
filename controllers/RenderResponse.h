@@ -30,7 +30,7 @@ public:
 
 protected:
 
-    QStringList getAPIStdOut(QString, bool bOneLine = false);
+    QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",");
     bool setNasCfg(QString, QString, QString);
     bool setNasCfg(QString, QMap<QString, QString> &);
     QMap<QString, QString> getNasCfg(QString);

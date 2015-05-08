@@ -1,3 +1,6 @@
+[web]
+language = TW
+
 [quota]
 enable = 0
 

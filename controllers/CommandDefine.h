@@ -24,12 +24,13 @@ enum CGI_COMMAND {
 
     /**** Home Page ****/
     CMD_CGI_IS_BUILD_IN_LANGUAGE,   /* cgi_is_build_in_language */
-    CMD_CGI_GET_USER_LANGUAGE,      /* cgi_get_user_language */
+    CMD_GET_USER_LANGUAGE,          /* cgi_get_user_language */
     CMD_CGI_GET_SSL_INFO,           /* cgi_get_ssl_info */
     CMD_UI_CHECK_WTO,               /* ui_check_wto */
     CMD_FW_STATUS,                  /* cgi_get_fw_status */
     CMD_LOGIN,                      /* login */
     CMD_LOGOUT,                     /* logout */
+    CMD_SET_USER_LANGUAGE,          /* cgi_set_user_language */
     CMD_LONGIN_END,
 
     /**** Network ****/
@@ -170,6 +171,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_fw_status",
     "login",
     "logout",
+    "cgi_set_user_language",
     "",
 
     /**** Network ****/

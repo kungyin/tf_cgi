@@ -406,7 +406,6 @@ void RenderResponseAccount::generateRestartService() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateUserSetQuota() {
     QString paraName = m_pMap->value("name").toString();
     QString paraAva1 = m_pMap->value("available1").toString();
@@ -414,7 +413,14 @@ void RenderResponseAccount::generateUserSetQuota() {
     QString paraAva3 = m_pMap->value("available3").toString();
     QString paraAva4 = m_pMap->value("available4").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userset " + paraName + " 1 " + paraAva1, true);
+    if(paraAva2.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userset " + paraName + " 2 " + paraAva2, true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userset " + paraName + " 3 " + paraAva3, true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userset " + paraName + " 4 " + paraAva4, true);
 }
 
 /* todo: need API */
@@ -734,14 +740,20 @@ void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize(QDomDocument &d
     minSizeElement.appendChild(doc.createTextNode("102400:0:0:0"));
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateGroupSetQuota() {
     QString paraName = m_pMap->value("name").toString();
     QString paraAva1 = m_pMap->value("available1").toString();
     QString paraAva2 = m_pMap->value("available2").toString();
     QString paraAva3 = m_pMap->value("available3").toString();
     QString paraAva4 = m_pMap->value("available4").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupset " + paraName + " 1 " + paraAva1, true);
+    if(paraAva2.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupset " + paraName + " 2 " + paraAva2, true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupset " + paraName + " 3 " + paraAva3, true);
+    if(paraAva1.compare("null") != 0)
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupset " + paraName + " 4 " + paraAva4, true);
 }
 
 /* todo: need API */
@@ -821,50 +833,61 @@ void RenderResponseAccount::generateGroupDel() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateGetQuotaInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " quotainfo", true, ";");
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
 
     QDomElement hddNumElement = doc.createElement("hddnum");
     root.appendChild(hddNumElement);
-    hddNumElement.appendChild(doc.createTextNode("2"));
+    hddNumElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement hddSizeElement = doc.createElement("hddsize");
     root.appendChild(hddSizeElement);
-    hddSizeElement.appendChild(doc.createTextNode("2814059,1875257"));
+    hddSizeElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement userNumElement = doc.createElement("usernum");
     root.appendChild(userNumElement);
-    userNumElement.appendChild(doc.createTextNode("2"));
+    userNumElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement groupNumElement = doc.createElement("groupnum");
     root.appendChild(groupNumElement);
-    groupNumElement.appendChild(doc.createTextNode("1"));
+    groupNumElement.appendChild(doc.createTextNode(apiOut.value(3)));
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
+    enableElement.appendChild(doc.createTextNode(apiOut.value(4)));
     QDomElement vnameElement = doc.createElement("v_name");
     root.appendChild(vnameElement);
-    vnameElement.appendChild(doc.createTextNode("Volume_1:Volume_2"));
+    vnameElement.appendChild(doc.createTextNode(apiOut.value(5)));
 }
 
-/* todo: need API */
+
 void RenderResponseAccount::generateGetHDMappingInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " remoteinfo", true, ";");
 
     QDomElement root = doc.createElement("mapping_info");
     doc.appendChild(root);
 
-    //for
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
-    QDomElement dataElement = doc.createElement("data");
-    root.appendChild(dataElement);
-    dataElement.appendChild(doc.createTextNode("Volume_1:/mnt/HD/HD_a2"));
-
+    for(auto e : apiOut) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        QDomElement dataElement = doc.createElement("data");
+        itemElement.appendChild(dataElement);
+        dataElement.appendChild(doc.createTextNode(e));
+    }
 }
 
-/* todo: need API */
+bool RenderResponseAccount::isQuotaNumber(QString str) {
+
+    if(str.isEmpty() || str.compare("Unlimited") == 0 || str.compare("-") == 0)
+        return false;
+
+    bool ok = false;
+    str.toInt(&ok);
+    if(!ok)
+        return false;
+
+    return true;
+}
+
 void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
     QString paraPage = m_pMap->value("page").toString();
     QString paraRp = m_pMap->value("rp").toString();
@@ -873,63 +896,59 @@ void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
     QString paraField = m_pMap->value("f_field").toString();
     QString paraUser = m_pMap->value("user").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userlist", false, ";");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    for(int i=0; i < apiOut.size(); i++) {
+        QStringList data = apiOut.at(i).split(";");
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("test"));
+        cellElement1.appendChild(doc.createTextNode(data.value(0)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("0 MB"));
+        cellElement2.appendChild(doc.createTextNode(isQuotaNumber(data.value(1)) ? data.value(1) + " MB" : data.value(1)));
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode("Unlimited"));
+        cellElement3.appendChild(doc.createTextNode(isQuotaNumber(data.value(2)) ? data.value(2) + " MB" : data.value(2)));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode("0 MB"));
+        cellElement4.appendChild(doc.createTextNode(isQuotaNumber(data.value(3)) ? data.value(3) + " MB" : data.value(3)));
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode("Unlimited"));
+        cellElement5.appendChild(doc.createTextNode(isQuotaNumber(data.value(4)) ? data.value(4) + " MB" : data.value(4)));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode("-"));
+        cellElement6.appendChild(doc.createTextNode(isQuotaNumber(data.value(5)) ? data.value(5) + " MB" : data.value(5)));
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode("-"));
+        cellElement7.appendChild(doc.createTextNode(isQuotaNumber(data.value(6)) ? data.value(6) + " MB" : data.value(6)));
         QDomElement cellElement8 = doc.createElement("cell");
         rowElement.appendChild(cellElement8);
-        cellElement8.appendChild(doc.createTextNode("-"));
+        cellElement8.appendChild(doc.createTextNode(isQuotaNumber(data.value(7)) ? data.value(7) + " MB" : data.value(7)));
         QDomElement cellElement9 = doc.createElement("cell");
         rowElement.appendChild(cellElement9);
-        cellElement9.appendChild(doc.createTextNode("-"));
+        cellElement9.appendChild(doc.createTextNode(isQuotaNumber(data.value(8)) ? data.value(8) + " MB" : data.value(8)));
 
-        rowElement.setAttribute("id", "1");
-    //}
+        rowElement.setAttribute("id", QString::number(i+1));
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("1"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
     QString paraPage = m_pMap->value("page").toString();
     QString paraRp = m_pMap->value("rp").toString();
@@ -938,51 +957,48 @@ void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
     QString paraField = m_pMap->value("f_field").toString();
     QString paraUser = m_pMap->value("user").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " grouplist", false, ";");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    for(int i=0; i < apiOut.size(); i++) {
+        QStringList data = apiOut.at(i).split(";");
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("staff"));
+        cellElement1.appendChild(doc.createTextNode(data.value(0)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("0 MB"));
+        cellElement2.appendChild(doc.createTextNode(isQuotaNumber(data.value(1)) ? data.value(1) + " MB" : data.value(1)));
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode("100 MB"));
+        cellElement3.appendChild(doc.createTextNode(isQuotaNumber(data.value(2)) ? data.value(2) + " MB" : data.value(2)));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode("0 MB"));
+        cellElement4.appendChild(doc.createTextNode(isQuotaNumber(data.value(3)) ? data.value(3) + " MB" : data.value(3)));
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode("Unlimited"));
+        cellElement5.appendChild(doc.createTextNode(isQuotaNumber(data.value(4)) ? data.value(4) + " MB" : data.value(4)));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode("-"));
+        cellElement6.appendChild(doc.createTextNode(isQuotaNumber(data.value(5)) ? data.value(5) + " MB" : data.value(5)));
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode("-"));
+        cellElement7.appendChild(doc.createTextNode(isQuotaNumber(data.value(6)) ? data.value(6) + " MB" : data.value(6)));
         QDomElement cellElement8 = doc.createElement("cell");
         rowElement.appendChild(cellElement8);
-        cellElement8.appendChild(doc.createTextNode("-"));
+        cellElement8.appendChild(doc.createTextNode(isQuotaNumber(data.value(7)) ? data.value(7) + " MB" : data.value(7)));
         QDomElement cellElement9 = doc.createElement("cell");
         rowElement.appendChild(cellElement9);
-        cellElement9.appendChild(doc.createTextNode("-"));
+        cellElement9.appendChild(doc.createTextNode(isQuotaNumber(data.value(8)) ? data.value(8) + " MB" : data.value(8)));
 
-        rowElement.setAttribute("id", "1");
-    //}
+        rowElement.setAttribute("id", QString::number(i+1));
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
@@ -990,45 +1006,41 @@ void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("1"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateGetUserQuotaMaxSize(QDomDocument &doc) {
     QString paraName = m_pMap->value("name").toString();
     QString paraHdd = m_pMap->value("hdd").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " usersize " + paraName + " " + paraHdd, true);
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
     QDomElement maxSizeElement = doc.createElement("max_size");
     root.appendChild(maxSizeElement);
-    maxSizeElement.appendChild(doc.createTextNode("102400"));
+    maxSizeElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateGetGroupQuotaMinSize(QDomDocument &doc) {
     QString paraName = m_pMap->value("name").toString();
     QString paraHdd = m_pMap->value("hdd").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupsize " + paraName + " " + paraHdd, true);
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
     QDomElement maxSizeElement = doc.createElement("max_size");
-    //min_size??
     root.appendChild(maxSizeElement);
-    maxSizeElement.appendChild(doc.createTextNode("102400"));
+    maxSizeElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo: need API */
 void RenderResponseAccount::generateSetQuotaOnOff() {
     QString paraOnoff = m_pMap->value("onoff").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " enable " + paraOnoff, true);
 }
 

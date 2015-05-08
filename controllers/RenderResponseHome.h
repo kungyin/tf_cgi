@@ -17,6 +17,7 @@ public:
 private:
 
     void generateIsBuildInLanguage(QDomDocument &);
+    void generateSetUserLanguage(QDomDocument &);
     void generateGetUserLanguage(QDomDocument &);
     void generateGetSslInfo(QDomDocument &);
     void generateUICheckWto(QString &);

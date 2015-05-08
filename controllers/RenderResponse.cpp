@@ -3,7 +3,7 @@
 #include "RenderResponse.h"
 #include "AppDefine.h"
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine) {
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar) {
     QStringList ret;
     QStringList input = apiCmd.split(" ");
     if(input.isEmpty())
@@ -19,9 +19,13 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine) {
 
     if(bOneLine) {
         if(!ret.isEmpty())
-            ret = ret.at(0).split(",");
+            ret = ret.at(0).split(splitChar);
         else
             ret = QStringList();
+    }
+    else {
+        if(ret.last().isEmpty())
+            ret.removeLast();
     }
 
     return ret;

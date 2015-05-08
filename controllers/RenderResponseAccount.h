@@ -12,6 +12,7 @@ public:
     virtual RENDER_TYPE preRender();
 
 private:
+    bool isQuotaNumber(QString);
 
     void generateChangeAdminPwd(QDomDocument &);
     void generateGetUserList(QDomDocument &);
