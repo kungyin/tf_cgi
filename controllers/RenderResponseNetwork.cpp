@@ -241,9 +241,6 @@ void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
     QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
 
-    if(lan0Info.isEmpty() || lan1Info.isEmpty())
-        return;
-
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement speed1 = doc.createElement("lan1_speed");
@@ -257,17 +254,17 @@ void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
 }
 
 void RenderResponseNetwork::generateLanXml2(QDomDocument &doc) {
-    QMap<QString, QString> lan0Info = getNasCfg("lan0");
+    //QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
 
-    if(lan0Info.isEmpty() || lan1Info.isEmpty())
-        return;
+    /* Get IP before changing */
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_GET_IP + " 0", true);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement ip1 = doc.createElement("ip1");
     root.appendChild(ip1);
-    QDomText value1 = doc.createTextNode(lan0Info.value("ip"));
+    QDomText value1 = doc.createTextNode(apiOutList.value(0));
     ip1.appendChild(value1);
     QDomElement ip2 = doc.createElement("ip2");
     root.appendChild(ip2);

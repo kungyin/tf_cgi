@@ -12,6 +12,7 @@ const QString SCRIPT_DDNS_CTL = "ddnsctl";
 const QString SCRIPT_LLTD_CTL = "lltdctl";
 const QString SCRIPT_UPNP_CTL = "upnpctl";
 const QString SCRIPT_USER_MGR = "ccUsermgr";
+const QString SCRIPT_GET_IP = "GetIP";
 
 #ifndef SIMULATOR_MODE
 

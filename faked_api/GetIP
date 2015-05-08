@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23	VBird	First release
+[ $1 == '0' ] && echo -e "192.168.0.3"
+
+
