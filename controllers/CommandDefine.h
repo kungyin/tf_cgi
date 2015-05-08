@@ -99,6 +99,7 @@ enum CGI_COMMAND {
     CMD_GET_USER_QUOTA_MAXSIZE,             /* cgi_get_user_quota_maxsize */
     CMD_GET_GROUP_QUOTA_MINSIZE,            /* cgi_get_group_quota_minsize */
     CMD_SET_QUOTA_ONOFF,                    /* cgi_set_quota_onoff */
+    CMD_ACCOUNT_END,
 
     /**** Network Share ****/
     CMD_MODULE_GET_INFO,                    /* Module_Get_Info */
@@ -125,9 +126,12 @@ enum CGI_COMMAND {
     CMD_MODIFY_NFS_SHARE,                   /* cgi_modify_nfs_share */
     CMD_WEBDAV_ACCOUNT_ADD,                 /* Webdav_Account_add */
     CMD_DEL_SESSION,                        /* cgi_del_session */
-    CMD_ACCOUNT_DEL,                        /* Webdav_Account_Del */
+    CMD_WEBDAV_ACCOUNT_DEL,                 /* Webdav_Account_Del */
     CMD_RESET_SESSION,                      /* cgi_reset_session */
-    CMD_ACCOUNT_END,
+    CMD_GET_SHARE_INFO,                     /* cgi_get_share_info */
+    CMD_GET_FTP,                            /* cgi_get_ftp */
+    CMD_WEBDAV_ACCOUNT_INFO,                /* Webdav_Account_Info */
+    CMD_NETSHARE_END,
 
     /**** Application Management ****/
     CMD_SET_AFP,                            /* cgi_set_afp */
@@ -235,6 +239,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_user_quota_maxsize",
     "cgi_get_group_quota_minsize",
     "cgi_set_quota_onoff",
+    "",
 
     /**** Network Share ****/
     "Module_Get_Info",
@@ -263,6 +268,9 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_del_session",
     "Webdav_Account_Del",
     "cgi_reset_session",
+    "cgi_get_share_info",
+    "cgi_get_ftp",
+    "Webdav_Account_Info",
     "",
 
     /**** Application Management ****/

@@ -19,7 +19,7 @@ const QString API_PATH = "/usr/local/modules/api/";
 const QString SCRIPT_DISK_MANAGER = "diskmgr";
 
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
-const QString NETWORK_SCRIPT = "network";
+const QString NETWORK_SCRIPT = API_PATH + "network";
 
 #else
 

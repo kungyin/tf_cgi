@@ -5,6 +5,7 @@
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
 #include "RenderResponseAccount.h"
+#include "RenderResponseNetShare.h"
 #include "RenderResponseAppMngm.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
@@ -85,6 +86,10 @@ void CgiController::index()
         case RENDER_TYPE_JOSEN:
             // todo: renderJson();
             break;
+        case RENDER_TYPE_HTML:
+            //render("index");
+            renderText(pRrep->getStr());
+            break;
         default:
             break;
         }
@@ -108,6 +113,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, C
         pRrep = new RenderResponseNetwork(map, cmd);
     else if(cmd < CMD_ACCOUNT_END)
         pRrep = new RenderResponseAccount(map, cmd);
+    else if(cmd < CMD_NETSHARE_END)
+        pRrep = new RenderResponseNetShare(map, cmd);
     else if(cmd < CMD_APP_MNGM_END)
         pRrep = new RenderResponseAppMngm(map, cmd);
 

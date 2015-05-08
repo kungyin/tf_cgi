@@ -31,16 +31,32 @@ id_3=mdn
 [lan0]                      
 speed=0                                  
 dhcp_enable= 1
-dns_manual= 1
+dns_manual= 0
 ip= 192.168.100.202
 netmask= 255.255.255.0
-gateway= 192.168.100.54
+gateway= 192.168.100.5
 jumbo_enable=0                          
 jumbo_mtu=1500                          
 lan_speed=100                           
 partener_speed=100                      
 dns1= 192.168.100.9
 dns2= 192.168.100.9
+vlan_enable= 1
+vlan_id= 22
+
+[lan1]
+speed=0
+dhcp_enable= 1
+dns_manual= 1
+ip= 192.168.100.188
+netmask= 255.255.255.0
+gateway= 192.168.100.54
+jumbo_enable=0
+jumbo_mtu=1500
+lan_speed=100
+partener_speed=100
+dns1= 192.168.100.8
+dns2= 192.168.100.8
 vlan_enable= 1
 vlan_id= 22
 
@@ -56,5 +72,20 @@ ip=
 
 [upnp] 
 upnp_test = Not Found  
+
+
+
+timeout=2073600  
+timestamp=
+ip=
+
+[upnp] 
+upnp_test = Not Found  
+
+
+  
+
+
+
 
 

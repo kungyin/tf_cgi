@@ -10,8 +10,13 @@ enum RENDER_TYPE {
     RENDER_TYPE_STRING,
     RENDER_TYPE_XML,
     RENDER_TYPE_JOSEN,
-    RENDER_TYPE_FILE
+    RENDER_TYPE_FILE,
+    RENDER_TYPE_HTML
 };
+
+//const int CGI_COMMANDS[][2] = {
+//    {2,  3}
+//};
 
 class T_CONTROLLER_EXPORT RenderResponse : public QObject {
     Q_OBJECT

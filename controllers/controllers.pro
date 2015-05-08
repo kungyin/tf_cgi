@@ -21,7 +21,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseDisk.h \
     RenderResponseAccount.h \
     RenderResponse.h \
-    RenderResponseAppMngm.h
+    RenderResponseAppMngm.h \
+    RenderResponseNetShare.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -30,4 +31,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseDisk.cpp \
     RenderResponseAccount.cpp \
     RenderResponse.cpp \
-    RenderResponseAppMngm.cpp
+    RenderResponseAppMngm.cpp \
+    RenderResponseNetShare.cpp

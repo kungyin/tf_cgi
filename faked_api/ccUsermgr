@@ -3,4 +3,4 @@
 #       This program shows "Hello World!" in your screen.
 # History:
 # 2005/08/23    VBird   First release
-echo -e "1"
+[ $1 == 'userlist' ] && echo -e "abc" && echo -e "def,workgroup"
