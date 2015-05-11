@@ -153,8 +153,7 @@ void RenderResponseNetwork::generateLanXml(QDomDocument &doc) {
     QVector<QMap<QString, QString>> lanInfo;
     if(lan0Info.isEmpty() || lan1Info.isEmpty())
         return;
-    lanInfo.push_back(lan0Info);
-    lanInfo.push_back(lan1Info);
+    lanInfo << lan0Info << lan1Info;
 
     for(auto e : lanInfo) {
         QDomElement lanElement = doc.createElement("lan");

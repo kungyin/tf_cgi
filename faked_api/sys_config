@@ -17,13 +17,13 @@ ads_realm = 0
 ads_pwd_server =
 
 [afp]
-enable = 0
+enable = 1
 
 [iso_mount]
 enable = 00000
 
 [nfs]
-enable = 0
+enable = 1
 
 [crond]
 list_count = 3
@@ -75,20 +75,4 @@ ip=
 
 [upnp] 
 upnp_test = Not Found  
-
-
-
-timeout=2073600  
-timestamp=
-ip=
-
-[upnp] 
-upnp_test = Not Found  
-
-
-  
-
-
-
-
 

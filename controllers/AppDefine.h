@@ -14,6 +14,8 @@ const QString SCRIPT_UPNP_CTL = "upnpctl";
 const QString SCRIPT_USER_MGR = "ccUsermgr";
 const QString SCRIPT_GET_IP = "GetIP";
 const QString SCRIPT_QUOTA_MGR = "quotamgr";
+const QString SCRIPT_AFP_API = "sysapi_afp";
+const QString SCRIPT_NFS_API = "sysapi_nfs";
 
 #ifndef SIMULATOR_MODE
 

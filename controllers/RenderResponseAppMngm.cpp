@@ -41,18 +41,19 @@ RENDER_TYPE RenderResponseAppMngm::preRender() {
 
 void RenderResponseAppMngm::generateSetAfp() {
     QString paraAfp = m_pMap->value("afp").toString();
-
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " admin " + paraOldPwd  + " " + paraPwd, true);
+    if(setNasCfg("afp", "enable", paraAfp))
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_AFP_API, true);
 }
 
 void RenderResponseAppMngm::generateNfsEnable(QDomDocument &doc) {
     QString paraNfsStatus = m_pMap->value("nfs_status").toString();
-
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " admin " + paraOldPwd  + " " + paraPwd, true);
+    QStringList apiOut;
+    if(setNasCfg("nfs", "enable", paraNfsStatus))
+        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
+    statusElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : apiOut.value(0)));
 }

@@ -24,7 +24,7 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
             ret = QStringList();
     }
     else {
-        if(ret.last().isEmpty())
+        while(!ret.isEmpty() && ret.last().isEmpty())
             ret.removeLast();
     }
 
