@@ -137,6 +137,27 @@ enum CGI_COMMAND {
     /**** Application Management ****/
     CMD_SET_AFP,                            /* cgi_set_afp */
     CMD_NFS_ENABLE,                         /* cgi_nfs_enable */
+
+    /**** Multimedia Services ****/
+    CMD_CHK_DB,                             /* cgi_chk_db */
+    CMD_UPNP_AV_SERVER_PATH_LIST,           /* UPnP_AV_Server_Path_List */
+    CMD_UPNP_AV_SERVER_GET_CONFIG,          /* UPnP_AV_Server_Get_Config */
+    CMD_UPNP_AV_SERVER,                     /* UPnP_AV_Server */
+    CMD_UPNP_AV_SERVER_GET_SQLDB_STATE,     /* UPnP_AV_Server_Get_SQLDB_State */
+    CMD_GUI_CODEPAGE_GET_LIST,              /* GUI_codepage_get_list */
+    CMD_ITUNES_SERVER_GET_XML,              /* iTunes_Server_Get_XML */
+    CMD_ITUNES_SERVER_READY,                /* iTunes_Server_Ready */
+    CMD_AV_SERVER_CHECK_PATH,               /* UPnP_AV_Server_Check_Path */
+    CMD_AV_SERVER_PATH_SETTING,             /* UPnP_AV_Server_Path_Setting */
+    CMD_SQLDB_STOP_FINISH,                  /* CGI_SQLDB_Stop_Finish */
+    CMD_UPNP_AV_SERVER_PRESCAN,             /* UPnP_AV_Server_Prescan */
+    CMD_UPNP_AV_SERVER_PATH_DEL,            /* UPnP_AV_Server_Path_Del */
+    CMD_UPNP_AV_SERVER_SETTING,             /* UPnP_AV_Server_Setting */
+    CMD_GUI_CODEPAGE_ADD,                   /* GUI_codepage_add */
+    CMD_ITUNES_SERVER_SETTING,              /* iTunes_Server_Setting */
+    CMD_ITUNES_SERVER_CHECK_PS,             /* iTunes_Server_Check_PS */
+    CMD_ITUNES_SERVER_REFRESH,              /* iTunes_Server_Refresh */
+    CMD_ITUNES_SERVER_REFRESH_STATE,        /* iTunes_Server_Refresh_State */
     CMD_APP_MNGM_END,
 
     CMD_SIZE
@@ -278,7 +299,28 @@ const char CGI_PARA_COMMANDS[][255] = {
     /**** Application Management ****/
     "cgi_set_afp",
     "cgi_nfs_enable",
-    ""
+
+    /**** Multimedia Services ****/
+    "cgi_chk_db",
+    "UPnP_AV_Server_Path_List",
+    "UPnP_AV_Server_Get_Config",
+    "UPnP_AV_Server",
+    "UPnP_AV_Server_Get_SQLDB_State",
+    "GUI_codepage_get_list",
+    "iTunes_Server_Get_XML",
+    "iTunes_Server_Ready",
+    "UPnP_AV_Server_Check_Path",
+    "UPnP_AV_Server_Path_Setting",
+    "CGI_SQLDB_Stop_Finish",
+    "UPnP_AV_Server_Prescan",
+    "UPnP_AV_Server_Path_Del",
+    "UPnP_AV_Server_Setting",
+    "GUI_codepage_add",
+    "iTunes_Server_Setting",
+    "iTunes_Server_Check_PS",
+    "iTunes_Server_Refresh",
+    "iTunes_Server_Refresh_State",
+    "",
 
 };
 

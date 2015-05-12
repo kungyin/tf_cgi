@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $2 == 'codepage' ] && echo -e "UTF-8,Unicode 8bit" && echo -e "ISO-8859-1,Western European" && echo -e "CP865,MS-DOS Northern European"
+

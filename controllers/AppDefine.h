@@ -16,6 +16,7 @@ const QString SCRIPT_GET_IP = "GetIP";
 const QString SCRIPT_QUOTA_MGR = "quotamgr";
 const QString SCRIPT_AFP_API = "sysapi_afp";
 const QString SCRIPT_NFS_API = "sysapi_nfs";
+const QString SCRIPT_FTP_API = "appapi_ftp";
 
 #ifndef SIMULATOR_MODE
 
