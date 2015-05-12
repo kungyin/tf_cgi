@@ -160,6 +160,14 @@ enum CGI_COMMAND {
     CMD_ITUNES_SERVER_REFRESH_STATE,        /* iTunes_Server_Refresh_State */
     CMD_APP_MNGM_END,
 
+    /**** System Management ****/
+    CMD_GET_TIME,                           /* cgi_get_time */
+    CMD_MANUAL_TIME,                        /* cgi_manual_time */
+    CMD_TIMEZONE,                           /* cgi_timezone */
+    CMD_NTP_TIME,                           /* cgi_ntp_time */
+    CMD_GET_TIME_STATUS,                    /* cgi_get_time_status */
+    CMD_SYS_MNGM_END,
+
     CMD_SIZE
 
 };
@@ -321,6 +329,14 @@ const char CGI_PARA_COMMANDS[][255] = {
     "iTunes_Server_Refresh",
     "iTunes_Server_Refresh_State",
     "",
+
+    /**** System Management ****/
+    "cgi_get_time",
+    "cgi_manual_time",
+    "cgi_timezone",
+    "cgi_ntp_time",
+    "cgi_get_time_status",
+    ""
 
 };
 
