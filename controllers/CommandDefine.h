@@ -166,6 +166,9 @@ enum CGI_COMMAND {
     CMD_TIMEZONE,                           /* cgi_timezone */
     CMD_NTP_TIME,                           /* cgi_ntp_time */
     CMD_GET_TIME_STATUS,                    /* cgi_get_time_status */
+
+    CMD_GET_DEVICE_INFO,                    /* cgi_get_device_info */
+    CMD_DEVICE,                             /* cgi_device */
     CMD_SYS_MNGM_END,
 
     CMD_SIZE
@@ -336,6 +339,9 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_timezone",
     "cgi_ntp_time",
     "cgi_get_time_status",
+
+    "cgi_get_device_info",
+    "cgi_device",
     ""
 
 };

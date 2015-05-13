@@ -42,6 +42,14 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
         generateGetTimeStatus(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
+    case CMD_GET_DEVICE_INFO:
+        generateGetDeviceInfo(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_DEVICE:
+        generateDevice();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
     case CMD_NONE:
     default:
         break;
@@ -131,4 +139,29 @@ void RenderResponseSysMngm::generateGetTimeStatus(QDomDocument &doc) {
     QDomElement updateTimeElement = doc.createElement("update_time");
     root.appendChild(updateTimeElement);
     updateTimeElement.appendChild(doc.createTextNode(""));
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetDeviceInfo(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("device_info");
+    doc.appendChild(root);
+    QDomElement nameElement = doc.createElement("name");
+    root.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode("dlink-8B21F7"));
+    QDomElement workgroupElement = doc.createElement("workgroup");
+    root.appendChild(workgroupElement);
+    workgroupElement.appendChild(doc.createTextNode("workgroup"));
+    QDomElement descriptionElement = doc.createElement("description");
+    root.appendChild(descriptionElement);
+    descriptionElement.appendChild(doc.createTextNode("DNS-340L"));
+}
+
+/* todo */
+void RenderResponseSysMngm::generateDevice() {
+    QString paraHostname = m_pMap->value("hostname").toString();
+    QString paraWorkgroup = m_pMap->value("workgroup").toString();
+    QString paraDescription = m_pMap->value("description").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 }

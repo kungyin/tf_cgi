@@ -18,6 +18,9 @@ private:
     void generateTimezone();
     void generateNtpTime();
     void generateGetTimeStatus(QDomDocument &);
+    void generateGetDeviceInfo(QDomDocument &);
+    void generateDevice();
+
 };
 
 
