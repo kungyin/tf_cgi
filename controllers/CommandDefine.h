@@ -158,6 +158,17 @@ enum CGI_COMMAND {
     CMD_ITUNES_SERVER_CHECK_PS,             /* iTunes_Server_Check_PS */
     CMD_ITUNES_SERVER_REFRESH,              /* iTunes_Server_Refresh */
     CMD_ITUNES_SERVER_REFRESH_STATE,        /* iTunes_Server_Refresh_State */
+
+    /**** Syslog Server ****/
+    CMD_SYSLOG_SEARCH,                      /* Syslog_Search */
+    CMD_GET_VOLUME_INFO,                    /* Get_Volume_Info */
+    CMD_SYSLOG_GET_LOG_FILE_OPTION,         /* Syslog_Get_Log_File_Option */
+    CMD_SYSLOG_GET_CONFIG,                  /* Syslog_Get_Config */
+    CMD_SYSLOG_GET_SELECT_OPTION,           /* Syslog_Get_Select_Option */
+    CMD_SYSLOG_SET_CONFIG,                  /* Syslog_Set_Config */
+    CMD_SYSLOG_EXPORT,                      /* Syslog_Export */
+    CMD_SYSLOG_GET_EXPORT_STATUS,           /* Syslog_Get_Export_Status */
+    CMD_SYSLOG_CLEAR,                       /* Syslog_Clear */
     CMD_APP_MNGM_END,
 
     /**** System Management ****/
@@ -331,6 +342,18 @@ const char CGI_PARA_COMMANDS[][255] = {
     "iTunes_Server_Check_PS",
     "iTunes_Server_Refresh",
     "iTunes_Server_Refresh_State",
+
+
+    /**** Syslog Server ****/
+    "Syslog_Search",
+    "Get_Volume_Info",
+    "Syslog_Get_Log_File_Option",
+    "Syslog_Get_Config",
+    "Syslog_Get_Select_Option",
+    "Syslog_Set_Config",
+    "Syslog_Export",
+    "Syslog_Get_Export_Status",
+    "Syslog_Clear",
     "",
 
     /**** System Management ****/

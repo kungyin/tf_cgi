@@ -1,6 +1,8 @@
 #include "RenderResponseNetShare.h"
 #include "AppDefine.h"
 
+#include <QDir>
+
 RenderResponseNetShare::RenderResponseNetShare(QVariantMap &map, CGI_COMMAND cmd)
 {
     m_cmd = cmd;

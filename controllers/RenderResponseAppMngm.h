@@ -35,6 +35,16 @@ private:
     void generateItunesServerRefresh(QDomDocument &);
     void generateItunesServerRefreshState(QDomDocument &);
 
+    void generateSyslogSearch(QDomDocument &);
+    void generateGetVolumeInfo(QDomDocument &);
+    void generateSyslogGetLogFileOption(QDomDocument &);
+    void generateSyslogGetConfig(QDomDocument &);
+    void generateSyslogGetSelectOption(QDomDocument &);
+    void generateSyslogSetConfig(QString &);
+    void generateSyslogExport();
+    void generateSyslogGetExportStatus(QDomDocument &);
+    void generateSyslogClear();
+
 };
 
 
