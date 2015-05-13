@@ -21,6 +21,18 @@ private:
     void generateGetDeviceInfo(QDomDocument &);
     void generateDevice();
 
+    void generateDetectDangerous(QDomDocument &);
+    void generateGetIdle(QString &);
+    void generateGetTemperature(QDomDocument &);
+    void generateGetRestoreStatus(QString &);
+    void generateRestart(QString &);
+    void generateRestore(QString &);
+    void generateShutdown();
+    void generateIdle();
+    void generateTemperature();
+    void generateBackupConf();
+    void generateRestoreConf(QString &);
+
 };
 
 

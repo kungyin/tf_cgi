@@ -50,6 +50,50 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
         generateDevice();
         m_renderType = RENDER_TYPE_NULL;
         break;
+    case CMD_DETECT_DANGEROUS:
+        generateDetectDangerous(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_GET_IDEL:
+        generateGetIdle(str);
+        m_renderType = RENDER_TYPE_STRING;
+        break;
+    case CMD_GET_TEMPERATURE:
+        generateGetTemperature(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_GET_RESTORE_STATUS:
+        generateGetRestoreStatus(str);
+        m_renderType = RENDER_TYPE_STRING;
+        break;
+    case CMD_RESTART:
+        generateRestart(str);
+        m_renderType = RENDER_TYPE_REDIRECT;
+        break;
+    case CMD_RESTORE:
+        generateRestore(str);
+        m_renderType = RENDER_TYPE_REDIRECT;
+        break;
+    case CMD_SHUTDOWN:
+        generateShutdown();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_IDLE:
+        generateIdle();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_TEMPERATURE:
+        generateTemperature();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_BACKUP_CONF:
+        generateBackupConf();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_RESTORE_CONF:
+        generateRestoreConf(str);
+        m_renderType = RENDER_TYPE_STRING;
+        break;
     case CMD_NONE:
     default:
         break;
@@ -164,4 +208,90 @@ void RenderResponseSysMngm::generateDevice() {
     QString paraWorkgroup = m_pMap->value("workgroup").toString();
     QString paraDescription = m_pMap->value("description").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateDetectDangerous(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetIdle(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    str = "30";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetTemperature(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("mail_info");
+    doc.appendChild(root);
+    QDomElement kotElement = doc.createElement("kot");
+    root.appendChild(kotElement);
+    kotElement.appendChild(doc.createTextNode("F"));
+    QDomElement temperatureElement = doc.createElement("temperature");
+    root.appendChild(temperatureElement);
+    temperatureElement.appendChild(doc.createTextNode("167"));
+
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetRestoreStatus(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    str = "0";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateRestart(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    str = "/web/dsk_mgr/wait.html";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateRestore(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    str = "/web/dsk_mgr/wait.html";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateShutdown() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateIdle() {
+    QString paraIdle = m_pMap->value("f_idle").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateTemperature() {
+    QString paraTemperature = m_pMap->value("f_temperature").toString();
+    QString paraKoc = m_pMap->value("f_koc").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateBackupConf() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    // Parse file
+}
+
+/* todo */
+void RenderResponseSysMngm::generateRestoreConf(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    //sendfile()
+    str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
 }

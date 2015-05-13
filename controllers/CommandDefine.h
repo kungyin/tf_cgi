@@ -180,6 +180,18 @@ enum CGI_COMMAND {
 
     CMD_GET_DEVICE_INFO,                    /* cgi_get_device_info */
     CMD_DEVICE,                             /* cgi_device */
+
+    CMD_DETECT_DANGEROUS,                   /* cgi_Detect_Dangerous */
+    CMD_GET_IDEL,                           /* cgi_get_idle */
+    CMD_GET_TEMPERATURE,                    /* cgi_get_temperature */
+    CMD_GET_RESTORE_STATUS,                 /* cgi_get_restore_status */
+    CMD_RESTART,                            /* cgi_restart */
+    CMD_RESTORE,                            /* cgi_restore */
+    CMD_SHUTDOWN,                           /* cgi_shutdown */
+    CMD_IDLE,                               /* cgi_idle */
+    CMD_TEMPERATURE,                        /* cgi_temperature */
+    CMD_BACKUP_CONF,                        /* cgi_backup_conf */
+    CMD_RESTORE_CONF,                       /* cgi_restore_conf */
     CMD_SYS_MNGM_END,
 
     CMD_SIZE
@@ -365,6 +377,18 @@ const char CGI_PARA_COMMANDS[][255] = {
 
     "cgi_get_device_info",
     "cgi_device",
+
+    "cgi_Detect_Dangerous",
+    "cgi_get_idle",
+    "cgi_get_temperature",
+    "cgi_get_restore_status",
+    "cgi_restart",
+    "cgi_restore",
+    "cgi_shutdown",
+    "cgi_idle",
+    "cgi_temperature",
+    "cgi_backup_conf",
+    "cgi_restore_conf",
     ""
 
 };
