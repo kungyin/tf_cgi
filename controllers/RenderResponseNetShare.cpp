@@ -472,7 +472,6 @@ void RenderResponseNetShare::generateGetAllIsoShare(QDomDocument &doc) {
     totalElement.appendChild(doc.createTextNode("0"));
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateOpenTree(QString &str) {
     QString paraDir = m_pMap->value("dir").toString();
     QString paraShowFile = m_pMap->value("show_file").toString();
@@ -481,18 +480,43 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
     QString paraFuncId = m_pMap->value("function_id").toString();
     QString paraFilterFile = m_pMap->value("filter_file").toString();
     QString paraRootPath = m_pMap->value("root_path").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
-    QString cssClass = "    <li class=\"directory collapsed\">\n            <input type='checkbox' \
-            name='folder_name' value=\"%1\" src=\"%2\" rel=\"%3\">\n            \
-            <a href=\"#\" rel=\"%4\">%5</a>\n    </li>\n";
-    QString mainFrame = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n%1</ul>\n";
+    QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n\
+                            %1\
+                         </ul>";
+    QString cssLiClass = "<li class=\"directory collapsed%1\">\n\
+                         %2%3\
+                         </li>\n";
+    QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\"  src=\"%2\" rel=\"%2\">\n";
+    QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
 
-    QString class1 = cssClass.arg("/mnt/HD/HD_a2/444").arg("444").arg("444").arg("/mnt/HD/HD_a2/444/").arg("444");
-    str = mainFrame.arg(class1);
+    QDir dir(paraDir.replace("%2F", "/"));
+    QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
+    if(paraShowFile.compare("1") == 0)
+        filters |= QDir::AllEntries;
+    QFileInfoList fileList= dir.entryInfoList(filters);
+
+    QString content;
+    for(QFileInfo e : fileList) {
+        QString fileName = e.fileName();
+        if(e.absoluteFilePath().compare("/mnt/HD/HD_a2") == 0)
+            fileName = "Volume_1";
+        if(e.absoluteFilePath().compare("/mnt/HD/HD_b2") == 0)
+            fileName = "Volume_2";
+        QString line1 = (paraChkFlag.compare("1") == 0) ? checkboxLine.arg(e.absoluteFilePath()).arg(fileName) : QString::null;
+        QString line2 = hrefLine.arg(e.absoluteFilePath()).arg(fileName);
+        content += cssLiClass.arg("").arg(line1).arg(line2);
+    }
+
+    /* If it was not rooted path, we can add folder. */
+    if(dir.absolutePath().compare("/mnt/HD") != 0) {
+        QString line2 = hrefLine.arg(dir.absolutePath() + "/new/").arg("New");
+        content += cssLiClass.arg(" add").arg("").arg(line2);
+    }
+
+    str = cssUlClass.arg(content);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
     QString paraDir = m_pMap->value("dir").toString();
     QString paraFileName = m_pMap->value("filename").toString();
@@ -502,14 +526,16 @@ void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
     QString paraFuncId = m_pMap->value("function_id").toString();
     QString paraFilterFile = m_pMap->value("filter_file").toString();
     QString paraRootPath = m_pMap->value("root_path").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDir dir(paraDir.replace("%2F", "/"));
+    QString ret = dir.mkdir(paraFileName) ? "ok" : "error";
 
     QDomElement root = doc.createElement("mkdir");
     doc.appendChild(root);
 
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("ok"));
+    statusElement.appendChild(doc.createTextNode(ret));
 }
 
 /* todo: need API */

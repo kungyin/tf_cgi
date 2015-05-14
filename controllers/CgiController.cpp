@@ -87,9 +87,15 @@ void CgiController::index()
         case RENDER_TYPE_JOSEN:
             // todo: renderJson();
             break;
+        case RENDER_TYPE_FILE:
+            //sendFile("a.txt", "text/plain");
+            break;
         case RENDER_TYPE_HTML:
             //render("index");
             renderText(pRrep->getStr());
+            break;
+        case RENDER_TYPE_REDIRECT:
+            redirect(QUrl(pRrep->getStr()));
             break;
         default:
             break;
