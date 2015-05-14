@@ -33,6 +33,13 @@ private:
     void generateBackupConf();
     void generateRestoreConf(QString &);
 
+    void generateLogSystem(QString &);
+    void generateGetLogInfo(QDomDocument &);
+    void generateLogServer();
+    void generateSendLogTest();
+    void generateLogBackup(QString &);
+    void generateLogClear();
+
 };
 
 

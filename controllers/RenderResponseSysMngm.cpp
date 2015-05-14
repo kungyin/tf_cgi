@@ -94,6 +94,30 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
         generateRestoreConf(str);
         m_renderType = RENDER_TYPE_STRING;
         break;
+    case CMD_LOG_SYSTEM:
+        generateLogSystem(str);
+        m_renderType = RENDER_TYPE_STRING;
+        break;
+    case CMD_GET_LOG_INFO:
+        generateGetLogInfo(doc);
+        m_renderType = RENDER_TYPE_XML;
+        break;
+    case CMD_LOG_SERVER:
+        generateLogServer();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_SEND_LOG_TEST:
+        generateSendLogTest();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
+    case CMD_LOG_BACKUP:
+        generateLogBackup(str);
+        m_renderType = RENDER_TYPE_FILE;
+        break;
+    case CMD_LOG_CLEAR:
+        generateLogClear();
+        m_renderType = RENDER_TYPE_NULL;
+        break;
     case CMD_NONE:
     default:
         break;
@@ -294,4 +318,61 @@ void RenderResponseSysMngm::generateRestoreConf(QString &str) {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
     //sendfile()
     str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateLogSystem(QString &str) {
+    QString paraPage = m_pMap->value("page").toString();
+    QString paraRp = m_pMap->value("rp").toString();
+    QString paraSortname = m_pMap->value("sortname").toString();
+    QString paraSortorder = m_pMap->value("sortorder").toString();
+    QString paraQuery = m_pMap->value("query").toString();
+    QString paraQType = m_pMap->value("qtype").toString();
+    QString paraField = m_pMap->value("f_field").toString();
+    QString paraUser = m_pMap->value("user").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "{\"rows\":[],\"total\":\"0\",\"page\":\"1\"}";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetLogInfo(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("log");
+    doc.appendChild(root);
+    QDomElement enableElement = doc.createElement("enable");
+    root.appendChild(enableElement);
+    enableElement.appendChild(doc.createTextNode("0"));
+    QDomElement ipElement = doc.createElement("ip");
+    root.appendChild(ipElement);
+    ipElement.appendChild(doc.createTextNode(""));
+    QDomElement portElement = doc.createElement("port");
+    root.appendChild(portElement);
+    portElement.appendChild(doc.createTextNode("514"));
+}
+
+/* todo */
+void RenderResponseSysMngm::generateLogServer() {
+    QString paraEnable = m_pMap->value("f_enable").toString();
+    QString paraIp = m_pMap->value("f_ip").toString();
+    QString paraPort = m_pMap->value("f_port").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateSendLogTest() {
+    QString paraIp = m_pMap->value("f_ip").toString();
+    QString paraPort = m_pMap->value("f_port").toString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+}
+
+/* todo */
+void RenderResponseSysMngm::generateLogBackup(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    //sendFile();
+}
+
+/* todo */
+void RenderResponseSysMngm::generateLogClear() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 }

@@ -192,6 +192,13 @@ enum CGI_COMMAND {
     CMD_TEMPERATURE,                        /* cgi_temperature */
     CMD_BACKUP_CONF,                        /* cgi_backup_conf */
     CMD_RESTORE_CONF,                       /* cgi_restore_conf */
+
+    CMD_LOG_SYSTEM,                         /* cgi_log_system */
+    CMD_GET_LOG_INFO,                       /* cgi_get_log_info */
+    CMD_LOG_SERVER,                         /* cgi_log_server */
+    CMD_SEND_LOG_TEST,                      /* cgi_send_log_test */
+    CMD_LOG_BACKUP,                         /* cgi_log_backup */
+    CMD_LOG_CLEAR,                          /* cgi_log_clear */
     CMD_SYS_MNGM_END,
 
     CMD_SIZE
@@ -389,6 +396,13 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_temperature",
     "cgi_backup_conf",
     "cgi_restore_conf",
+
+    "cgi_log_system",
+    "cgi_get_log_info",
+    "cgi_log_server",
+    "cgi_send_log_test",
+    "cgi_log_backup",
+    "cgi_log_clear",
     ""
 
 };
