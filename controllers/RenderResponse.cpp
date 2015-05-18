@@ -6,6 +6,8 @@
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar) {
     QStringList ret;
     QStringList input = apiCmd.split(" ");
+
+    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s", apiCmd.toLocal8Bit().data());
     if(input.isEmpty())
         return ret;
 
@@ -15,7 +17,9 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     QProcess process;
     process.start(cmd, input);
     process.waitForFinished();
-    ret = QString(process.readAllStandardOutput()).split("\n");
+    QString allOut = QString(process.readAllStandardOutput());
+    ret = allOut.split("\n");
+    tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
 
     if(bOneLine) {
         if(!ret.isEmpty())

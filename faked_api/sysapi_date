@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == 'get' ] && echo -e "34;1;time.stdtime.gov.tw;2015;5;12;0;3;24"
+[ $1 == 'set' ] && echo -e "0"

@@ -129,8 +129,8 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
     return m_renderType;
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
 
     QDateTime currentTime = QDateTime::currentDateTime();
 
@@ -138,13 +138,13 @@ void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement timezoneElement = doc.createElement("timezone");
     root.appendChild(timezoneElement);
-    timezoneElement.appendChild(doc.createTextNode("34"));
+    timezoneElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement ntpEnableElement = doc.createElement("ntp_enable");
     root.appendChild(ntpEnableElement);
-    ntpEnableElement.appendChild(doc.createTextNode("0"));
+    ntpEnableElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement ntpServerElement = doc.createElement("ntp_server");
     root.appendChild(ntpServerElement);
-    ntpServerElement.appendChild(doc.createTextNode(""));
+    ntpServerElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement yearElement = doc.createElement("year");
     root.appendChild(yearElement);
     yearElement.appendChild(doc.createTextNode(QString::number(currentTime.date().year())));
@@ -166,7 +166,6 @@ void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
     secElement.appendChild(doc.createTextNode(QString::number(currentTime.time().second())));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateManualTime() {
     QString paraYear = m_pMap->value("f_year").toString();
     QString paraMonth = m_pMap->value("f_month").toString();
@@ -175,63 +174,61 @@ void RenderResponseSysMngm::generateManualTime() {
     QString paraMin = m_pMap->value("f_min").toString();
     QString paraSec = m_pMap->value("f_sec").toString();
 
-#ifndef SIMULATOR_MODE
-    uint timeToSet = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
-                               QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toTime_t();
-#endif
+    QString timeToSet = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
+                               QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toString("yyyy-mm-dd hh:mm:ss");
+
+    tDebug("set date/time: %s", timeToSet.toLocal8Bit().data());
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " set " + timeToSet, true);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateTimezone() {
     QString paraTimezone = m_pMap->value("f_timezone").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TIMEZONE_API + " " + paraTimezone, true);
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateNtpTime() {
     QString paraNtpEnable = m_pMap->value("f_ntp_enable").toString();
     QString paraNtpServer = m_pMap->value("f_ntp_server").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API +
+                                      " set " + paraNtpEnable + " " + paraNtpServer, true);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetTimeStatus(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API + " status", true, ";");
 
     QDomElement root = doc.createElement("time");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("done"));
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement updateTimeElement = doc.createElement("update_time");
     root.appendChild(updateTimeElement);
-    updateTimeElement.appendChild(doc.createTextNode(""));
+    updateTimeElement.appendChild(doc.createTextNode(apiOut.value(1)));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetDeviceInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
 
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);
     QDomElement nameElement = doc.createElement("name");
     root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("dlink-8B21F7"));
+    nameElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement workgroupElement = doc.createElement("workgroup");
     root.appendChild(workgroupElement);
-    workgroupElement.appendChild(doc.createTextNode("workgroup"));
+    workgroupElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement descriptionElement = doc.createElement("description");
     root.appendChild(descriptionElement);
-    descriptionElement.appendChild(doc.createTextNode("DNS-340L"));
+    descriptionElement.appendChild(doc.createTextNode(apiOut.value(2)));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateDevice() {
     QString paraHostname = m_pMap->value("hostname").toString();
     QString paraWorkgroup = m_pMap->value("workgroup").toString();
     QString paraDescription = m_pMap->value("description").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " set " +
+                                      paraHostname + " " + paraWorkgroup + " " + paraDescription, true);
 }
 
 /* todo */

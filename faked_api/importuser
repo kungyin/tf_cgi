@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+echo -e "user2/000000/group1:group3/Volume_1///0:0:0:0"
+echo -e "user3/000000/group2:group3/Volume_1///0:0:0:0"
+echo -e "user4/123456/test1/Volume_1///0:0:0:0"

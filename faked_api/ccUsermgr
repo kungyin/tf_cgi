@@ -4,3 +4,11 @@
 # History:
 # 2005/08/23    VBird   First release
 [ $1 == 'userlist' ] && echo -e "abc" && echo -e "def,workgroup"
+[ $1 == 'userinfo' ] && echo -e "6;abc#aaa#bbb#ccc#ddd#eee;workgroup#usrgroup#usergroup;2;2814038,1875129;Volume_1;Volume_2"
+[ $1 == 'sharelist' ] && echo -e "Volume_1" && echo -e "Volume_2" 
+[ $1 == 'add' ] && echo -e "1"
+[ $1 == 'multiadd' ] && echo -e "1"
+[ $1 == 'modinfo' ] && echo -e "Volume_1,0,1997#Volume_2,100,1997;group1,group2,group3;2;1997,4726642;aaaa;Volume_1,w#Volume_2,r;0;Volume_1:RO#Volume_2:RW"
+[ $1 == 'modify' ] && echo -e "1"
+[ $1 == 'del' ] && echo -e "1"
+[ $1 == 'session' ] && echo -e "Volume_1;/mnt/HD/HD_a2" && echo -e "Volume_2;/mnt/HD/HD_b2"

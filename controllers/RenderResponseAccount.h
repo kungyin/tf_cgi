@@ -30,7 +30,7 @@ private:
     void generateUserModify(QDomDocument &);
     void generateUserDel();
     void generateMyFavDelUser(QDomDocument &);
-    void generateDownloadImportSample();
+    void generateDownloadImportSample(QString &);
     void generateGetAllSession(QDomDocument &);
     void generateGetImportUsers(QDomDocument &);
     void generateAddUserGetUserQuotaMaxsize(QDomDocument &);
