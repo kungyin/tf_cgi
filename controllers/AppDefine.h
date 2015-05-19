@@ -26,6 +26,7 @@ const QString SCRIPT_TIMEZONE_API   =   "sysapi_timezone";
 const QString SCRIPT_NTP_API        =   "sysapi_ntp";
 const QString SCRIPT_DEVICE_API     =   "sysapi_device";
 const QString SCRIPT_DISK_MANAGER   =   "diskmgr";
+const QString SCRIPT_SMART_API      =   "ccManger";
 
 #ifndef SIMULATOR_MODE
 

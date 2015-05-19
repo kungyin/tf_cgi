@@ -23,7 +23,8 @@ HEADERS += applicationcontroller.h \
     RenderResponse.h \
     RenderResponseAppMngm.h \
     RenderResponseNetShare.h \
-    RenderResponseSysMngm.h
+    RenderResponseSysMngm.h \
+    RenderResponseSysStatus.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -34,4 +35,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponse.cpp \
     RenderResponseAppMngm.cpp \
     RenderResponseNetShare.cpp \
-    RenderResponseSysMngm.cpp
+    RenderResponseSysMngm.cpp \
+    RenderResponseSysStatus.cpp

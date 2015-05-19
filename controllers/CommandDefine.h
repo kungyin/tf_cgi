@@ -201,6 +201,17 @@ enum CGI_COMMAND {
     CMD_LOG_CLEAR,                          /* cgi_log_clear */
     CMD_SYS_MNGM_END,
 
+    /**** System Status ****/
+    CMD_GET_STATUS,                         /* cgi_get_status */
+    //CMD_GET_TEMPERATURE,                    /* cgi_get_temperature */
+    CMD_STATUS_VOLUME_INFO,                 /* cgi_Status_Volume_Info */
+    CMD_USB_STORAGE_INFO,                   /* cgi_usb_Storage_info */
+    CMD_MTP_INFO,                           /* cgi_mtp_info */
+    CMD_USB_PRINTER_INFO,                   /* cgi_usb_printer_info */
+    CMD_UPS_INFO2,                          /* cgi_ups_info2 */
+
+    CMD_SYS_STATUS_END,
+
     CMD_SIZE
 
 };
@@ -403,6 +414,16 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_send_log_test",
     "cgi_log_backup",
     "cgi_log_clear",
+    "",
+
+    /**** System Status ****/
+    "cgi_get_status",
+    //"cgi_get_temperature",
+    "cgi_Status_Volume_Info",
+    "cgi_usb_Storage_info",
+    "cgi_mtp_info",
+    "cgi_usb_printer_info",
+    "cgi_ups_info2",
     ""
 
 };

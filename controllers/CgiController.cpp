@@ -8,6 +8,7 @@
 #include "RenderResponseNetShare.h"
 #include "RenderResponseAppMngm.h"
 #include "RenderResponseSysMngm.h"
+#include "RenderResponseSysStatus.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -126,6 +127,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, C
         pRrep = new RenderResponseAppMngm(map, cmd);
     else if(cmd < CMD_SYS_MNGM_END)
         pRrep = new RenderResponseSysMngm(map, cmd);
+    else if(cmd < CMD_SYS_STATUS_END)
+        pRrep = new RenderResponseSysStatus(map, cmd);
 
     return pRrep;
 

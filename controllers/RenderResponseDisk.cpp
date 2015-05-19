@@ -262,11 +262,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     tag1.appendChild(t1);
 }
 
-/* todo */
 void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
-
-    if(!m_pMap)
-        return;
 
     QString paraPage;
     QString paraRp;
@@ -288,91 +284,70 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
     if(m_pMap->contains("user"))
         paraUser = m_pMap->value("user").toString();
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_disk_list");
+    apiOut.removeLast();
+    QString checkbox = "&lt;input type=&quot;checkbox&quot; value=&quot;%1,%2,%3&quot; \
+            id=&quot;smart_hdd_num_0&quot; name=&quot;smart_hdd_num&quot; &gt;";
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QDomElement rowElement1 = doc.createElement("row");
-    root.appendChild(rowElement1);
-    rowElement1.setAttribute("id", "1");
+    for(QString e : apiOut) {
+        QDomElement rowElement1 = doc.createElement("row");
+        root.appendChild(rowElement1);
+        rowElement1.setAttribute("id", e.split(";").value(0));
 
-    QDomElement cellElement1 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement1);
-    QDomElement inputElement1 = doc.createElement("input");
-    cellElement1.appendChild(inputElement1);
-    inputElement1.setAttribute("type", "checkbox");
-    inputElement1.setAttribute("value", "0,sda,S1F0HDP7");
-    inputElement1.setAttribute("id", "smart_hdd_num_0");
-    inputElement1.setAttribute("name", "smart_hdd_num");
-    QDomElement cellElement2 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement2);
-    cellElement2.appendChild(doc.createTextNode("Disk1"));
-    QDomElement cellElement3 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement3);
-    cellElement3.appendChild(doc.createTextNode("Seagate"));
-    QDomElement cellElement4 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement4);
-    cellElement4.appendChild(doc.createTextNode("ST3000DM001-9YN166"));
-    QDomElement cellElement5 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement5);
-    cellElement5.appendChild(doc.createTextNode("-"));
-    QDomElement cellElement6 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement6);
-    cellElement6.appendChild(doc.createTextNode("-"));
+        QString checkboxValues = e.split(";").value(1);
+        QString checkboxValue1 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(0);
+        QString checkboxValue2 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(1);
+        QString checkboxValue3 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(2);
 
-    QDomElement rowElement2 = doc.createElement("row");
-    root.appendChild(rowElement2);
-    rowElement2.setAttribute("id", "2");
-
-    QDomElement cellElement7 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement7);
-    QDomElement inputElement2 = doc.createElement("input");
-    cellElement7.appendChild(inputElement2);
-    inputElement2.setAttribute("type", "checkbox");
-    inputElement2.setAttribute("value", "1,sdb,S1F0HDP9");
-    inputElement2.setAttribute("id", "smart_hdd_num_0");
-    inputElement2.setAttribute("name", "smart_hdd_num");
-    QDomElement cellElement8 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement8);
-    cellElement8.appendChild(doc.createTextNode("Disk2"));
-    QDomElement cellElement9 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement9);
-    cellElement9.appendChild(doc.createTextNode("Seagate"));
-    QDomElement cellElement10 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement10);
-    cellElement10.appendChild(doc.createTextNode("ST3000DM001-9YN166"));
-    QDomElement cellElement11 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement11);
-    cellElement11.appendChild(doc.createTextNode("-"));
-    QDomElement cellElement12 = doc.createElement("cell");
-    rowElement2.appendChild(cellElement12);
-    cellElement12.appendChild(doc.createTextNode("-"));
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(checkbox.arg(checkboxValue1)
+                                                            .arg(checkboxValue2)
+                                                            .arg(checkboxValue3)));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode(e.split(";").value(2)));
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode(e.split(";").value(3)));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createTextNode(e.split(";").value(4)));
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode(e.split(";").value(5)));
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createTextNode(e.split(";").value(6)));
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
     pageElement.appendChild(doc.createTextNode("1"));
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("2"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 
-/* todo */
 void RenderResponseDisk::generateCreateTestList(QDomDocument &doc) {
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_test_list", true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement sendElement = doc.createElement("send_mail");
     root.appendChild(sendElement);
-    sendElement.appendChild(doc.createTextNode("0"));
+    sendElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement smartElement = doc.createElement("smart_mail");
     root.appendChild(smartElement);
-    smartElement.appendChild(doc.createTextNode("0"));
+    smartElement.appendChild(doc.createTextNode(apiOut.value(1)));
+
 }
 
-/* todo */
 void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
-
-    if(!m_pMap)
-        return;
 
     QString paraPage;
     QString paraRp;
@@ -394,27 +369,50 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     if(m_pMap->contains("user"))
         paraUser = m_pMap->value("user").toString();
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_schedule_list");
+    QString onClick = "&lt;a href=javascript:onclick=create_schedule_wait(0)&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;";
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QDomElement rowElement1 = doc.createElement("row");
-    root.appendChild(rowElement1);
-    rowElement1.setAttribute("id", "1");
+    if(apiOut.isEmpty()) {
 
-    QDomElement cellElement1 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement1);
-    cellElement1.appendChild(doc.createTextNode("S.M.A.R.T - Quick"));
-    QDomElement cellElement2 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement2);
-    cellElement2.appendChild(doc.createTextNode("Disk1,Disk2"));
-    QDomElement cellElement3 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement3);
-    cellElement3.appendChild(doc.createTextNode("MON 17:00 / Weekly"));
-    QDomElement cellElement4 = doc.createElement("cell");
-    rowElement1.appendChild(cellElement4);
-    QDomElement aElement = doc.createElement("a");
-    rowElement1.appendChild(aElement);
-    aElement.setAttribute("href", "javascript:onclick=create_schedule_wait(0)><IMG border='0' src='/web/images/delete_over.png'");
+        QDomElement rowElement1 = doc.createElement("row");
+        root.appendChild(rowElement1);
+        rowElement1.setAttribute("id", "1");
+
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode("-"));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode("-"));
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode("-"));
+
+    }
+    else {
+        for(int i; i < apiOut.size(); i++) {
+            QDomElement rowElement1 = doc.createElement("row");
+            root.appendChild(rowElement1);
+            rowElement1.setAttribute("id", QString::number(i+1));
+
+            QDomElement cellElement1 = doc.createElement("cell");
+            rowElement1.appendChild(cellElement1);
+            cellElement1.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(0)));
+            QDomElement cellElement2 = doc.createElement("cell");
+            rowElement1.appendChild(cellElement2);
+            cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(1)));
+            QDomElement cellElement3 = doc.createElement("cell");
+            rowElement1.appendChild(cellElement3);
+            cellElement3.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
+
+            QDomElement cellElement4 = doc.createElement("cell");
+            rowElement1.appendChild(cellElement4);
+            cellElement4.appendChild(doc.createTextNode(onClick));
+        }
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
@@ -426,6 +424,8 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
 
 /* todo */
 void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " system_get_disk_volume_status");
+
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
     QDomElement stateElement = doc.createElement("State");
@@ -433,46 +433,36 @@ void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
     stateElement.appendChild(doc.createTextNode("0:"));
 }
 
-/* todo */
 void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
 
-    if(!m_pMap)
-        return;
+    QString paraFlag = m_pMap->value("f_flag").toString();
+    QString paraDevice = m_pMap->value("f_device").toString();
+    QString paraType = m_pMap->value("f_type").toString();
+    QString paraHour = m_pMap->value("f_hour").toString();
+    QString paraMin = m_pMap->value("f_min").toString();
+    QString paraWeekly = m_pMap->value("f_weekly").toString();
+    QString paraDay = m_pMap->value("f_day").toString();
+    QString paraTestType = m_pMap->value("f_test_type").toString();
+    QString paraSlot = m_pMap->value("f_slot").toString();
+    QString paraMailFlag = m_pMap->value("f_mail_flag").toString();
 
-    QString paraDevice;
-    QString paraType;
-    QString paraHour;
-    QString paraMin;
-    QString paraWeekly;
-    QString paraDay;
-    QString paraTestType;
-    QString paraSlot;
-    QString paraMailFlag;
+    QString allPara;
+    allPara =   "f_flag=" + paraFlag + "#" +
+                "f_device=" + paraDevice.replace(" ", ",") + "#" +
+                "f_type=" + paraType + "#" +
+                "f_hour=" + paraHour + "#" +
+                "f_min=" + paraMin + "#" +
+                "f_weekly=" + paraWeekly + "#" +
+                "f_day=" + paraDay + "#" +
+                "f_test_type=" + paraTestType;
 
-    if(m_pMap->contains("f_device"))
-        paraDevice = m_pMap->value("f_device").toString();
-    if(m_pMap->contains("f_type"))
-        paraType = m_pMap->value("f_type").toString();
-    if(m_pMap->contains("f_hour"))
-        paraHour = m_pMap->value("f_hour").toString();
-    if(m_pMap->contains("f_min"))
-        paraMin = m_pMap->value("f_min").toString();
-    if(m_pMap->contains("f_weekly"))
-        paraWeekly = m_pMap->value("f_weekly").toString();
-    if(m_pMap->contains("f_day"))
-        paraDay = m_pMap->value("f_day").toString();
-    if(m_pMap->contains("f_test_type"))
-        paraTestType = m_pMap->value("f_test_type").toString();
-    if(m_pMap->contains("f_slot"))
-        paraSlot = m_pMap->value("f_slot").toString();
-    if(m_pMap->contains("f_mail_flag"))
-        paraMailFlag = m_pMap->value("f_mail_flag").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_set_smart_schedule " + allPara);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement cmdElement = doc.createElement("cmd");
     root.appendChild(cmdElement);
-    cmdElement.appendChild(doc.createTextNode("1:short:0 :00:00:1:06"));
+    cmdElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }
 
 /* todo */
@@ -491,11 +481,7 @@ void RenderResponseDisk::generateSmartDelSchedule(QDomDocument &doc) {
     cmdElement.appendChild(doc.createTextNode("null"));
 }
 
-/* todo */
 void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
-
-    if(!m_pMap)
-        return;
 
     QString paraDevice;
     QString paraType;
@@ -508,11 +494,18 @@ void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
     if(m_pMap->contains("f_mail_flag"))
         paraMailFlag = m_pMap->value("f_mail_flag").toString();
 
+    QString allPara;
+    allPara =   "f_device=" + paraDevice.replace(" ", ",") + "#" +
+                "f_type=" + paraType + "#" +
+                "f_mail_flag=" + paraMailFlag;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_set_smart_test_start " + allPara);
+
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }
 
 void RenderResponseDisk::generateScanDiskInfo(QDomDocument &doc) {
