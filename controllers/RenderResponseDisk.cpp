@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "RenderResponseDisk.h"
 #include "AppDefine.h"
 
@@ -169,36 +171,45 @@ void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
 }
 
 FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
+
     FMT_ARGS args;
-    args.volNameArg = fmtArgs.at(0).toUpper();
-    args.raidModeArg = "M1";
-    if(fmtArgs.at(1).compare("standard") == 0)
-        args.raidModeArg = "M1";
-    else if (fmtArgs.at(1).compare("linar") == 0)
-        args.raidModeArg ="M2";
-    else if (fmtArgs.at(1).compare("raid0") == 0)
-        args.raidModeArg ="M3";
-    else if (fmtArgs.at(1).compare("raid1") == 0)
-        args.raidModeArg ="M4";
+    args.volNameArg = fmtArgs.value(0);
+    args.raidModeArg = "m1";
+    if(fmtArgs.value(1).compare("standard") == 0)
+        args.raidModeArg = "m1";
+    else if (fmtArgs.value(1).compare("linar") == 0)
+        args.raidModeArg ="m2";
+    else if (fmtArgs.value(1).compare("raid0") == 0)
+        args.raidModeArg ="m3";
+    else if (fmtArgs.value(1).compare("raid1") == 0)
+        args.raidModeArg ="m4";
 
-    args.fileSystemTypeArg = "F2";
-    if(fmtArgs.at(2).compare("ext3") == 0)
-        args.fileSystemTypeArg = "F2";
-    else if(fmtArgs.at(2).compare("ext4") == 0)
-        args.fileSystemTypeArg ="F3";
+    args.fileSystemTypeArg = "f2";
+    if(fmtArgs.value(2).compare("ext3") == 0)
+        args.fileSystemTypeArg = "f2";
+    else if(fmtArgs.value(2).compare("ext4") == 0)
+        args.fileSystemTypeArg ="f3";
 
-    args.volSizeArg = "S" + fmtArgs.at(8);
-    args.devNameArg = "K" + fmtArgs.at(4);
+    args.volSizeArg = "s" + fmtArgs.value(8);
+
+    /* sdasdb -> sda,sdb */
+    assert(fmtArgs.value(4).size() % 3 == 0);
+    QString devName;
+    for(int i = 0; i < fmtArgs.value(4).size(); i+=3) {
+        if(!devName.isEmpty())
+            devName += ",";
+        devName += fmtArgs.value(4).midRef(i, 3);
+    }
+
+    args.devNameArg = "k" + devName;
 
     args.createVolume = false;
-    if(fmtArgs.at(7).compare("1"))
+    if(fmtArgs.value(7).compare("1") == 0)
         args.createVolume = true;
+    return args;
 }
 
 void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
-    if(!m_pMap)
-        return;
-
     QString paraCreateType;
     QString paraCreateVolumeInfo;
     QString paraAutoSync;
@@ -216,12 +227,12 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
         return;
     }
     else {
-#ifndef SIMULATOR_MODE
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
         QStringList paraSubList2 = paraList.mid(15, 15);
         args1 = getFMTArgs(paraSubList1);
         args2 = getFMTArgs(paraSubList2);
+
         QString strArg1 =   "-" + args1.volNameArg + " " +
                             "-" + args1.raidModeArg + " " +
                             "-" + args1.fileSystemTypeArg + " " +
@@ -238,17 +249,16 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
 
         apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
                                          strArg1 + " " +
-                                         strArg2
-                                         ,true
+                                         strArg2,
+                                         true
                                      );
-#endif
     }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0));
+    QDomText t1 = doc.createTextNode(apiOut.value(0));
     tag1.appendChild(t1);
 }
 

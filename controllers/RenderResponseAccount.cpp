@@ -535,13 +535,27 @@ void RenderResponseAccount::generateUserModify(QDomDocument &doc) {
     QString paraMQuota = m_pMap->value("m_quota").toString();
     QString paraMShare = m_pMap->value("m_share").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR +
+//    QVector<QString> available;
+//    if(paraAva1.compare("null") != 0)
+//        available.insert("volume_1");
+//    if(paraAva2.compare("null") != 0)
+//        available.insert("volume_2");
+//    if(paraAva3.compare("null") != 0)
+//        available.insert("volume_3");
+//    if(paraAva4.compare("null") != 0)
+//        available.insert("volume_4");
+
+    QStringList apiOutUser = getAPIStdOut(API_PATH + SCRIPT_USER_MGR +
                                       " modify " + paraName + " " + paraPw + " " + paraMGroup, true);
+//    for(auto e : available) {
+//        getAPIStdOut(API_PATH + SCRIPT_SMB_API + " access " + e + " " +
+//                     paraPw + " " + paraMGroup, true);
+//    }
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    statusElement.appendChild(doc.createTextNode(apiOutUser.value(0)));
 }
 
 void RenderResponseAccount::generateUserDel() {

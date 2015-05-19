@@ -25,11 +25,11 @@ const QString SCRIPT_DATE_API       =   "sysapi_date";
 const QString SCRIPT_TIMEZONE_API   =   "sysapi_timezone";
 const QString SCRIPT_NTP_API        =   "sysapi_ntp";
 const QString SCRIPT_DEVICE_API     =   "sysapi_device";
+const QString SCRIPT_DISK_MANAGER   =   "diskmgr";
 
 #ifndef SIMULATOR_MODE
 
 const QString API_PATH = "/usr/local/modules/api/";
-const QString SCRIPT_DISK_MANAGER = "diskmgr";
 
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString NETWORK_SCRIPT = API_PATH + "network";
