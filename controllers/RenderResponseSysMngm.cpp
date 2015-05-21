@@ -1,5 +1,4 @@
 #include "RenderResponseSysMngm.h"
-#include "AppDefine.h"
 
 #include <QTimeZone>
 #include <QFileInfo>

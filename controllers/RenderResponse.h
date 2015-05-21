@@ -3,6 +3,7 @@
 
 #include "applicationcontroller.h"
 #include "CommandDefine.h"
+#include "AppDefine.h"
 
 enum RENDER_TYPE {
     RENDER_TYPE_UNKNOWN,

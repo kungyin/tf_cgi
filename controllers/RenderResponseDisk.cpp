@@ -1,7 +1,6 @@
 #include <cassert>
 
 #include "RenderResponseDisk.h"
-#include "AppDefine.h"
 
 RenderResponseDisk::RenderResponseDisk(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -59,17 +58,9 @@ RENDER_TYPE RenderResponseDisk::preRender() {
         m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_SET_SCHEDULE:
-    {
-        if(m_pReq->allParameters().contains("f_flag")) {
-            QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
-            if(paraFlag.compare("1") == 0)
-                generateSmartSetSchedule(doc);
-            else if(paraFlag.compare("0") == 0)
-                generateSmartDelSchedule(doc);
-        }
+        generateSmartSetSchedule(doc);
         m_renderType = RENDER_TYPE_XML;
         break;
-    }
     case CMD_SCANDISK_INFO:
         generateScanDiskInfo(doc);
         m_renderType = RENDER_TYPE_XML;
@@ -422,15 +413,14 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     totalElement.appendChild(doc.createTextNode("1"));
 }
 
-/* todo */
 void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " system_get_disk_volume_status");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_test_status", true);
 
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
     QDomElement stateElement = doc.createElement("State");
     root.appendChild(stateElement);
-    stateElement.appendChild(doc.createTextNode("0:"));
+    stateElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }
 
 void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
@@ -463,22 +453,6 @@ void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
     QDomElement cmdElement = doc.createElement("cmd");
     root.appendChild(cmdElement);
     cmdElement.appendChild(doc.createTextNode(apiOut.value(0)));
-}
-
-/* todo */
-void RenderResponseDisk::generateSmartDelSchedule(QDomDocument &doc) {
-    if(!m_pReq)
-        return;
-
-    QString paraMailFlag;
-    if(m_pReq->allParameters().contains("f_mail_flag"))
-        paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
-
-    QDomElement root = doc.createElement("config");
-    doc.appendChild(root);
-    QDomElement cmdElement = doc.createElement("cmd");
-    root.appendChild(cmdElement);
-    cmdElement.appendChild(doc.createTextNode("null"));
 }
 
 void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
@@ -562,4 +536,3 @@ void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
 }
-

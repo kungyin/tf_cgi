@@ -1,5 +1,4 @@
 #include "RenderResponseAppMngm.h"
-#include "AppDefine.h"
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {

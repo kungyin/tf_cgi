@@ -1,5 +1,4 @@
 #include "RenderResponseNetShare.h"
-#include "AppDefine.h"
 
 #include <QDir>
 

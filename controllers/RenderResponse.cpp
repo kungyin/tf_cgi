@@ -1,7 +1,6 @@
 #include <QProcess>
 
 #include "RenderResponse.h"
-#include "AppDefine.h"
 
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar) {
     QStringList ret;

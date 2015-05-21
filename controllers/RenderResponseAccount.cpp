@@ -1,5 +1,4 @@
 #include "RenderResponseAccount.h"
-#include "AppDefine.h"
 
 RenderResponseAccount::RenderResponseAccount(THttpRequest &req, CGI_COMMAND cmd)
 {

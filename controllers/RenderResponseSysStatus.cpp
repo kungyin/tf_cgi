@@ -1,5 +1,4 @@
 #include "RenderResponseSysStatus.h"
-#include "AppDefine.h"
 
 RenderResponseSysStatus::RenderResponseSysStatus(THttpRequest &req, CGI_COMMAND cmd)
 {

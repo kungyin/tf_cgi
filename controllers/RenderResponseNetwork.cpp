@@ -1,7 +1,6 @@
 #include <QProcess>
 
 #include "RenderResponseNetwork.h"
-#include "AppDefine.h"
 
 RenderResponseNetwork::RenderResponseNetwork(THttpRequest &req, CGI_COMMAND cmd)
 {

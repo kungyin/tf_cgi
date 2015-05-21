@@ -1,5 +1,4 @@
 #include "RenderResponseHome.h"
-#include "AppDefine.h"
 
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
 {
