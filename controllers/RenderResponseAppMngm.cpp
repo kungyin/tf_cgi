@@ -1,11 +1,11 @@
 #include "RenderResponseAppMngm.h"
 #include "AppDefine.h"
 
-RenderResponseAppMngm::RenderResponseAppMngm(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseAppMngm::~RenderResponseAppMngm() {
@@ -13,7 +13,7 @@ RenderResponseAppMngm::~RenderResponseAppMngm() {
 
 RENDER_TYPE RenderResponseAppMngm::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -152,13 +152,13 @@ RENDER_TYPE RenderResponseAppMngm::preRender() {
 }
 
 void RenderResponseAppMngm::generateSetAfp() {
-    QString paraAfp = m_pMap->value("afp").toString();
+    QString paraAfp = m_pReq->allParameters().value("afp").toString();
     if(setNasCfg("afp", "enable", paraAfp))
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_AFP_API, true);
 }
 
 void RenderResponseAppMngm::generateNfsEnable(QDomDocument &doc) {
-    QString paraNfsStatus = m_pMap->value("nfs_status").toString();
+    QString paraNfsStatus = m_pReq->allParameters().value("nfs_status").toString();
     QStringList apiOut;
     if(setNasCfg("nfs", "enable", paraNfsStatus))
         apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
@@ -178,12 +178,12 @@ void RenderResponseAppMngm::generateCheckDb() {
 
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
 //    QStringList apiOut;
 //    if(setNasCfg("nfs", "enable", paraNfsStatus))
@@ -361,7 +361,7 @@ void RenderResponseAppMngm::generateItunesServerReady(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerCheckPath(QDomDocument &doc) {
 
-    QString paraDir = m_pMap->value("f_dir").toString();
+    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
     QDomElement root = doc.createElement("config");
@@ -381,8 +381,8 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathSetting(QDomDocument &doc) {
 
-    QString paraDir = m_pMap->value("f_dir").toString();
-    QString paraRefresh = m_pMap->value("f_refresh").toString();
+    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
+    QString paraRefresh = m_pReq->allParameters().value("f_refresh").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
     QDomElement root = doc.createElement("config");
@@ -411,7 +411,7 @@ void RenderResponseAppMngm::generateSqldbStopFinish(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPrescan(QDomDocument &doc) {
 
-    QString paraDir = m_pMap->value("f_dir").toString();
+    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
     QDomElement root = doc.createElement("config");
@@ -426,7 +426,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPrescan(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathDel(QDomDocument &doc) {
 
-    QString paraDir = m_pMap->value("f_dir").toString();
+    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
     QDomElement root = doc.createElement("config");
@@ -446,7 +446,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 
-    QString paraUpnpAvServer = m_pMap->value("f_UPNPAVServer").toString();
+    QString paraUpnpAvServer = m_pReq->allParameters().value("f_UPNPAVServer").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
 }
@@ -454,7 +454,7 @@ void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 /* todo */
 void RenderResponseAppMngm::generateGuiCodepageAdd(QDomDocument &doc) {
 
-    QString paraLang = m_pMap->value("f_lang").toString();
+    QString paraLang = m_pReq->allParameters().value("f_lang").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
     QDomElement root = doc.createElement("config");
@@ -469,12 +469,12 @@ void RenderResponseAppMngm::generateGuiCodepageAdd(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateItunesServerSetting(QDomDocument &doc) {
 
-    QString paraItunesServer = m_pMap->value("f_iTunesServer").toString();
-    QString paraRoot = m_pMap->value("f_root").toString();
-    QString paraDir = m_pMap->value("f_dir").toString();
-    QString paraPasswd = m_pMap->value("f_passwd").toString();
-    QString paraLang = m_pMap->value("f_lang").toString();
-    QString paraRescanInterval = m_pMap->value("f_rescan_interval").toString();
+    QString paraItunesServer = m_pReq->allParameters().value("f_iTunesServer").toString();
+    QString paraRoot = m_pReq->allParameters().value("f_root").toString();
+    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
+    QString paraPasswd = m_pReq->allParameters().value("f_passwd").toString();
+    QString paraLang = m_pReq->allParameters().value("f_lang").toString();
+    QString paraRescanInterval = m_pReq->allParameters().value("f_rescan_interval").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -493,7 +493,7 @@ void RenderResponseAppMngm::generateItunesServerSetting(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateItunesServerCheckPs(QDomDocument &doc) {
 
-    QString paraType = m_pMap->value("f_type").toString();
+    QString paraType = m_pReq->allParameters().value("f_type").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -551,22 +551,22 @@ void RenderResponseAppMngm::generateItunesServerRefreshState(QDomDocument &doc) 
 /* todo */
 void RenderResponseAppMngm::generateSyslogSearch(QDomDocument &doc) {
 
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraSortname = m_pMap->value("sortname").toString();
-    QString paraSortorder = m_pMap->value("sortorder").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
-    QString paraLogFile = m_pMap->value("log_file").toString();
-    QString paraDateFrom = m_pMap->value("f_date_from").toString();
-    QString paraDateTo = m_pMap->value("f_date_to").toString();
-    QString paraViewSeverity = m_pMap->value("f_view_severity").toString();
-    QString paraLogHost = m_pMap->value("log_host").toString();
-    QString paraLogFacility = m_pMap->value("log_facility").toString();
-    QString paraLogApplication = m_pMap->value("log_application").toString();
-    QString paraKeyword = m_pMap->value("keyword").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraSortname = m_pReq->allParameters().value("sortname").toString();
+    QString paraSortorder = m_pReq->allParameters().value("sortorder").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
+    QString paraLogFile = m_pReq->allParameters().value("log_file").toString();
+    QString paraDateFrom = m_pReq->allParameters().value("f_date_from").toString();
+    QString paraDateTo = m_pReq->allParameters().value("f_date_to").toString();
+    QString paraViewSeverity = m_pReq->allParameters().value("f_view_severity").toString();
+    QString paraLogHost = m_pReq->allParameters().value("log_host").toString();
+    QString paraLogFacility = m_pReq->allParameters().value("log_facility").toString();
+    QString paraLogApplication = m_pReq->allParameters().value("log_application").toString();
+    QString paraKeyword = m_pReq->allParameters().value("keyword").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -725,7 +725,7 @@ void RenderResponseAppMngm::generateSyslogGetConfig(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateSyslogGetSelectOption(QDomDocument &doc) {
 
-    QString paraDatabase = m_pMap->value("f_database").toString();
+    QString paraDatabase = m_pReq->allParameters().value("f_database").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -760,19 +760,19 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
 
-    QString paraSyslogEnable = m_pMap->value("f_syslog_enable").toString();
-    QString paraSyslogFolder = m_pMap->value("f_syslog_folder").toString();
-    QString paraSyslogUdp = m_pMap->value("f_syslog_udp").toString();
-    QString paraArchiveSizeEn = m_pMap->value("f_archive_size_en").toString();
-    QString paraArchiveSize = m_pMap->value("f_archive_size").toString();
-    QString paraArchiveNumEn = m_pMap->value("f_archive_num_en").toString();
-    QString paraArchiveCycleEn = m_pMap->value("f_archive_cycle_en").toString();
-    QString paraArchiveCycle = m_pMap->value("f_archive_cycle").toString();
-    QString paraFolderQuotaSize = m_pMap->value("f_folder_quota_size").toString();
-    QString paraEmailSeverity = m_pMap->value("f_email_severity").toString();
-    QString paraEmailEnable = m_pMap->value("f_email_enable").toString();
-    QString paraIsSendmail = m_pMap->value("is_sendmail").toString();
-    QString paraNewLogFolder = m_pMap->value("f_new_log_folder").toString();
+    QString paraSyslogEnable = m_pReq->allParameters().value("f_syslog_enable").toString();
+    QString paraSyslogFolder = m_pReq->allParameters().value("f_syslog_folder").toString();
+    QString paraSyslogUdp = m_pReq->allParameters().value("f_syslog_udp").toString();
+    QString paraArchiveSizeEn = m_pReq->allParameters().value("f_archive_size_en").toString();
+    QString paraArchiveSize = m_pReq->allParameters().value("f_archive_size").toString();
+    QString paraArchiveNumEn = m_pReq->allParameters().value("f_archive_num_en").toString();
+    QString paraArchiveCycleEn = m_pReq->allParameters().value("f_archive_cycle_en").toString();
+    QString paraArchiveCycle = m_pReq->allParameters().value("f_archive_cycle").toString();
+    QString paraFolderQuotaSize = m_pReq->allParameters().value("f_folder_quota_size").toString();
+    QString paraEmailSeverity = m_pReq->allParameters().value("f_email_severity").toString();
+    QString paraEmailEnable = m_pReq->allParameters().value("f_email_enable").toString();
+    QString paraIsSendmail = m_pReq->allParameters().value("is_sendmail").toString();
+    QString paraNewLogFolder = m_pReq->allParameters().value("f_new_log_folder").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -783,15 +783,15 @@ void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
 /* todo */
 void RenderResponseAppMngm::generateSyslogExport() {
 
-    QString paraLogFile = m_pMap->value("log_file").toString();
-    QString paraDateFrom = m_pMap->value("f_date_from").toString();
-    QString paraDateTo = m_pMap->value("f_date_to").toString();
-    QString paraViewSeverity = m_pMap->value("f_view_severity").toString();
-    QString paraLogHost = m_pMap->value("log_host").toString();
-    QString paraLogFacility = m_pMap->value("log_facility").toString();
-    QString paraLogApplication = m_pMap->value("log_application").toString();
-    QString paraKeyword = m_pMap->value("keyword").toString();
-    QString paraRp = m_pMap->value("rp").toString();
+    QString paraLogFile = m_pReq->allParameters().value("log_file").toString();
+    QString paraDateFrom = m_pReq->allParameters().value("f_date_from").toString();
+    QString paraDateTo = m_pReq->allParameters().value("f_date_to").toString();
+    QString paraViewSeverity = m_pReq->allParameters().value("f_view_severity").toString();
+    QString paraLogHost = m_pReq->allParameters().value("log_host").toString();
+    QString paraLogFacility = m_pReq->allParameters().value("log_facility").toString();
+    QString paraLogApplication = m_pReq->allParameters().value("log_application").toString();
+    QString paraKeyword = m_pReq->allParameters().value("keyword").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 

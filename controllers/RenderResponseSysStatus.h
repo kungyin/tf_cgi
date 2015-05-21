@@ -6,7 +6,7 @@
 class T_CONTROLLER_EXPORT RenderResponseSysStatus : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseSysStatus(QVariantMap &, CGI_COMMAND);
+    RenderResponseSysStatus(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseSysStatus();
 
     virtual RENDER_TYPE preRender();

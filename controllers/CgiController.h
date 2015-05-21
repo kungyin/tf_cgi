@@ -16,7 +16,7 @@ public slots:
     void index();
 
 private:
-    RenderResponse *getRenderResponseBaseInstance(QVariantMap &, CGI_COMMAND);
+    RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);

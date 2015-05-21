@@ -6,7 +6,7 @@
 class T_CONTROLLER_EXPORT RenderResponseAppMngm : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseAppMngm(QVariantMap &, CGI_COMMAND);
+    RenderResponseAppMngm(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAppMngm();
 
     virtual RENDER_TYPE preRender();

@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == 'get' ] && echo -e "dlink-8B21F7;workgroup;DNS-340L"
+[ $1 == 'set' ] && echo -e "1"

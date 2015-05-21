@@ -1,11 +1,11 @@
 #include "RenderResponseSysStatus.h"
 #include "AppDefine.h"
 
-RenderResponseSysStatus::RenderResponseSysStatus(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseSysStatus::RenderResponseSysStatus(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseSysStatus::~RenderResponseSysStatus() {
@@ -13,7 +13,7 @@ RenderResponseSysStatus::~RenderResponseSysStatus() {
 
 RENDER_TYPE RenderResponseSysStatus::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();

@@ -6,7 +6,7 @@
 class T_CONTROLLER_EXPORT RenderResponseNetShare : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseNetShare(QVariantMap &, CGI_COMMAND);
+    RenderResponseNetShare(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseNetShare();
 
     virtual RENDER_TYPE preRender();

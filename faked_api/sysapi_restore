@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == 'status' ] && echo -e "0"
+[ $1 == 'resetdef' ] && echo -e "1"

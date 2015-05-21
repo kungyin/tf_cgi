@@ -3,11 +3,11 @@
 #include "RenderResponseNetwork.h"
 #include "AppDefine.h"
 
-RenderResponseNetwork::RenderResponseNetwork(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseNetwork::RenderResponseNetwork(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseNetwork::~RenderResponseNetwork() {
@@ -15,7 +15,7 @@ RenderResponseNetwork::~RenderResponseNetwork() {
 
 RENDER_TYPE RenderResponseNetwork::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -282,8 +282,8 @@ void RenderResponseNetwork::generateSetIPLock() {
 
     QString paraLan;
 
-    if(m_pMap->contains("lan"))
-        paraLan = m_pMap->value("lan").toString();
+    if(m_pReq->allParameters().contains("lan"))
+        paraLan = m_pReq->allParameters().value("lan").toString();
 }
 
 void RenderResponseNetwork::generateIP() {
@@ -293,26 +293,26 @@ void RenderResponseNetwork::generateIP() {
             paraVlanEnable, paraVlanID, paraDnsManual,
             paraLan;
 
-    if(m_pMap->contains("f_dhcp_enable"))
-        paraDhcpEnable = m_pMap->value("f_dhcp_enable").toString();
-    if(m_pMap->contains("f_ip"))
-        paraIP = m_pMap->value("f_ip").toString();
-    if(m_pMap->contains("f_gateway"))
-        paraGateway = m_pMap->value("f_gateway").toString();
-    if(m_pMap->contains("f_netmask"))
-        paraNetmask = m_pMap->value("f_netmask").toString();
-    if(m_pMap->contains("f_dns1"))
-        paraDns1 = m_pMap->value("f_dns1").toString();
-    if(m_pMap->contains("f_dns2"))
-        paraDns2 = m_pMap->value("f_dns2").toString();
-    if(m_pMap->contains("vlan_enable"))
-        paraVlanEnable = m_pMap->value("vlan_enable").toString();
-    if(m_pMap->contains("vlan_id"))
-        paraVlanID = m_pMap->value("vlan_id").toString();
-    if(m_pMap->contains("f_dns_manual"))
-        paraDnsManual = m_pMap->value("f_dns_manual").toString();
-    if(m_pMap->contains("lan"))
-        paraLan = m_pMap->value("lan").toString();
+    if(m_pReq->allParameters().contains("f_dhcp_enable"))
+        paraDhcpEnable = m_pReq->allParameters().value("f_dhcp_enable").toString();
+    if(m_pReq->allParameters().contains("f_ip"))
+        paraIP = m_pReq->allParameters().value("f_ip").toString();
+    if(m_pReq->allParameters().contains("f_gateway"))
+        paraGateway = m_pReq->allParameters().value("f_gateway").toString();
+    if(m_pReq->allParameters().contains("f_netmask"))
+        paraNetmask = m_pReq->allParameters().value("f_netmask").toString();
+    if(m_pReq->allParameters().contains("f_dns1"))
+        paraDns1 = m_pReq->allParameters().value("f_dns1").toString();
+    if(m_pReq->allParameters().contains("f_dns2"))
+        paraDns2 = m_pReq->allParameters().value("f_dns2").toString();
+    if(m_pReq->allParameters().contains("vlan_enable"))
+        paraVlanEnable = m_pReq->allParameters().value("vlan_enable").toString();
+    if(m_pReq->allParameters().contains("vlan_id"))
+        paraVlanID = m_pReq->allParameters().value("vlan_id").toString();
+    if(m_pReq->allParameters().contains("f_dns_manual"))
+        paraDnsManual = m_pReq->allParameters().value("f_dns_manual").toString();
+    if(m_pReq->allParameters().contains("lan"))
+        paraLan = m_pReq->allParameters().value("lan").toString();
 
     if(paraLan.compare("0") == 0) {
         QMap<QString, QString> map;
@@ -337,8 +337,8 @@ void RenderResponseNetwork::generateIP() {
 void RenderResponseNetwork::generateSpeed() {
     QString paraSpeed;
 
-    if(m_pMap->contains("lan0"))
-        paraSpeed = m_pMap->value("lan0").toString();
+    if(m_pReq->allParameters().contains("lan0"))
+        paraSpeed = m_pReq->allParameters().value("lan0").toString();
 
     setNasCfg("lan0", "speed", paraSpeed);
 }
@@ -347,8 +347,8 @@ void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
 
     QString paraEnable;
 
-    if(m_pMap->contains("f_enable"))
-        paraEnable = m_pMap->value("f_enable").toString();
+    if(m_pReq->allParameters().contains("f_enable"))
+        paraEnable = m_pReq->allParameters().value("f_enable").toString();
 
     if(setNasCfg("lltd", "enable", paraEnable)) {
         getAPIStdOut(API_PATH + SCRIPT_LLTD_CTL + " start");
@@ -439,18 +439,18 @@ void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
     QString paraEnable, paraDdnsServer, paraDdnsDomain,
             paraDdnsUsername, paraPassword, paraRePassword;
 
-    if(m_pMap->contains("f_enable"))
-        paraEnable = m_pMap->value("f_enable").toString();
-    if(m_pMap->contains("f_ddns_server"))
-        paraDdnsServer = m_pMap->value("f_ddns_server").toString();
-    if(m_pMap->contains("f_ddns_domain"))
-        paraDdnsDomain = m_pMap->value("f_ddns_domain").toString();
-    if(m_pMap->contains("f_ddns_username"))
-        paraDdnsUsername = m_pMap->value("f_ddns_username").toString();
-    if(m_pMap->contains("f_ddns_password"))
-        paraPassword = m_pMap->value("f_ddns_password").toString();
-    if(m_pMap->contains("f_ddns_re_password"))
-        paraRePassword = m_pMap->value("f_ddns_re_password").toString();
+    if(m_pReq->allParameters().contains("f_enable"))
+        paraEnable = m_pReq->allParameters().value("f_enable").toString();
+    if(m_pReq->allParameters().contains("f_ddns_server"))
+        paraDdnsServer = m_pReq->allParameters().value("f_ddns_server").toString();
+    if(m_pReq->allParameters().contains("f_ddns_domain"))
+        paraDdnsDomain = m_pReq->allParameters().value("f_ddns_domain").toString();
+    if(m_pReq->allParameters().contains("f_ddns_username"))
+        paraDdnsUsername = m_pReq->allParameters().value("f_ddns_username").toString();
+    if(m_pReq->allParameters().contains("f_ddns_password"))
+        paraPassword = m_pReq->allParameters().value("f_ddns_password").toString();
+    if(m_pReq->allParameters().contains("f_ddns_re_password"))
+        paraRePassword = m_pReq->allParameters().value("f_ddns_re_password").toString();
 
     if(paraPassword.compare(paraRePassword) != 0)
         return;
@@ -474,22 +474,22 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
             paraSortOrder, paraQuery, paraQType,
             paraField, paraUser;
 
-    if(m_pMap->contains("page"))
-        paraPage = m_pMap->value("page").toString();
-    if(m_pMap->contains("rp"))
-        paraRp = m_pMap->value("rp").toString();
-    if(m_pMap->contains("sortname"))
-        paraSortname = m_pMap->value("sortname").toString();
-    if(m_pMap->contains("sortorder"))
-        paraSortOrder = m_pMap->value("sortorder").toString();
-    if(m_pMap->contains("query"))
-        paraQuery = m_pMap->value("query").toString();
-    if(m_pMap->contains("qtype"))
-        paraQType = m_pMap->value("qtype").toString();
-    if(m_pMap->contains("f_field"))
-        paraField = m_pMap->value("f_field").toString();
-    if(m_pMap->contains("user"))
-        paraUser = m_pMap->value("user").toString();
+    if(m_pReq->allParameters().contains("page"))
+        paraPage = m_pReq->allParameters().value("page").toString();
+    if(m_pReq->allParameters().contains("rp"))
+        paraRp = m_pReq->allParameters().value("rp").toString();
+    if(m_pReq->allParameters().contains("sortname"))
+        paraSortname = m_pReq->allParameters().value("sortname").toString();
+    if(m_pReq->allParameters().contains("sortorder"))
+        paraSortOrder = m_pReq->allParameters().value("sortorder").toString();
+    if(m_pReq->allParameters().contains("query"))
+        paraQuery = m_pReq->allParameters().value("query").toString();
+    if(m_pReq->allParameters().contains("qtype"))
+        paraQType = m_pReq->allParameters().value("qtype").toString();
+    if(m_pReq->allParameters().contains("f_field"))
+        paraField = m_pReq->allParameters().value("f_field").toString();
+    if(m_pReq->allParameters().contains("user"))
+        paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -L");
 
@@ -602,11 +602,11 @@ void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
 }
 
 void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
-    QString paraService = m_pMap->value("service").toString();
-    QString paraEnable = m_pMap->value("enable").toString();
-    QString paraProtocol = m_pMap->value("protocol").toString();
-    QString paraPPort = m_pMap->value("p_port").toString();
-    QString paraEPort = m_pMap->value("e_port").toString();
+    QString paraService = m_pReq->allParameters().value("service").toString();
+    QString paraEnable = m_pReq->allParameters().value("enable").toString();
+    QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
+    QString paraPPort = m_pReq->allParameters().value("p_port").toString();
+    QString paraEPort = m_pReq->allParameters().value("e_port").toString();
     if(paraService.isEmpty() || paraEnable.isEmpty()
             || paraProtocol.isEmpty() || paraPPort.isEmpty()
             || paraEPort.isEmpty()) {
@@ -636,13 +636,13 @@ void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
 
 void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
 
-    QString paraEnable = m_pMap->value("enable").toString();
-    QString paraProtocol = m_pMap->value("protocol").toString();
-    QString paraPPort = m_pMap->value("p_port").toString();
-    QString paraEPort = m_pMap->value("e_port").toString();
-    QString paraService = m_pMap->value("service").toString();
-    QString paraScan = m_pMap->value("scan").toString();
-    QString paraOldEPort = m_pMap->value("old_e_port").toString();
+    QString paraEnable = m_pReq->allParameters().value("enable").toString();
+    QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
+    QString paraPPort = m_pReq->allParameters().value("p_port").toString();
+    QString paraEPort = m_pReq->allParameters().value("e_port").toString();
+    QString paraService = m_pReq->allParameters().value("service").toString();
+    QString paraScan = m_pReq->allParameters().value("scan").toString();
+    QString paraOldEPort = m_pReq->allParameters().value("old_e_port").toString();
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -m -p " + paraProtocol +
                                                                         " -e " + paraEPort +
@@ -660,11 +660,11 @@ void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
 
 void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
 
-    QString paraProtocol = m_pMap->value("protocol").toString();
-    QString paraPPort = m_pMap->value("p_port").toString();
-    QString paraEPort = m_pMap->value("e_port").toString();
-    QString paraService = m_pMap->value("service").toString();
-    QString paraScan = m_pMap->value("scan").toString();
+    QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
+    QString paraPPort = m_pReq->allParameters().value("p_port").toString();
+    QString paraEPort = m_pReq->allParameters().value("e_port").toString();
+    QString paraService = m_pReq->allParameters().value("service").toString();
+    QString paraScan = m_pReq->allParameters().value("scan").toString();
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -d -p " + paraProtocol +
                                                                         " -e " + paraEPort +

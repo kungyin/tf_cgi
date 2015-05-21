@@ -13,6 +13,7 @@ enum RENDER_TYPE {
     RENDER_TYPE_FILE,
     RENDER_TYPE_HTML,
     RENDER_TYPE_REDIRECT,
+    RENDER_TYPE_REDIRECT_WITH_COOKIE,
 };
 
 //const int CGI_COMMANDS[][2] = {
@@ -28,6 +29,8 @@ public:
 
     QDomDocument &getDoc() { return m_doc; }
     QString &getStr() { return m_str; }
+    QString &getFile() { return m_file; }
+    QList<TCookie> &getCookies() { return m_cookies; }
 
 protected:
 
@@ -40,8 +43,10 @@ protected:
     RENDER_TYPE m_renderType;
     QDomDocument m_doc;
     QString m_str;
+    QString m_file;
+    QList<TCookie> m_cookies;
 
-    QVariantMap *m_pMap;
+    THttpRequest *m_pReq;
 
 private:
 

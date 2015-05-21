@@ -3,11 +3,11 @@
 
 #include <QDir>
 
-RenderResponseNetShare::RenderResponseNetShare(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseNetShare::RenderResponseNetShare(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseNetShare::~RenderResponseNetShare() {
@@ -15,7 +15,7 @@ RenderResponseNetShare::~RenderResponseNetShare() {
 
 RENDER_TYPE RenderResponseNetShare::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -230,12 +230,12 @@ void RenderResponseNetShare::generateGetAdsInfo(QDomDocument &doc) {
 /* todo: need API */
 void RenderResponseNetShare::generateGetSession(QDomDocument &doc) {
 
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QString cellContentCifs =
@@ -306,12 +306,12 @@ void RenderResponseNetShare::generateGetSession(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateGetIsoShare(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QDomElement root = doc.createElement("rows");
@@ -355,27 +355,27 @@ void RenderResponseNetShare::generateGetNfsInfo(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateIsoPrecentage(QString &str) {
-    QString paraFileName = m_pMap->value("fileName").toString();
-    QString paraUpIsoRootPath = m_pMap->value("upIsoRootPath").toString();
+    QString paraFileName = m_pReq->allParameters().value("fileName").toString();
+    QString paraUpIsoRootPath = m_pReq->allParameters().value("upIsoRootPath").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     str = "-1";
 }
 
 /* todo: need API */
 void RenderResponseNetShare::generateClearIsoCreate() {
-    QString paraFileName = m_pMap->value("fileName").toString();
-    QString paraUpIsoRootPath = m_pMap->value("upIsoRootPath").toString();
+    QString paraFileName = m_pReq->allParameters().value("fileName").toString();
+    QString paraUpIsoRootPath = m_pReq->allParameters().value("upIsoRootPath").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
 /* todo: need API */
 void RenderResponseNetShare::generateUserList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QString cellContent("&lt;input type=&apos;checkbox&apos; name\
                         =&apos;C_%1&apos; value=&apos;%2&apos; rel=&apos;%3&apos;&gt;");
@@ -416,12 +416,12 @@ void RenderResponseNetShare::generateUserList(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateGroupList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QString cellContent("&lt;input type=&apos;checkbox&apos; name\
                         =&apos;C_%1&apos; value=&apos;%2&apos; rel=&apos;%3&apos;&gt;");
@@ -473,13 +473,13 @@ void RenderResponseNetShare::generateGetAllIsoShare(QDomDocument &doc) {
 }
 
 void RenderResponseNetShare::generateOpenTree(QString &str) {
-    QString paraDir = m_pMap->value("dir").toString();
-    QString paraShowFile = m_pMap->value("show_file").toString();
-    QString paraChkFlag = m_pMap->value("chk_flag").toString();
-    QString paraFileType = m_pMap->value("file_type").toString();
-    QString paraFuncId = m_pMap->value("function_id").toString();
-    QString paraFilterFile = m_pMap->value("filter_file").toString();
-    QString paraRootPath = m_pMap->value("root_path").toString();
+    QString paraDir = m_pReq->allParameters().value("dir").toString();
+    QString paraShowFile = m_pReq->allParameters().value("show_file").toString();
+    QString paraChkFlag = m_pReq->allParameters().value("chk_flag").toString();
+    QString paraFileType = m_pReq->allParameters().value("file_type").toString();
+    QString paraFuncId = m_pReq->allParameters().value("function_id").toString();
+    QString paraFilterFile = m_pReq->allParameters().value("filter_file").toString();
+    QString paraRootPath = m_pReq->allParameters().value("root_path").toString();
 
     QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n\
                             %1\
@@ -518,14 +518,14 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
 }
 
 void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
-    QString paraDir = m_pMap->value("dir").toString();
-    QString paraFileName = m_pMap->value("filename").toString();
-    QString paraShowFile = m_pMap->value("show_file").toString();
-    QString paraChkFlag = m_pMap->value("chk_flag").toString();
-    //QString paraFileType = m_pMap->value("file_type").toString();
-    QString paraFuncId = m_pMap->value("function_id").toString();
-    QString paraFilterFile = m_pMap->value("filter_file").toString();
-    QString paraRootPath = m_pMap->value("root_path").toString();
+    QString paraDir = m_pReq->allParameters().value("dir").toString();
+    QString paraFileName = m_pReq->allParameters().value("filename").toString();
+    QString paraShowFile = m_pReq->allParameters().value("show_file").toString();
+    QString paraChkFlag = m_pReq->allParameters().value("chk_flag").toString();
+    //QString paraFileType = m_pReq->allParameters().value("file_type").toString();
+    QString paraFuncId = m_pReq->allParameters().value("function_id").toString();
+    QString paraFilterFile = m_pReq->allParameters().value("filter_file").toString();
+    QString paraRootPath = m_pReq->allParameters().value("root_path").toString();
 
     QDir dir(paraDir.replace("%2F", "/"));
     QString ret = dir.mkdir(paraFileName) ? "ok" : "error";
@@ -540,17 +540,17 @@ void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateAddSession() {
-    QString paraPath = m_pMap->value("path").toString();
-    QString paraName = m_pMap->value("name").toString();
-    QString paraOplocks = m_pMap->value("oplocks").toString();
-    QString paraMapArchive = m_pMap->value("map_archive").toString();
-    QString paraComment = m_pMap->value("comment").toString();
-    QString paraFtp = m_pMap->value("ftp").toString();
-    QString paraReadList = m_pMap->value("read_list").toString();
-    QString paraWriteList = m_pMap->value("write_list").toString();
-    QString paraDeclineList = m_pMap->value("decline_list").toString();
-    QString paraRecycle = m_pMap->value("recycle").toString();
-    QString paraFtpAnonymous = m_pMap->value("ftp_anonymous").toString();
+    QString paraPath = m_pReq->allParameters().value("path").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
+    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
+    QString paraComment = m_pReq->allParameters().value("comment").toString();
+    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
+    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -558,10 +558,10 @@ void RenderResponseNetShare::generateAddSession() {
 
 /* todo: need API */
 void RenderResponseNetShare::generateSetNfsShare() {
-    QString paraHost = m_pMap->value("host").toString();
-    QString paraPath = m_pMap->value("path").toString();
-    QString paraRw = m_pMap->value("rw").toString();
-    QString paraRootsquash = m_pMap->value("rootsquash").toString();
+    QString paraHost = m_pReq->allParameters().value("host").toString();
+    QString paraPath = m_pReq->allParameters().value("path").toString();
+    QString paraRw = m_pReq->allParameters().value("rw").toString();
+    QString paraRootsquash = m_pReq->allParameters().value("rootsquash").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -569,7 +569,7 @@ void RenderResponseNetShare::generateSetNfsShare() {
 
 /* todo: need API */
 void RenderResponseNetShare::generateGetModifySession(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -661,17 +661,17 @@ void RenderResponseNetShare::generateGetModifySession(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateModifySession() {
-    QString paraPath = m_pMap->value("path").toString();
-    QString paraName = m_pMap->value("name").toString();
-    QString paraOplocks = m_pMap->value("oplocks").toString();
-    QString paraMapArchive = m_pMap->value("map_archive").toString();
-    QString paraComment = m_pMap->value("comment").toString();
-    QString paraFtp = m_pMap->value("ftp").toString();
-    QString paraReadList = m_pMap->value("read_list").toString();
-    QString paraWriteList = m_pMap->value("write_list").toString();
-    QString paraDeclineList = m_pMap->value("decline_list").toString();
-    QString paraRecycle = m_pMap->value("recycle").toString();
-    QString paraFtpAnonymous = m_pMap->value("ftp_anonymous").toString();
+    QString paraPath = m_pReq->allParameters().value("path").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
+    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
+    QString paraComment = m_pReq->allParameters().value("comment").toString();
+    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
+    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -679,13 +679,13 @@ void RenderResponseNetShare::generateModifySession() {
 
 /* todo: need API */
 void RenderResponseNetShare::generateModifyNfsShare() {
-    QString paraOldHost = m_pMap->value("old_host").toString();
-    QString paraHost = m_pMap->value("host").toString();
-    QString paraPath = m_pMap->value("path").toString();
-    QString paraRw = m_pMap->value("rw").toString();
-    QString paraRootSquash = m_pMap->value("rootsquash").toString();
-    QString paraNfsFlag = m_pMap->value("nfs_flag").toString();
-    QString paraNfs = m_pMap->value("nfs").toString();
+    QString paraOldHost = m_pReq->allParameters().value("old_host").toString();
+    QString paraHost = m_pReq->allParameters().value("host").toString();
+    QString paraPath = m_pReq->allParameters().value("path").toString();
+    QString paraRw = m_pReq->allParameters().value("rw").toString();
+    QString paraRootSquash = m_pReq->allParameters().value("rootsquash").toString();
+    QString paraNfsFlag = m_pReq->allParameters().value("nfs_flag").toString();
+    QString paraNfs = m_pReq->allParameters().value("nfs").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -693,11 +693,11 @@ void RenderResponseNetShare::generateModifyNfsShare() {
 
 /* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountAdd(QDomDocument &doc) {
-    QString paraShareName = m_pMap->value("f_share_name").toString();
-    QString paraPath = m_pMap->value("f_path").toString();
-    QString paraRw = m_pMap->value("f_rw").toString();
-    QString paraUser = m_pMap->value("f_user").toString();
-    QString paraWebdav = m_pMap->value("webdav").toString();
+    QString paraShareName = m_pReq->allParameters().value("f_share_name").toString();
+    QString paraPath = m_pReq->allParameters().value("f_path").toString();
+    QString paraRw = m_pReq->allParameters().value("f_rw").toString();
+    QString paraUser = m_pReq->allParameters().value("f_user").toString();
+    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -711,18 +711,18 @@ void RenderResponseNetShare::generateWebdavAccountAdd(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateDeleteSession() {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraPath = m_pMap->value("path").toString();
-    QString paraHost = m_pMap->value("host").toString();
-    QString paraSmbPath = m_pMap->value("smb_path").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraPath = m_pReq->allParameters().value("path").toString();
+    QString paraHost = m_pReq->allParameters().value("host").toString();
+    QString paraSmbPath = m_pReq->allParameters().value("smb_path").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
 /* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountDel(QDomDocument &doc) {
-    QString paraFlag = m_pMap->value("f_flag").toString();
-    QString paraPath = m_pMap->value("f_path").toString();
+    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
+    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -743,7 +743,7 @@ void RenderResponseNetShare::generateResetSession(QString &str) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateGetShareInfo(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -805,7 +805,7 @@ void RenderResponseNetShare::generateGetShareInfo(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateGetFtp(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -835,7 +835,7 @@ void RenderResponseNetShare::generateGetFtp(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountInfo(QDomDocument &doc) {
-    QString paraPath = m_pMap->value("f_path").toString();
+    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 

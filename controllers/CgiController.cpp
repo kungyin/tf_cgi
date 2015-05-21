@@ -1,3 +1,5 @@
+#include <QFileInfo>
+
 #include "AppDefine.h"
 #include "CgiController.h"
 #include "ParseCmd.h"
@@ -21,7 +23,6 @@ void CgiController::index()
 
 #ifndef SIMULATOR_MODE
     if(!httpRequest().header().path().startsWith("/cgi-bin/login_mgr.cgi")) {
-        //std::string user = my_cookie.value();
         if(httpRequest().cookie("username").isEmpty()) {
             renderErrorResponse(Tf::NotFound);
             return;
@@ -40,39 +41,10 @@ void CgiController::index()
             return;
 
         RenderResponse *pRrep = NULL;
-        pRrep = getRenderResponseBaseInstance(parasMap, cmd);
+        pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
         if(!pRrep)
             return;
         RENDER_TYPE type = pRrep->preRender();
-
-        if(paraCmd.compare("login") == 0) {
-            QString name = static_cast<RenderResponseHome *>(pRrep)->getUsername();
-            QDateTime age = QDateTime::currentDateTime();;
-            if(!name.isEmpty())
-                age = age.addSecs(31536000);    // 1 year in seconds.
-
-            if(parasMap.contains("username"))
-                addCookie("uname", parasMap["username"].toByteArray(), age, "/");
-            addCookie("rembMe", "checked", age, "/");
-            if(parasMap.contains("pwd"))
-                addCookie("password", parasMap["pwd"].toByteArray(), age, "/");
-
-            int status = static_cast<RenderResponseHome *>(pRrep)->getLoginStatus();
-            if(status == 1) {
-                if(parasMap.contains("username")) {
-                    TCookie cookie("username", parasMap["username"].toByteArray());
-                    cookie.setPath("/");
-                    addCookie(cookie);
-                }
-                redirect(QUrl("../web/home.html?v=8401878"));
-            }
-            else if(status == 0){
-                redirect(QUrl("../web/relogin.html"));
-            }
-        }
-        else if(paraCmd.compare("logout") == 0) {
-            redirect(QUrl(".."));
-        }
 
         /* render */
         switch(type) {
@@ -89,7 +61,13 @@ void CgiController::index()
             // todo: renderJson();
             break;
         case RENDER_TYPE_FILE:
-            //sendFile("a.txt", "text/plain");
+        {
+            QFileInfo file(pRrep->getStr());
+            if(file.exists() && file.isFile())
+                sendFile(pRrep->getStr(), "application/octet-stream", file.fileName());
+            else
+                tDebug("file %s doesn't exist.", pRrep->getStr().toLocal8Bit().data());
+        }
             break;
         case RENDER_TYPE_HTML:
             //render("index");
@@ -97,6 +75,14 @@ void CgiController::index()
             break;
         case RENDER_TYPE_REDIRECT:
             redirect(QUrl(pRrep->getStr()));
+            break;
+        case RENDER_TYPE_REDIRECT_WITH_COOKIE:
+        {
+            QList<TCookie> cookies = pRrep->getCookies();
+            for(auto e : cookies)
+                addCookie(e);
+            redirect(QUrl(pRrep->getStr()));
+        }
             break;
         default:
             break;
@@ -107,28 +93,28 @@ void CgiController::index()
     }
 }
 
-RenderResponse *CgiController::getRenderResponseBaseInstance(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)
 {
     if(cmd <= CMD_NONE)
         return NULL;
 
     RenderResponse *pRrep = NULL;
     if(cmd < CMD_DISK_END)
-        pRrep = new RenderResponseDisk(map, cmd);
+        pRrep = new RenderResponseDisk(req, cmd);
     else if(cmd < CMD_LONGIN_END)
-        pRrep = new RenderResponseHome(map, cmd);
+        pRrep = new RenderResponseHome(req, cmd);
     else if(cmd < CMD_NETWORK_END)
-        pRrep = new RenderResponseNetwork(map, cmd);
+        pRrep = new RenderResponseNetwork(req, cmd);
     else if(cmd < CMD_ACCOUNT_END)
-        pRrep = new RenderResponseAccount(map, cmd);
+        pRrep = new RenderResponseAccount(req, cmd);
     else if(cmd < CMD_NETSHARE_END)
-        pRrep = new RenderResponseNetShare(map, cmd);
+        pRrep = new RenderResponseNetShare(req, cmd);
     else if(cmd < CMD_APP_MNGM_END)
-        pRrep = new RenderResponseAppMngm(map, cmd);
+        pRrep = new RenderResponseAppMngm(req, cmd);
     else if(cmd < CMD_SYS_MNGM_END)
-        pRrep = new RenderResponseSysMngm(map, cmd);
+        pRrep = new RenderResponseSysMngm(req, cmd);
     else if(cmd < CMD_SYS_STATUS_END)
-        pRrep = new RenderResponseSysStatus(map, cmd);
+        pRrep = new RenderResponseSysStatus(req, cmd);
 
     return pRrep;
 

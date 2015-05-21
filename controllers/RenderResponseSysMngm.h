@@ -6,7 +6,7 @@
 class T_CONTROLLER_EXPORT RenderResponseSysMngm : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseSysMngm(QVariantMap &, CGI_COMMAND);
+    RenderResponseSysMngm(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseSysMngm();
 
     virtual RENDER_TYPE preRender();
@@ -30,7 +30,7 @@ private:
     void generateShutdown();
     void generateIdle();
     void generateTemperature();
-    void generateBackupConf();
+    void generateBackupConf(QString &);
     void generateRestoreConf(QString &);
 
     void generateLogSystem(QString &);

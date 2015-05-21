@@ -3,11 +3,11 @@
 #include "RenderResponseDisk.h"
 #include "AppDefine.h"
 
-RenderResponseDisk::RenderResponseDisk(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseDisk::RenderResponseDisk(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseDisk::~RenderResponseDisk() {
@@ -15,7 +15,7 @@ RenderResponseDisk::~RenderResponseDisk() {
 
 RENDER_TYPE RenderResponseDisk::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -60,8 +60,8 @@ RENDER_TYPE RenderResponseDisk::preRender() {
         break;
     case CMD_SMART_SET_SCHEDULE:
     {
-        if(m_pMap->contains("f_flag")) {
-            QString paraFlag = m_pMap->value("f_flag").toString();
+        if(m_pReq->allParameters().contains("f_flag")) {
+            QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
             if(paraFlag.compare("1") == 0)
                 generateSmartSetSchedule(doc);
             else if(paraFlag.compare("0") == 0)
@@ -103,8 +103,8 @@ RENDER_TYPE RenderResponseDisk::preRender() {
 
 void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
 //    QString paraFlag;
-//    if(m_pMap->contains("f_flag"))
-//        paraFlag = m_pMap->value("f_flag").toString();
+//    if(m_pReq->allParameters().contains("f_flag"))
+//        paraFlag = m_pReq->allParameters().value("f_flag").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g volume_status", true);
     if(apiOut.size() < 2)
@@ -214,12 +214,12 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     QString paraCreateVolumeInfo;
     QString paraAutoSync;
 
-    if(m_pMap->contains("f_create_type"))
-        paraCreateType = m_pMap->value("f_create_type").toString();
-    if(m_pMap->contains("f_create_volume_info"))
-        paraCreateVolumeInfo = m_pMap->value("f_create_volume_info").toString();
-    if(m_pMap->contains("f_auto_sync"))
-        paraAutoSync = m_pMap->value("f_auto_sync").toString();
+    if(m_pReq->allParameters().contains("f_create_type"))
+        paraCreateType = m_pReq->allParameters().value("f_create_type").toString();
+    if(m_pReq->allParameters().contains("f_create_volume_info"))
+        paraCreateVolumeInfo = m_pReq->allParameters().value("f_create_volume_info").toString();
+    if(m_pReq->allParameters().contains("f_auto_sync"))
+        paraAutoSync = m_pReq->allParameters().value("f_auto_sync").toString();
 
     QStringList apiOut;
     QStringList paraList = paraCreateVolumeInfo.split("%2C");
@@ -271,18 +271,18 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
     QString paraField;
     QString paraUser;
 
-    if(m_pMap->contains("page"))
-        paraPage = m_pMap->value("page").toString();
-    if(m_pMap->contains("rp"))
-        paraRp = m_pMap->value("rp").toString();
-    if(m_pMap->contains("query"))
-        paraQuery = m_pMap->value("query").toString();
-    if(m_pMap->contains("qtype"))
-        paraQtype = m_pMap->value("qtype").toString();
-    if(m_pMap->contains("f_field"))
-        paraField = m_pMap->value("f_field").toString();
-    if(m_pMap->contains("user"))
-        paraUser = m_pMap->value("user").toString();
+    if(m_pReq->allParameters().contains("page"))
+        paraPage = m_pReq->allParameters().value("page").toString();
+    if(m_pReq->allParameters().contains("rp"))
+        paraRp = m_pReq->allParameters().value("rp").toString();
+    if(m_pReq->allParameters().contains("query"))
+        paraQuery = m_pReq->allParameters().value("query").toString();
+    if(m_pReq->allParameters().contains("qtype"))
+        paraQtype = m_pReq->allParameters().value("qtype").toString();
+    if(m_pReq->allParameters().contains("f_field"))
+        paraField = m_pReq->allParameters().value("f_field").toString();
+    if(m_pReq->allParameters().contains("user"))
+        paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_disk_list");
     apiOut.removeLast();
@@ -356,18 +356,18 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     QString paraField;
     QString paraUser;
 
-    if(m_pMap->contains("page"))
-        paraPage = m_pMap->value("page").toString();
-    if(m_pMap->contains("rp"))
-        paraRp = m_pMap->value("rp").toString();
-    if(m_pMap->contains("query"))
-        paraQuery = m_pMap->value("query").toString();
-    if(m_pMap->contains("qtype"))
-        paraQtype = m_pMap->value("qtype").toString();
-    if(m_pMap->contains("f_field"))
-        paraField = m_pMap->value("f_field").toString();
-    if(m_pMap->contains("user"))
-        paraUser = m_pMap->value("user").toString();
+    if(m_pReq->allParameters().contains("page"))
+        paraPage = m_pReq->allParameters().value("page").toString();
+    if(m_pReq->allParameters().contains("rp"))
+        paraRp = m_pReq->allParameters().value("rp").toString();
+    if(m_pReq->allParameters().contains("query"))
+        paraQuery = m_pReq->allParameters().value("query").toString();
+    if(m_pReq->allParameters().contains("qtype"))
+        paraQtype = m_pReq->allParameters().value("qtype").toString();
+    if(m_pReq->allParameters().contains("f_field"))
+        paraField = m_pReq->allParameters().value("f_field").toString();
+    if(m_pReq->allParameters().contains("user"))
+        paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_schedule_list");
     QString onClick = "&lt;a href=javascript:onclick=create_schedule_wait(0)&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;";
@@ -435,16 +435,16 @@ void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
 
 void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
 
-    QString paraFlag = m_pMap->value("f_flag").toString();
-    QString paraDevice = m_pMap->value("f_device").toString();
-    QString paraType = m_pMap->value("f_type").toString();
-    QString paraHour = m_pMap->value("f_hour").toString();
-    QString paraMin = m_pMap->value("f_min").toString();
-    QString paraWeekly = m_pMap->value("f_weekly").toString();
-    QString paraDay = m_pMap->value("f_day").toString();
-    QString paraTestType = m_pMap->value("f_test_type").toString();
-    QString paraSlot = m_pMap->value("f_slot").toString();
-    QString paraMailFlag = m_pMap->value("f_mail_flag").toString();
+    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
+    QString paraDevice = m_pReq->allParameters().value("f_device").toString();
+    QString paraType = m_pReq->allParameters().value("f_type").toString();
+    QString paraHour = m_pReq->allParameters().value("f_hour").toString();
+    QString paraMin = m_pReq->allParameters().value("f_min").toString();
+    QString paraWeekly = m_pReq->allParameters().value("f_weekly").toString();
+    QString paraDay = m_pReq->allParameters().value("f_day").toString();
+    QString paraTestType = m_pReq->allParameters().value("f_test_type").toString();
+    QString paraSlot = m_pReq->allParameters().value("f_slot").toString();
+    QString paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
 
     QString allPara;
     allPara =   "f_flag=" + paraFlag + "#" +
@@ -467,12 +467,12 @@ void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
 
 /* todo */
 void RenderResponseDisk::generateSmartDelSchedule(QDomDocument &doc) {
-    if(!m_pMap)
+    if(!m_pReq)
         return;
 
     QString paraMailFlag;
-    if(m_pMap->contains("f_mail_flag"))
-        paraMailFlag = m_pMap->value("f_mail_flag").toString();
+    if(m_pReq->allParameters().contains("f_mail_flag"))
+        paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -487,12 +487,12 @@ void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
     QString paraType;
     QString paraMailFlag;
 
-    if(m_pMap->contains("f_device"))
-        paraDevice = m_pMap->value("f_device").toString();
-    if(m_pMap->contains("f_type"))
-        paraType = m_pMap->value("f_type").toString();
-    if(m_pMap->contains("f_mail_flag"))
-        paraMailFlag = m_pMap->value("f_mail_flag").toString();
+    if(m_pReq->allParameters().contains("f_device"))
+        paraDevice = m_pReq->allParameters().value("f_device").toString();
+    if(m_pReq->allParameters().contains("f_type"))
+        paraType = m_pReq->allParameters().value("f_type").toString();
+    if(m_pReq->allParameters().contains("f_mail_flag"))
+        paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
 
     QString allPara;
     allPara =   "f_device=" + paraDevice.replace(" ", ",") + "#" +

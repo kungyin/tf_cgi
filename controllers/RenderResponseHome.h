@@ -6,13 +6,10 @@
 class T_CONTROLLER_EXPORT RenderResponseHome : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseHome(QVariantMap &, CGI_COMMAND);
+    RenderResponseHome(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseHome();
 
     virtual RENDER_TYPE preRender();
-
-    QString getUsername() { return m_session; }
-    int getLoginStatus() { return m_loginStatus; }
 
 private:
 
@@ -24,9 +21,6 @@ private:
     void generateFWStatus(QString &);
     void generateLogin(QString &);
     void generateLogout(QString &);
-
-    QString m_session;
-    int m_loginStatus;
 
 };
 

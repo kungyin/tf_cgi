@@ -1,13 +1,11 @@
 #include "RenderResponseHome.h"
 #include "AppDefine.h"
 
-RenderResponseHome::RenderResponseHome(QVariantMap &map, CGI_COMMAND cmd)
-    : m_session("")
-    , m_loginStatus(0)
+RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseHome::~RenderResponseHome() {
@@ -15,7 +13,7 @@ RenderResponseHome::~RenderResponseHome() {
 
 RENDER_TYPE RenderResponseHome::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -48,11 +46,11 @@ RENDER_TYPE RenderResponseHome::preRender() {
         break;
     case CMD_LOGIN:
         generateLogin(str);
-        m_renderType = RENDER_TYPE_STRING;
+        m_renderType = RENDER_TYPE_REDIRECT_WITH_COOKIE;
         break;
     case CMD_LOGOUT:
         generateLogout(str);
-        m_renderType = RENDER_TYPE_STRING;
+        m_renderType = RENDER_TYPE_REDIRECT;
         break;
     case CMD_NONE:
     default:
@@ -76,7 +74,7 @@ void RenderResponseHome::generateIsBuildInLanguage(QDomDocument &doc) {
 }
 
 void RenderResponseHome::generateSetUserLanguage(QDomDocument &doc) {
-    QString paraLang = m_pMap->value("language").toString();
+    QString paraLang = m_pReq->allParameters().value("language").toString();
     QString ret = setNasCfg("web", "language", paraLang) ? "1" : "0";
 
     QDomElement root = doc.createElement("status");
@@ -120,9 +118,6 @@ void RenderResponseHome::generateFWStatus(QString &str) {
 }
 
 void RenderResponseHome::generateLogin(QString &str) {
-    if(!m_pMap)
-        return;
-
     QString paraUsername;
     QString paraPwd;
     QString paraPort;
@@ -133,24 +128,24 @@ void RenderResponseHome::generateLogin(QString &str) {
     QString paraC1;
     QString paraSslPort;
 
-    if(m_pMap->contains("username"))
-        paraUsername = m_pMap->value("username").toString();
-    if(m_pMap->contains("pwd"))
-        paraPwd = m_pMap->value("pwd").toString();
-    if(m_pMap->contains("port"))
-        paraPort = m_pMap->value("port").toString();
-    if(m_pMap->contains("f_type"))
-        paraType = m_pMap->value("f_type").toString();
-    if(m_pMap->contains("f_username"))
-        paraFUsername = m_pMap->value("f_username").toString();
-    if(m_pMap->contains("pre_pwd"))
-        paraPrePwd = m_pMap->value("pre_pwd").toString();
-    if(m_pMap->contains("ssl"))
-        paraSsl = m_pMap->value("ssl").toString();
-    if(m_pMap->contains("C1"))
-        paraC1 = m_pMap->value("C1").toString();
-    if(m_pMap->contains("ssl_port"))
-        paraSslPort = m_pMap->value("ssl_port").toString();
+    if(m_pReq->allParameters().contains("username"))
+        paraUsername = m_pReq->allParameters().value("username").toString();
+    if(m_pReq->allParameters().contains("pwd"))
+        paraPwd = m_pReq->allParameters().value("pwd").toString();
+    if(m_pReq->allParameters().contains("port"))
+        paraPort = m_pReq->allParameters().value("port").toString();
+    if(m_pReq->allParameters().contains("f_type"))
+        paraType = m_pReq->allParameters().value("f_type").toString();
+    if(m_pReq->allParameters().contains("f_username"))
+        paraFUsername = m_pReq->allParameters().value("f_username").toString();
+    if(m_pReq->allParameters().contains("pre_pwd"))
+        paraPrePwd = m_pReq->allParameters().value("pre_pwd").toString();
+    if(m_pReq->allParameters().contains("ssl"))
+        paraSsl = m_pReq->allParameters().value("ssl").toString();
+    if(m_pReq->allParameters().contains("C1"))
+        paraC1 = m_pReq->allParameters().value("C1").toString();
+    if(m_pReq->allParameters().contains("ssl_port"))
+        paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g login " + paraUsername + " " + paraPwd, true);
 
@@ -166,29 +161,46 @@ void RenderResponseHome::generateLogin(QString &str) {
         //}
     }
 
-    if(paraC1.compare("ON") == 0) {
-        m_session = paraUsername;
+    QDateTime expire = QDateTime::currentDateTime();
+    if(paraC1.compare("ON") == 0)
+        expire = expire.addSecs(31536000);    // 1 year in seconds.
+
+    TCookie cookieName("uname", paraUsername.toLocal8Bit());
+    cookieName.setExpirationDate(expire);
+    cookieName.setPath("/");
+    TCookie cookieRemMe("rembMe", "checked");
+    cookieRemMe.setExpirationDate(expire);
+    cookieRemMe.setPath("/");
+    TCookie cookiePwd("password", paraPwd.toLocal8Bit());
+    cookiePwd.setExpirationDate(expire);
+    cookiePwd.setPath("/");
+    m_cookies.append(cookieName);
+    m_cookies.append(cookieRemMe);
+    m_cookies.append(cookiePwd);
+
+    if(apiOut.value(0).compare("1") == 0) {
+        TCookie cookie("username", paraUsername.toLocal8Bit());
+        cookie.setPath("/");
+        m_cookies.append(cookie);
+        str = "../web/home.html?v=8401878";
+    }
+    else if(apiOut.value(0).compare("0") == 0){
+        str = "../web/relogin.html";
     }
 
-    QString status = apiOut.isEmpty() ? "0" : apiOut.at(0);
-    if(status.compare("1") == 0) {
-        m_loginStatus = 1;
-    }
 }
 
 void RenderResponseHome::generateLogout(QString &str) {
-    if(!m_pMap)
-        return;
 
     QString paraUsername;
     QString paraOS;
 
-    if(m_pMap->contains("name"))
-        paraUsername = m_pMap->value("name").toString();
-    if(m_pMap->contains("os"))
-        paraOS = m_pMap->value("os").toString();
+    if(m_pReq->allParameters().contains("name"))
+        paraUsername = m_pReq->allParameters().value("name").toString();
+    if(m_pReq->allParameters().contains("os"))
+        paraOS = m_pReq->allParameters().value("os").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -s logout " + paraUsername, true);
-    m_loginStatus = -1;
+    str = "..";
 
 }

@@ -2,12 +2,13 @@
 #include "AppDefine.h"
 
 #include <QTimeZone>
+#include <QFileInfo>
 
-RenderResponseSysMngm::RenderResponseSysMngm(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseSysMngm::RenderResponseSysMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseSysMngm::~RenderResponseSysMngm() {
@@ -15,7 +16,7 @@ RenderResponseSysMngm::~RenderResponseSysMngm() {
 
 RENDER_TYPE RenderResponseSysMngm::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -87,8 +88,8 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
         m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_BACKUP_CONF:
-        generateBackupConf();
-        m_renderType = RENDER_TYPE_NULL;
+        generateBackupConf(str);
+        m_renderType = RENDER_TYPE_FILE;
         break;
     case CMD_RESTORE_CONF:
         generateRestoreConf(str);
@@ -167,12 +168,12 @@ void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
 }
 
 void RenderResponseSysMngm::generateManualTime() {
-    QString paraYear = m_pMap->value("f_year").toString();
-    QString paraMonth = m_pMap->value("f_month").toString();
-    QString paraDay = m_pMap->value("f_day").toString();
-    QString paraHour = m_pMap->value("f_hour").toString();
-    QString paraMin = m_pMap->value("f_min").toString();
-    QString paraSec = m_pMap->value("f_sec").toString();
+    QString paraYear = m_pReq->allParameters().value("f_year").toString();
+    QString paraMonth = m_pReq->allParameters().value("f_month").toString();
+    QString paraDay = m_pReq->allParameters().value("f_day").toString();
+    QString paraHour = m_pReq->allParameters().value("f_hour").toString();
+    QString paraMin = m_pReq->allParameters().value("f_min").toString();
+    QString paraSec = m_pReq->allParameters().value("f_sec").toString();
 
     QString timeToSet = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
                                QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toString("yyyy-mm-dd hh:mm:ss");
@@ -182,14 +183,14 @@ void RenderResponseSysMngm::generateManualTime() {
 }
 
 void RenderResponseSysMngm::generateTimezone() {
-    QString paraTimezone = m_pMap->value("f_timezone").toString();
+    QString paraTimezone = m_pReq->allParameters().value("f_timezone").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TIMEZONE_API + " " + paraTimezone, true);
 
 }
 
 void RenderResponseSysMngm::generateNtpTime() {
-    QString paraNtpEnable = m_pMap->value("f_ntp_enable").toString();
-    QString paraNtpServer = m_pMap->value("f_ntp_server").toString();
+    QString paraNtpEnable = m_pReq->allParameters().value("f_ntp_enable").toString();
+    QString paraNtpServer = m_pReq->allParameters().value("f_ntp_server").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API +
                                       " set " + paraNtpEnable + " " + paraNtpServer, true);
 }
@@ -224,109 +225,111 @@ void RenderResponseSysMngm::generateGetDeviceInfo(QDomDocument &doc) {
 }
 
 void RenderResponseSysMngm::generateDevice() {
-    QString paraHostname = m_pMap->value("hostname").toString();
-    QString paraWorkgroup = m_pMap->value("workgroup").toString();
-    QString paraDescription = m_pMap->value("description").toString();
+    QString paraHostname = m_pReq->allParameters().value("hostname").toString();
+    QString paraWorkgroup = m_pReq->allParameters().value("workgroup").toString();
+    QString paraDescription = m_pReq->allParameters().value("description").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " set " +
                                       paraHostname + " " + paraWorkgroup + " " + paraDescription, true);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateDetectDangerous(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " status", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetIdle(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-
-    str = "30";
+    QMap<QString, QString> idleInfo = getNasCfg("idle");
+    str = idleInfo.value("time");
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetTemperature(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QMap<QString, QString> mailEventInfo = getNasCfg("mail_event");
 
     QDomElement root = doc.createElement("mail_info");
     doc.appendChild(root);
     QDomElement kotElement = doc.createElement("kot");
     root.appendChild(kotElement);
-    kotElement.appendChild(doc.createTextNode("F"));
+    kotElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_kot")));
     QDomElement temperatureElement = doc.createElement("temperature");
     root.appendChild(temperatureElement);
-    temperatureElement.appendChild(doc.createTextNode("167"));
+    temperatureElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_temperature")));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetRestoreStatus(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-
-    str = "0";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_RESTORE_API + " status", true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateRestart(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
     str = "/web/dsk_mgr/wait.html";
 }
 
-/* todo */
 void RenderResponseSysMngm::generateRestore(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_RESTORE_API + " resetdef", true);
     str = "/web/dsk_mgr/wait.html";
 }
 
-/* todo */
 void RenderResponseSysMngm::generateShutdown() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " shutdown");
 }
 
-/* todo */
 void RenderResponseSysMngm::generateIdle() {
-    QString paraIdle = m_pMap->value("f_idle").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QString paraIdle = m_pReq->allParameters().value("f_idle").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_IDLE_API + " set " + paraIdle);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateTemperature() {
-    QString paraTemperature = m_pMap->value("f_temperature").toString();
-    QString paraKoc = m_pMap->value("f_koc").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QString paraTemperature = m_pReq->allParameters().value("f_temperature").toString();
+    QString paraKoc = m_pReq->allParameters().value("f_koc").toString();
+
+    QMap<QString, QString> map;
+    map.insert("hdd_temperature_temperature", paraTemperature);
+    map.insert("hdd_temperature_kot", paraKoc);
+    if(!setNasCfg("mail_event", map))
+        tDebug("setNasCfg mail_event failed");
 }
 
-/* todo */
-void RenderResponseSysMngm::generateBackupConf() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    // Parse file
+void RenderResponseSysMngm::generateBackupConf(QString &str) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " save", true);
+    QString filePath = apiOut.value(0);
+    tDebug("file: %s", filePath.toLocal8Bit().data());
+    QFileInfo file(filePath);
+    if(file.exists() && file.isFile())
+        str = filePath;
 }
 
-/* todo */
 void RenderResponseSysMngm::generateRestoreConf(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    //sendfile()
-    str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
+
+    if(!m_pReq->multipartFormData().isEmpty()) {
+        if(m_pReq->multipartFormData().renameUploadedFile("name", USER_IMPORT_FILE)) {
+            QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
+            if(apiOut.value(0).compare("0") == 0) {
+                str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
+                getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
+            }
+        }
+    }
+
 }
 
 /* todo */
 void RenderResponseSysMngm::generateLogSystem(QString &str) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraSortname = m_pMap->value("sortname").toString();
-    QString paraSortorder = m_pMap->value("sortorder").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraSortname = m_pReq->allParameters().value("sortname").toString();
+    QString paraSortorder = m_pReq->allParameters().value("sortorder").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
     str = "{\"rows\":[],\"total\":\"0\",\"page\":\"1\"}";
 }
@@ -350,16 +353,16 @@ void RenderResponseSysMngm::generateGetLogInfo(QDomDocument &doc) {
 
 /* todo */
 void RenderResponseSysMngm::generateLogServer() {
-    QString paraEnable = m_pMap->value("f_enable").toString();
-    QString paraIp = m_pMap->value("f_ip").toString();
-    QString paraPort = m_pMap->value("f_port").toString();
+    QString paraEnable = m_pReq->allParameters().value("f_enable").toString();
+    QString paraIp = m_pReq->allParameters().value("f_ip").toString();
+    QString paraPort = m_pReq->allParameters().value("f_port").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 }
 
 /* todo */
 void RenderResponseSysMngm::generateSendLogTest() {
-    QString paraIp = m_pMap->value("f_ip").toString();
-    QString paraPort = m_pMap->value("f_port").toString();
+    QString paraIp = m_pReq->allParameters().value("f_ip").toString();
+    QString paraPort = m_pReq->allParameters().value("f_port").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 }
 

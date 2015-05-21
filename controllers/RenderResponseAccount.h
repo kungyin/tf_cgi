@@ -6,7 +6,7 @@
 class T_CONTROLLER_EXPORT RenderResponseAccount : public RenderResponse {
     Q_OBJECT
 public:
-    RenderResponseAccount(QVariantMap &, CGI_COMMAND);
+    RenderResponseAccount(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAccount();
 
     virtual RENDER_TYPE preRender();

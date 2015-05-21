@@ -1,11 +1,11 @@
 #include "RenderResponseAccount.h"
 #include "AppDefine.h"
 
-RenderResponseAccount::RenderResponseAccount(QVariantMap &map, CGI_COMMAND cmd)
+RenderResponseAccount::RenderResponseAccount(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
     m_renderType = RENDER_TYPE_UNKNOWN;
-    m_pMap = &map;
+    m_pReq = &req;
 }
 
 RenderResponseAccount::~RenderResponseAccount() {
@@ -13,7 +13,7 @@ RenderResponseAccount::~RenderResponseAccount() {
 
 RENDER_TYPE RenderResponseAccount::preRender() {
 
-    if(!m_pMap)
+    if(!m_pReq)
         return RENDER_TYPE_UNKNOWN;
 
     QDomDocument doc = QDomDocument();
@@ -208,8 +208,8 @@ RENDER_TYPE RenderResponseAccount::preRender() {
 }
 
 void RenderResponseAccount::generateChangeAdminPwd(QDomDocument &doc) {
-    QString paraPwd = m_pMap->value("pw").toString();
-    QString paraOldPwd = m_pMap->value("old_pw").toString();
+    QString paraPwd = m_pReq->allParameters().value("pw").toString();
+    QString paraOldPwd = m_pReq->allParameters().value("old_pw").toString();
     //QByteArray pwd = QByteArray::fromBase64(paraPwd.toLocal8Bit());
     //QByteArray oldPwd = QByteArray::fromBase64(paraOldPwd.toLocal8Bit());
 
@@ -223,12 +223,12 @@ void RenderResponseAccount::generateChangeAdminPwd(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateGetUserList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " userlist");
 
@@ -297,12 +297,12 @@ void RenderResponseAccount::generateGetUserInfo(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " sharelist");
 
@@ -340,9 +340,9 @@ void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateUserAdd(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraPw = m_pMap->value("pw").toString();
-    QString paraGroup = QUrl::fromPercentEncoding(m_pMap->value("group").toByteArray()).remove("#");
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraPw = m_pReq->allParameters().value("pw").toString();
+    QString paraGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group").toByteArray()).remove("#");
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR +
                                       " add " + paraName + " " + paraPw + " " + paraGroup, true);
@@ -350,18 +350,18 @@ void RenderResponseAccount::generateUserAdd(QDomDocument &doc) {
 
 /* todo: restart specified service*/
 void RenderResponseAccount::generateRestartService() {
-    QString paraNfs = m_pMap->value("nfs").toString();
-    QString paraWebdav = m_pMap->value("webdav").toString();
+    QString paraNfs = m_pReq->allParameters().value("nfs").toString();
+    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SERVICE_API + " restart", true);
 }
 
 void RenderResponseAccount::generateUserSetQuota() {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraAva1 = m_pMap->value("available1").toString();
-    QString paraAva2 = m_pMap->value("available2").toString();
-    QString paraAva3 = m_pMap->value("available3").toString();
-    QString paraAva4 = m_pMap->value("available4").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraAva1 = m_pReq->allParameters().value("available1").toString();
+    QString paraAva2 = m_pReq->allParameters().value("available2").toString();
+    QString paraAva3 = m_pReq->allParameters().value("available3").toString();
+    QString paraAva4 = m_pReq->allParameters().value("available4").toString();
 
     if(paraAva1.compare("null") != 0)
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userset " + paraName + " 1 " + paraAva1, true);
@@ -375,12 +375,12 @@ void RenderResponseAccount::generateUserSetQuota() {
 
 /* todo: ftp */
 void RenderResponseAccount::generateAddUserToSession() {
-    QString paraName = m_pMap->value("s_name").toString();
-    QString paraFtp = m_pMap->value("ftp").toString();
-    QString paraReadList = m_pMap->value("read_list").toString();
-    QString paraWriteList = m_pMap->value("write_list").toString();
-    QString paraDeclineList = m_pMap->value("decline_list").toString();
-    QString paraUsername = m_pMap->value("username").toString();
+    QString paraName = m_pReq->allParameters().value("s_name").toString();
+    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+    QString paraUsername = m_pReq->allParameters().value("username").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMB_API + " access "
                 + paraName + " " + paraReadList + " " + paraWriteList + " " + paraDeclineList, true);
@@ -392,7 +392,7 @@ void RenderResponseAccount::generateCreateFtpLink() {
 }
 
 void RenderResponseAccount::generateFtpService() {
-    QString paraStart = m_pMap->value("type").toString();
+    QString paraStart = m_pReq->allParameters().value("type").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API2 + " " + paraStart, true);
 }
@@ -400,11 +400,11 @@ void RenderResponseAccount::generateFtpService() {
 /* todo: need API */
 /* For user, group and network share. */
 void RenderResponseAccount::generateWebdavAccountMerge(QDomDocument &doc) {
-    QString paraShareName = m_pMap->value("f_share_name").toString();
-    QString paraRw = m_pMap->value("f_rw").toString();
-    QString paraUser = m_pMap->value("f_user").toString();
-    QString paraWebdav = m_pMap->value("webdav").toString();
-    QString paraPath = m_pMap->value("f_path").toString();
+    QString paraShareName = m_pReq->allParameters().value("f_share_name").toString();
+    QString paraRw = m_pReq->allParameters().value("f_rw").toString();
+    QString paraUser = m_pReq->allParameters().value("f_user").toString();
+    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
+    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QDomElement root = doc.createElement("config");
@@ -415,17 +415,17 @@ void RenderResponseAccount::generateWebdavAccountMerge(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateUserBatchCreate() {
-    QString paraPrefix = m_pMap->value("f_prefix").toString();
-    QString paraStart = m_pMap->value("f_start").toString();
-    QString paraNumber = m_pMap->value("f_number").toString();
-    QString paraBatchPw = m_pMap->value("f_batch_pw").toString();
-//    QString paraRList = m_pMap->value("r_list").toString();
-//    QString paraWList = m_pMap->value("w_list").toString();
-//    QString paraDList = m_pMap->value("d_list").toString();
-    QString paraGroupList = QUrl::fromPercentEncoding(m_pMap->value("group_list").toByteArray()).replace(":", ",");
-    QString paraApp = m_pMap->value("app").toString();
-    QString paraQuota = m_pMap->value("quota").toString();
-    QString paraOverWrite = m_pMap->value("f_overwrite").toString();
+    QString paraPrefix = m_pReq->allParameters().value("f_prefix").toString();
+    QString paraStart = m_pReq->allParameters().value("f_start").toString();
+    QString paraNumber = m_pReq->allParameters().value("f_number").toString();
+    QString paraBatchPw = m_pReq->allParameters().value("f_batch_pw").toString();
+//    QString paraRList = m_pReq->allParameters().value("r_list").toString();
+//    QString paraWList = m_pReq->allParameters().value("w_list").toString();
+//    QString paraDList = m_pReq->allParameters().value("d_list").toString();
+    QString paraGroupList = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group_list").toByteArray()).replace(":", ",");
+    QString paraApp = m_pReq->allParameters().value("app").toString();
+    QString paraQuota = m_pReq->allParameters().value("quota").toString();
+    QString paraOverWrite = m_pReq->allParameters().value("f_overwrite").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR +
                                       " multiadd " + paraPrefix + " " + paraStart + " " + paraNumber +
@@ -434,7 +434,7 @@ void RenderResponseAccount::generateUserBatchCreate() {
 }
 
 void RenderResponseAccount::generateGetModifyUserInfo(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " modinfo " + paraName, true, ";");
     QDomElement root = doc.createElement("user_info");
@@ -518,22 +518,22 @@ void RenderResponseAccount::generateGetModifyUserInfo(QDomDocument &doc) {
 
 /* todo */
 void RenderResponseAccount::generateUserModify(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraPw = m_pMap->value("pw").toString();
-    QString paraFtp = m_pMap->value("ftp").toString();
-    QString paraGroup = m_pMap->value("group").toString();
-    QString paraAva1 = m_pMap->value("available1").toString();
-    QString paraAva2 = m_pMap->value("available2").toString();
-    QString paraAva3 = m_pMap->value("available3").toString();
-    QString paraAva4 = m_pMap->value("available4").toString();
-    QString paraReadList = m_pMap->value("read_list").toString();
-    QString paraWriteList = m_pMap->value("write_list").toString();
-    QString paraDeclineList = m_pMap->value("decline_list").toString();
-    QString paraUncheckList = m_pMap->value("uncheck_list").toString();
-    QString paraMPw = m_pMap->value("m_pw").toString();
-    QString paraMGroup = QUrl::fromPercentEncoding(m_pMap->value("m_group").toByteArray()).remove("#");
-    QString paraMQuota = m_pMap->value("m_quota").toString();
-    QString paraMShare = m_pMap->value("m_share").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraPw = m_pReq->allParameters().value("pw").toString();
+    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+    QString paraGroup = m_pReq->allParameters().value("group").toString();
+    QString paraAva1 = m_pReq->allParameters().value("available1").toString();
+    QString paraAva2 = m_pReq->allParameters().value("available2").toString();
+    QString paraAva3 = m_pReq->allParameters().value("available3").toString();
+    QString paraAva4 = m_pReq->allParameters().value("available4").toString();
+    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+    QString paraUncheckList = m_pReq->allParameters().value("uncheck_list").toString();
+    QString paraMPw = m_pReq->allParameters().value("m_pw").toString();
+    QString paraMGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("m_group").toByteArray()).remove("#");
+    QString paraMQuota = m_pReq->allParameters().value("m_quota").toString();
+    QString paraMShare = m_pReq->allParameters().value("m_share").toString();
 
 //    QVector<QString> available;
 //    if(paraAva1.compare("null") != 0)
@@ -559,13 +559,13 @@ void RenderResponseAccount::generateUserModify(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateUserDel() {
-    QString paraName = QUrl::fromPercentEncoding(m_pMap->value("name").toByteArray());
+    QString paraName = QUrl::fromPercentEncoding(m_pReq->allParameters().value("name").toByteArray());
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " del " + paraName, true);
 }
 
 /* the same API ?? */
 void RenderResponseAccount::generateMyFavDelUser(QDomDocument &doc) {
-    QString paraUserList = m_pMap->value("f_user_lst").toString();
+    QString paraUserList = m_pReq->allParameters().value("f_user_lst").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " del " + paraUserList, true);
     QDomElement root = doc.createElement("config");
@@ -620,7 +620,7 @@ void RenderResponseAccount::generateGetImportUsers(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
@@ -631,8 +631,8 @@ void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize(QDomDocument &doc
 
 /* todo: need API */
 void RenderResponseAccount::generateCreateImportUsers() {
-    QString paraApp = m_pMap->value("app").toString();
-    QString paraOverwrite = m_pMap->value("overwrite").toString();
+    QString paraApp = m_pReq->allParameters().value("app").toString();
+    QString paraOverwrite = m_pReq->allParameters().value("overwrite").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
@@ -648,12 +648,12 @@ void RenderResponseAccount::generateCreateStatus(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseAccount::generateGetGroupList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qtype").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qtype").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -718,15 +718,15 @@ void RenderResponseAccount::generateGetGroupInfo(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseAccount::generateGroupAdd() {
-    QString paraGroup = m_pMap->value("group").toString();
-    QString paraMember = m_pMap->value("member").toString();
+    QString paraGroup = m_pReq->allParameters().value("group").toString();
+    QString paraMember = m_pReq->allParameters().value("member").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
 
 /* todo: need API */
 void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QDomElement root = doc.createElement("group_info");
@@ -740,11 +740,11 @@ void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize(QDomDocument &d
 }
 
 void RenderResponseAccount::generateGroupSetQuota() {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraAva1 = m_pMap->value("available1").toString();
-    QString paraAva2 = m_pMap->value("available2").toString();
-    QString paraAva3 = m_pMap->value("available3").toString();
-    QString paraAva4 = m_pMap->value("available4").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraAva1 = m_pReq->allParameters().value("available1").toString();
+    QString paraAva2 = m_pReq->allParameters().value("available2").toString();
+    QString paraAva3 = m_pReq->allParameters().value("available3").toString();
+    QString paraAva4 = m_pReq->allParameters().value("available4").toString();
     if(paraAva1.compare("null") != 0)
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupset " + paraName + " 1 " + paraAva1, true);
     if(paraAva2.compare("null") != 0)
@@ -757,7 +757,7 @@ void RenderResponseAccount::generateGroupSetQuota() {
 
 /* todo: need API */
 void RenderResponseAccount::generateGetModifyGroupInfo(QDomDocument &doc) {
-    QString paraGroup = m_pMap->value("group").toString();
+    QString paraGroup = m_pReq->allParameters().value("group").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QDomElement root = doc.createElement("group_info");
@@ -812,23 +812,23 @@ void RenderResponseAccount::generateGetModifyGroupInfo(QDomDocument &doc) {
 
 /* todo: need API */
 void RenderResponseAccount::generateGroupModify() {
-    QString paraGroup = m_pMap->value("group").toString();
-    QString paraAva1 = m_pMap->value("available1").toString();
-    QString paraAva2 = m_pMap->value("available2").toString();
-    QString paraAva3 = m_pMap->value("available3").toString();
-    QString paraAva4 = m_pMap->value("available4").toString();
-    QString paraReadList = m_pMap->value("read_list").toString();
-    QString paraWriteList = m_pMap->value("write_list").toString();
-    QString paraDeclineList = m_pMap->value("decline_list").toString();
-    QString paraUncheckList = m_pMap->value("uncheck_list").toString();
-    QString paraFtp = m_pMap->value("ftp").toString();
+    QString paraGroup = m_pReq->allParameters().value("group").toString();
+    QString paraAva1 = m_pReq->allParameters().value("available1").toString();
+    QString paraAva2 = m_pReq->allParameters().value("available2").toString();
+    QString paraAva3 = m_pReq->allParameters().value("available3").toString();
+    QString paraAva4 = m_pReq->allParameters().value("available4").toString();
+    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+    QString paraUncheckList = m_pReq->allParameters().value("uncheck_list").toString();
+    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
 /* todo: need API */
 void RenderResponseAccount::generateGroupDel() {
-    QString paraGroup = m_pMap->value("group").toString();
+    QString paraGroup = m_pReq->allParameters().value("group").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
@@ -888,12 +888,12 @@ bool RenderResponseAccount::isQuotaNumber(QString str) {
 }
 
 void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qyupe").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qyupe").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userlist", false, ";");
 
@@ -949,12 +949,12 @@ void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
-    QString paraPage = m_pMap->value("page").toString();
-    QString paraRp = m_pMap->value("rp").toString();
-    QString paraQuery = m_pMap->value("query").toString();
-    QString paraQType = m_pMap->value("qyupe").toString();
-    QString paraField = m_pMap->value("f_field").toString();
-    QString paraUser = m_pMap->value("user").toString();
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+    QString paraQuery = m_pReq->allParameters().value("query").toString();
+    QString paraQType = m_pReq->allParameters().value("qyupe").toString();
+    QString paraField = m_pReq->allParameters().value("f_field").toString();
+    QString paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " grouplist", false, ";");
 
@@ -1010,8 +1010,8 @@ void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateGetUserQuotaMaxSize(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraHdd = m_pMap->value("hdd").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " usersize " + paraName + " " + paraHdd, true);
 
@@ -1024,8 +1024,8 @@ void RenderResponseAccount::generateGetUserQuotaMaxSize(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateGetGroupQuotaMinSize(QDomDocument &doc) {
-    QString paraName = m_pMap->value("name").toString();
-    QString paraHdd = m_pMap->value("hdd").toString();
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " groupsize " + paraName + " " + paraHdd, true);
 
@@ -1038,7 +1038,7 @@ void RenderResponseAccount::generateGetGroupQuotaMinSize(QDomDocument &doc) {
 }
 
 void RenderResponseAccount::generateSetQuotaOnOff() {
-    QString paraOnoff = m_pMap->value("onoff").toString();
+    QString paraOnoff = m_pReq->allParameters().value("onoff").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " enable " + paraOnoff, true);
 }
