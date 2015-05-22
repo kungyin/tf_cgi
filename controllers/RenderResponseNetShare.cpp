@@ -5,17 +5,16 @@
 RenderResponseNetShare::RenderResponseNetShare(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseNetShare::~RenderResponseNetShare() {
 }
 
-RENDER_TYPE RenderResponseNetShare::preRender() {
+void RenderResponseNetShare::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -23,103 +22,78 @@ RENDER_TYPE RenderResponseNetShare::preRender() {
     switch(m_cmd) {
     case CMD_MODULE_GET_INFO:
         generateModuleGetInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_ADS_INFO:
         generateGetAdsInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_SESSION:
         generateGetSession(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_ISO_SHARE:
         generateGetIsoShare(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_AFP_INFO:
         generateGetAfpInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_NFS_INFO:
         generateGetNfsInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ISO_PERCENTAGE:
         generateIsoPrecentage(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_CLEAR_ISO_CREATE:
         generateClearIsoCreate();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_USER_LIST:
         generateUserList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GROUP_LIST:
         generateGroupList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_ALL_ISO_SHARE:
         generateGetAllIsoShare(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_OPEN_TREE:
         generateOpenTree(str);
-        m_renderType = RENDER_TYPE_HTML;
         break;
     case CMD_OPEN_NEW_FOLDER:
         generateOpenNewFolder(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ADD_SESSION:
         generateAddSession();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_SET_NFS_SHARE:
         generateSetNfsShare();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_MODIFY_SESSION:
         generateGetModifySession(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_MODIFY_SESSION:
         generateModifySession();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_MODIFY_NFS_SHARE:
         generateModifyNfsShare();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_WEBDAV_ACCOUNT_ADD:
         generateWebdavAccountAdd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_DEL_SESSION:
         generateDeleteSession();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_WEBDAV_ACCOUNT_DEL:
         generateWebdavAccountDel(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_RESET_SESSION:
         generateResetSession(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_GET_SHARE_INFO:
         generateGetShareInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_FTP:
         generateGetFtp(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_WEBDAV_ACCOUNT_INFO:
         generateWebdavAccountInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_NONE:
     default:
@@ -129,7 +103,6 @@ RENDER_TYPE RenderResponseNetShare::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 /* todo: need API */

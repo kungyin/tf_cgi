@@ -6,17 +6,16 @@
 RenderResponseSysMngm::RenderResponseSysMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseSysMngm::~RenderResponseSysMngm() {
 }
 
-RENDER_TYPE RenderResponseSysMngm::preRender() {
+void RenderResponseSysMngm::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -24,99 +23,75 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
     switch(m_cmd) {
     case CMD_GET_TIME:
         generateGetTime(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_MANUAL_TIME:
         generateManualTime();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_TIMEZONE:
         generateTimezone();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_NTP_TIME:
         generateNtpTime();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_TIME_STATUS:
         generateGetTimeStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_DEVICE_INFO:
         generateGetDeviceInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_DEVICE:
         generateDevice();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_DETECT_DANGEROUS:
         generateDetectDangerous(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_IDEL:
         generateGetIdle(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_GET_TEMPERATURE:
         generateGetTemperature(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_RESTORE_STATUS:
         generateGetRestoreStatus(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_RESTART:
         generateRestart(str);
-        m_renderType = RENDER_TYPE_REDIRECT;
         break;
     case CMD_RESTORE:
         generateRestore(str);
-        m_renderType = RENDER_TYPE_REDIRECT;
         break;
     case CMD_SHUTDOWN:
         generateShutdown();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_IDLE:
         generateIdle();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_TEMPERATURE:
         generateTemperature();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_BACKUP_CONF:
         generateBackupConf(str);
-        m_renderType = RENDER_TYPE_FILE;
         break;
     case CMD_RESTORE_CONF:
         generateRestoreConf(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_LOG_SYSTEM:
         generateLogSystem(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_GET_LOG_INFO:
         generateGetLogInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_LOG_SERVER:
         generateLogServer();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_SEND_LOG_TEST:
         generateSendLogTest();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_LOG_BACKUP:
         generateLogBackup(str);
-        m_renderType = RENDER_TYPE_FILE;
         break;
     case CMD_LOG_CLEAR:
         generateLogClear();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_NONE:
     default:
@@ -126,7 +101,6 @@ RENDER_TYPE RenderResponseSysMngm::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {

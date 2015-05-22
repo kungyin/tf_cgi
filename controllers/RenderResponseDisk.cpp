@@ -5,17 +5,16 @@
 RenderResponseDisk::RenderResponseDisk(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseDisk::~RenderResponseDisk() {
 }
 
-RENDER_TYPE RenderResponseDisk::preRender() {
+void RenderResponseDisk::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -23,63 +22,48 @@ RENDER_TYPE RenderResponseDisk::preRender() {
     switch(m_cmd) {
     case CMD_VOLUME_STATUS:
         generateVolumeStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_GET_SYNC_SATTE:
         generateFMTGetSyncState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_GET_AUTO_REBUILD_INFO:
         generateFMTGetAutoRebuildInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_AJAXPLORER_STOP:
         generateAJAXPlorerStop(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_CREATE_DISKMGR:
         generateFMTCreateDiskMGR(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_HD_LIST:
         generateSmartHDList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_XML_CREATE_TEST_LIST:
         generateCreateTestList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_SCHEDULE_LIST:
         generateSmartScheduleList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_GET_TEST_STATUS:
         generateGetTestStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_SET_SCHEDULE:
         generateSmartSetSchedule(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SCANDISK_INFO:
         generateScanDiskInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_TEST_START:
         generateSmartTestStart(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_CHECK_DISK_REMOUNT_STATUS:
         generateCheckDiskRemountState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SCANDISK_RUN_E2FSCK:
         generateScanDiskRunE2fsck(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SCANDISK_FINISH:
         generateScanDiskFinish(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_NONE:
     default:
@@ -89,7 +73,6 @@ RENDER_TYPE RenderResponseDisk::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {

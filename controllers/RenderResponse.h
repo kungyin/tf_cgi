@@ -5,27 +5,11 @@
 #include "CommandDefine.h"
 #include "AppDefine.h"
 
-enum RENDER_TYPE {
-    RENDER_TYPE_UNKNOWN,
-    RENDER_TYPE_NULL,
-    RENDER_TYPE_STRING,
-    RENDER_TYPE_XML,
-    RENDER_TYPE_JOSEN,
-    RENDER_TYPE_FILE,
-    RENDER_TYPE_HTML,
-    RENDER_TYPE_REDIRECT,
-    RENDER_TYPE_REDIRECT_WITH_COOKIE,
-};
-
-//const int CGI_COMMANDS[][2] = {
-//    {2,  3}
-//};
-
 class T_CONTROLLER_EXPORT RenderResponse : public QObject {
     Q_OBJECT
 public:
 
-    virtual RENDER_TYPE preRender() = 0;
+    virtual void preRender() = 0;
     virtual ~RenderResponse() {}
 
     QDomDocument &getDoc() { return m_doc; }
@@ -41,7 +25,6 @@ protected:
     QMap<QString, QString> getNasCfg(QString);
 
     CGI_COMMAND m_cmd;
-    RENDER_TYPE m_renderType;
     QDomDocument m_doc;
     QString m_str;
     QString m_file;

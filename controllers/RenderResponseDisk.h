@@ -40,7 +40,7 @@ public:
     RenderResponseDisk(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseDisk();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
 

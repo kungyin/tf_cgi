@@ -5,17 +5,16 @@
 RenderResponseNetwork::RenderResponseNetwork(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseNetwork::~RenderResponseNetwork() {
 }
 
-RENDER_TYPE RenderResponseNetwork::preRender() {
+void RenderResponseNetwork::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -23,87 +22,66 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
     switch(m_cmd) {
     case CMD_GET_LLTD:
         generateGetLLTD(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_LAN_XML:
         generateLanXml(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_IPV6:
         generateIPV6(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_LAN_STATUS:
         generateLanStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_LAN_XML2:
         generateLanXml2(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SETIP_LOCK:
         generateSetIPLock();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_IP:
         generateIP();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_SPEED:
         generateSpeed();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_LLTD:
         generateLLTD(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_DDNS:
         generateGetDdns(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_DDNS_STATUS:
         generateGetDdnsStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_DDNS:
         generateDdns(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_PORTFORWARDING_GET:
         generatePortForwardingGet(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_TEST:
         generateUpnpTest();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_UPNP_TEST_RESULT:
         generateUpnpTestResult(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_PORTFORWARDING_TOTAL:
         generatePortForwardingTotal(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_GET_PORT_TABLE:
         generateGetPortTable(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_PORTFORWARDING_ADD_SCAN:
         generatePortFrowardingAddScan(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_PORTFORWARDING_ADD:
         generatePortFrowardingAdd(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_PORTFORWARDING_MODIFY:
         generatePortFrowardingModify(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_PORTFORWARDING_DEL:
         generatePortFrowardingDel(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_NONE:
     default:
@@ -113,7 +91,6 @@ RENDER_TYPE RenderResponseNetwork::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseNetwork::generateGetLLTD(QDomDocument &doc) {

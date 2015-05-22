@@ -9,7 +9,7 @@ public:
     RenderResponseAccount(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAccount();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
     bool isQuotaNumber(QString);

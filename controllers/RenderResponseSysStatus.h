@@ -9,7 +9,7 @@ public:
     RenderResponseSysStatus(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseSysStatus();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
     void generateGetStatus(QDomDocument &);

@@ -3,17 +3,16 @@
 RenderResponseAccount::RenderResponseAccount(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseAccount::~RenderResponseAccount() {
 }
 
-RENDER_TYPE RenderResponseAccount::preRender() {
+void RenderResponseAccount::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -21,179 +20,135 @@ RENDER_TYPE RenderResponseAccount::preRender() {
     switch(m_cmd) {
     case CMD_CHANGE_ADMIN_PWD:
         generateChangeAdminPwd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_USER_LIST:
         generateGetUserList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_USER_INFO:
         generateGetUserInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_SMB_LIST:
         generateGetSmbList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USER_ADD:
         generateUserAdd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_RESTART_SERVICE:
         generateRestartService();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_USER_SET_QUOTA:
         generateUserSetQuota();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_ADDUSER_TO_SESSION:
         generateAddUserToSession();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_CREATE_FTP_LINK:
         generateCreateFtpLink();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_FTP_SERVICE:
         generateFtpService();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_WEBDAV_ACCOUNT_MERGE:
         generateWebdavAccountMerge(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USER_BATCH_CREATE:
         generateUserBatchCreate();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_MODIFY_USER_INFO:
         generateGetModifyUserInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USER_MODIFY:
         generateUserModify(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USER_DEL:
         generateUserDel();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_MYFAVORITE_DEL_USER:
         generateMyFavDelUser(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_DWONLOAD_IMPORT_SAMPLE:
         generateDownloadImportSample(str);
-        m_renderType = RENDER_TYPE_FILE;
         break;
     case CMD_GET_ALL_SESSION:
         generateGetAllSession(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_IMPORT_USERS:
         generateGetImportUsers(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE:
         generateAddUserGetUserQuotaMaxsize(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_CREATE_IMPORT_USERS:
         generateCreateImportUsers();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_CREATE_STATUS:
         generateCreateStatus(doc);
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_GROUP_LIST:
         generateGetGroupList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_GROUP_INFO:
         generateGetGroupInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GROUP_ADD:
         generateGroupAdd();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_ADDGROUP_GET_GROUP_QUOTA_MINSIZE:
         generateAddGroupGetGroupQuotaMinsize(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GROUP_SET_QUOTA:
         generateGroupSetQuota();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_MODIFY_GROUP_INFO:
         generateGetModifyGroupInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GROUP_MODIFY:
         generateGroupModify();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GROUP_DEL:
         generateGroupDel();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GET_QUOTA_INFO:
         generateGetQuotaInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_HD_MAPPING_INFO:
         generateGetHDMappingInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_USER_QUOTA_LIST:
         generateGetUserQuotaList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_GROUP_QUOTA_LIST:
         generateGetGroupQuotaList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_USER_QUOTA_MAXSIZE:
         generateGetUserQuotaMaxSize(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_GROUP_QUOTA_MINSIZE:
         generateGetGroupQuotaMinSize(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SET_QUOTA_ONOFF:
         generateSetQuotaOnOff();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_MODULE_GET_INFO:
         generateModuleGetInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_ADS_INFO:
         generateGetAdsInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_SESSION:
         generateGetSession(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_ISO_SHARE:
         generateGetIsoShare(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_AFP_INFO:
         generateGetAfpInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_NFS_INFO:
         generateGetNfsInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ISO_PERCENTAGE:
         generateIsoPrecentage(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_NONE:
     default:
@@ -203,7 +158,6 @@ RENDER_TYPE RenderResponseAccount::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseAccount::generateChangeAdminPwd(QDomDocument &doc) {

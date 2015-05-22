@@ -3,17 +3,16 @@
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseHome::~RenderResponseHome() {
 }
 
-RENDER_TYPE RenderResponseHome::preRender() {
+void RenderResponseHome::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -21,35 +20,27 @@ RENDER_TYPE RenderResponseHome::preRender() {
     switch(m_cmd) {
     case CMD_CGI_IS_BUILD_IN_LANGUAGE:
         generateIsBuildInLanguage(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SET_USER_LANGUAGE:
         generateSetUserLanguage(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_USER_LANGUAGE:
         generateGetUserLanguage(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_CGI_GET_SSL_INFO:
         generateGetSslInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UI_CHECK_WTO:
         generateUICheckWto(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_FW_STATUS:
         generateFWStatus(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_LOGIN:
         generateLogin(str);
-        m_renderType = RENDER_TYPE_REDIRECT_WITH_COOKIE;
         break;
     case CMD_LOGOUT:
         generateLogout(str);
-        m_renderType = RENDER_TYPE_REDIRECT;
         break;
     case CMD_NONE:
     default:
@@ -59,7 +50,6 @@ RENDER_TYPE RenderResponseHome::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseHome::generateIsBuildInLanguage(QDomDocument &doc) {

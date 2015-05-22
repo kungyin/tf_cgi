@@ -3,17 +3,16 @@
 RenderResponseSysStatus::RenderResponseSysStatus(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseSysStatus::~RenderResponseSysStatus() {
 }
 
-RENDER_TYPE RenderResponseSysStatus::preRender() {
+void RenderResponseSysStatus::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -21,27 +20,21 @@ RENDER_TYPE RenderResponseSysStatus::preRender() {
     switch(m_cmd) {
     case CMD_GET_STATUS:
         generateGetStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_STATUS_VOLUME_INFO:
         generateStatusVolumeInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USB_STORAGE_INFO:
         generateUsbStorageInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_MTP_INFO:
         generateMtpInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_USB_PRINTER_INFO:
         generateUsbPrinterInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPS_INFO2:
         generateUpsInfo2(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_NONE:
     default:
@@ -51,7 +44,6 @@ RENDER_TYPE RenderResponseSysStatus::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 /* todo: need API */

@@ -1,6 +1,24 @@
 #ifndef COMMANDDEFINE_H
 #define COMMANDDEFINE_H
 
+enum RENDER_TYPE {
+    RENDER_TYPE_UNKNOWN,
+    RENDER_TYPE_NULL,
+    RENDER_TYPE_STRING,
+    RENDER_TYPE_XML,
+    RENDER_TYPE_JOSEN,
+    RENDER_TYPE_FILE,
+    RENDER_TYPE_HTML,
+    RENDER_TYPE_REDIRECT,
+    RENDER_TYPE_REDIRECT_WITH_COOKIE,
+};
+
+enum COMMAND_ALLOW {
+    LOGIN_CMDS = 1,
+    OPENED_CMDS = 1 << 1,
+    COOKIE_REQ_CMDS = 1 << 2,  // login with cookie required.
+};
+
 enum CGI_COMMAND {
     CMD_NONE = 0,
 
@@ -425,6 +443,221 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_usb_printer_info",
     "cgi_ups_info2",
     ""
+
+};
+
+const int CGI_COMMAND_TYPE_FILTER[][3] {
+    //{ CMD_NONE,                         RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
+
+    /**** Disk ****/
+    { CMD_VOLUME_STATUS,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Volume_Status" */
+    { CMD_FMT_GET_SYNC_SATTE,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Get_Sync_State */
+    { CMD_FMT_GET_AUTO_REBUILD_INFO,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Get_Auto_Rebuild_Info */
+    { CMD_AJAXPLORER_STOP,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_AJAXPlorer_Stop */
+    { CMD_FMT_CREATE_DISKMGR,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Create_DiskMGR */
+    { CMD_SMART_HD_LIST,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_SMART_HD_List */
+    { CMD_SMART_XML_CREATE_TEST_LIST,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_XML_Create_Test_List */
+    { CMD_SMART_SCHEDULE_LIST,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Schedule_List */
+    { CMD_SMART_GET_TEST_STATUS,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Get_Test_Status */
+    { CMD_SMART_SET_SCHEDULE,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Set_Schedule */
+    { CMD_SMART_TEST_START,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Test_Start */
+    { CMD_SCANDISK_INFO,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_info */
+    { CMD_CHECK_DISK_REMOUNT_STATUS,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Remount_State */
+    { CMD_SCANDISK_RUN_E2FSCK,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_run_e2fsck */
+    { CMD_SCANDISK_FINISH,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_Finish */
+    //{ CMD_DISK_END,                     RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
+
+    /**** Home Page ****/
+    { CMD_CGI_IS_BUILD_IN_LANGUAGE,     RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_is_build_in_language */
+    { CMD_GET_USER_LANGUAGE,            RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_get_user_language */
+    { CMD_CGI_GET_SSL_INFO,             RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_get_ssl_info */
+    { CMD_UI_CHECK_WTO,                 RENDER_TYPE_STRING,         LOGIN_CMDS          },          /* ui_check_wto */
+    { CMD_FW_STATUS,                    RENDER_TYPE_STRING,         LOGIN_CMDS          },          /* cgi_get_fw_status */
+    { CMD_LOGIN,                        RENDER_TYPE_REDIRECT_WITH_COOKIE, LOGIN_CMDS    },          /* login */
+    { CMD_LOGOUT,                       RENDER_TYPE_REDIRECT,       LOGIN_CMDS          },          /* logout */
+    { CMD_SET_USER_LANGUAGE,            RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_set_user_language */
+//    CMD_LONGIN_END,
+
+//    /**** Network ****/
+    { CMD_GET_LLTD,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lltd */
+    { CMD_LAN_XML,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml */
+    { CMD_IPV6,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ipv6 */
+    { CMD_LAN_STATUS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_status */
+    { CMD_LAN_XML2,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml2 */
+    { CMD_SETIP_LOCK,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_setip_lock */
+    { CMD_IP,                           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ip */
+    { CMD_SPEED,                        RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_speed */
+    { CMD_LLTD,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_lltd */
+    { CMD_GET_DDNS,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns */
+    { CMD_GET_DDNS_STATUS,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns_status */
+    { CMD_DDNS,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_ddns */
+    { CMD_PORTFORWARDING_GET,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_portforwarding_get */
+    { CMD_UPNP_TEST,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* upnp_test */
+    { CMD_UPNP_TEST_RESULT,             RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* upnp_test_result */
+    { CMD_PORTFORWARDING_TOTAL,         RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_total */
+    { CMD_GET_PORT_TABLE,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* get_port_table */
+    { CMD_PORTFORWARDING_ADD_SCAN,      RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_add_scan */
+    { CMD_PORTFORWARDING_ADD,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_add */
+    { CMD_PORTFORWARDING_MODIFY,        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_modify */
+    { CMD_PORTFORWARDING_DEL,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_del */
+//    CMD_NETWORK_END,
+
+//    /**** Account ****/
+    { CMD_CHANGE_ADMIN_PWD,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_chg_admin_pw */
+    { CMD_GET_USER_LIST,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_user_list */
+    { CMD_GET_USER_INFO,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_user_info */
+    { CMD_GET_SMB_LIST,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_smb_list */
+    { CMD_USER_ADD,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_user_add */
+    { CMD_RESTART_SERVICE,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_restart_service */
+    { CMD_USER_SET_QUOTA,               RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_user_set_quota */
+    { CMD_ADDUSER_TO_SESSION,           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_adduser_to_session */
+    { CMD_CREATE_FTP_LINK,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_create_ftp_link */
+    { CMD_FTP_SERVICE,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ftp_service */
+    { CMD_WEBDAV_ACCOUNT_MERGE,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* Webdav_Account_merge */
+    { CMD_USER_BATCH_CREATE,            RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_user_batch_create */
+    { CMD_GET_MODIFY_USER_INFO,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_modify_user_info */
+    { CMD_USER_MODIFY,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_user_modify */
+    { CMD_USER_DEL,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_user_del */
+    { CMD_MYFAVORITE_DEL_USER,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_myfavorite_del_user */
+    { CMD_DWONLOAD_IMPORT_SAMPLE,       RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },          /* cgi_download_import_sample */
+    { CMD_GET_ALL_SESSION,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_all_session */
+    { CMD_GET_IMPORT_USERS,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_import_uesrs */
+    { CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE, RENDER_TYPE_XML,          COOKIE_REQ_CMDS      },          /* cgi_adduser_get_user_quota_maxsize */
+    { CMD_CREATE_IMPORT_USERS,          RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_create_import_users */
+    { CMD_GET_CREATE_STATUS,            RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_get_create_status */
+
+//    /**** Group ****/
+    { CMD_GET_GROUP_LIST,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_group_list */
+    { CMD_GET_GROUP_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_group_info */
+    { CMD_GROUP_ADD,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_group_add */
+    { CMD_ADDGROUP_GET_GROUP_QUOTA_MINSIZE, RENDER_TYPE_XML,        COOKIE_REQ_CMDS      },          /* cgi_addgroup_get_group_quota_minsize */
+    { CMD_GROUP_SET_QUOTA,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_group_set_quota */
+    { CMD_GET_MODIFY_GROUP_INFO,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_modify_group_info */
+//    //CMD_WEBDAV_ACCOUNT_MERGE,               /* Webdav_Account_merge */
+    { CMD_GROUP_MODIFY,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_group_modify */
+    { CMD_GROUP_DEL,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_group_del */
+
+//    /**** Quota ****/
+    { CMD_GET_QUOTA_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_quota_info */
+    { CMD_GET_HD_MAPPING_INFO,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_HD_Mapping_Info */
+    { CMD_GET_USER_QUOTA_LIST,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_user_quota_list */
+    { CMD_GET_GROUP_QUOTA_LIST,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_group_quota_list */
+    { CMD_GET_USER_QUOTA_MAXSIZE,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_user_quota_maxsize */
+    { CMD_GET_GROUP_QUOTA_MINSIZE,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_group_quota_minsize */
+    { CMD_SET_QUOTA_ONOFF,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_quota_onoff */
+//    CMD_ACCOUNT_END,
+
+//    /**** Network Share ****/
+    { CMD_MODULE_GET_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Module_Get_Info */
+    { CMD_GET_ADS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_ads_info */
+    { CMD_GET_SESSION,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_session */
+    { CMD_GET_ISO_SHARE,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_iso_share */
+//    //CMD_GET_HD_MAPPING_INFO,                /* cgi_get_HD_Mapping_Info */
+    { CMD_GET_AFP_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_afp_info */
+    { CMD_GET_NFS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_nfs_info */
+    { CMD_ISO_PERCENTAGE,               RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_iso_percentage */
+    { CMD_CLEAR_ISO_CREATE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_clear_iso_create */
+    { CMD_USER_LIST,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_user_list */
+    { CMD_GROUP_LIST,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_group_list */
+//    //CMD_GET_ALL_SESSION,                    /* cgi_get_all_session */
+    { CMD_GET_ALL_ISO_SHARE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_all_iso_share */
+    { CMD_OPEN_TREE,                    RENDER_TYPE_HTML,           COOKIE_REQ_CMDS      },         /* cgi_open_tree */
+    { CMD_OPEN_NEW_FOLDER,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_open_new_folder */
+//    //CMD_FTP_SERVICE,                        /* cgi_ftp_service */
+    { CMD_ADD_SESSION,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_add_session */
+    { CMD_SET_NFS_SHARE,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_nfs_share */
+//    //CMD_RESTART_SERVICE,                    /* cgi_restart_service */
+    { CMD_GET_MODIFY_SESSION,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_modify_session */
+    { CMD_MODIFY_SESSION,               RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_modify_session */
+    { CMD_MODIFY_NFS_SHARE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_modify_nfs_share */
+    { CMD_WEBDAV_ACCOUNT_ADD,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Webdav_Account_add */
+    { CMD_DEL_SESSION,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_del_session */
+    { CMD_WEBDAV_ACCOUNT_DEL,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Webdav_Account_Del */
+    { CMD_RESET_SESSION,                RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_reset_session */
+    { CMD_GET_SHARE_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_share_info */
+    { CMD_GET_FTP,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_ftp */
+    { CMD_WEBDAV_ACCOUNT_INFO,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Webdav_Account_Info */
+//    CMD_NETSHARE_END,
+
+//    /**** Application Management ****/
+    { CMD_SET_AFP,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_afp */
+    { CMD_NFS_ENABLE,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },       /* cgi_nfs_enable */
+
+//    /**** Multimedia Services ****/
+    { CMD_CHK_DB,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_chk_db */
+    { CMD_UPNP_AV_SERVER_PATH_LIST,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Path_List */
+    { CMD_UPNP_AV_SERVER_GET_CONFIG,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Get_Config */
+    { CMD_UPNP_AV_SERVER,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server */
+    { CMD_UPNP_AV_SERVER_GET_SQLDB_STATE, RENDER_TYPE_XML,          COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Get_SQLDB_State */
+    { CMD_GUI_CODEPAGE_GET_LIST,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_codepage_get_list */
+    { CMD_ITUNES_SERVER_GET_XML,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Get_XML */
+    { CMD_ITUNES_SERVER_READY,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Ready */
+    { CMD_AV_SERVER_CHECK_PATH,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Check_Path */
+    { CMD_AV_SERVER_PATH_SETTING,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Path_Setting */
+    { CMD_SQLDB_STOP_FINISH,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* CGI_SQLDB_Stop_Finish */
+    { CMD_UPNP_AV_SERVER_PRESCAN,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Prescan */
+    { CMD_UPNP_AV_SERVER_PATH_DEL,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Path_Del */
+    { CMD_UPNP_AV_SERVER_SETTING,       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Setting */
+    { CMD_GUI_CODEPAGE_ADD,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_codepage_add */
+    { CMD_ITUNES_SERVER_SETTING,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Setting */
+    { CMD_ITUNES_SERVER_CHECK_PS,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Check_PS */
+    { CMD_ITUNES_SERVER_REFRESH,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Refresh */
+    { CMD_ITUNES_SERVER_REFRESH_STATE,  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Refresh_State */
+
+//    /**** Syslog Server ****/
+    { CMD_SYSLOG_SEARCH,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Search */
+    { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Get_Volume_Info */
+    { CMD_SYSLOG_GET_LOG_FILE_OPTION,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Log_File_Option */
+    { CMD_SYSLOG_GET_CONFIG,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Config */
+    { CMD_SYSLOG_GET_SELECT_OPTION,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Select_Option */
+    { CMD_SYSLOG_SET_CONFIG,            RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* Syslog_Set_Config */
+    { CMD_SYSLOG_EXPORT,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Export */
+    { CMD_SYSLOG_GET_EXPORT_STATUS,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Export_Status */
+    { CMD_SYSLOG_CLEAR,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Clear */
+//    CMD_APP_MNGM_END,
+
+//    /**** System Management ****/
+    { CMD_GET_TIME,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_time */
+    { CMD_MANUAL_TIME,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_manual_time */
+    { CMD_TIMEZONE,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_timezone */
+    { CMD_NTP_TIME,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_ntp_time */
+    { CMD_GET_TIME_STATUS,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_time_status */
+
+    { CMD_GET_DEVICE_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_device_info */
+    { CMD_DEVICE,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_device */
+
+    { CMD_DETECT_DANGEROUS,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_Detect_Dangerous */
+    { CMD_GET_IDEL,                     RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_idle */
+    { CMD_GET_TEMPERATURE,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_temperature */
+    { CMD_GET_RESTORE_STATUS,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_restore_status */
+    { CMD_RESTART,                      RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_restart */
+    { CMD_RESTORE,                      RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_restore */
+    { CMD_SHUTDOWN,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_shutdown */
+    { CMD_IDLE,                         RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_idle */
+    { CMD_TEMPERATURE,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_temperature */
+    { CMD_BACKUP_CONF,                  RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },         /* cgi_backup_conf */
+    { CMD_RESTORE_CONF,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_restore_conf */
+
+    { CMD_LOG_SYSTEM,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_log_system */
+    { CMD_GET_LOG_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_log_info */
+    { CMD_LOG_SERVER,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_server */
+    { CMD_SEND_LOG_TEST,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_send_log_test */
+    { CMD_LOG_BACKUP,                   RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },         /* cgi_log_backup */
+    { CMD_LOG_CLEAR,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_clear */
+//    CMD_SYS_MNGM_END,
+
+//    /**** System Status ****/
+    { CMD_GET_STATUS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_status */
+//    //CMD_GET_TEMPERATURE,                    /* cgi_get_temperature */
+    { CMD_STATUS_VOLUME_INFO,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_Status_Volume_Info */
+    { CMD_USB_STORAGE_INFO,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_Storage_info */
+    { CMD_MTP_INFO,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info */
+    { CMD_USB_PRINTER_INFO,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_info */
+    { CMD_UPS_INFO2,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_ups_info2 */
+
+//    CMD_SYS_STATUS_END,
+
+//    CMD_SIZE
 
 };
 
