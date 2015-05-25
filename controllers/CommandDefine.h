@@ -212,7 +212,28 @@ enum CGI_COMMAND {
 
     CMD_SYS_STATUS_END,
 
-    CMD_SIZE
+    /**** FTP Server ****/
+    CMD_FTP_SERVER_GET_CONFIG,              /* FTP_Server_Get_Config */
+    CMD_FTP_SERVER_EXIP_RENEW,              /* FTP_Server_EXIP_Renew */
+    CMD_P2P_GET_PORT,                       /* cgi_p2p_get_port */
+    CMD_FTP_SERVER_BLOCKIP_LIST,            /* FTP_Server_BlockIP_List */
+    CMD_FTP_SERVER_BLOCKIP_ADD,             /* FTP_Server_BlockIP_Add */
+    CMD_FTP_SERVER_ENABLE,                  /* FTP_Server_Enable */
+    CMD_FTP_SERVER_END,
+
+    /**** Time Machine ****/
+
+    CMD_GET_TM_INFO,                        /* cgi_tm_get_info */
+    CMD_GET_TM_LIST,                        /* cgi_tm_get_list */
+    CMD_TM_GET_SMB_LIST,                    /* cgi_tm_get_smb_list */
+    CMD_TM_SET,                             /* cgi_tm_set */
+    CMD_TM_GET_SHARENAME,                   /* cgi_tm_get_sharename */
+    CMD_TM_SET_SHARE,                       /* cgi_tm_set_share */
+    CMD_TM_DEL_SHARE,                       /* cgi_tm_del_share */
+    CMD_TM_DEL_ALL_SHARE,                   /* cgi_tm_del_all_share */
+    CMD_TIME_MACHINE_END,
+
+    CMD_SIZE,
 
 };
 
@@ -424,8 +445,29 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_mtp_info",
     "cgi_usb_printer_info",
     "cgi_ups_info2",
+    "",
+    
+    /**** FTP Server ****/    
+    "FTP_Server_Get_Config",
+    "FTP_Server_EXIP_Renew",
+    "cgi_p2p_get_port",
+    "FTP_Server_BlockIP_List",
+    "FTP_Server_BlockIP_Add",
+    "FTP_Server_Enable",
+    "",
+
+    /**** Time Machine ****/
+    "cgi_tm_get_info",
+    "cgi_tm_get_list",
+    "cgi_tm_get_smb_list",
+    "cgi_tm_set",
+    "cgi_tm_get_sharename",
+    "cgi_tm_set_share",
+    "cgi_tm_del_share",
+    "cgi_tm_del_all_share",
     ""
 
 };
 
 #endif // COMMANDDEFINE_H
+

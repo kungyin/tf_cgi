@@ -3,7 +3,7 @@
 
 #include <QString>
 
-//#define SIMULATOR_MODE
+#define SIMULATOR_MODE
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_HOME_API       =   "sysapi_home";
@@ -31,6 +31,10 @@ const QString SCRIPT_POWER_API      =   "sysapi_power";
 const QString SCRIPT_IDLE_API       =   "sysapi_idle";
 const QString SCRIPT_RESTORE_API    =   "sysapi_restore";
 const QString SCRIPT_CONFIG_API     =   "sysapi_config";
+const QString SCRIPT_APPAPI_FTP     =   "appapi_ftp2";
+const QString SCRIPT_APPAPI_TMM     =   "appapi_tmm";
+
+
 
 #ifndef SIMULATOR_MODE
 
