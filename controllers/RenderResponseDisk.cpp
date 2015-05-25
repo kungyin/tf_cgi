@@ -1,22 +1,20 @@
 #include <cassert>
 
 #include "RenderResponseDisk.h"
-#include "AppDefine.h"
 
 RenderResponseDisk::RenderResponseDisk(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseDisk::~RenderResponseDisk() {
 }
 
-RENDER_TYPE RenderResponseDisk::preRender() {
+void RenderResponseDisk::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -24,71 +22,48 @@ RENDER_TYPE RenderResponseDisk::preRender() {
     switch(m_cmd) {
     case CMD_VOLUME_STATUS:
         generateVolumeStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_GET_SYNC_SATTE:
         generateFMTGetSyncState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_GET_AUTO_REBUILD_INFO:
         generateFMTGetAutoRebuildInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_AJAXPLORER_STOP:
         generateAJAXPlorerStop(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FMT_CREATE_DISKMGR:
         generateFMTCreateDiskMGR(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_HD_LIST:
         generateSmartHDList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_XML_CREATE_TEST_LIST:
         generateCreateTestList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_SCHEDULE_LIST:
         generateSmartScheduleList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_GET_TEST_STATUS:
         generateGetTestStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_SET_SCHEDULE:
-    {
-        if(m_pReq->allParameters().contains("f_flag")) {
-            QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
-            if(paraFlag.compare("1") == 0)
-                generateSmartSetSchedule(doc);
-            else if(paraFlag.compare("0") == 0)
-                generateSmartDelSchedule(doc);
-        }
-        m_renderType = RENDER_TYPE_XML;
+        generateSmartSetSchedule(doc);
         break;
-    }
     case CMD_SCANDISK_INFO:
         generateScanDiskInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SMART_TEST_START:
         generateSmartTestStart(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_CHECK_DISK_REMOUNT_STATUS:
         generateCheckDiskRemountState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SCANDISK_RUN_E2FSCK:
         generateScanDiskRunE2fsck(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SCANDISK_FINISH:
         generateScanDiskFinish(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_NONE:
     default:
@@ -98,7 +73,6 @@ RENDER_TYPE RenderResponseDisk::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
@@ -422,15 +396,14 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     totalElement.appendChild(doc.createTextNode("1"));
 }
 
-/* todo */
 void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " system_get_disk_volume_status");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_test_status", true);
 
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
     QDomElement stateElement = doc.createElement("State");
     root.appendChild(stateElement);
-    stateElement.appendChild(doc.createTextNode("0:"));
+    stateElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }
 
 void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
@@ -463,22 +436,6 @@ void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
     QDomElement cmdElement = doc.createElement("cmd");
     root.appendChild(cmdElement);
     cmdElement.appendChild(doc.createTextNode(apiOut.value(0)));
-}
-
-/* todo */
-void RenderResponseDisk::generateSmartDelSchedule(QDomDocument &doc) {
-    if(!m_pReq)
-        return;
-
-    QString paraMailFlag;
-    if(m_pReq->allParameters().contains("f_mail_flag"))
-        paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
-
-    QDomElement root = doc.createElement("config");
-    doc.appendChild(root);
-    QDomElement cmdElement = doc.createElement("cmd");
-    root.appendChild(cmdElement);
-    cmdElement.appendChild(doc.createTextNode("null"));
 }
 
 void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
@@ -562,4 +519,3 @@ void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
 }
-

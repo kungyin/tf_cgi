@@ -1,7 +1,7 @@
 #include <QProcess>
+#include <QFileInfo>
 
 #include "RenderResponse.h"
-#include "AppDefine.h"
 
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar) {
     QStringList ret;
@@ -11,7 +11,13 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     if(input.isEmpty())
         return ret;
 
-    QString cmd = input.at(0);
+    QString cmd = input.value(0);
+    QFileInfo fileInfo(cmd);
+    if ( !fileInfo.exists() || !fileInfo.isFile() ) {
+        tError("RenderResponse::getAPIStdOut() -- file %s does not exist", cmd.toLocal8Bit().data());
+        return ret;
+    }
+
     input.removeFirst();
 
     QProcess process;

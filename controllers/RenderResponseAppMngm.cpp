@@ -1,20 +1,18 @@
 #include "RenderResponseAppMngm.h"
-#include "AppDefine.h"
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseAppMngm::~RenderResponseAppMngm() {
 }
 
-RENDER_TYPE RenderResponseAppMngm::preRender() {
+void RenderResponseAppMngm::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -22,123 +20,93 @@ RENDER_TYPE RenderResponseAppMngm::preRender() {
     switch(m_cmd) {
     case CMD_SET_AFP:
         generateSetAfp();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_NFS_ENABLE:
         generateNfsEnable(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_CHK_DB:
         generateCheckDb();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_UPNP_AV_SERVER_PATH_LIST:
         generateUpnpAvServerPathList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER_GET_CONFIG:
         generateUpnpAvServerGetConfig(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER:
         generateUpnpAvServer(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER_GET_SQLDB_STATE:
         generateUpnpAvServerGetSqldbState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GUI_CODEPAGE_GET_LIST:
         generateGuiCodepageGetList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_GET_XML:
         generateItunesServerGetXml(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_READY:
         generateItunesServerReady(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_AV_SERVER_CHECK_PATH:
         generateUpnpAvServerCheckPath(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_AV_SERVER_PATH_SETTING:
         generateUpnpAvServerPathSetting(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SQLDB_STOP_FINISH:
         generateSqldbStopFinish(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER_PRESCAN:
         generateUpnpAvServerPrescan(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER_PATH_DEL:
         generateUpnpAvServerPathDel(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_UPNP_AV_SERVER_SETTING:
         generateUpnpAvServerSetting();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_GUI_CODEPAGE_ADD:
         generateGuiCodepageAdd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_SETTING:
         generateItunesServerSetting(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_CHECK_PS:
         generateItunesServerCheckPs(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_REFRESH:
         generateItunesServerRefresh(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_ITUNES_SERVER_REFRESH_STATE:
         generateItunesServerRefreshState(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_SEARCH:
         generateSyslogSearch(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_VOLUME_INFO:
         generateGetVolumeInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_GET_LOG_FILE_OPTION:
         generateSyslogGetLogFileOption(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_GET_CONFIG:
         generateSyslogGetConfig(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_GET_SELECT_OPTION:
         generateSyslogGetSelectOption(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_SET_CONFIG:
         generateSyslogSetConfig(str);
-        m_renderType = RENDER_TYPE_STRING;
         break;
     case CMD_SYSLOG_EXPORT:
         generateSyslogExport();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_SYSLOG_GET_EXPORT_STATUS:
         generateSyslogGetExportStatus(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_SYSLOG_CLEAR:
         generateSyslogClear();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_NONE:
     default:
@@ -148,7 +116,6 @@ RENDER_TYPE RenderResponseAppMngm::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseAppMngm::generateSetAfp() {

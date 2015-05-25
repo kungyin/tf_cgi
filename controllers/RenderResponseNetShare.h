@@ -9,7 +9,7 @@ public:
     RenderResponseNetShare(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseNetShare();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
 

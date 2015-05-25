@@ -9,7 +9,7 @@ public:
     RenderResponseAppMngm(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAppMngm();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
 

@@ -10,12 +10,17 @@ public:
     ParseCmd(QString);
     virtual ~ParseCmd() {}
 
-    CGI_COMMAND getCGICmd();
-    int getCmdNumber() { return iCmdNumber; }
+    inline int getCGICmd() { return m_iCommand; }
+    inline int getRenderType() { return m_iRenderType; }
+    inline int getFilterType() { return m_iFilterType; }
 
 private:
 
-    int iCmdNumber;
+    void parse(QString);
+
+    int m_iCommand;
+    int m_iRenderType;
+    int m_iFilterType;
 };
 
 #endif // PARSECMD_H
