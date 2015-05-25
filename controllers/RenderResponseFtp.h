@@ -9,7 +9,7 @@ public:
     RenderResponseFtp(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseFtp();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
 

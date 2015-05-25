@@ -4,17 +4,16 @@
 RenderResponseTimeMachine::RenderResponseTimeMachine(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseTimeMachine::~RenderResponseTimeMachine() {
 }
 
-RENDER_TYPE RenderResponseTimeMachine::preRender() {
+void RenderResponseTimeMachine::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -22,35 +21,27 @@ RENDER_TYPE RenderResponseTimeMachine::preRender() {
     switch(m_cmd) {
     case CMD_GET_TM_INFO:
         timeGetInfo(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_GET_TM_LIST:
         timeGetList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_TM_GET_SMB_LIST:
         timeGetSmbList(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_TM_SET:
         timeSet();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_TM_GET_SHARENAME:
         timeGetShareName(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_TM_SET_SHARE:
         timeSetShare(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_TM_DEL_SHARE:
         timeDelShare();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_TM_DEL_ALL_SHARE:
         timeDelAllShare();
-        m_renderType = RENDER_TYPE_NULL;
         break;
     case CMD_NONE:
     default:
@@ -60,7 +51,6 @@ RENDER_TYPE RenderResponseTimeMachine::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 
 void RenderResponseTimeMachine::timeGetInfo(QDomDocument &doc) {

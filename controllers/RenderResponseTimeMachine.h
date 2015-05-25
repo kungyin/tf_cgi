@@ -9,7 +9,7 @@ public:
     RenderResponseTimeMachine(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseTimeMachine();
 
-    virtual RENDER_TYPE preRender();
+    virtual void preRender();
 
 private:
 

@@ -4,17 +4,16 @@
 RenderResponseFtp::RenderResponseFtp(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
-    m_renderType = RENDER_TYPE_UNKNOWN;
     m_pReq = &req;
 }
 
 RenderResponseFtp::~RenderResponseFtp() {
 }
 
-RENDER_TYPE RenderResponseFtp::preRender() {
+void RenderResponseFtp::preRender() {
 
     if(!m_pReq)
-        return RENDER_TYPE_UNKNOWN;
+        return;
 
     QDomDocument doc = QDomDocument();
     QString str = QString();
@@ -26,31 +25,24 @@ RENDER_TYPE RenderResponseFtp::preRender() {
         break;*/
     case CMD_FTP_SERVER_GET_CONFIG:
         servergetconfig(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FTP_SERVER_EXIP_RENEW:
         serverexiprenew(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
 /*    case CMD_GUI_CODE_ADD:
         codepageadd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;*/
     case CMD_P2P_GET_PORT:
         p2pgetport(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FTP_SERVER_BLOCKIP_LIST:
         serverblockiplist(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FTP_SERVER_BLOCKIP_ADD:
         serverblockipadd(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
     case CMD_FTP_SERVER_ENABLE:
         serverenable(doc);
-        m_renderType = RENDER_TYPE_XML;
         break;
 
     case CMD_NONE:
@@ -61,7 +53,6 @@ RENDER_TYPE RenderResponseFtp::preRender() {
     m_doc = doc;
     m_str = str;
 
-    return m_renderType;
 }
 /*/ todo API
 void RenderResponseFtp::codepagegetlist(QDomDocument &doc) {
