@@ -27,15 +27,18 @@ const QString SCRIPT_TIMEZONE_API   =   "sysapi_timezone";
 const QString SCRIPT_NTP_API        =   "sysapi_ntp";
 const QString SCRIPT_DEVICE_API     =   "sysapi_device";
 const QString SCRIPT_DISK_MANAGER   =   "diskmgr";
-const QString SCRIPT_MANAGER_API    =   "ccManger";
+const QString SCRIPT_MANAGER_API    =   "ccManager";
 const QString SCRIPT_POWER_API      =   "sysapi_power";
 const QString SCRIPT_IDLE_API       =   "sysapi_idle";
 const QString SCRIPT_RESTORE_API    =   "sysapi_restore";
 const QString SCRIPT_CONFIG_API     =   "sysapi_config";
+const QString SCRIPT_LED_API        =   "cled";
+
 
 #ifndef SIMULATOR_MODE
 
 const QString API_PATH = "/usr/local/modules/api/";
+const QString ENV_PATH = "";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backupconfig.tar";
 
@@ -44,6 +47,7 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 #else
 
 const QString API_PATH = "./faked_api/";
+const QString ENV_PATH = API_PATH;
 const QString SYS_CONFIG_FILE = "./faked_api/sys_config";
 const QString USER_IMPORT_FILE = "./faked_api/backupconfig.tar";
 

@@ -33,7 +33,7 @@ void CgiController::index()
     }
 
 #ifndef SIMULATOR_MODE
-    if(c.getFilterType() == COOKIE_REQ_CMDS) {
+    if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
         if(httpRequest().cookie("username").isEmpty()) {
             renderErrorResponse(Tf::NotFound);
             return;

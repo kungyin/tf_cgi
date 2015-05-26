@@ -227,14 +227,18 @@ enum CGI_COMMAND {
 
     /**** System Status ****/
     CMD_GET_STATUS,                         /* cgi_get_status */
-    //CMD_GET_TEMPERATURE,                    /* cgi_get_temperature */
+    //CMD_GET_TEMPERATURE,                  /* cgi_get_temperature */
     CMD_STATUS_VOLUME_INFO,                 /* cgi_Status_Volume_Info */
     CMD_USB_STORAGE_INFO,                   /* cgi_usb_Storage_info */
     CMD_MTP_INFO,                           /* cgi_mtp_info */
     CMD_USB_PRINTER_INFO,                   /* cgi_usb_printer_info */
     CMD_UPS_INFO2,                          /* cgi_ups_info2 */
-
     CMD_SYS_STATUS_END,
+
+    /**** Setup Wizard ****/
+    CMD_CHK_ADMIN_PW,                       /* cgi_chk_admin_pw */
+    CMD_SET_LED,                            /* cgi_set_led */
+    CMD_SETUP_WIZARD_END,
 
     CMD_SIZE
 
@@ -454,6 +458,11 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_mtp_info",
     "cgi_usb_printer_info",
     "cgi_ups_info2",
+    "",
+
+    /**** Setup Wizard ****/
+    "cgi_chk_admin_pw",
+    "cgi_set_led",
     ""
 
 };
@@ -495,7 +504,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LAN_XML,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml */
     { CMD_IPV6,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ipv6 */
     { CMD_LAN_STATUS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_status */
-    { CMD_LAN_XML2,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml2 */
+    { CMD_LAN_XML2,                     RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_xml2 */
     { CMD_SETIP_LOCK,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_setip_lock */
     { CMD_IP,                           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ip */
     { CMD_SPEED,                        RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_speed */
@@ -562,7 +571,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    /**** Network Share ****/
     { CMD_MODULE_GET_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Module_Get_Info */
     { CMD_GET_ADS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_ads_info */
-    { CMD_GET_SESSION,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_session */
+    { CMD_GET_SESSION,                  RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_session */
     { CMD_GET_ISO_SHARE,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_iso_share */
 //    //CMD_GET_HD_MAPPING_INFO,                /* cgi_get_HD_Mapping_Info */
     { CMD_GET_AFP_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_afp_info */
@@ -629,11 +638,11 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    CMD_APP_MNGM_END,
 
 //    /**** System Management ****/
-    { CMD_GET_TIME,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_time */
+    { CMD_GET_TIME,                     RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_time */
     { CMD_MANUAL_TIME,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_manual_time */
     { CMD_TIMEZONE,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_timezone */
     { CMD_NTP_TIME,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_ntp_time */
-    { CMD_GET_TIME_STATUS,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_time_status */
+    { CMD_GET_TIME_STATUS,              RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_time_status */
 
     { CMD_GET_DEVICE_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_device_info */
     { CMD_DEVICE,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_device */
@@ -672,8 +681,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MTP_INFO,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info */
     { CMD_USB_PRINTER_INFO,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_info */
     { CMD_UPS_INFO2,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_ups_info2 */
-
 //    CMD_SYS_STATUS_END,
+
+    /**** Setup Wizard ****/
+    { CMD_CHK_ADMIN_PW,                 RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_chk_admin_pw */
+    { CMD_SET_LED,                      RENDER_TYPE_NULL,           OPENED_CMDS          },         /* cgi_set_led */
+    //CMD_SETUP_WIZARD_END,
 
 //    CMD_SIZE
 
