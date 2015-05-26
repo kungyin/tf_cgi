@@ -31,6 +31,19 @@ id_1=user.log
 id_2=:stime
 id_3=mdn
 
+[power_management]
+hdd_hibernation_enable = 1
+turn_off_time = 300
+recovery_enable = 1
+fan = 0
+power_off_scheduling_enable= 1
+
+[power_on_sch]
+schedule = 1,23,0;0,2,0;1,0,0;0,0,0;1,0,0;1,0,0;0,0,0
+
+[power_off_sch]
+off_schedule= 0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0
+
 [lan0]                      
 speed=0                                  
 dhcp_enable= 1

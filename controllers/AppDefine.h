@@ -6,6 +6,7 @@
 //#define SIMULATOR_MODE
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
+const QString SCRIPT_SCANDISK_API   =   "scandisk";
 const QString SCRIPT_HOME_API       =   "sysapi_home";
 const QString SCRIPT_USER_API       =   "sysapi_user";
 const QString SCRIPT_DDNS_CTL       =   "ddnsctl";
@@ -26,7 +27,7 @@ const QString SCRIPT_TIMEZONE_API   =   "sysapi_timezone";
 const QString SCRIPT_NTP_API        =   "sysapi_ntp";
 const QString SCRIPT_DEVICE_API     =   "sysapi_device";
 const QString SCRIPT_DISK_MANAGER   =   "diskmgr";
-const QString SCRIPT_SMART_API      =   "ccManger";
+const QString SCRIPT_MANAGER_API    =   "ccManger";
 const QString SCRIPT_POWER_API      =   "sysapi_power";
 const QString SCRIPT_IDLE_API       =   "sysapi_idle";
 const QString SCRIPT_RESTORE_API    =   "sysapi_restore";

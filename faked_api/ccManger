@@ -10,3 +10,8 @@
 [ $1 == 'service_set_smart_schedule' ] && echo -e "3;short;;00;00;1;01,00:00,,,short test" && echo -e "2;short;;02;04;5;01,02:04,Fri,,short test" && echo -e "1;short;;07;04;1;13,07:04,,13th,short test"
 [ $1 == 'service_get_smart_schedule_list' ] && echo -e "S.M.A.R.T - Quick;Disk2;13 07:04"
 [ $1 == 'service_get_smart_test_status' ] && echo -e "4:sdb,short"
+[ $1 == 'system_powermgr_info' ] && echo -e "1,3,10;1,15,3;0,0,1;0,0,0;1,0,0;0,0,3;0,2,0;1;30;1" && echo -e "0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;1;1;1;50" 
+[ $1 == 'system_hdd_hibernation_setting' ] && echo -e "1"
+[ $1 == 'system_power_recovery_setting' ] && echo -e "0"
+[ $1 == 'system_fan_control_setting' ] && echo -e "0"
+[ $1 == 'system_power_onoff_schedule' ] && echo -e "0"

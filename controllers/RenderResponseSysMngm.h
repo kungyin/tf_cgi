@@ -33,6 +33,12 @@ private:
     void generateBackupConf(QString &);
     void generateRestoreConf(QString &);
 
+    void generateGetPowerMgr(QDomDocument &);
+    void generatePowerManagement(QString &);
+    void generatePowerRecovery();
+    void generateFan();
+    void generatePowerOffSchedule();
+
     void generateLogSystem(QString &);
     void generateGetLogInfo(QDomDocument &);
     void generateLogServer();

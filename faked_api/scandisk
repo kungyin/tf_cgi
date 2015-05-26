@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+[ $1 == '-i' ] && echo -e "Volume_1,Volume_2"
+[ $1 == '-f' ] && echo -e "1"
+[ $1 == '-c' ] && echo -e "1"

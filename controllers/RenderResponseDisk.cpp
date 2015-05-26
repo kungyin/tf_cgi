@@ -258,7 +258,7 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
     if(m_pReq->allParameters().contains("user"))
         paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_disk_list");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_disk_list");
     apiOut.removeLast();
     QString checkbox = "&lt;input type=&quot;checkbox&quot; value=&quot;%1,%2,%3&quot; \
             id=&quot;smart_hdd_num_0&quot; name=&quot;smart_hdd_num&quot; &gt;";
@@ -309,7 +309,7 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
 
 void RenderResponseDisk::generateCreateTestList(QDomDocument &doc) {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_test_list", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_list", true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement sendElement = doc.createElement("send_mail");
@@ -343,7 +343,7 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     if(m_pReq->allParameters().contains("user"))
         paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_schedule_list");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
     QString onClick = "&lt;a href=javascript:onclick=create_schedule_wait(0)&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;";
 
     QDomElement root = doc.createElement("rows");
@@ -397,7 +397,7 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
 }
 
 void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_get_smart_test_status", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_status", true);
 
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
@@ -429,7 +429,7 @@ void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
                 "f_day=" + paraDay + "#" +
                 "f_test_type=" + paraTestType;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_set_smart_schedule " + allPara);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_schedule " + allPara);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -456,7 +456,7 @@ void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
                 "f_type=" + paraType + "#" +
                 "f_mail_flag=" + paraMailFlag;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SMART_API + " service_set_smart_test_start " + allPara);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_test_start " + allPara);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -466,56 +466,60 @@ void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
 }
 
 void RenderResponseDisk::generateScanDiskInfo(QDomDocument &doc) {
-    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g scandsk_info");
-
-    QStringList line1 = apiOutList.at(0).split(",");
-    QStringList line2 = apiOutList.at(1).split(",");
-    QStringList line3 = apiOutList.at(2).split(",");
-    if(line1.size() < 2 || line2.size() < 2 || line3.size() < 2)
-        return;
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -i", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement resElement = doc.createElement("res");
-    root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    if(!apiOutList.isEmpty()) {
 
-    for (int i=0; i<apiOutList.size(); i++) {
-        QStringList line = apiOutList.at(i).split(",");
-        if(line.size() < 2)
-            continue;
-        QDomElement itemElement1 = doc.createElement("item");
-        root.appendChild(itemElement1);
-        QDomElement optElement1 = doc.createElement("opt_value");
-        itemElement1.appendChild(optElement1);
-        optElement1.appendChild(doc.createTextNode(line.at(0)));
-        QDomElement guiElement1 = doc.createElement("gui_value");
-        itemElement1.appendChild(guiElement1);
-        guiElement1.appendChild(doc.createTextNode(line.at(1)));
+        QDomElement resElement = doc.createElement("res");
+        root.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode("1"));
+
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        QDomElement optElement = doc.createElement("opt_value");
+        itemElement.appendChild(optElement);
+        optElement.appendChild(doc.createTextNode("a"));
+        QDomElement guiElement = doc.createElement("gui_value");
+        itemElement.appendChild(guiElement);
+        guiElement.appendChild(doc.createTextNode("All Volume(s)"));
+
+        for (QString e: apiOutList) {
+            QDomElement itemElement1 = doc.createElement("item");
+            root.appendChild(itemElement1);
+            QDomElement optElement1 = doc.createElement("opt_value");
+            itemElement1.appendChild(optElement1);
+            optElement1.appendChild(doc.createTextNode(e));
+            QDomElement guiElement1 = doc.createElement("gui_value");
+            itemElement1.appendChild(guiElement1);
+            guiElement1.appendChild(doc.createTextNode(e));
+        }
     }
 }
 
 void RenderResponseDisk::generateCheckDiskRemountState(QDomDocument &doc) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g dsk_remount_state", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }
 
 void RenderResponseDisk::generateScanDiskRunE2fsck(QDomDocument &doc) {
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -r", true);
     QDomElement root = doc.createElement("script");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode("location.href='/web/dsk_mgr/hd_scandisk_state.html'"));
 }
 
 void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g scandsk_finish", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0)));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 }

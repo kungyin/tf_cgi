@@ -211,6 +211,12 @@ enum CGI_COMMAND {
     CMD_BACKUP_CONF,                        /* cgi_backup_conf */
     CMD_RESTORE_CONF,                       /* cgi_restore_conf */
 
+    CMD_GET_POWER_MGR,                      /* cgi_get_power_mgr_xml */
+    CMD_POWER_MANAGEMENT,                   /* cgi_power_management */
+    CMD_POWER_RECV,                         /* cgi_power_recovery */
+    CMD_FAN,                                /* cgi_fan */
+    CMD_POWER_OFF_SCH,                      /* cgi_power_off_sch */
+
     CMD_LOG_SYSTEM,                         /* cgi_log_system */
     CMD_GET_LOG_INFO,                       /* cgi_get_log_info */
     CMD_LOG_SERVER,                         /* cgi_log_server */
@@ -426,6 +432,12 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_backup_conf",
     "cgi_restore_conf",
 
+    "cgi_get_power_mgr_xml",
+    "cgi_power_management",
+    "cgi_power_recovery",
+    "cgi_fan",
+    "cgi_power_off_sch",
+
     "cgi_log_system",
     "cgi_get_log_info",
     "cgi_log_server",
@@ -637,6 +649,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_TEMPERATURE,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_temperature */
     { CMD_BACKUP_CONF,                  RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },         /* cgi_backup_conf */
     { CMD_RESTORE_CONF,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_restore_conf */
+
+    { CMD_GET_POWER_MGR,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_power_mgr_xml */
+    { CMD_POWER_MANAGEMENT,             RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_power_management */
+    { CMD_POWER_RECV,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_power_recovery */
+    { CMD_FAN,                          RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_fan */
+    { CMD_POWER_OFF_SCH,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_power_off_sch */
 
     { CMD_LOG_SYSTEM,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_log_system */
     { CMD_GET_LOG_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_log_info */

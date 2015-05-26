@@ -23,6 +23,7 @@ protected:
     bool setNasCfg(QString, QString, QString);
     bool setNasCfg(QString, QMap<QString, QString> &);
     QMap<QString, QString> getNasCfg(QString);
+    QString allParametersToString();
 
     CGI_COMMAND m_cmd;
     QDomDocument m_doc;

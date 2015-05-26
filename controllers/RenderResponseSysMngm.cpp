@@ -75,6 +75,23 @@ void RenderResponseSysMngm::preRender() {
     case CMD_RESTORE_CONF:
         generateRestoreConf(str);
         break;
+
+    case CMD_GET_POWER_MGR:
+        generateGetPowerMgr(doc);
+        break;
+    case CMD_POWER_MANAGEMENT:
+        generatePowerManagement(str);
+        break;
+    case CMD_POWER_RECV:
+        generatePowerRecovery();
+        break;
+    case CMD_FAN:
+        generateFan();
+        break;
+    case CMD_POWER_OFF_SCH:
+        generatePowerOffSchedule();
+        break;
+
     case CMD_LOG_SYSTEM:
         generateLogSystem(str);
         break;
@@ -164,6 +181,7 @@ void RenderResponseSysMngm::generateTimezone() {
 void RenderResponseSysMngm::generateNtpTime() {
     QString paraNtpEnable = m_pReq->allParameters().value("f_ntp_enable").toString();
     QString paraNtpServer = m_pReq->allParameters().value("f_ntp_server").toString();
+
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API +
                                       " set " + paraNtpEnable + " " + paraNtpServer, true);
 }
@@ -291,6 +309,135 @@ void RenderResponseSysMngm::generateRestoreConf(QString &str) {
         }
     }
 
+}
+
+void RenderResponseSysMngm::generateGetPowerMgr(QDomDocument &doc) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_powermgr_info");
+
+    QDomElement root = doc.createElement("power");
+    doc.appendChild(root);
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QStringList schItems = apiOut.value(i).split(";").mid(0, 7);
+        QString schStr = "sch_on";
+        if(i == 1)
+            schStr = "sch_off";
+
+        int j = 0;
+        for(QString e : schItems) {
+
+            QDomElement schElement = doc.createElement(schStr);
+            root.appendChild(schElement);
+
+            QDomElement enableElement = doc.createElement("enable");
+            schElement.appendChild(enableElement);
+            enableElement.appendChild(doc.createTextNode(e.split(",").value(0)));
+
+            if(i == 0) {
+                QDomElement wdayElement = doc.createElement("wday");
+                schElement.appendChild(wdayElement);
+                wdayElement.appendChild(doc.createTextNode(QString::number(j)));
+            }
+
+            QDomElement hourElement = doc.createElement("hour");
+            schElement.appendChild(hourElement);
+            hourElement.appendChild(doc.createTextNode(e.split(",").value(1)));
+
+            QDomElement minuteElement = doc.createElement("minute");
+            schElement.appendChild(minuteElement);
+            minuteElement.appendChild(doc.createTextNode(e.split(",").value(2)));
+            j++;
+        }
+        if(i == 0) {
+            QDomElement hibernationEnableElement = doc.createElement("hdd_hibernation_enable");
+            root.appendChild(hibernationEnableElement);
+            hibernationEnableElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(7)));
+
+            QDomElement turnOffTimeElement = doc.createElement("turn_off_time");
+            root.appendChild(turnOffTimeElement);
+            turnOffTimeElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(8)));
+
+            QDomElement recvEnableElement = doc.createElement("recovery_enable");
+            root.appendChild(recvEnableElement);
+            recvEnableElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(9)));
+        }
+        else if(i == 1) {
+            QDomElement powerOffEnableElement = doc.createElement("power_off_enable");
+            root.appendChild(powerOffEnableElement);
+            powerOffEnableElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(7)));
+
+            QDomElement fanElement = doc.createElement("fan");
+            root.appendChild(fanElement);
+            fanElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(8)));
+
+            QDomElement ledEnableElement = doc.createElement("led_enable");
+            root.appendChild(ledEnableElement);
+            ledEnableElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(9)));
+
+            QDomElement ledTimeElement = doc.createElement("led_time");
+            root.appendChild(ledTimeElement);
+            ledTimeElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(10)));
+        }
+    }
+
+}
+
+void RenderResponseSysMngm::generatePowerManagement(QString &str) {
+    QString paraHibEnable = m_pReq->parameter("f_hdd_hibernation_enable");
+    QString paraTurnOffTime = m_pReq->parameter("f_turn_off_time");
+
+    QMap<QString, QString> map;
+
+    map.insert("hdd_hibernation_enable", paraHibEnable);
+    map.insert("turn_off_time", paraTurnOffTime);
+    if(!setNasCfg("power_management", map))
+        tDebug("RenderResponseSysMngm::generatePowerManagement(): setNasCfg power_management failed");
+    else
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_hdd_hibernation_setting", true);
+
+    str = "Location: /web/system_mgr/power_mgr.html";
+}
+
+void RenderResponseSysMngm::generatePowerRecovery() {
+    QString paraRecvEnable = m_pReq->parameter("f_recovery_enable");
+
+    if(!setNasCfg("power_management", "recovery_enable", paraRecvEnable))
+        tDebug("RenderResponseSysMngm::generatePowerRecovery(): setNasCfg power_management failed");
+    else
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_recovery_setting", true);
+
+}
+
+void RenderResponseSysMngm::generateFan() {
+    QString paraFanType = m_pReq->parameter("f_fan_type");
+
+    if(!setNasCfg("power_management", "fan", paraFanType))
+        tDebug("RenderResponseSysMngm::generateFan(): setNasCfg power_management failed");
+    else
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_fan_control_setting", true);
+}
+
+void RenderResponseSysMngm::generatePowerOffSchedule() {
+    QString paraPowerOffEnable = m_pReq->parameter("f_power_off_enable");
+    QString paraSchedule = m_pReq->parameter("schedule").replace(",", ";").replace(" ", ",");
+    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", ";").replace(" ", ",");
+
+    if(!setNasCfg("power_management", "power_off_scheduling_enable", paraPowerOffEnable)) {
+        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_management failed");
+        return;
+    }
+
+    if(!setNasCfg("power_on_sch", "schedule", paraSchedule)) {
+        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_on_sch failed");
+        return;
+    }
+
+    if(!setNasCfg("power_off_sch", "off_schedule", paraOffSchedule)) {
+        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_off_sch failed");
+        return;
+    }
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_onoff_schedule", true);
 }
 
 /* todo */

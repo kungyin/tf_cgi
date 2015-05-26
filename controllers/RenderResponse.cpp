@@ -134,3 +134,17 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
     file.close();
     return ret;
 }
+
+QString RenderResponse::allParametersToString() {
+
+    QString ret;
+    if(m_pReq) {
+        for ( QString entryKey : m_pReq->allParameters().keys() ) {
+            if(!ret.isEmpty())
+                ret += "#";
+            ret += entryKey + "=" + m_pReq->allParameters().value(entryKey).toString();
+        }
+    }
+
+    return ret;
+}
