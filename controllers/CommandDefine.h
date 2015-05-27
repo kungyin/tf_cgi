@@ -227,15 +227,37 @@ enum CGI_COMMAND {
 
     /**** System Status ****/
     CMD_GET_STATUS,                         /* cgi_get_status */
-    //CMD_GET_TEMPERATURE,                  /* cgi_get_temperature */
+    //CMD_GET_TEMPERATURE,                    /* cgi_get_temperature */
     CMD_STATUS_VOLUME_INFO,                 /* cgi_Status_Volume_Info */
     CMD_USB_STORAGE_INFO,                   /* cgi_usb_Storage_info */
     CMD_MTP_INFO,                           /* cgi_mtp_info */
     CMD_USB_PRINTER_INFO,                   /* cgi_usb_printer_info */
     CMD_UPS_INFO2,                          /* cgi_ups_info2 */
+
     CMD_SYS_STATUS_END,
 
-    /**** Setup Wizard ****/
+    /**** FTP Server ****/
+    CMD_FTP_SERVER_GET_CONFIG,              /* FTP_Server_Get_Config */
+    CMD_FTP_SERVER_EXIP_RENEW,              /* FTP_Server_EXIP_Renew */
+    CMD_P2P_GET_PORT,                       /* cgi_p2p_get_port */
+    CMD_FTP_SERVER_BLOCKIP_LIST,            /* FTP_Server_BlockIP_List */
+    CMD_FTP_SERVER_BLOCKIP_ADD,             /* FTP_Server_BlockIP_Add */
+    CMD_FTP_SERVER_ENABLE,                  /* FTP_Server_Enable */
+    CMD_FTP_SERVER_END,
+
+    /**** Time Machine ****/
+
+    CMD_GET_TM_INFO,                        /* cgi_tm_get_info */
+    CMD_GET_TM_LIST,                        /* cgi_tm_get_list */
+    CMD_TM_GET_SMB_LIST,                    /* cgi_tm_get_smb_list */
+    CMD_TM_SET,                             /* cgi_tm_set */
+    CMD_TM_GET_SHARENAME,                   /* cgi_tm_get_sharename */
+    CMD_TM_SET_SHARE,                       /* cgi_tm_set_share */
+    CMD_TM_DEL_SHARE,                       /* cgi_tm_del_share */
+    CMD_TM_DEL_ALL_SHARE,                   /* cgi_tm_del_all_share */
+    CMD_TIME_MACHINE_END,
+	
+	/**** Setup Wizard ****/
     CMD_CHK_ADMIN_PW,                       /* cgi_chk_admin_pw */
     CMD_SET_LED,                            /* cgi_set_led */
     CMD_SETUP_WIZARD_END,
@@ -459,8 +481,28 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_usb_printer_info",
     "cgi_ups_info2",
     "",
+    
+    /**** FTP Server ****/    
+    "FTP_Server_Get_Config",
+    "FTP_Server_EXIP_Renew",
+    "cgi_p2p_get_port",
+    "FTP_Server_BlockIP_List",
+    "FTP_Server_BlockIP_Add",
+    "FTP_Server_Enable",
+    "",
 
-    /**** Setup Wizard ****/
+    /**** Time Machine ****/
+    "cgi_tm_get_info",
+    "cgi_tm_get_list",
+    "cgi_tm_get_smb_list",
+    "cgi_tm_set",
+    "cgi_tm_get_sharename",
+    "cgi_tm_set_share",
+    "cgi_tm_del_share",
+    "cgi_tm_del_all_share",
+	"",
+	
+	   /**** Setup Wizard ****/
     "cgi_chk_admin_pw",
     "cgi_set_led",
     ""
@@ -681,7 +723,28 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MTP_INFO,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info */
     { CMD_USB_PRINTER_INFO,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_info */
     { CMD_UPS_INFO2,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_ups_info2 */
+
 //    CMD_SYS_STATUS_END,
+
+//    /**** FTP Server ****/
+    { CMD_FTP_SERVER_GET_CONFIG,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_Get_Config */
+    { CMD_FTP_SERVER_EXIP_RENEW,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_EXIP_Renew */
+    { CMD_P2P_GET_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_p2p_get_port */
+    { CMD_FTP_SERVER_BLOCKIP_LIST,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_List */
+    { CMD_FTP_SERVER_BLOCKIP_ADD,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_Add */
+    { CMD_FTP_SERVER_ENABLE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_Enable */
+//    CMD_FTP_SERVER_END,
+
+//    /**** Time Machine ****/
+    { CMD_GET_TM_INFO,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_info */
+    { CMD_GET_TM_LIST,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_list */
+    { CMD_TM_GET_SMB_LIST,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_smb_list */
+    { CMD_TM_SET,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_set */
+    { CMD_TM_GET_SHARENAME,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_sharename */
+    { CMD_TM_SET_SHARE,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_set_share */
+    { CMD_TM_DEL_SHARE,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_del_share */
+    { CMD_TM_DEL_ALL_SHARE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_del_all_share */
+//  CMD_TIME_MACHINE_END
 
     /**** Setup Wizard ****/
     { CMD_CHK_ADMIN_PW,                 RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_chk_admin_pw */
@@ -693,3 +756,4 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 };
 
 #endif // COMMANDDEFINE_H
+

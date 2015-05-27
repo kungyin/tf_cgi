@@ -598,13 +598,16 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
                                                                         " -b " + paraEnable
                                                                         , true);
 
-    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
-    if(str.compare("ok1") == 0 || str.compare("OK") == 0)
-        str = "ok1";
-    else
-        str = "error";
+    str = apiOutList.value(0);
+
+//    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
+//    if(str.compare("ok1") == 0 || str.compare("OK") == 0)
+//        str = "ok1";
+//    else
+//        str = "error";
 }
 
+/* todo */
 void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
     generatePortFrowardingAddScan(str);
     str = str.compare("ok1") == 0 ? "OK1" : "ERROR1";

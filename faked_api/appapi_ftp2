@@ -1,0 +1,14 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23	VBird	First release
+[ $1 == 'config' ] && echo -e "10,10,21,0,UTF-8,ISO-8859-1,55536:55663,0.0.0.0,0.0.0.0,1,1,0,,0"
+[ $1 == 'blkiplist' ] && echo -e "1;2.1.1.1;Permanent;-;-" && echo -e "2;3.3.3.3;Block Duration;5/01/15 1:47;-" && echo -e "2;2.2.2.2;Permanent;-;-"
+#[ $1 == 'userlist' ] && echo -e "user1;0;Unlimited;0;Unlimited;-;-;-;-" && echo -e "user2;0;100;0;Unlimited;-;-;-;-"
+#[ $1 == 'grouplist' ] && echo -e "group1;0;Unlimited;0;Unlimited;-;-;-;-" && echo -e "group2;0;100;0;Unlimited;-;-;-;-"
+#[ $1 == 'usersize' ] && echo -e "2047056"
+#[ $1 == 'groupsize' ] && echo -e "10240"
+#[ $1 == 'userset' ] && echo -e "1"
+#[ $1 == 'groupset' ] && echo -e "1"
+#[ $1 == 'enable' ] && echo -e "1"

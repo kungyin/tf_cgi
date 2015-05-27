@@ -25,6 +25,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseNetShare.h \
     RenderResponseSysMngm.h \
     RenderResponseSysStatus.h \
+    RenderResponseFtp.h \
+    RenderResponseTimeMachine.h \
     RenderResponseSetupWizard.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
@@ -38,4 +40,6 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseNetShare.cpp \
     RenderResponseSysMngm.cpp \
     RenderResponseSysStatus.cpp \
+    RenderResponseFtp.cpp \
+    RenderResponseTimeMachine.cpp \
     RenderResponseSetupWizard.cpp
