@@ -217,6 +217,14 @@ enum CGI_COMMAND {
     CMD_FAN,                                /* cgi_fan */
     CMD_POWER_OFF_SCH,                      /* cgi_power_off_sch */
 
+    CMD_GET_EMAIL_XML,                      /* cgi_get_email_xml */
+    CMD_GET_EVENT_XML,                      /* cgi_get_event_xml */
+    CMD_EMAIL_EVENT,                        /* cgi_email_event */
+    CMD_EMAIL,                              /* cgi_email */
+    CMD_EMAIL_TEST,                         /* cgi_email_test */
+    CMD_EMAIL_TEST_RESULT,                  /* cgi_email_test_result */
+    CMD_EMAIL_CLEAR,                        /* cgi_email_clear */
+
     CMD_LOG_SYSTEM,                         /* cgi_log_system */
     CMD_GET_LOG_INFO,                       /* cgi_get_log_info */
     CMD_LOG_SERVER,                         /* cgi_log_server */
@@ -233,7 +241,6 @@ enum CGI_COMMAND {
     CMD_MTP_INFO,                           /* cgi_mtp_info */
     CMD_USB_PRINTER_INFO,                   /* cgi_usb_printer_info */
     CMD_UPS_INFO2,                          /* cgi_ups_info2 */
-
     CMD_SYS_STATUS_END,
 
     /**** FTP Server ****/
@@ -260,6 +267,7 @@ enum CGI_COMMAND {
 	/**** Setup Wizard ****/
     CMD_CHK_ADMIN_PW,                       /* cgi_chk_admin_pw */
     CMD_SET_LED,                            /* cgi_set_led */
+    CMD_GET_WIZARD,                         /* cgi_get_wizard */
     CMD_SETUP_WIZARD_END,
 
     CMD_SIZE
@@ -464,6 +472,14 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_fan",
     "cgi_power_off_sch",
 
+    "cgi_get_email_xml",
+    "cgi_get_event_xml",
+    "cgi_email_event",
+    "cgi_email",
+    "cgi_email_test",
+    "cgi_email_test_result",
+    "cgi_email_clear",
+
     "cgi_log_system",
     "cgi_get_log_info",
     "cgi_log_server",
@@ -505,6 +521,7 @@ const char CGI_PARA_COMMANDS[][255] = {
 	   /**** Setup Wizard ****/
     "cgi_chk_admin_pw",
     "cgi_set_led",
+    "cgi_get_wizard",
     ""
 
 };
@@ -545,7 +562,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_LLTD,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lltd */
     { CMD_LAN_XML,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml */
     { CMD_IPV6,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ipv6 */
-    { CMD_LAN_STATUS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_status */
+    { CMD_LAN_STATUS,                   RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_status */
     { CMD_LAN_XML2,                     RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_xml2 */
     { CMD_SETIP_LOCK,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_setip_lock */
     { CMD_IP,                           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ip */
@@ -707,6 +724,14 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_FAN,                          RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_fan */
     { CMD_POWER_OFF_SCH,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_power_off_sch */
 
+    { CMD_GET_EMAIL_XML,                RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_email_xml */
+    { CMD_GET_EVENT_XML,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_event_xml */
+    { CMD_EMAIL_EVENT,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_email_event */
+    { CMD_EMAIL,                        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_email */
+    { CMD_EMAIL_TEST,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_email_test */
+    { CMD_EMAIL_TEST_RESULT,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_email_test_result */
+    { CMD_EMAIL_CLEAR,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_email_clear */
+
     { CMD_LOG_SYSTEM,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_log_system */
     { CMD_GET_LOG_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_log_info */
     { CMD_LOG_SERVER,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_server */
@@ -749,6 +774,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     /**** Setup Wizard ****/
     { CMD_CHK_ADMIN_PW,                 RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_chk_admin_pw */
     { CMD_SET_LED,                      RENDER_TYPE_NULL,           OPENED_CMDS          },         /* cgi_set_led */
+    { CMD_GET_WIZARD,                   RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_wizard */
     //CMD_SETUP_WIZARD_END,
 
 //    CMD_SIZE

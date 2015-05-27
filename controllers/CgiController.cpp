@@ -13,6 +13,7 @@
 #include "RenderResponseSysStatus.h"
 #include "RenderResponseFtp.h"
 #include "RenderResponseTimeMachine.h"
+#include "RenderResponseSetupWizard.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -123,6 +124,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseFtp(req, cmd);
     else if(cmd < CMD_TIME_MACHINE_END)
         pRrep = new RenderResponseTimeMachine(req, cmd);
+    else if(cmd < CMD_SETUP_WIZARD_END)
+        pRrep = new RenderResponseSetupWizard(req, cmd);
 
     return pRrep;
 

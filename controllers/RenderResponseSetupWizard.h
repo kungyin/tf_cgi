@@ -14,6 +14,7 @@ public:
 private:
     void generateChkAdminPw(QDomDocument &);
     void generateSetLed();
+    void generateGetWizard(QDomDocument &);
 
 
 };

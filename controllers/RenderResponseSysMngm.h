@@ -39,6 +39,14 @@ private:
     void generateFan();
     void generatePowerOffSchedule();
 
+    void generateGetEmailXml(QDomDocument &);
+    void generateGetEventXml(QDomDocument &);
+    void generateEmailEvent(QString &);
+    void generateEmail(QString &);
+    void generateEmailTest();
+    void generateEmailTestResult(QDomDocument &);
+    void generateEmailClear(QString &);
+
     void generateLogSystem(QString &);
     void generateGetLogInfo(QDomDocument &);
     void generateLogServer();

@@ -24,6 +24,9 @@ void RenderResponseSetupWizard::preRender() {
     case CMD_SET_LED:
         generateSetLed();
         break;
+    case CMD_GET_WIZARD:
+        generateGetWizard(doc);
+        break;
     default:
         break;
     }
@@ -80,4 +83,88 @@ void RenderResponseSetupWizard::generateSetLed() {
 
 }
 
+/* todo: need API */
+void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QMap<QString, QString> lan0Info = getNasCfg("lan0");
+    QMap<QString, QString> lan1Info = getNasCfg("lan1");
+    QVector<QMap<QString, QString>> lanInfo;
+    if(lan0Info.isEmpty() || lan1Info.isEmpty())
+        return;
+    lanInfo << lan0Info << lan1Info;
+
+    QDomElement root = doc.createElement("wizard");
+    doc.appendChild(root);
+
+    for(auto e : lanInfo) {
+        QDomElement lanElement = doc.createElement("lan");
+        root.appendChild(lanElement);
+
+        QDomElement vlanEnableElement = doc.createElement("vlan_enable");
+        lanElement.appendChild(vlanEnableElement);
+        QDomText vlanEnableValue = doc.createTextNode(e.value("vlan_enable"));
+        vlanEnableElement.appendChild(vlanEnableValue);
+
+        QDomElement vlanIDElement = doc.createElement("vlan_id");
+        lanElement.appendChild(vlanIDElement);
+        QDomText vlanIDValue = doc.createTextNode(e.value("vlan_id"));
+        vlanIDElement.appendChild(vlanIDValue);
+
+        QDomElement dhcpEnableElement = doc.createElement("dhcp_enable");
+        lanElement.appendChild(dhcpEnableElement);
+        QDomText dhcpEnableValue = doc.createTextNode(e.value("dhcp_enable"));
+        dhcpEnableElement.appendChild(dhcpEnableValue);
+
+        QDomElement dnsManualElement = doc.createElement("dns_manual");
+        lanElement.appendChild(dnsManualElement);
+        QDomText dnsManualValue = doc.createTextNode(e.value("dns_manual"));
+        dnsManualElement.appendChild(dnsManualValue);
+
+        QDomElement ipElement = doc.createElement("ip");
+        lanElement.appendChild(ipElement);
+        QDomText ipValue = doc.createTextNode(e.value("ip"));
+        ipElement.appendChild(ipValue);
+
+        QDomElement netmaskElement = doc.createElement("netmask");
+        lanElement.appendChild(netmaskElement);
+        QDomText netmaskValue = doc.createTextNode(e.value("netmask"));
+        netmaskElement.appendChild(netmaskValue);
+
+        QDomElement gatewayElement = doc.createElement("gateway");
+        lanElement.appendChild(gatewayElement);
+        QDomText gatewayValue = doc.createTextNode(e.value("gateway"));
+        gatewayElement.appendChild(gatewayValue);
+
+        QDomElement dns1Element = doc.createElement("dns1");
+        lanElement.appendChild(dns1Element);
+        QDomText dns1Value = doc.createTextNode(e.value("dns1"));
+        dns1Element.appendChild(dns1Value);
+
+        QDomElement dns2Element = doc.createElement("dns2");
+        lanElement.appendChild(dns2Element);
+        QDomText dns2Value = doc.createTextNode(e.value("dns2"));
+        dns2Element.appendChild(dns2Value);
+
+    }
+
+    QDomElement systemElement = doc.createElement("system");
+    root.appendChild(systemElement);
+
+    QDomElement nameElement = doc.createElement("name");
+    systemElement.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode("dlink-8B21F7dd"));
+
+    QDomElement workgroupElement = doc.createElement("workgroup");
+    systemElement.appendChild(workgroupElement);
+    workgroupElement.appendChild(doc.createTextNode("workgroup"));
+
+    QDomElement descriptionElement = doc.createElement("description");
+    systemElement.appendChild(descriptionElement);
+    descriptionElement.appendChild(doc.createTextNode("DNS-340Ldd2"));
+
+    QDomElement timezoneElement = doc.createElement("timezone");
+    systemElement.appendChild(timezoneElement);
+    timezoneElement.appendChild(doc.createTextNode("3"));
+
+}
 
