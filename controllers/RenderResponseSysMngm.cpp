@@ -462,159 +462,179 @@ void RenderResponseSysMngm::generatePowerOffSchedule() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_onoff_schedule", true);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetEmailXml(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_email_info", true, ";");
 
     QDomElement root = doc.createElement("mail");
     doc.appendChild(root);
     QDomElement authElement = doc.createElement("auth");
     root.appendChild(authElement);
-    authElement.appendChild(doc.createTextNode("1"));
+    authElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     QDomElement usernameElement = doc.createElement("username");
     root.appendChild(usernameElement);
-    usernameElement.appendChild(doc.createTextNode(""));
+    usernameElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     QDomElement pwdElement = doc.createElement("pwd");
     root.appendChild(pwdElement);
-    pwdElement.appendChild(doc.createTextNode(""));
+    pwdElement.appendChild(doc.createTextNode(apiOut.value(2)));
 
     QDomElement smtpElement = doc.createElement("smtp");
     root.appendChild(smtpElement);
-    smtpElement.appendChild(doc.createTextNode(""));
+    smtpElement.appendChild(doc.createTextNode(apiOut.value(3)));
 
     QDomElement senderElement = doc.createElement("sender");
     root.appendChild(senderElement);
-    senderElement.appendChild(doc.createTextNode(""));
+    senderElement.appendChild(doc.createTextNode(apiOut.value(4)));
 
     QDomElement receiverElement = doc.createElement("receiver");
     root.appendChild(receiverElement);
-    receiverElement.appendChild(doc.createTextNode(""));
+    receiverElement.appendChild(doc.createTextNode(apiOut.value(5)));
 
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode("25"));
+    portElement.appendChild(doc.createTextNode(apiOut.value(6)));
 
     QDomElement smtpAuthElement = doc.createElement("smtp_auth");
     root.appendChild(smtpAuthElement);
-    smtpAuthElement.appendChild(doc.createTextNode("1"));
+    smtpAuthElement.appendChild(doc.createTextNode(apiOut.value(7)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetEventXml(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mail_info", true, ";");
 
     QDomElement root = doc.createElement("event");
     doc.appendChild(root);
 
     QDomElement pwdElement = doc.createElement("pwd");
     root.appendChild(pwdElement);
-    pwdElement.appendChild(doc.createTextNode("0"));
+    pwdElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     QDomElement hddSpaceStatusElement = doc.createElement("hdd_space_status");
     root.appendChild(hddSpaceStatusElement);
-    hddSpaceStatusElement.appendChild(doc.createTextNode("0"));
+    hddSpaceStatusElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     QDomElement hddFullElement = doc.createElement("hdd_full");
     root.appendChild(hddFullElement);
-    hddFullElement.appendChild(doc.createTextNode("0"));
+    hddFullElement.appendChild(doc.createTextNode(apiOut.value(2)));
 
     QDomElement hddCrashElement = doc.createElement("hdd_crash");
     root.appendChild(hddCrashElement);
-    hddCrashElement.appendChild(doc.createTextNode("0"));
+    hddCrashElement.appendChild(doc.createTextNode(apiOut.value(3)));
 
     QDomElement hddDegradedElement = doc.createElement("hdd_degraded");
     root.appendChild(hddDegradedElement);
-    hddDegradedElement.appendChild(doc.createTextNode("0"));
+    hddDegradedElement.appendChild(doc.createTextNode(apiOut.value(4)));
 
     QDomElement hddRebuildIsDoneElement = doc.createElement("hdd_rebuild_is_done");
     root.appendChild(hddRebuildIsDoneElement);
-    hddRebuildIsDoneElement.appendChild(doc.createTextNode("0"));
+    hddRebuildIsDoneElement.appendChild(doc.createTextNode(apiOut.value(5)));
 
     QDomElement hddRebuildStartElement = doc.createElement("hdd_rebuild_start");
     root.appendChild(hddRebuildStartElement);
-    hddRebuildStartElement.appendChild(doc.createTextNode("0"));
+    hddRebuildStartElement.appendChild(doc.createTextNode(apiOut.value(6)));
 
     QDomElement hddRemoveElement = doc.createElement("hdd_remove");
     root.appendChild(hddRemoveElement);
-    hddRemoveElement.appendChild(doc.createTextNode("0"));
+    hddRemoveElement.appendChild(doc.createTextNode(apiOut.value(7)));
 
     QDomElement hddInsertElement = doc.createElement("hdd_insert");
     root.appendChild(hddInsertElement);
-    hddInsertElement.appendChild(doc.createTextNode("0"));
+    hddInsertElement.appendChild(doc.createTextNode(apiOut.value(8)));
 
     QDomElement hddTemperatureElement = doc.createElement("hdd_temperature");
     root.appendChild(hddTemperatureElement);
-    hddTemperatureElement.appendChild(doc.createTextNode("0"));
+    hddTemperatureElement.appendChild(doc.createTextNode(apiOut.value(9)));
 
     QDomElement firmwareUpdateElement = doc.createElement("firmware_update");
     root.appendChild(firmwareUpdateElement);
-    firmwareUpdateElement.appendChild(doc.createTextNode("0"));
+    firmwareUpdateElement.appendChild(doc.createTextNode(apiOut.value(10)));
 
     QDomElement systemLogScheduleElement = doc.createElement("system_log_schedule");
     root.appendChild(systemLogScheduleElement);
-    systemLogScheduleElement.appendChild(doc.createTextNode("0"));
+    systemLogScheduleElement.appendChild(doc.createTextNode(apiOut.value(11)));
 
     QDomElement systemLogFullElement = doc.createElement("system_log_full");
     root.appendChild(systemLogFullElement);
-    systemLogFullElement.appendChild(doc.createTextNode("0"));
+    systemLogFullElement.appendChild(doc.createTextNode(apiOut.value(12)));
+
+    if(!apiOut.value(13).isEmpty()) {
+        QDomElement hddSpaceSchElement = doc.createElement("hddspace_sch");
+        root.appendChild(hddSpaceSchElement);
+        hddSpaceSchElement.appendChild(doc.createTextNode(apiOut.value(13)));
+    }
+
+    if(!apiOut.value(14).isEmpty()) {
+        QDomElement logSchElement = doc.createElement("log_sch");
+        root.appendChild(logSchElement);
+        logSchElement.appendChild(doc.createTextNode(apiOut.value(14)));
+    }
 
     QDomElement btDownloadElement = doc.createElement("bt_download");
     root.appendChild(btDownloadElement);
-    btDownloadElement.appendChild(doc.createTextNode("0"));
+    btDownloadElement.appendChild(doc.createTextNode(apiOut.value(15)));
 
     QDomElement configUpdateElement = doc.createElement("config_update");
     root.appendChild(configUpdateElement);
-    configUpdateElement.appendChild(doc.createTextNode("0"));
+    configUpdateElement.appendChild(doc.createTextNode(apiOut.value(16)));
 
     QDomElement smartTestElement = doc.createElement("smart_test");
     root.appendChild(smartTestElement);
-    smartTestElement.appendChild(doc.createTextNode("0"));
+    smartTestElement.appendChild(doc.createTextNode(apiOut.value(17)));
 
     QDomElement recoverPwerFailElement = doc.createElement("recover_power_fail");
     root.appendChild(recoverPwerFailElement);
-    recoverPwerFailElement.appendChild(doc.createTextNode("0"));
+    recoverPwerFailElement.appendChild(doc.createTextNode(apiOut.value(18)));
 
     QDomElement upsElement = doc.createElement("ups");
     root.appendChild(upsElement);
-    upsElement.appendChild(doc.createTextNode("0"));
+    upsElement.appendChild(doc.createTextNode(apiOut.value(19)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateEmailEvent(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_event_setting "
+                                      + allParametersToString());
     str = "Content-type: text/html";
 }
 
-/* todo */
 void RenderResponseSysMngm::generateEmail(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QMap<QString, QString> map;
+    map.insert("auth", m_pReq->parameter("login_method"));
+    map.insert("username", QUrl::fromPercentEncoding(m_pReq->parameter("f_username").toLocal8Bit()));
+    map.insert("pwd", m_pReq->parameter("f_password"));
+    map.insert("smtp", m_pReq->parameter("f_smtp"));
+    map.insert("sender", QUrl::fromPercentEncoding(m_pReq->parameter("f_sender").toLocal8Bit()));
+    map.insert("receiver", QUrl::fromPercentEncoding(m_pReq->parameter("f_receiver").toLocal8Bit()));
+    map.insert("port", m_pReq->parameter("f_port"));
+    map.insert("smtp_auth", m_pReq->parameter("f_smtp_auth"));
+
+    if(!setNasCfg("mail", map))
+        tDebug("RenderResponseSysMngm::generateEmail(): setNasCfg <mail> failed");
+
     str = "Content-type: text/html";
 }
 
-/* todo */
 void RenderResponseSysMngm::generateEmailTest() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_send_email_test "
+                                      + allParametersToString());
 }
 
-/* todo */
 void RenderResponseSysMngm::generateEmailTestResult(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_send_email_test_result");
 
     QDomElement root = doc.createElement("test");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("0"));
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateEmailClear(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_email_save_config");
     str = "Content-type: text/html";
 }
 

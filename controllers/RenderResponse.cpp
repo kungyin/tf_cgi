@@ -142,7 +142,7 @@ QString RenderResponse::allParametersToString() {
         for ( QString entryKey : m_pReq->allParameters().keys() ) {
             if(!ret.isEmpty())
                 ret += "#";
-            ret += entryKey + "=" + m_pReq->allParameters().value(entryKey).toString();
+            ret += entryKey + "=" + QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
         }
     }
 

@@ -44,6 +44,16 @@ schedule = 1,23,0;0,2,0;1,0,0;0,0,0;1,0,0;1,0,0;0,0,0
 [power_off_sch]
 off_schedule= 0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0
 
+[mail] 
+auth= 1
+username= jerryhsieh0530@gmail.com
+pwd= kdsjdksjkd
+smtp= smtp.gmail.com
+sender= jerryhsieh0530@gmail.com
+receiver= jerryhsieh0530@gmail.com
+port= 465
+smtp_auth= 0
+
 [lan0]                      
 speed=0                                  
 dhcp_enable= 1
@@ -83,6 +93,13 @@ pwd=qqddeerr22667
 domain=josen-hung.no-ip.org
 server=no-ip.DDNS
 timeout=2073600  
+timestamp=
+ip=
+
+[upnp] 
+upnp_test = Not Found  
+
+eout=2073600  
 timestamp=
 ip=
 
