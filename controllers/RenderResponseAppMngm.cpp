@@ -108,6 +108,32 @@ void RenderResponseAppMngm::preRender() {
     case CMD_SYSLOG_CLEAR:
         generateSyslogClear();
         break;
+
+    case CMD_LOCAL_BACKUP_NOW:
+        generateLocalBackupNow(doc);
+        break;
+    case CMD_LOCAL_BACKUP_LIST:
+        generateLocalBackupList(doc);
+        break;
+    case CMD_LOCAL_BACKUP_SAMBA_FORMAT:
+        generateLocalBackupSambaFormat(doc);
+        break;
+    case CMD_LOCAL_BACKUP_ADD:
+        generateLocalBackupAdd(str);
+        break;
+    case CMD_LOCAL_BACKUP_INFO:
+        generateLocalBackupInfo(doc);
+        break;
+    case CMD_LOCAL_BACKUP_RENEW:
+        generateLocalBackupRenew(str);
+        break;
+    case CMD_LOCAL_BACKUP_DEL:
+        generateLocalBackupDel(doc);
+        break;
+    case CMD_LOCAL_BACKUP_TEST:
+        generateLocalBackupTest(doc);
+        break;
+
     case CMD_NONE:
     default:
         break;
@@ -784,3 +810,250 @@ void RenderResponseAppMngm::generateSyslogClear() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
 }
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupNow(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement dateElement = doc.createElement("date");
+    root.appendChild(dateElement);
+    dateElement.appendChild(doc.createTextNode("05/24/2015"));
+
+    QDomElement hourElement = doc.createElement("hour");
+    root.appendChild(hourElement);
+    hourElement.appendChild(doc.createTextNode("13"));
+
+    QDomElement minsElement = doc.createElement("mins");
+    root.appendChild(minsElement);
+    minsElement.appendChild(doc.createTextNode("47"));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QString strProgressBar = "&lt;span class=&apos;progressBar&apos; id=&apos;progressbar_row%1&apos;&gt;%2&lt;/span&gt;";
+    QString strImage = "&lt;IMG src=&apos;%1&apos;&gt;";
+    QString strBackupStart = "&lt;a href=javascript:localbackup_start(&apos;%1&apos;)&gt;&lt;IMG border\
+            =&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;";
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    //for(int i=0; i<apiOutList.size(); i++) {
+
+        QDomElement rowElement1 = doc.createElement("row");
+        root.appendChild(rowElement1);
+        rowElement1.setAttribute("id", "1");
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement1);
+        QDomText cellValue1 = doc.createTextNode("Volume_1/photo.db");
+        cellElement1.appendChild(cellValue1);
+
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement2);
+        QDomText cellValue2 = doc.createTextNode("Volume_2/");
+        cellElement2.appendChild(cellValue2);
+
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement3);
+        QDomText cellValue3 = doc.createTextNode(strProgressBar.arg("1").arg("100"));
+        cellElement3.appendChild(cellValue3);
+
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement4);
+        QDomText cellValue4 = doc.createTextNode(strImage.arg("/web/images/icon_stop.png"));
+        cellElement4.appendChild(cellValue4);
+
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement5);
+        QDomText cellValue5 = doc.createTextNode("0 KB");
+        cellElement5.appendChild(cellValue5);
+
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement6);
+        QDomText cellValue6 = doc.createTextNode("06/10/15 00:30");
+        cellElement6.appendChild(cellValue6);
+
+        QDomElement cellElement7 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement7);
+        QDomText cellValue7 = doc.createTextNode(strBackupStart.arg("00000014326443120151"));
+        cellElement4.appendChild(cellValue7);
+
+        QDomElement cellElement8 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement8);
+        QDomText cellValue8 = doc.createTextNode("-");
+        cellElement4.appendChild(cellValue8);
+
+        QDomElement cellElement9 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement9);
+        QDomText cellValue9 = doc.createTextNode("00000014326443120151");
+        cellElement4.appendChild(cellValue9);
+
+        QDomElement cellElement10 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement10);
+        QDomText cellValue10 = doc.createTextNode("0");
+        cellElement4.appendChild(cellValue10);
+    //}
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode("2"));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupSambaFormat(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    //for
+    QDomElement itemElement = doc.createElement("item");
+    root.appendChild(itemElement);
+
+    QDomElement volElement = doc.createElement("vol");
+    itemElement.appendChild(volElement);
+    volElement.appendChild(doc.createTextNode("Volume_1"));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement idxElement = doc.createElement("idx");
+    root.appendChild(idxElement);
+    idxElement.appendChild(doc.createTextNode("00000014326443120151"));
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode("3"));
+
+    QDomElement periodElement = doc.createElement("period");
+    root.appendChild(periodElement);
+    periodElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement recurDateElement = doc.createElement("recur_date");
+    root.appendChild(recurDateElement);
+    recurDateElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement fileTypeElement = doc.createElement("file_type");
+    root.appendChild(fileTypeElement);
+    fileTypeElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement srcElement = doc.createElement("src");
+    root.appendChild(srcElement);
+    srcElement.appendChild(doc.createTextNode("Volume_1/photo.db"));
+
+    QDomElement destElement = doc.createElement("dest");
+    root.appendChild(destElement);
+    destElement.appendChild(doc.createTextNode("Volume_2"));
+
+    QDomElement srcUserElement = doc.createElement("src_user");
+    root.appendChild(srcUserElement);
+    srcUserElement.appendChild(doc.createTextNode(""));
+
+    QDomElement srcPasswdElement = doc.createElement("src_passwd");
+    root.appendChild(srcPasswdElement);
+    srcPasswdElement.appendChild(doc.createTextNode(""));
+
+    QDomElement dstUserElement = doc.createElement("dst_user");
+    root.appendChild(dstUserElement);
+    dstUserElement.appendChild(doc.createTextNode(""));
+
+    QDomElement dstPasswdElement = doc.createElement("dst_passwd");
+    root.appendChild(dstPasswdElement);
+    dstPasswdElement.appendChild(doc.createTextNode(""));
+
+    QDomElement execatElement = doc.createElement("execat");
+    root.appendChild(execatElement);
+    execatElement.appendChild(doc.createTextNode("201505261244"));
+
+    QDomElement renameElement = doc.createElement("rename");
+    root.appendChild(renameElement);
+    renameElement.appendChild(doc.createTextNode(""));
+
+    QDomElement incElement = doc.createElement("inc");
+    root.appendChild(incElement);
+    incElement.appendChild(doc.createTextNode("0"));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupRenew(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupDel(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement idxElement = doc.createElement("idx");
+    root.appendChild(idxElement);
+    idxElement.appendChild(doc.createTextNode("00000014326172430977"));
+
+    QDomElement fnameElement = doc.createElement("fname");
+    root.appendChild(fnameElement);
+    fnameElement.appendChild(doc.createTextNode("00000014326172430977.xml"));
+
+    QDomElement resultElement = doc.createElement("result");
+    root.appendChild(resultElement);
+    resultElement.appendChild(doc.createTextNode("0"));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateLocalBackupTest(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement suserElement = doc.createElement("f_suser");
+    root.appendChild(suserElement);
+    suserElement.appendChild(doc.createTextNode("admin"));
+
+    QDomElement spasswdElement = doc.createElement("f_spasswd");
+    root.appendChild(spasswdElement);
+    spasswdElement.appendChild(doc.createTextNode("000000"));
+
+    QDomElement srcElement = doc.createElement("src");
+    root.appendChild(srcElement);
+    srcElement.appendChild(doc.createTextNode("\\192.168.100.9\d\Jerry\app\popup.js"));
+
+    QDomElement resultElement = doc.createElement("result");
+    root.appendChild(resultElement);
+    resultElement.appendChild(doc.createTextNode("-1"));
+
+    QDomElement sizeElement = doc.createElement("size");
+    root.appendChild(sizeElement);
+    sizeElement.appendChild(doc.createTextNode("-1"));
+}
+

@@ -445,7 +445,7 @@ void RenderResponseNetShare::generateGetAllIsoShare(QDomDocument &doc) {
 }
 
 void RenderResponseNetShare::generateOpenTree(QString &str) {
-    QString paraDir = m_pReq->allParameters().value("dir").toString();
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->allParameters().value("dir").toByteArray());
     QString paraShowFile = m_pReq->allParameters().value("show_file").toString();
     QString paraChkFlag = m_pReq->allParameters().value("chk_flag").toString();
     QString paraFileType = m_pReq->allParameters().value("file_type").toString();
@@ -462,7 +462,7 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
     QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\"  src=\"%2\" rel=\"%2\">\n";
     QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
 
-    QDir dir(paraDir.replace("%2F", "/"));
+    QDir dir(paraDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
     if(paraShowFile.compare("1") == 0)
         filters |= QDir::AllEntries;

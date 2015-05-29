@@ -36,13 +36,15 @@ void CgiController::index()
     }
 
 #ifndef SIMULATOR_MODE
-    if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
-        if(httpRequest().cookie("username").isEmpty()) {
-            renderErrorResponse(Tf::NotFound);
-            return;
-        }
-    }
+//    if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
+//        if(httpRequest().cookie("username").isEmpty()) {
+//            renderErrorResponse(Tf::NotFound);
+//            return;
+//        }
+//    }
 #endif
+
+    tError("CgiController::index() -- %d", cmd);
 
     RenderResponse *pRrep = NULL;
     pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);

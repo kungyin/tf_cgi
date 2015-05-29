@@ -43,7 +43,7 @@ void ParseCmd::parse(QString cmd) {
     if(iCmdNumber == -1)
         m_iCommand = CMD_NONE;
     else {
-        m_iCommand = iCmdNumber + 1;
+        m_iCommand = findIfEqual(iCmdNumber + 1);
 
         bool bFound = false;
         int size = sizeof(CGI_COMMAND_TYPE_FILTER)/sizeof(CGI_COMMAND_TYPE_FILTER[0]);
@@ -62,5 +62,21 @@ void ParseCmd::parse(QString cmd) {
         }
     }
 
+}
+
+int ParseCmd::findIfEqual(int iCmd) {
+
+    int ret = iCmd;
+    int iSize = sizeof(EQUAL_COMMANDS)/sizeof(EQUAL_COMMANDS[0]);
+
+    for(int i = 0; i < iSize; i++) {
+        if(EQUAL_COMMANDS[i][0] == iCmd) {
+            ret = EQUAL_COMMANDS[i][1];
+            tDebug("ParseCmd::getCGICmd(): command %d is replaced with %d", iCmd, ret);
+            break;
+        }
+    }
+
+    return ret;
 }
 

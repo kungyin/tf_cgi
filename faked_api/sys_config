@@ -17,7 +17,7 @@ ads_realm = 0
 ads_pwd_server =
 
 [afp]
-enable = 1
+enable = 0
 
 [iso_mount]
 enable = 00000

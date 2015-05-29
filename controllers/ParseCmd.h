@@ -17,6 +17,7 @@ public:
 private:
 
     void parse(QString);
+    int findIfEqual(int);
 
     int m_iCommand;
     int m_iRenderType;

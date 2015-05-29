@@ -45,6 +45,17 @@ private:
     void generateSyslogGetExportStatus(QDomDocument &);
     void generateSyslogClear();
 
+    void generateLocalBackupNow(QDomDocument &);
+    void generateLocalBackupList(QDomDocument &);
+    void generateReadOpenTree(QString &);
+    void generateGenericOpenTree(QString &);
+    void generateLocalBackupSambaFormat(QDomDocument &);
+    void generateLocalBackupAdd(QString &);
+    void generateLocalBackupInfo(QDomDocument &);
+    void generateLocalBackupRenew(QString &);
+    void generateLocalBackupDel(QDomDocument &);
+    void generateLocalBackupTest(QDomDocument &);
+
 };
 
 
