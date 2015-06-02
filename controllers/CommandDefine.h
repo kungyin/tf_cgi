@@ -254,6 +254,15 @@ enum CGI_COMMAND {
     CMD_MTP_INFO,                           /* cgi_mtp_info */
     CMD_USB_PRINTER_INFO,                   /* cgi_usb_printer_info */
     CMD_UPS_INFO2,                          /* cgi_ups_info2 */
+
+    CMD_SMART_XML_CREATE_DEVICE_LIST,       /* SMART_XML_Create_Device_List */
+    CMD_SMART_XML_CREATE_SMART_INFO,        /* SMART_XML_Create_Smart_Info */
+
+    CMD_RESOURCE,                           /* resource */
+
+    CMD_GET_SERVICE,                        /* cgi_get_service */
+    CMD_MODULE_LIST,                        /* module_list */
+
     CMD_SYS_STATUS_END,
 
     /**** FTP Server ****/
@@ -521,6 +530,14 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_mtp_info",
     "cgi_usb_printer_info",
     "cgi_ups_info2",
+
+    "SMART_XML_Create_Device_List",
+    "SMART_XML_Create_Smart_Info",
+
+    "resource",
+
+    "cgi_get_service",
+    "module_list",
     "",
     
     /**** FTP Server ****/    
@@ -791,6 +808,14 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MTP_INFO,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info */
     { CMD_USB_PRINTER_INFO,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_info */
     { CMD_UPS_INFO2,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_ups_info2 */
+
+    { CMD_SMART_XML_CREATE_DEVICE_LIST, RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* SMART_XML_Create_Device_List */
+    { CMD_SMART_XML_CREATE_SMART_INFO,  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* SMART_XML_Create_Smart_Info */
+
+    { CMD_RESOURCE,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* resource */
+
+    { CMD_GET_SERVICE,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_service */
+    { CMD_MODULE_LIST,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* module_list */
 
 //    CMD_SYS_STATUS_END,
 

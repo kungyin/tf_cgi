@@ -44,7 +44,8 @@ void CgiController::index()
 //    }
 #endif
 
-    tError("CgiController::index() -- %d", cmd);
+
+    //tDebug("CgiController::index() -- %s", authenticityToken().data());
 
     RenderResponse *pRrep = NULL;
     pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);

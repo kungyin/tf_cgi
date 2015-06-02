@@ -36,6 +36,25 @@ void RenderResponseSysStatus::preRender() {
     case CMD_UPS_INFO2:
         generateUpsInfo2(doc);
         break;
+
+    case CMD_SMART_XML_CREATE_DEVICE_LIST:
+        generateSmartXmlCreateDeviceList(doc);
+        break;
+    case CMD_SMART_XML_CREATE_SMART_INFO:
+        generateSmartXmlCreateSmartInfo(doc);
+        break;
+
+    case CMD_RESOURCE:
+        generateResource(doc);
+        break;
+
+    case CMD_GET_SERVICE:
+        generateGetService(doc);
+        break;
+    case CMD_MODULE_LIST:
+        generateModuleList(doc);
+        break;
+
     case CMD_NONE:
     default:
         break;
@@ -240,6 +259,299 @@ void RenderResponseSysStatus::generateUpsInfo2(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
+
+}
+
+/* todo: need API */
+void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    //for(int i=0; i < apiOut.size(); i++) {
+//        if(apiOut.at(i).isEmpty())
+//            continue;
+//        if(apiOut.at(i).split(",").size() < 2)
+//            continue;
+
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode("Disk1"));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode("Seagate"));
+
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode("ST3000DM001-9YN166"));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createTextNode("S1F0HYJ4"));
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode("32"));
+
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createTextNode("2930266584"));
+        QDomElement cellElement7 = doc.createElement("cell");
+        rowElement.appendChild(cellElement7);
+        cellElement7.appendChild(doc.createTextNode("&lt;a href=javascript:onclick=GetSmartInfo\
+            (&apos;sdb&apos;,&apos;1&apos;);&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images\
+            /normal.png&apos; alt=&apos;Normal&apos;&gt;&lt;/a&gt;"));
+
+        rowElement.setAttribute("id", "1");
+    //}
+
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode("2"));
+
+}
+
+/* todo: need API */
+void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    //for(int i=0; i < apiOut.size(); i++) {
+//        if(apiOut.at(i).isEmpty())
+//            continue;
+//        if(apiOut.at(i).split(",").size() < 2)
+//            continue;
+
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode("1"));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode("Raw_Read_Error_Rate"));
+
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode("117"));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createTextNode("100"));
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode("6"));
+
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createTextNode("132806608"));
+
+        rowElement.setAttribute("id", "1");
+    //}
+
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode("3"));
+
+}
+
+
+/* todo: need API */
+void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
+    QDomElement root = doc.createElement("xml");
+    doc.appendChild(root);
+
+
+    QDomElement bondingEnableElement = doc.createElement("bonding_enable");
+    root.appendChild(bondingEnableElement);
+    bondingEnableElement.appendChild(doc.createTextNode("0"));
+    QDomElement lanRSpeedElement = doc.createElement("lan_r_speed");
+    root.appendChild(lanRSpeedElement);
+    lanRSpeedElement.appendChild(doc.createTextNode("4954335"));
+
+    QDomElement lanTSpeedElement = doc.createElement("lan_t_speed");
+    root.appendChild(lanTSpeedElement);
+    lanTSpeedElement.appendChild(doc.createTextNode("24244223"));
+    QDomElement lan2RSpeedElement = doc.createElement("lan2_r_speed");
+    root.appendChild(lan2RSpeedElement);
+    lan2RSpeedElement.appendChild(doc.createTextNode("0"));
+    QDomElement lan2TSpeedElement = doc.createElement("lan2_t_speed");
+    root.appendChild(lan2TSpeedElement);
+    lan2TSpeedElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement memTotalElement = doc.createElement("mem_total");
+    root.appendChild(memTotalElement);
+    memTotalElement.appendChild(doc.createTextNode("509748"));
+    QDomElement memFreeElement = doc.createElement("mem_free");
+    root.appendChild(memFreeElement);
+    memFreeElement.appendChild(doc.createTextNode("346748"));
+    QDomElement buffersElement = doc.createElement("buffers");
+    root.appendChild(buffersElement);
+    buffersElement.appendChild(doc.createTextNode("10404"));
+
+    QDomElement cachedElement = doc.createElement("cached");
+    root.appendChild(cachedElement);
+    cachedElement.appendChild(doc.createTextNode("84924"));
+    QDomElement nowTimeElement = doc.createElement("now_time");
+    root.appendChild(nowTimeElement);
+    nowTimeElement.appendChild(doc.createTextNode("1430112389"));
+    QDomElement cpuElement = doc.createElement("cpu");
+    root.appendChild(cpuElement);
+    cpuElement.appendChild(doc.createTextNode("0%"));
+
+    //for(int i=0; i < apiOut.size(); i++) {
+
+        QDomElement processMainElement = doc.createElement("process_main");
+        root.appendChild(processMainElement);
+        QDomElement commandElement = doc.createElement("command");
+        processMainElement.appendChild(commandElement);
+        commandElement.appendChild(doc.createTextNode("/usr/libexec/mysqld"));
+        QDomElement userElement = doc.createElement("user");
+        processMainElement.appendChild(userElement);
+        userElement.appendChild(doc.createTextNode("root"));
+
+        QDomElement pidElement = doc.createElement("pid");
+        processMainElement.appendChild(pidElement);
+        pidElement.appendChild(doc.createTextNode("2332"));
+
+        QDomElement processCpuElement = doc.createElement("cpu");
+        processMainElement.appendChild(processCpuElement);
+        processCpuElement.appendChild(doc.createTextNode("0.0"));
+
+        QDomElement memElement = doc.createElement("mem");
+        processMainElement.appendChild(memElement);
+        memElement.appendChild(doc.createTextNode("5.2"));
+
+    //}
+
+}
+
+/* todo: need API */
+void RenderResponseSysStatus::generateGetService(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
+    QDomElement root = doc.createElement("service");
+    doc.appendChild(root);
+
+
+    QDomElement afpEnableElement = doc.createElement("afp_enable");
+    root.appendChild(afpEnableElement);
+    afpEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement nfsEnableElement = doc.createElement("nfs_enable");
+    root.appendChild(nfsEnableElement);
+    nfsEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement ddnsEnableElement = doc.createElement("ddns_enable");
+    root.appendChild(ddnsEnableElement);
+    ddnsEnableElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement ddnsStatusElement = doc.createElement("ddns_status");
+    root.appendChild(ddnsStatusElement);
+    ddnsStatusElement.appendChild(doc.createTextNode("off"));
+
+    QDomElement upnpEnableElement = doc.createElement("upnp_enable");
+    root.appendChild(upnpEnableElement);
+    upnpEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement tmEnableElement = doc.createElement("tm_enable");
+    root.appendChild(tmEnableElement);
+    tmEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement ftpEnableElement = doc.createElement("ftp_enable");
+    root.appendChild(ftpEnableElement);
+    ftpEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement p2pEnableElement = doc.createElement("p2p_enable");
+    root.appendChild(p2pEnableElement);
+    p2pEnableElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement syslogEnableElement = doc.createElement("syslog_enable");
+    root.appendChild(syslogEnableElement);
+    syslogEnableElement.appendChild(doc.createTextNode(""));
+
+    QDomElement syslogStatusElement = doc.createElement("syslog_status");
+    root.appendChild(syslogStatusElement);
+    syslogStatusElement.appendChild(doc.createTextNode(""));
+
+    QDomElement syslogFolderElement = doc.createElement("syslog_folder");
+    root.appendChild(syslogFolderElement);
+    syslogFolderElement.appendChild(doc.createTextNode("Volume_1"));
+
+}
+
+/* todo: need API */
+void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    //for(int i=0; i < apiOut.size(); i++) {
+
+    QDomElement rowElement = doc.createElement("row");
+    root.appendChild(rowElement);
+    QDomElement cellElement1 = doc.createElement("cell");
+    rowElement.appendChild(cellElement1);
+    cellElement1.appendChild(doc.createTextNode("1"));
+
+    QDomElement cellElement2 = doc.createElement("cell");
+    rowElement.appendChild(cellElement2);
+    cellElement2.appendChild(doc.createTextNode("Transmission"));
+
+    QDomElement cellElement3 = doc.createElement("cell");
+    rowElement.appendChild(cellElement3);
+    cellElement3.appendChild(doc.createTextNode("1.00"));
+
+    QDomElement cellElement4 = doc.createElement("cell");
+    rowElement.appendChild(cellElement4);
+    cellElement4.appendChild(doc.createTextNode(
+          "&lt;img border=&apos;0&apos; src=&apos;/web/images/sign_ok.png&apos;&gt;"));
+
+    QDomElement cellElement5 = doc.createElement("cell");
+    rowElement.appendChild(cellElement5);
+    cellElement5.appendChild(doc.createTextNode(
+          "&lt;img border=&apos;0&apos; src=&apos;/web/images/off.png&apos;&gt;"));
+
+    QDomElement cellElement6 = doc.createElement("cell");
+    rowElement.appendChild(cellElement6);
+    cellElement6.appendChild(doc.createTextNode(
+          "&lt;a href=javascript:enable(&apos;Transmission&apos;,&apos;1&apos;,&apos;app&apos;)\
+          &gt;&lt;img border=&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;"));
+
+    QDomElement cellElement7 = doc.createElement("cell");
+    rowElement.appendChild(cellElement7);
+    cellElement7.appendChild(doc.createTextNode(
+          "&lt;a href=javascript:del_module(&apos;Transmission&apos;,&apos;app&apos;)&gt;&lt;img \
+          border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;"));
+
+    rowElement.setAttribute("id", "0");
+
+    //}
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode("1"));
 
 }
 

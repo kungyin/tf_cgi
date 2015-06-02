@@ -19,6 +19,12 @@ private:
     void generateUsbPrinterInfo(QDomDocument &);
     void generateUpsInfo2(QDomDocument &);
 
+    void generateSmartXmlCreateDeviceList(QDomDocument &);
+    void generateSmartXmlCreateSmartInfo(QDomDocument &);
+    void generateResource(QDomDocument &);
+    void generateGetService(QDomDocument &);
+    void generateModuleList(QDomDocument &);
+
 };
 
 #endif // RENDERRESPONSESYSSTATUS_H

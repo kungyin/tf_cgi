@@ -47,8 +47,6 @@ private:
 
     void generateLocalBackupNow(QDomDocument &);
     void generateLocalBackupList(QDomDocument &);
-    void generateReadOpenTree(QString &);
-    void generateGenericOpenTree(QString &);
     void generateLocalBackupSambaFormat(QDomDocument &);
     void generateLocalBackupAdd(QString &);
     void generateLocalBackupInfo(QDomDocument &);
