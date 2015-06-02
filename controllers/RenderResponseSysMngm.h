@@ -54,6 +54,12 @@ private:
     void generateLogBackup(QString &);
     void generateLogClear();
 
+    void generateUpsInfo(QDomDocument &);
+    void generateUpsSlaveSetting(QDomDocument &);
+    void generateUpsPs(QDomDocument &);
+    void generateUsbStorageUmount(QDomDocument &);
+    void generateUsbPrinterClear(QDomDocument &);
+
 };
 
 

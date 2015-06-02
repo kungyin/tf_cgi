@@ -132,6 +132,23 @@ void RenderResponseSysMngm::preRender() {
     case CMD_LOG_CLEAR:
         generateLogClear();
         break;
+
+    case CMD_GUI_UPS_INFO:
+        generateUpsInfo(doc);
+        break;
+    case CMD_GUI_UPS_SLAVE_SETTING:
+        generateUpsSlaveSetting(doc);
+        break;
+    case CMD_GUI_UPS_PS:
+        generateUpsPs(doc);
+        break;
+    case CMD_USB_STORAGE_UMOUNT:
+        generateUsbStorageUmount(doc);
+        break;
+    case CMD_USB_PRINTER_CLEAR:
+        generateUsbPrinterClear(doc);
+        break;
+
     case CMD_NONE:
     default:
         break;
@@ -695,3 +712,72 @@ void RenderResponseSysMngm::generateLogBackup(QString &str) {
 void RenderResponseSysMngm::generateLogClear() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 }
+
+/* todo */
+void RenderResponseSysMngm::generateUpsInfo(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement upsPlugmodeElement = doc.createElement("ups_plugmode");
+    root.appendChild(upsPlugmodeElement);
+    upsPlugmodeElement.appendChild(doc.createTextNode("0"));
+    QDomElement upsModeElement = doc.createElement("ups_mode");
+    root.appendChild(upsModeElement);
+    upsModeElement.appendChild(doc.createTextNode("0"));
+    QDomElement masterIpElement = doc.createElement("master_ip");
+    root.appendChild(masterIpElement);
+    masterIpElement.appendChild(doc.createTextNode("none"));
+    QDomElement upsNetworkElement = doc.createElement("ups_network");
+    root.appendChild(upsNetworkElement);
+    upsNetworkElement.appendChild(doc.createTextNode("0"));
+}
+
+/* todo */
+void RenderResponseSysMngm::generateUpsSlaveSetting(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+
+}
+
+/* todo */
+void RenderResponseSysMngm::generateUpsPs(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+
+}
+
+/* todo */
+void RenderResponseSysMngm::generateUsbStorageUmount(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+
+}
+
+/* todo */
+void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+
+}
+

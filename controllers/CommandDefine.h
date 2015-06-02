@@ -244,6 +244,12 @@ enum CGI_COMMAND {
     CMD_SEND_LOG_TEST,                      /* cgi_send_log_test */
     CMD_LOG_BACKUP,                         /* cgi_log_backup */
     CMD_LOG_CLEAR,                          /* cgi_log_clear */
+
+    CMD_GUI_UPS_INFO,                       /* GUI_ups_info */
+    CMD_GUI_UPS_SLAVE_SETTING,              /* GUI_ups_slave_setting */
+    CMD_GUI_UPS_PS,                         /* GUI_ups_ps */
+    CMD_USB_STORAGE_UMOUNT,                 /* cgi_usb_Storage_umount */
+    CMD_USB_PRINTER_CLEAR,                  /* cgi_usb_printer_clear */
     CMD_SYS_MNGM_END,
 
     /**** System Status ****/
@@ -520,6 +526,12 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_send_log_test",
     "cgi_log_backup",
     "cgi_log_clear",
+
+    "GUI_ups_info",
+    "GUI_ups_slave_setting",
+    "GUI_ups_ps",
+    "cgi_usb_Storage_umount",
+    "cgi_usb_printer_clear",
     "",
 
     /**** System Status ****/
@@ -798,6 +810,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SEND_LOG_TEST,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_send_log_test */
     { CMD_LOG_BACKUP,                   RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },         /* cgi_log_backup */
     { CMD_LOG_CLEAR,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_clear */
+
+    { CMD_GUI_UPS_INFO,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* GUI_ups_info */
+    { CMD_GUI_UPS_SLAVE_SETTING,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_slave_setting */
+    { CMD_GUI_UPS_PS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_ps */
+    { CMD_USB_STORAGE_UMOUNT,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_Storage_umount */
+
 //    CMD_SYS_MNGM_END,
 
     /**** System Status ****/

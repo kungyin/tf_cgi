@@ -205,17 +205,66 @@ void RenderResponseSysStatus::generateStatusVolumeInfo(QDomDocument &doc) {
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_storage_info", false);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement resElement = doc.createElement("res");
-    root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    if(apiOut.isEmpty()) {
+        QDomElement resElement = doc.createElement("res");
+        root.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode("0"));
+    }
+    else {
+        for(QString e : apiOut) {
+            QDomElement usbElement = doc.createElement("usb");
+            root.appendChild(usbElement);
+            QDomElement usbPortElement = doc.createElement("usb_port");
+            usbElement.appendChild(usbPortElement);
+            usbPortElement.appendChild(doc.createTextNode(e.split(";").value(0)));
+            QDomElement manufacturerElement = doc.createElement("manufacturer");
+            usbElement.appendChild(manufacturerElement);
+            manufacturerElement.appendChild(doc.createTextNode(e.split(";").value(1)));
+
+            QDomElement productElement = doc.createElement("product");
+            usbElement.appendChild(productElement);
+            productElement.appendChild(doc.createTextNode(e.split(";").value(2)));
+
+            QDomElement mapDevElement = doc.createElement("map_dev");
+            usbElement.appendChild(mapDevElement);
+            mapDevElement.appendChild(doc.createTextNode(e.split(";").value(3)));
+            QDomElement usbVersionElement = doc.createElement("usb_version");
+            usbElement.appendChild(usbVersionElement);
+            usbVersionElement.appendChild(doc.createTextNode(e.split(";").value(4)));
+            QDomElement totalSizeElement = doc.createElement("total_size");
+            usbElement.appendChild(totalSizeElement);
+            totalSizeElement.appendChild(doc.createTextNode(e.split(";").value(5)));
+
+            QDomElement partitionsElement = doc.createElement("partitions");
+            root.appendChild(partitionsElement);
+            for(QString partitionEntry : e.split(";").value(6).split("#")) {
+                QDomElement partitionElement = doc.createElement("partition");
+                root.appendChild(partitionElement);
+                QDomElement shareNameElement = doc.createElement("share_name");
+                partitionElement.appendChild(shareNameElement);
+                shareNameElement.appendChild(doc.createTextNode(partitionEntry.split(",").value(0)));
+
+                QDomElement psizeElement = doc.createElement("psize");
+                partitionElement.appendChild(psizeElement);
+                psizeElement.appendChild(doc.createTextNode(partitionEntry.split(",").value(1)));
+
+                QDomElement pusedSizeElement = doc.createElement("pused_size");
+                partitionElement.appendChild(pusedSizeElement);
+                pusedSizeElement.appendChild(doc.createTextNode(partitionEntry.split(",").value(2)));
+
+                QDomElement fsTypeElement = doc.createElement("fs_type");
+                partitionElement.appendChild(fsTypeElement);
+                fsTypeElement.appendChild(doc.createTextNode(partitionEntry.split(",").value(3)));
+            }
+        }
+    }
 
 }
 
@@ -375,7 +424,6 @@ void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
 
     QDomElement root = doc.createElement("xml");
     doc.appendChild(root);
-
 
     QDomElement bondingEnableElement = doc.createElement("bonding_enable");
     root.appendChild(bondingEnableElement);
