@@ -3,6 +3,7 @@
 #include "AppDefine.h"
 #include "CgiController.h"
 #include "ParseCmd.h"
+
 #include "RenderResponseDisk.h"
 #include "RenderResponseHome.h"
 #include "RenderResponseNetwork.h"
@@ -14,6 +15,7 @@
 #include "RenderResponseFtp.h"
 #include "RenderResponseTimeMachine.h"
 #include "RenderResponseSetupWizard.h"
+#include "RenderResponseAppDownloads.h"
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -43,7 +45,6 @@ void CgiController::index()
 //        }
 //    }
 #endif
-
 
     //tDebug("CgiController::index() -- %s", authenticityToken().data());
 
@@ -129,6 +130,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseTimeMachine(req, cmd);
     else if(cmd < CMD_SETUP_WIZARD_END)
         pRrep = new RenderResponseSetupWizard(req, cmd);
+    else if(cmd < CMD_APP_DOWNLOAD_END)
+        pRrep = new RenderResponseAppDownloads(req, cmd);
 
     return pRrep;
 

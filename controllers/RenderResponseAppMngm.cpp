@@ -899,6 +899,7 @@ void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
         rowElement1.appendChild(cellElement10);
         QDomText cellValue10 = doc.createTextNode("0");
         cellElement4.appendChild(cellValue10);
+
     //}
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);

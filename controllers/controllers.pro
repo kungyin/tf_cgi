@@ -27,7 +27,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseSysStatus.h \
     RenderResponseFtp.h \
     RenderResponseTimeMachine.h \
-    RenderResponseSetupWizard.h
+    RenderResponseSetupWizard.h \
+    RenderResponseAppDownloads.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -42,4 +43,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseSysStatus.cpp \
     RenderResponseFtp.cpp \
     RenderResponseTimeMachine.cpp \
-    RenderResponseSetupWizard.cpp
+    RenderResponseSetupWizard.cpp \
+    RenderResponseAppDownloads.cpp

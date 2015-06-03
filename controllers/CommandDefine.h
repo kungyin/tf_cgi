@@ -298,6 +298,16 @@ enum CGI_COMMAND {
     CMD_GET_WIZARD,                         /* cgi_get_wizard */
     CMD_SETUP_WIZARD_END,
 
+    /**** Application FTP/HTTP download ****/
+    CMD_DOWNLOADS_SCHEDULE_NOW,              /* Downloads_Schedule_Now */
+    CMD_DOWNLOADS_SCHEDULE_LIST,             /* Downloads_Schedule_List */
+    CMD_DOWNLOADS_SCHEDULE_ADD,              /* Downloads_Schedule_Add */
+    CMD_DOWNLOADS_SCHEDULE_INFO,             /* Downloads_Schedule_Info */
+    CMD_DOWNLOADS_SCHEDULE_RENEW,            /* Downloads_Schedule_Renew */
+    CMD_DOWNLOADS_SCHEDULE_DEL,              /* Downloads_Schedule_Del */
+    CMD_DOWNLOADS_SCHEDULE_TEST,             /* Downloads_Schedule_Test */
+    CMD_APP_DOWNLOAD_END,
+
     CMD_SIZE
 
 };
@@ -572,17 +582,34 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_tm_del_all_share",
 	"",
 	
-	   /**** Setup Wizard ****/
+    /**** Setup Wizard ****/
     "cgi_chk_admin_pw",
     "cgi_set_led",
     "cgi_get_wizard",
+    "",
+
+    /**** Application FTP/HTTP download ****/
+    "Downloads_Schedule_Now",
+    "Downloads_Schedule_List",
+    "Downloads_Schedule_Add",
+    "Downloads_Schedule_Info",
+    "Downloads_Schedule_Renew",
+    "Downloads_Schedule_Del",
+    "Downloads_Schedule_Test",
     ""
 
 };
 
 const int EQUAL_COMMANDS[][2] {
-    { CMD_READ_OPEN_TREE,       CMD_OPEN_TREE },
-    { CMD_GENERIC_OPEN_TREE,    CMD_OPEN_TREE }
+    { CMD_READ_OPEN_TREE,           CMD_OPEN_TREE           },
+    { CMD_GENERIC_OPEN_TREE,        CMD_OPEN_TREE           },
+    { CMD_DOWNLOADS_SCHEDULE_NOW,   CMD_LOCAL_BACKUP_NOW    },
+    { CMD_DOWNLOADS_SCHEDULE_LIST,  CMD_LOCAL_BACKUP_LIST   },
+    { CMD_DOWNLOADS_SCHEDULE_ADD,   CMD_LOCAL_BACKUP_ADD    },
+    { CMD_DOWNLOADS_SCHEDULE_INFO,  CMD_LOCAL_BACKUP_INFO   },
+    { CMD_DOWNLOADS_SCHEDULE_RENEW, CMD_LOCAL_BACKUP_RENEW  },
+    { CMD_DOWNLOADS_SCHEDULE_DEL,   CMD_LOCAL_BACKUP_DEL    },
+    { CMD_DOWNLOADS_SCHEDULE_TEST,  CMD_LOCAL_BACKUP_TEST   },
 };
 
 const int CGI_COMMAND_TYPE_FILTER[][3] {
@@ -811,10 +838,11 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LOG_BACKUP,                   RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },         /* cgi_log_backup */
     { CMD_LOG_CLEAR,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_clear */
 
-    { CMD_GUI_UPS_INFO,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* GUI_ups_info */
+    { CMD_GUI_UPS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_info */
     { CMD_GUI_UPS_SLAVE_SETTING,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_slave_setting */
     { CMD_GUI_UPS_PS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_ps */
     { CMD_USB_STORAGE_UMOUNT,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_Storage_umount */
+    { CMD_USB_PRINTER_CLEAR,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_clear */
 
 //    CMD_SYS_MNGM_END,
 
@@ -862,6 +890,18 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SET_LED,                      RENDER_TYPE_NULL,           OPENED_CMDS          },         /* cgi_set_led */
     { CMD_GET_WIZARD,                   RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_wizard */
     //CMD_SETUP_WIZARD_END,
+
+    /**** Application FTP/HTTP download ****/
+    { CMD_DOWNLOADS_SCHEDULE_NOW,        RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Now */
+    { CMD_DOWNLOADS_SCHEDULE_LIST,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_List */
+    { CMD_DOWNLOADS_SCHEDULE_ADD,        RENDER_TYPE_STRING,         OPENED_CMDS          },         /* Downloads_Schedule_Add */
+    { CMD_DOWNLOADS_SCHEDULE_INFO,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Info */
+    { CMD_DOWNLOADS_SCHEDULE_RENEW,      RENDER_TYPE_STRING,         OPENED_CMDS          },         /* Downloads_Schedule_Renew */
+    { CMD_DOWNLOADS_SCHEDULE_DEL,        RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Del */
+    { CMD_DOWNLOADS_SCHEDULE_TEST,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Test */
+
+    //CMD_APP_DOWNLOAD_END,
+
 
 //    CMD_SIZE
 
