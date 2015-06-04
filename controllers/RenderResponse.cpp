@@ -69,6 +69,7 @@ bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
 
     file.reset();
     file.write(fileData.toUtf8());
+    file.resize(file.pos());
     file.close();
     return true;
 }
@@ -101,6 +102,7 @@ bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
 
     file.reset();
     file.write(fileData.toUtf8());
+    file.resize(file.pos());
     file.close();
     return true;
 }

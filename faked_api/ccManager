@@ -17,6 +17,6 @@
 [ $1 == 'system_fan_control_setting' ] && echo -e "0"
 [ $1 == 'system_power_onoff_schedule' ] && echo -e "0"
 [ $1 == 'service_get_email_info' ] && echo -e "1;;;;;;25;1"
-[ $1 == 'service_get_mail_info' ] && echo -e "1;1;1;1;1;1;1;1;1;1;1;1;1;3:0:0:*:0;3:0:0:*:0;1;0;1;1;1"
+[ $1 == 'service_get_event_info' ] && echo -e "1;1;1;1;1;1;1;1;1;1;1;1;1;3:0:0:*:0;3:0:0:*:0;1;0;1;1;1"
 [ $1 == 'service_get_send_email_test_result' ] && echo -e "1"
 [ $1 == 'service_get_usb_storage_info' ] && echo -e "1;JetFlash;Transcend 8GB;8.07;sdc;8.03GB;USBDisk1_c1,3.4G,7.0M,ext4#USBDisk1_c2,3.0G,4.0K,vfat#USBDisk1_c3,1.0G,5.6M,ntfs"

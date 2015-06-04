@@ -205,7 +205,7 @@ void RenderResponseSysMngm::generateManualTime() {
     QString paraSec = m_pReq->allParameters().value("f_sec").toString();
 
     QString timeToSet = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
-                               QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toString("yyyy-mm-dd hh:mm:ss");
+                               QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toString("yyyy-MM-dd hh:mm:ss");
 
     tDebug("set date/time: %s", timeToSet.toLocal8Bit().data());
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " set " + timeToSet, true);
@@ -458,8 +458,8 @@ void RenderResponseSysMngm::generateFan() {
 
 void RenderResponseSysMngm::generatePowerOffSchedule() {
     QString paraPowerOffEnable = m_pReq->parameter("f_power_off_enable");
-    QString paraSchedule = m_pReq->parameter("schedule").replace(",", ";").replace(" ", ",");
-    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", ";").replace(" ", ",");
+    QString paraSchedule = m_pReq->parameter("schedule").replace(",", "#").replace(" ", ",");
+    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", "#").replace(" ", ",");
 
     if(!setNasCfg("power_management", "power_off_scheduling_enable", paraPowerOffEnable)) {
         tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_management failed");
@@ -519,7 +519,7 @@ void RenderResponseSysMngm::generateGetEmailXml(QDomDocument &doc) {
 }
 
 void RenderResponseSysMngm::generateGetEventXml(QDomDocument &doc) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mail_info", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_event_info", true, ";");
 
     QDomElement root = doc.createElement("event");
     doc.appendChild(root);

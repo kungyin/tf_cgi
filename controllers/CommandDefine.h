@@ -150,6 +150,20 @@ enum CGI_COMMAND {
     CMD_GET_SHARE_INFO,                     /* cgi_get_share_info */
     CMD_GET_FTP,                            /* cgi_get_ftp */
     CMD_WEBDAV_ACCOUNT_INFO,                /* Webdav_Account_Info */
+
+    /**** ISO mount share ****/
+    CMD_SET_ISO_SHARE,                      /* cgi_set_iso_share */
+    CMD_GET_ISO_SHARE_DETAIL,               /* cgi_get_iso_share_detail */
+    CMD_GET_NFS_SHARE_INFO,                 /* cgi_get_nfs_share_info */
+    CMD_GET_MODIFY_ISO_INFO,                /* cgi_get_modify_iso_info */
+    CMD_MODIFY_ISO_SHARE,                   /* cgi_modify_iso_share */
+    CMD_DEL_ISO_SHARE,                      /* cgi_del_iso_share */
+    CMD_CHK_IMG_NAME,                       /* cgi_chk_img_name */
+    CMD_CHK_HD_SIZE,                        /* cgi_chk_hd_size */
+    CMD_ISO_CREATE_PATH,                    /* cgi_iso_create_path */
+    CMD_ISO_SIZE,                           /* cgi_iso_size */
+    CMD_DEL,                                /* cgi_del */
+    CMD_ISO_CREATE_IMAGE,                   /* cgi_iso_create_image */
     CMD_NETSHARE_END,
 
     /**** Application Management ****/
@@ -442,6 +456,20 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_share_info",
     "cgi_get_ftp",
     "Webdav_Account_Info",
+
+    /**** ISO mount share ****/
+    "cgi_set_iso_share",
+    "cgi_get_iso_share_detail",
+    "cgi_get_nfs_share_info",
+    "cgi_get_modify_iso_info",
+    "cgi_modify_iso_share",
+    "cgi_del_iso_share",
+    "cgi_chk_img_name",
+    "cgi_chk_hd_size",
+    "cgi_iso_create_path",
+    "cgi_iso_size",
+    "cgi_del",
+    "cgi_iso_create_image",
     "",
 
     /**** Application Management ****/
@@ -743,11 +771,25 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_SHARE_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_share_info */
     { CMD_GET_FTP,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_ftp */
     { CMD_WEBDAV_ACCOUNT_INFO,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Webdav_Account_Info */
+
+    /**** ISO mount share ****/
+    { CMD_SET_ISO_SHARE,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_set_iso_share */
+    { CMD_GET_ISO_SHARE_DETAIL,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_iso_share_detail */
+    { CMD_GET_NFS_SHARE_INFO,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_nfs_share_info */
+    { CMD_GET_MODIFY_ISO_INFO,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_modify_iso_info */
+    { CMD_MODIFY_ISO_SHARE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_modify_iso_share */
+    { CMD_DEL_ISO_SHARE,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del_iso_share */
+    { CMD_CHK_IMG_NAME,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_img_name */
+    { CMD_CHK_HD_SIZE,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_hd_size */
+    { CMD_ISO_CREATE_PATH,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_iso_create_path */
+    { CMD_ISO_SIZE,                     RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_iso_size */
+    { CMD_DEL,                          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del */
+    { CMD_ISO_CREATE_IMAGE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_iso_create_image */
 //    CMD_NETSHARE_END,
 
     /**** Application Management ****/
     { CMD_SET_AFP,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_afp */
-    { CMD_NFS_ENABLE,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },       /* cgi_nfs_enable */
+    { CMD_NFS_ENABLE,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_nfs_enable */
 
     /**** Multimedia Services ****/
     { CMD_CHK_DB,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_chk_db */
@@ -808,7 +850,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_DETECT_DANGEROUS,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_Detect_Dangerous */
     { CMD_GET_IDEL,                     RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_idle */
     { CMD_GET_TEMPERATURE,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_temperature */
-    { CMD_GET_RESTORE_STATUS,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_restore_status */
+    { CMD_GET_RESTORE_STATUS,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_restore_status */
     { CMD_RESTART,                      RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_restart */
     { CMD_RESTORE,                      RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_restore */
     { CMD_SHUTDOWN,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_shutdown */

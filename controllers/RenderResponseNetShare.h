@@ -39,6 +39,19 @@ private:
     void generateGetFtp(QDomDocument &);
     void generateWebdavAccountInfo(QDomDocument &);
 
+    void generateSetIsoShare(QDomDocument &);
+    void generateGetIsoShareDetail(QDomDocument &);
+    void generateGetNfsShareInfo(QDomDocument &);
+    void generateGetModifyIsoInfo(QDomDocument &);
+    void generateModifyIsoShare();
+    void generateDelIsoShare(QDomDocument &);
+    void generateChkImgName(QString &);
+    void generateChkHDSize(QString &);
+    void generateIsoCreatePath();
+    void generateIsoSize(QString &);
+    void generateDel(QDomDocument &);
+    void generateIsoCreateImage();
+
 };
 
 #endif // RENDERRESPONSENETSHARE_H

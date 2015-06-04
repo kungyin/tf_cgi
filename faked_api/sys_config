@@ -23,7 +23,7 @@ enable = 0
 enable = 00000
 
 [nfs]
-enable = 1
+enable = 0
 
 [crond]
 list_count = 3
@@ -39,15 +39,15 @@ fan = 0
 power_off_scheduling_enable= 1
 
 [power_on_sch]
-schedule = 1,23,0;0,2,0;1,0,0;0,0,0;1,0,0;1,0,0;0,0,0
+schedule = 1,23,0#0,2,0#1,0,0#0,0,0#1,0,0#1,0,0#0,0,0
 
 [power_off_sch]
-off_schedule= 0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0
+off_schedule= 0,0,0#0,0,0#0,0,0#0,0,0#0,0,0#0,0,0#0,0,0
 
 [mail] 
 auth= 1
 username= jerryhsieh0530@gmail.com
-pwd= kdsjdksjkd
+pwd= 05111031
 smtp= smtp.gmail.com
 sender= jerryhsieh0530@gmail.com
 receiver= jerryhsieh0530@gmail.com
@@ -87,7 +87,7 @@ vlan_enable= 1
 vlan_id= 22
 
 [ddns]                                   
-enable=1
+enable=0
 username=s77310788899
 pwd=qqddeerr22667
 domain=josen-hung.no-ip.org
@@ -99,10 +99,6 @@ ip=
 [upnp] 
 upnp_test = Not Found  
 
-eout=2073600  
-timestamp=
-ip=
 
-[upnp] 
-upnp_test = Not Found  
+
 

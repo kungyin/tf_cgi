@@ -95,6 +95,44 @@ void RenderResponseNetShare::preRender() {
     case CMD_WEBDAV_ACCOUNT_INFO:
         generateWebdavAccountInfo(doc);
         break;
+
+    case CMD_SET_ISO_SHARE:
+        generateSetIsoShare(doc);
+        break;
+    case CMD_GET_ISO_SHARE_DETAIL:
+        generateGetIsoShareDetail(doc);
+        break;
+    case CMD_GET_NFS_SHARE_INFO:
+        generateGetNfsShareInfo(doc);
+        break;
+    case CMD_GET_MODIFY_ISO_INFO:
+        generateGetModifyIsoInfo(doc);
+        break;
+    case CMD_MODIFY_ISO_SHARE:
+        generateModifyIsoShare();
+        break;
+    case CMD_DEL_ISO_SHARE:
+        generateDelIsoShare(doc);
+        break;
+    case CMD_CHK_IMG_NAME:
+        generateChkImgName(str);
+        break;
+    case CMD_CHK_HD_SIZE:
+        generateChkHDSize(str);
+        break;
+    case CMD_ISO_CREATE_PATH:
+        generateIsoCreatePath();
+        break;
+    case CMD_ISO_SIZE:
+        generateIsoSize(str);
+        break;
+    case CMD_DEL:
+        generateDel(doc);
+        break;
+    case CMD_ISO_CREATE_IMAGE:
+        generateIsoCreateImage();
+        break;
+
     case CMD_NONE:
     default:
         break;
@@ -836,3 +874,165 @@ void RenderResponseNetShare::generateWebdavAccountInfo(QDomDocument &doc) {
     userElement.appendChild(doc.createTextNode("#jerry#,#@aaaa#"));
 }
 
+/* todo: need API */
+void RenderResponseNetShare::generateSetIsoShare(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("iso_info");
+    doc.appendChild(root);
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode("1"));
+
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateGetIsoShareDetail(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("iso_mount");
+    doc.appendChild(root);
+
+    QDomElement nameElement = doc.createElement("name");
+    root.appendChild(nameElement);
+    nameElement.appendChild(doc.createTextNode("uu"));
+    QDomElement commentElement = doc.createElement("comment");
+    root.appendChild(commentElement);
+    commentElement.appendChild(doc.createTextNode(""));
+    QDomElement pathElement = doc.createElement("path");
+    root.appendChild(pathElement);
+    pathElement.appendChild(doc.createTextNode("Volume_1/dddd.iso"));
+    QDomElement readListElement = doc.createElement("read_list");
+    root.appendChild(readListElement);
+    readListElement.appendChild(doc.createTextNode("ALL"));
+    QDomElement invalidUsersElement = doc.createElement("invalid_users");
+    root.appendChild(invalidUsersElement);
+    invalidUsersElement.appendChild(doc.createTextNode(" - "));
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateGetNfsShareInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("nfs_share");
+    doc.appendChild(root);
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement realPathElement = doc.createElement("real_path");
+    root.appendChild(realPathElement);
+    realPathElement.appendChild(doc.createTextNode("/mnt/isoMount/dddd"));
+
+    QDomElement rootSquashElement = doc.createElement("root_squash");
+    root.appendChild(rootSquashElement);
+    rootSquashElement.appendChild(doc.createTextNode("No"));
+
+    QDomElement writeElement = doc.createElement("write");
+    root.appendChild(writeElement);
+    writeElement.appendChild(doc.createTextNode("No"));
+
+    QDomElement hostElement = doc.createElement("host");
+    root.appendChild(hostElement);
+    hostElement.appendChild(doc.createTextNode("123"));
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateGetModifyIsoInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("iso_mount");
+    doc.appendChild(root);
+
+    QDomElement commentElement = doc.createElement("comment");
+    root.appendChild(commentElement);
+    commentElement.appendChild(doc.createTextNode("ddd"));
+
+    QDomElement pathElement = doc.createElement("path");
+    root.appendChild(pathElement);
+    pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/dddd.iso"));
+
+    QDomElement readListElement = doc.createElement("read_list");
+    root.appendChild(readListElement);
+    readListElement.appendChild(doc.createTextNode("#jerry#"));
+
+    QDomElement invalidUsersElement = doc.createElement("invalid_users");
+    root.appendChild(invalidUsersElement);
+    invalidUsersElement.appendChild(doc.createTextNode("#@staff#"));
+
+    QDomElement ftpElement = doc.createElement("ftp");
+    root.appendChild(ftpElement);
+    ftpElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement nfsElement = doc.createElement("nfs");
+    root.appendChild(nfsElement);
+    nfsElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement nfsHostElement = doc.createElement("nfs_host");
+    root.appendChild(nfsHostElement);
+    nfsHostElement.appendChild(doc.createTextNode("acc"));
+
+    QDomElement webdavElement = doc.createElement("webdav");
+    root.appendChild(webdavElement);
+    webdavElement.appendChild(doc.createTextNode("1"));
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateModifyIsoShare() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateDelIsoShare(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("iso_mount");
+    doc.appendChild(root);
+    root.appendChild(doc.createTextNode("0"));
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateChkImgName(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    str = "0";
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateChkHDSize(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    str = "ok";
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateIsoCreatePath() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateIsoSize(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    str = "874.0k";
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateDel(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+
+    QDomElement statusElement = doc.createElement("status");
+    doc.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode("ok"));
+}
+
+/* todo: need API */
+void RenderResponseNetShare::generateIsoCreateImage() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+}
