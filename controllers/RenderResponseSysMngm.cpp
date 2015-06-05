@@ -149,6 +149,30 @@ void RenderResponseSysMngm::preRender() {
         generateUsbPrinterClear(doc);
         break;
 
+    case CMD_FIRM_V_XML:
+        generateFirmVXml(doc);
+        break;
+    case CMD_CHECK_POWER_SCH:
+        generateCheckPowerSch(str);
+        break;
+    case CMD_FIRMWARE_INIT_UPLOAD:
+        generateFirmwareInitUpload(str);
+        break;
+    case CMD_FIRMWARE_UPLOAD:
+        generateFirmwareUpload(str);
+        break;
+    case CMD_GET_PERCENTAGE:
+        generateGetPercentage(str);
+        break;
+    case CMD_GET_FIRMWARE_VERIFY:
+        generateGetFirmwareVerify(str);
+        break;
+    case CMD_GET_UP_FW:
+        generateGetUpFw(str);
+        break;
+    case CMD_REBOOT:
+        generateReboot(str);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -339,7 +363,7 @@ void RenderResponseSysMngm::generateBackupConf(QString &str) {
 void RenderResponseSysMngm::generateRestoreConf(QString &str) {
 
     if(!m_pReq->multipartFormData().isEmpty()) {
-        if(m_pReq->multipartFormData().renameUploadedFile("name", USER_IMPORT_FILE)) {
+        if(m_pReq->multipartFormData().renameUploadedFile("name", USER_IMPORT_FILE, true)) {
             QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
             if(apiOut.value(0).compare("0") == 0) {
                 str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
@@ -458,8 +482,8 @@ void RenderResponseSysMngm::generateFan() {
 
 void RenderResponseSysMngm::generatePowerOffSchedule() {
     QString paraPowerOffEnable = m_pReq->parameter("f_power_off_enable");
-    QString paraSchedule = m_pReq->parameter("schedule").replace(",", "#").replace(" ", ",");
-    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", "#").replace(" ", ",");
+    QString paraSchedule = m_pReq->parameter("schedule").replace(",", ";").replace(" ", ",");
+    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", ";").replace(" ", ",");
 
     if(!setNasCfg("power_management", "power_off_scheduling_enable", paraPowerOffEnable)) {
         tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_management failed");
@@ -781,3 +805,66 @@ void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
 
 }
 
+/* todo */
+void RenderResponseSysMngm::generateFirmVXml(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("version");
+    doc.appendChild(root);
+    QDomElement fwElement = doc.createElement("fw");
+    root.appendChild(fwElement);
+    fwElement.appendChild(doc.createTextNode("1.01.0905.2014"));
+    QDomElement oledElement = doc.createElement("oled");
+    root.appendChild(oledElement);
+    oledElement.appendChild(doc.createTextNode("1.07"));
+}
+
+/* todo */
+void RenderResponseSysMngm::generateCheckPowerSch(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "ok";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateFirmwareInitUpload(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "success";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateFirmwareUpload(QString &str) {
+    if(!m_pReq->multipartFormData().isEmpty()) {
+        if(m_pReq->multipartFormData().renameUploadedFile("name", "./faked_api/ys.tar", true)) {
+            tDebug("222222222");
+
+            //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
+            //if(apiOut.value(0).compare("0") == 0) {
+                str = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
+            //}
+        }
+    }
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetPercentage(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "-1";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetFirmwareVerify(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "4";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateGetUpFw(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "NO";
+}
+
+/* todo */
+void RenderResponseSysMngm::generateReboot(QString &str) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    str = "N/A";
+}

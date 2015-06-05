@@ -34,6 +34,9 @@ private:
     void generatePortFrowardingAdd(QString &);
     void generatePortFrowardingModify(QString &);
     void generatePortFrowardingDel(QString &);
+
+    void generateGetSshPort(QDomDocument &);
+    void generateSetSshPort(QDomDocument &);
 };
 
 #endif // RENDERRESPONSENETWORK_H

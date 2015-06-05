@@ -73,6 +73,9 @@ enum CGI_COMMAND {
     CMD_PORTFORWARDING_ADD,         /* cgi_portforwarding_add */
     CMD_PORTFORWARDING_MODIFY,      /* cgi_portforwarding_modify */
     CMD_PORTFORWARDING_DEL,         /* cgi_portforwarding_del */
+
+    CMD_GET_SSH_PORT,               /* cgi_get_ssh_port */
+    CMD_SET_SSH_PORT,               /* cgi_set_ssh_port */
     CMD_NETWORK_END,
 
     /**** Account ****/
@@ -264,6 +267,16 @@ enum CGI_COMMAND {
     CMD_GUI_UPS_PS,                         /* GUI_ups_ps */
     CMD_USB_STORAGE_UMOUNT,                 /* cgi_usb_Storage_umount */
     CMD_USB_PRINTER_CLEAR,                  /* cgi_usb_printer_clear */
+
+    CMD_FIRM_V_XML,                         /* get_firm_v_xml */
+    CMD_CHECK_POWER_SCH,                    /* check_power_sch */
+    CMD_FIRMWARE_INIT_UPLOAD,               /* cgi_firmware_init_upload */
+    CMD_FIRMWARE_UPLOAD,                    /* cgi_firmware_upload */
+    CMD_GET_PERCENTAGE,                     /* cgi_get_percentage */
+    CMD_GET_FIRMWARE_VERIFY,                /* cgi_get_firmware_verify */
+    CMD_GET_UP_FW,                          /* cgi_get_uP_fw */
+    CMD_REBOOT,                             /* cgi_reboot */
+
     CMD_SYS_MNGM_END,
 
     /**** System Status ****/
@@ -379,6 +392,9 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_portforwarding_add",
     "cgi_portforwarding_modify",
     "cgi_portforwarding_del",
+
+    "cgi_get_ssh_port",
+    "cgi_set_ssh_port",
     "",
 
     /**** Account ****/
@@ -570,6 +586,15 @@ const char CGI_PARA_COMMANDS[][255] = {
     "GUI_ups_ps",
     "cgi_usb_Storage_umount",
     "cgi_usb_printer_clear",
+
+    "get_firm_v_xml",
+    "check_power_sch",
+    "cgi_firmware_init_upload",
+    "cgi_firmware_upload",
+    "cgi_get_percentage",
+    "cgi_get_firmware_verify",
+    "cgi_get_uP_fw",
+    "cgi_reboot",
     "",
 
     /**** System Status ****/
@@ -694,6 +719,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_PORTFORWARDING_ADD,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_add */
     { CMD_PORTFORWARDING_MODIFY,        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_modify */
     { CMD_PORTFORWARDING_DEL,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_del */
+    { CMD_GET_SSH_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ssh_port */
+    { CMD_SET_SSH_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_set_ssh_port */
 //    CMD_NETWORK_END,
 
     /**** Account ****/
@@ -885,6 +912,15 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GUI_UPS_PS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_ps */
     { CMD_USB_STORAGE_UMOUNT,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_Storage_umount */
     { CMD_USB_PRINTER_CLEAR,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_printer_clear */
+
+    { CMD_FIRM_V_XML,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_firm_v_xml */
+    { CMD_CHECK_POWER_SCH,              RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* check_power_sch */
+    { CMD_FIRMWARE_INIT_UPLOAD,         RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_firmware_init_upload */
+    { CMD_FIRMWARE_UPLOAD,              RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_firmware_upload */
+    { CMD_GET_PERCENTAGE,               RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_percentage */
+    { CMD_GET_FIRMWARE_VERIFY,          RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_firmware_verify */
+    { CMD_GET_UP_FW,                    RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_uP_fw */
+    { CMD_REBOOT,                       RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_reboot */
 
 //    CMD_SYS_MNGM_END,
 

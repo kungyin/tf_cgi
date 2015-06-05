@@ -60,6 +60,15 @@ private:
     void generateUsbStorageUmount(QDomDocument &);
     void generateUsbPrinterClear(QDomDocument &);
 
+    void generateFirmVXml(QDomDocument &);
+    void generateCheckPowerSch(QString &);
+    void generateFirmwareInitUpload(QString &);
+    void generateFirmwareUpload(QString &);
+    void generateGetPercentage(QString &);
+    void generateGetFirmwareVerify(QString &);
+    void generateGetUpFw(QString &);
+    void generateReboot(QString &);
+
 };
 
 

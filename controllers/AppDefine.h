@@ -39,7 +39,7 @@ const QString SCRIPT_APPAPI_TMM     =   "appapi_tmm";
 
 #ifndef SIMULATOR_MODE
 
-const QString API_PATH = "/usr/local/modules/api/";
+const QString API_PATH = "";
 const QString ENV_PATH = "";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backupconfig.tar";

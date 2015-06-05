@@ -8,7 +8,8 @@
 [ $1 == '-T' ] && echo -e "Not Found"
 [ $1 == '-C' ] && echo -e "23"
 [ $1 == '-D' ] && echo -e "BitTorrent,TCP,6881" && echo -e "FTP,TCP,21" && echo -e "aMule,TCP,4662"
-[ $1 == '-a' ] && echo -e "OK"
-[ $1 == '-m' ] && echo -e "OK"
-[ $1 == '-d' ] && echo -e "OK"
+[ $1 == '-a' ] && [ $2 == 'add_scan' ]&& echo -e "ok"
+[ $1 == '-a' ] && [ $2 == 'add' ]&& echo -e "OK1"
+[ $1 == '-m' ] && echo -e "OK1"
+[ $1 == '-d' ] && echo -e "ok"
 

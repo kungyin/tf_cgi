@@ -83,6 +83,12 @@ void RenderResponseNetwork::preRender() {
     case CMD_PORTFORWARDING_DEL:
         generatePortFrowardingDel(str);
         break;
+    case CMD_GET_SSH_PORT:
+        generateGetSshPort(doc);
+        break;
+    case CMD_SET_SSH_PORT:
+        generateSetSshPort(doc);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -326,9 +332,17 @@ void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
     if(m_pReq->allParameters().contains("f_enable"))
         paraEnable = m_pReq->allParameters().value("f_enable").toString();
 
+    bool bSet = false;
     if(setNasCfg("lltd", "enable", paraEnable)) {
         getAPIStdOut(API_PATH + SCRIPT_LLTD_CTL + " start");
+        bSet = true;
     }
+
+    QDomElement root = doc.createElement("lltd");
+    doc.appendChild(root);
+    QDomElement enableElement = doc.createElement("enable");
+    root.appendChild(enableElement);
+    enableElement.appendChild(doc.createTextNode(bSet ? paraEnable : "0"));
 }
 
 void RenderResponseNetwork::generateGetDdns(QDomDocument &doc) {
@@ -591,7 +605,12 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
         return;
     }
 
-    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -a -p " + paraProtocol +
+    QString paraCmd = m_pReq->parameter("cmd");
+    QString apiParaAdd = "add_scan";
+    if(paraCmd.compare("cgi_portforwarding_add") == 0)
+        apiParaAdd = "add";
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -a " + apiParaAdd +
+                                                                        " -p " + paraProtocol +
                                                                         " -e " + paraEPort +
                                                                         " -i " + paraPPort +
                                                                         " -s " + paraService +
@@ -599,18 +618,10 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
                                                                         , true);
 
     str = apiOutList.value(0);
-
-//    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
-//    if(str.compare("ok1") == 0 || str.compare("OK") == 0)
-//        str = "ok1";
-//    else
-//        str = "error";
 }
 
-/* todo */
 void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
     generatePortFrowardingAddScan(str);
-    str = str.compare("ok1") == 0 ? "OK1" : "ERROR1";
 }
 
 void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
@@ -630,11 +641,7 @@ void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
                                                                         " -b " + paraEnable +
                                                                         " -o " + paraOldEPort
                                                                         , true);
-    str = apiOutList.isEmpty() ? "ERROR1" : apiOutList.at(0);
-    if(str.compare("OK1") == 0 || str.compare("OK") == 0)
-        str = "OK1";
-    else
-        str = "ERROR1";
+    str = apiOutList.value(0);
 }
 
 void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
@@ -650,9 +657,26 @@ void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
                                                                         " -i " + paraPPort +
                                                                         " -s " + paraService
                                                                         , true);
-    str = apiOutList.isEmpty() ? "error" : apiOutList.at(0);
-    if(str.compare("OK") == 0 || str.compare("ok") == 0)
-        str = "ok";
-    else
-        str = "error";
+    str = apiOutList.value(0);
+}
+
+void RenderResponseNetwork::generateGetSshPort(QDomDocument &doc) {
+    //QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
+
+    QDomElement root = doc.createElement("ssh_info");
+    doc.appendChild(root);
+    QDomElement enableElement = doc.createElement("enable");
+    root.appendChild(enableElement);
+    enableElement.appendChild(doc.createTextNode("1"));
+    QDomElement portElement = doc.createElement("port");
+    root.appendChild(portElement);
+    portElement.appendChild(doc.createTextNode("22"));
+}
+
+void RenderResponseNetwork::generateSetSshPort(QDomDocument &doc) {
+    //QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
+
+    QDomElement root = doc.createElement("ret");
+    doc.appendChild(root);
+    root.appendChild(doc.createTextNode("1"));
 }

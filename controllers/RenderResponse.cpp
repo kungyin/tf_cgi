@@ -12,11 +12,11 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
         return ret;
 
     QString cmd = input.value(0);
-    QFileInfo fileInfo(cmd);
-    if ( !fileInfo.exists() || !fileInfo.isFile() ) {
-        tError("RenderResponse::getAPIStdOut() -- file %s does not exist", cmd.toLocal8Bit().data());
-        return ret;
-    }
+//    QFileInfo fileInfo(cmd);
+//    if ( !fileInfo.exists() || !fileInfo.isFile() ) {
+//        tError("RenderResponse::getAPIStdOut() -- file %s does not exist", cmd.toLocal8Bit().data());
+//        return ret;
+//    }
 
     input.removeFirst();
 

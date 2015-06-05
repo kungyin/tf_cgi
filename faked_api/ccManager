@@ -4,7 +4,7 @@
 # History:
 # 2005/08/23    VBird   First release
 
-[ $1 == 'system_get_disk_volume_status' ] && echo -e "0;1"
+[ $1 == 'system_get_disk_volume_status' ] && echo -e "0,1"
 [ $1 == 'service_get_smart_disk_list' ] && echo -e "1;0,sda,ST3500414CS;Disk1;ST350041;ST3500414CS;-;-" && echo -e "2;1,sdb,6QM0Z8QP;Disk2;Seagate Barracuda 7200.11;ST3500820AS;-;PASSED [1970/01/01 08:34:09]" && echo -e "2"
 [ $1 == 'service_get_smart_test_list' ] && echo -e "0;0"
 [ $1 == 'service_set_smart_test_start ' ] && echo -e "1"
