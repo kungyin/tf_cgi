@@ -134,6 +134,41 @@ void RenderResponseAppMngm::preRender() {
         generateLocalBackupTest(doc);
         break;
 
+    case CMD_GET_RSYNC_INFO:
+        generateGetRsyncInfo(doc);
+        break;
+    case CMD_SET_RSYNC_SERVER:
+        generateSetRsyncServer(str);
+        break;
+
+    case CMD_GET_BACKUP_LIST:
+        generateGetBackupList(doc);
+        break;
+    case CMD_GET_ALL_TASK_NAME:
+        generateGetAllTaskName(doc);
+        break;
+    case CMD_SERVER_TEST:
+        generateServerTest(doc);
+        break;
+    case CMD_CHECK_RSYNC_RW:
+        generateCheckRsyncRw(doc);
+        break;
+    case CMD_SET_SCHEDULE:
+        generateSetSchedule(str);
+        break;
+    case CMD_GET_MODIFY_INFO:
+        generateGetModifyInfo(doc);
+        break;
+    case CMD_DEL_SCHEDULE:
+        generateDelSchedule(str);
+        break;
+    case CMD_ENABLE_DISABLE_SCHEDULE:
+        generateEnableDisableSchedule(str);
+        break;
+    case CMD_BACKUP_NOW:
+        generateBackupNow(str);
+        break;
+
     case CMD_NONE:
     default:
         break;
@@ -1058,3 +1093,256 @@ void RenderResponseAppMngm::generateLocalBackupTest(QDomDocument &doc) {
     sizeElement.appendChild(doc.createTextNode("-1"));
 }
 
+/* todo */
+void RenderResponseAppMngm::generateGetRsyncInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("rsync_info");
+    doc.appendChild(root);
+
+    QDomElement serverEnableElement = doc.createElement("server_enable");
+    root.appendChild(serverEnableElement);
+    serverEnableElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement serverPwElement = doc.createElement("server_pw");
+    root.appendChild(serverPwElement);
+    serverPwElement.appendChild(doc.createTextNode("000000"));
+
+    QDomElement localIpElement = doc.createElement("local_ip");
+    root.appendChild(localIpElement);
+    localIpElement.appendChild(doc.createTextNode("192.168.100.85"));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateSetRsyncServer(QString &str) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    str = "<script>location.href='/web/backup_mgr/remote_server.html'</script>";
+
+}
+
+
+/* todo */
+void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+        QString cellcontent3 = "&lt;img border=&apos;0&apos; src=&apos;/web/images/stop.png&apos; width=&apos;27&apos\
+                               ; height=&apos;17&apos; onclick=&apos;onoff_job(&quot;task&quot;,0)&apos;&gt;";
+        QString cellcontent4 = "&lt;img border=&apos;0&apos; src=&apos;/web/images/backup.png&apos; width=&apos;16&apos\
+                                ; height=&apos;16&apos; onclick=&apos;backup_now(&quot;task&quot;)&apos;&gt;";
+        //for(int i=0; i < apiOut.size(); i++) {
+    //        if(apiOut.at(i).isEmpty())
+    //            continue;
+    //        if(apiOut.at(i).split(",").size() < 2)
+    //            continue;
+
+        QDomElement root = doc.createElement("rows");
+        doc.appendChild(root);
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode("task"));
+
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode("Manual"));
+
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode(""));
+
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createTextNode(cellcontent3));
+
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode(cellcontent4));
+
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createTextNode("-"));
+
+        rowElement.setAttribute("id", "1");
+
+        QDomElement pageElement = doc.createElement("page");
+        root.appendChild(pageElement);
+        pageElement.appendChild(doc.createTextNode("1"));
+
+        QDomElement totalElement = doc.createElement("total");
+        root.appendChild(totalElement);
+        totalElement.appendChild(doc.createTextNode("1"));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateGetAllTaskName(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+
+    QDomElement root = doc.createElement("info");
+    doc.appendChild(root);
+}
+
+/* todo */
+void RenderResponseAppMngm::generateServerTest(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+        //for(int i=0; i < apiOut.size(); i++) {
+    //        if(apiOut.at(i).isEmpty())
+    //            continue;
+    //        if(apiOut.at(i).split(",").size() < 2)
+    //            continue;
+
+        QDomElement root = doc.createElement("test_info");
+        doc.appendChild(root);
+
+        QDomElement sshTestStatusElement = doc.createElement("ssh_test_status");
+        root.appendChild(sshTestStatusElement);
+        sshTestStatusElement.appendChild(doc.createTextNode("1"));
+
+        QDomElement rsyncTestStatusElement = doc.createElement("rsync_test_status");
+        root.appendChild(rsyncTestStatusElement);
+        rsyncTestStatusElement.appendChild(doc.createTextNode("101"));
+
+        QDomElement remoteHdA2FreeSizeElement = doc.createElement("remote_hd_a2_free_size");
+        root.appendChild(remoteHdA2FreeSizeElement);
+        remoteHdA2FreeSizeElement.appendChild(doc.createTextNode("2.7T"));
+
+        QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
+        root.appendChild(localDirectoryUsedSizeElement);
+        localDirectoryUsedSizeElement.appendChild(doc.createTextNode("8.0K"));
+
+        QDomElement shareNodeElement = doc.createElement("share_node");
+        root.appendChild(shareNodeElement);
+
+        QDomElement nameElement = doc.createElement("name");
+        shareNodeElement.appendChild(nameElement);
+        nameElement.appendChild(doc.createTextNode("Volume_1"));
+
+        QDomElement pathElement = doc.createElement("path");
+        shareNodeElement.appendChild(pathElement);
+        pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2"));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateCheckRsyncRw(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QDomElement root = doc.createElement("rsync_info");
+    doc.appendChild(root);
+
+    QDomElement rsyncRetElement = doc.createElement("rsync_ret");
+    root.appendChild(rsyncRetElement);
+    rsyncRetElement.appendChild(doc.createTextNode("101"));
+}
+
+
+/* todo */
+void RenderResponseAppMngm::generateSetSchedule(QString &str) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    str = "N/A";
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateGetModifyInfo(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QDomElement root = doc.createElement("info");
+    doc.appendChild(root);
+
+    QDomElement jobNameElement = doc.createElement("job_name");
+    root.appendChild(jobNameElement);
+    jobNameElement.appendChild(doc.createTextNode("task"));
+
+    QDomElement serverTypeElement = doc.createElement("server_type");
+    root.appendChild(serverTypeElement);
+    serverTypeElement.appendChild(doc.createTextNode("2"));
+
+    QDomElement backupTypeElement = doc.createElement("backup_type");
+    root.appendChild(backupTypeElement);
+    backupTypeElement.appendChild(doc.createTextNode("2"));
+
+    QDomElement scheduleModeElement = doc.createElement("schedule_mode");
+    root.appendChild(scheduleModeElement);
+    scheduleModeElement.appendChild(doc.createTextNode("1"));
+
+    QDomElement useSshElement = doc.createElement("use_ssh");
+    root.appendChild(useSshElement);
+    useSshElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement keepExistFileElement = doc.createElement("keep_exist_file");
+    root.appendChild(keepExistFileElement);
+    keepExistFileElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement incBackupElement = doc.createElement("inc_backup");
+    root.appendChild(incBackupElement);
+    incBackupElement.appendChild(doc.createTextNode("0"));
+
+    QDomElement incNumberElement = doc.createElement("inc_number");
+    root.appendChild(incNumberElement);
+    incNumberElement.appendChild(doc.createTextNode("3"));
+
+    QDomElement scheduleElement = doc.createElement("schedule");
+    root.appendChild(scheduleElement);
+    scheduleElement.appendChild(doc.createTextNode(""));
+
+    QDomElement remoteIpElement = doc.createElement("remote_ip");
+    root.appendChild(remoteIpElement);
+    remoteIpElement.appendChild(doc.createTextNode("192.168.100.203"));
+
+    QDomElement localPathElement = doc.createElement("local_path");
+    root.appendChild(localPathElement);
+    localPathElement.appendChild(doc.createTextNode("Volume_1"));
+
+    QDomElement rsyncUserElement = doc.createElement("rsync_user");
+    root.appendChild(rsyncUserElement);
+    rsyncUserElement.appendChild(doc.createTextNode("admin"));
+
+    QDomElement rsyncPwElement = doc.createElement("rsync_pw");
+    root.appendChild(rsyncPwElement);
+    rsyncPwElement.appendChild(doc.createTextNode("admin"));
+
+    QDomElement sshUserElement = doc.createElement("ssh_user");
+    root.appendChild(sshUserElement);
+    sshUserElement.appendChild(doc.createTextNode(""));
+
+    QDomElement sshPwElement = doc.createElement("ssh_pw");
+    root.appendChild(sshPwElement);
+    sshPwElement.appendChild(doc.createTextNode(""));
+
+    QDomElement remotePathElement = doc.createElement("remote_path");
+    root.appendChild(remotePathElement);
+    remotePathElement.appendChild(doc.createTextNode("NetBackup"));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateDelSchedule(QString &str) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    str = "N/A";
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateEnableDisableSchedule(QString &str) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    str = "N/A";
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateBackupNow(QString &str) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    str = "N/A";
+
+}

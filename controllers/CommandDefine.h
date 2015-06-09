@@ -217,6 +217,18 @@ enum CGI_COMMAND {
     CMD_LOCAL_BACKUP_DEL,                   /* Local_Backup_Del */
     CMD_LOCAL_BACKUP_TEST,                  /* Localbackup_Test */
 
+    CMD_GET_RSYNC_INFO,                     /* cgi_get_rsync_info */
+    CMD_SET_RSYNC_SERVER,                   /* cgi_set_rsync_server */
+
+    CMD_GET_BACKUP_LIST,                    /* cgi_get_backup_list */
+    CMD_GET_ALL_TASK_NAME,                  /* cgi_get_all_task_name */
+    CMD_SERVER_TEST,                        /* cgi_server_test */
+    CMD_CHECK_RSYNC_RW,                     /* cgi_check_rsync_rw */
+    CMD_SET_SCHEDULE,                       /* cgi_set_schedule */
+    CMD_GET_MODIFY_INFO,                    /* cgi_get_modify_info */
+    CMD_DEL_SCHEDULE,                       /* cgi_del_schedule */
+    CMD_ENABLE_DISABLE_SCHEDULE,            /* cgi_enable_disable_schedule */
+    CMD_BACKUP_NOW,                         /* cgi_backup_now */
     CMD_APP_MNGM_END,
 
     /**** System Management ****/
@@ -536,6 +548,19 @@ const char CGI_PARA_COMMANDS[][255] = {
     "Local_Backup_Renew",
     "Local_Backup_Del",
     "Localbackup_Test",
+
+    "cgi_get_rsync_info",
+    "cgi_set_rsync_server",
+
+    "cgi_get_backup_list",
+    "cgi_get_all_task_name",
+    "cgi_server_test",
+    "cgi_check_rsync_rw",
+    "cgi_set_schedule",
+    "cgi_get_modify_info",
+    "cgi_del_schedule",
+    "cgi_enable_disable_schedule",
+    "cgi_backup_now",
     "",
 
     /**** System Management ****/
@@ -861,6 +886,18 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LOCAL_BACKUP_RENEW,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* Local_Backup_Renew */
     { CMD_LOCAL_BACKUP_DEL,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Local_Backup_Del */
     { CMD_LOCAL_BACKUP_TEST,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Localbackup_Test */
+
+    { CMD_GET_RSYNC_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_rsync_info */
+    { CMD_SET_RSYNC_SERVER,             RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_set_rsync_server */
+    { CMD_GET_BACKUP_LIST,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_backup_list */
+    { CMD_GET_ALL_TASK_NAME,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_all_task_name */
+    { CMD_SERVER_TEST,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_server_test */
+    { CMD_CHECK_RSYNC_RW,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_check_rsync_rw */
+    { CMD_SET_SCHEDULE,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_set_schedule */
+    { CMD_GET_MODIFY_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_modify_info */
+    { CMD_DEL_SCHEDULE,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_del_schedule */
+    { CMD_ENABLE_DISABLE_SCHEDULE,      RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_enable_disable_schedule */
+    { CMD_BACKUP_NOW,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_backup_now */
 
 //    CMD_APP_MNGM_END,
 

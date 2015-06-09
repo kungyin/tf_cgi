@@ -54,6 +54,18 @@ private:
     void generateLocalBackupDel(QDomDocument &);
     void generateLocalBackupTest(QDomDocument &);
 
+    void generateGetRsyncInfo(QDomDocument &);
+    void generateSetRsyncServer(QString &);
+
+    void generateGetBackupList(QDomDocument &);
+    void generateGetAllTaskName(QDomDocument &);
+    void generateServerTest(QDomDocument &);
+    void generateCheckRsyncRw(QDomDocument &);
+    void generateSetSchedule(QString &);
+    void generateGetModifyInfo(QDomDocument &);
+    void generateDelSchedule(QString &);
+    void generateEnableDisableSchedule(QString &);
+    void generateBackupNow(QString &);
 };
 
 
