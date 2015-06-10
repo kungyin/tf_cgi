@@ -1,4 +1,6 @@
 #include "RenderResponseAppMngm.h"
+#include "http_ftp_download.h"
+
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -877,6 +879,7 @@ void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
     QString strImage = "&lt;IMG src=&apos;%1&apos;&gt;";
     QString strBackupStart = "&lt;a href=javascript:localbackup_start(&apos;%1&apos;)&gt;&lt;IMG border\
             =&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;";
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
@@ -966,6 +969,52 @@ void RenderResponseAppMngm::generateLocalBackupSambaFormat(QDomDocument &doc) {
 /* todo */
 void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+//     = {
+//        .is_download = 1,
+//        .is_src_login
+
+//    };
+
+    QString paraLoginMethod = m_pReq->parameter("f_login_method");
+    DOWNLOAD_TASK_INFO taskInfo;
+    taskInfo.is_download = 1;
+    taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
+    taskInfo.is_dst_login = 0;
+    taskInfo.is_file = m_pReq->parameter("f_type").toInt() ? 0 : 1;
+    taskInfo.execat = m_pReq->parameter("f_at").toLocal8Bit().data();
+    taskInfo.login_id = m_pReq->parameter("f_login_user").toLocal8Bit().data();
+    taskInfo.src = m_pReq->parameter("f_URL").toLocal8Bit().data();
+    taskInfo.src_user = m_pReq->parameter("f_user").toLocal8Bit().data();
+    taskInfo.src_pwd = m_pReq->parameter("f_pwd").toLocal8Bit().data();
+
+    if(m_pReq->parameter("f_dir").compare("Volume_1") == 0)
+        taskInfo.dest = "/mnt/HD/HD_a2";
+    if(m_pReq->parameter("f_dir").compare("Volume_2") == 0)
+        taskInfo.dest = "/mnt/HD/HD_b2";
+
+    taskInfo.dest = m_pReq->parameter("f_pwd").toLocal8Bit().data();
+
+    taskInfo.dst_user = NULL;
+    taskInfo.dst_pwd = NULL;
+
+    QMap<QString, int> recurTypeMap;
+    recurTypeMap.insert("none", 0);
+    recurTypeMap.insert("day", 1);
+    recurTypeMap.insert("week", 2);
+    recurTypeMap.insert("month", 3);
+    taskInfo.recur_type = recurTypeMap.value(m_pReq->parameter("f_period"));
+    taskInfo.recur_date = -1;
+
+
+    if(taskInfo.recur_type == 2)
+        taskInfo.recur_date = m_pReq->parameter("f_period_week").toInt();
+    else if(taskInfo.recur_type == 3)
+        taskInfo.recur_date = m_pReq->parameter("f_period_month").toInt();
+
+    taskInfo.is_inc = 1;
+    taskInfo.rename = m_pReq->parameter("f_rename").toLocal8Bit().data();
+    taskInfo.charset = m_pReq->parameter("f_lang").toLocal8Bit().data();
+            tDebug("taskInfo: %s", taskInfo.rename);
 
     str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 }

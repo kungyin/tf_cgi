@@ -5,11 +5,24 @@ QT += network sql xml
 QT -= gui
 DEFINES += TF_DLL
 DESTDIR = ../lib
-INCLUDEPATH += ../helpers ../models
+INCLUDEPATH += ../helpers ../models \
+               ext_libs/inc
 DEPENDPATH  += ../helpers ../models
 LIBS += -L../lib -lhelper -lmodel
 
 include(../appbase.pri)
+
+unix:!macx {
+
+    linux-arm-gnueabihf-g++ {
+
+    } else {
+        LIBS += -L$$PWD/ext_libs/x86/ -lhttpftpdownload
+        DEPENDPATH += $$PWD/ext_libs/x86
+        DEFINES += SIMULATOR_MODE
+    }
+
+}
 
 HEADERS += applicationcontroller.h \
     CgiController.h \
@@ -28,7 +41,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseFtp.h \
     RenderResponseTimeMachine.h \
     RenderResponseSetupWizard.h \
-    RenderResponseAppDownloads.h
+    RenderResponseAppDownloads.h \
+    ext_libs/inc/http_ftp_download.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \

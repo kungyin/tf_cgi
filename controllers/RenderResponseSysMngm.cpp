@@ -834,7 +834,8 @@ void RenderResponseSysMngm::generateFirmwareInitUpload(QString &str) {
 /* todo */
 void RenderResponseSysMngm::generateFirmwareUpload(QString &str) {
     if(!m_pReq->multipartFormData().isEmpty()) {
-        if(m_pReq->multipartFormData().renameUploadedFile("name", "./faked_api/ys.tar", true)) {
+        tDebug("11111111111");
+        if(m_pReq->multipartFormData().entity("name").renameUploadedFile("./faked_api/ys.tar", true)) {
             tDebug("222222222");
 
             //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);

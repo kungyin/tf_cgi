@@ -37,7 +37,9 @@ void CgiController::index()
         return;
     }
 
-#ifndef SIMULATOR_MODE
+#ifdef SIMULATOR_MODE
+    tDebug("SIMULATOR_MODE is enabled.");
+#else
 //    if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
 //        if(httpRequest().cookie("username").isEmpty()) {
 //            renderErrorResponse(Tf::NotFound);
@@ -45,6 +47,7 @@ void CgiController::index()
 //        }
 //    }
 #endif
+
 
     //tDebug("CgiController::index() -- %s", authenticityToken().data());
 
