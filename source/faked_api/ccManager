@@ -20,3 +20,5 @@
 [ $1 == 'service_get_event_info' ] && echo -e "1;1;1;1;1;1;1;1;1;1;1;1;1;3:0:0:*:0;3:0:0:*:0;1;0;1;1;1"
 [ $1 == 'service_get_send_email_test_result' ] && echo -e "1"
 [ $1 == 'service_get_usb_storage_info' ] && echo -e "1;JetFlash;Transcend 8GB;8.07;sdc;8.03GB;USBDisk1_c1,3.4G,7.0M,ext4#USBDisk1_c2,3.0G,4.0K,vfat#USBDisk1_c3,1.0G,5.6M,ntfs"
+[ $1 == 'system_get_system_status' ] && echo -e "0;1;1;192.168.100.85;255.255.255.0;192.168.100.5;192.168.100.5;192.168.100.5;34029/5047;1;169.254.0.253;255.255.255.0;192.168.0.1;;;N/A;dlink-8B21F7;workgroup;DNS-340L;CC:B2:55:8B:21:F7;;HP;Officejet 4620 series;100 %;On Line;UPS;Apotop#AP-U1#USBDisk3_1,2.01 GB#USBDisk3_2,2.01 GB#USBDisk3_3,3.52 GB;1433984152"
+[ $1 == 'system_get_hdd_volume_info' ] && echo -e "1;standard;0;2881575288;514476;2881044428;0" && echo -e "2;standard;0;1920264152;200120;1920064032;0"

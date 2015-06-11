@@ -65,144 +65,154 @@ void RenderResponseSysStatus::preRender() {
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateGetStatus(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
     QDomElement bondingEnableElement = doc.createElement("bonding_enable");
     root.appendChild(bondingEnableElement);
-    bondingEnableElement.appendChild(doc.createTextNode("0"));
+    bondingEnableElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement bondingModeElement = doc.createElement("bonding_mode");
     root.appendChild(bondingModeElement);
-    bondingModeElement.appendChild(doc.createTextNode("1"));
+    bondingModeElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     QDomElement dhcpEnableElement = doc.createElement("dhcp_enable");
     root.appendChild(dhcpEnableElement);
-    dhcpEnableElement.appendChild(doc.createTextNode("1"));
+    dhcpEnableElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement ipElement = doc.createElement("ip");
     root.appendChild(ipElement);
-    ipElement.appendChild(doc.createTextNode("192.168.100.85"));
+    ipElement.appendChild(doc.createTextNode(apiOut.value(3)));
 
     QDomElement netmaskElement = doc.createElement("netmask");
     root.appendChild(netmaskElement);
-    netmaskElement.appendChild(doc.createTextNode("255.255.255.0"));
+    netmaskElement.appendChild(doc.createTextNode(apiOut.value(4)));
     QDomElement gatewayElement = doc.createElement("gateway");
     root.appendChild(gatewayElement);
-    gatewayElement.appendChild(doc.createTextNode("192.168.100.5"));
+    gatewayElement.appendChild(doc.createTextNode(apiOut.value(5)));
 
     QDomElement dns1Element = doc.createElement("dns1");
     root.appendChild(dns1Element);
-    dns1Element.appendChild(doc.createTextNode(""));
+    dns1Element.appendChild(doc.createTextNode(apiOut.value(6)));
     QDomElement dns2Element = doc.createElement("dns2");
     root.appendChild(dns2Element);
-    dns2Element.appendChild(doc.createTextNode(""));
+    dns2Element.appendChild(doc.createTextNode(apiOut.value(7)));
     QDomElement txrxElement = doc.createElement("txrx");
     root.appendChild(txrxElement);
-    txrxElement.appendChild(doc.createTextNode(""));
+    txrxElement.appendChild(doc.createTextNode(apiOut.value(8)));
     QDomElement lan2DhcpEnableElement = doc.createElement("lan2_dhcp_enable");
     root.appendChild(lan2DhcpEnableElement);
-    lan2DhcpEnableElement.appendChild(doc.createTextNode(""));
+    lan2DhcpEnableElement.appendChild(doc.createTextNode(apiOut.value(9)));
 
     QDomElement lan2IpElement = doc.createElement("lan2_ip");
     root.appendChild(lan2IpElement);
-    lan2IpElement.appendChild(doc.createTextNode(""));
+    lan2IpElement.appendChild(doc.createTextNode(apiOut.value(10)));
     QDomElement lan2NetmaskElement = doc.createElement("lan2_netmask");
     root.appendChild(lan2NetmaskElement);
-    lan2NetmaskElement.appendChild(doc.createTextNode(""));
+    lan2NetmaskElement.appendChild(doc.createTextNode(apiOut.value(11)));
     QDomElement lan2GatewayElement = doc.createElement("lan2_gateway");
     root.appendChild(lan2GatewayElement);
-    lan2GatewayElement.appendChild(doc.createTextNode(""));
+    lan2GatewayElement.appendChild(doc.createTextNode(apiOut.value(12)));
 
     QDomElement lan2Dns1Element = doc.createElement("lan2_dns1");
     root.appendChild(lan2Dns1Element);
-    lan2Dns1Element.appendChild(doc.createTextNode(""));
+    lan2Dns1Element.appendChild(doc.createTextNode(apiOut.value(13)));
     QDomElement lan2Dns2Element = doc.createElement("lan2_dns2");
     root.appendChild(lan2Dns2Element);
-    lan2Dns2Element.appendChild(doc.createTextNode(""));
+    lan2Dns2Element.appendChild(doc.createTextNode(apiOut.value(14)));
     QDomElement lan2TxrxElement = doc.createElement("lan2_txrx");
     root.appendChild(lan2TxrxElement);
-    lan2TxrxElement.appendChild(doc.createTextNode(""));
+    lan2TxrxElement.appendChild(doc.createTextNode(apiOut.value(15)));
 
     QDomElement nameElement = doc.createElement("name");
     root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(""));
+    nameElement.appendChild(doc.createTextNode(apiOut.value(16)));
     QDomElement workgroupElement = doc.createElement("workgroup");
     root.appendChild(workgroupElement);
-    workgroupElement.appendChild(doc.createTextNode(""));
+    workgroupElement.appendChild(doc.createTextNode(apiOut.value(17)));
     QDomElement descriptionElement = doc.createElement("description");
     root.appendChild(descriptionElement);
-    descriptionElement.appendChild(doc.createTextNode(""));
+    descriptionElement.appendChild(doc.createTextNode(apiOut.value(18)));
 
     QDomElement macElement = doc.createElement("mac");
     root.appendChild(macElement);
-    macElement.appendChild(doc.createTextNode(""));
+    macElement.appendChild(doc.createTextNode(apiOut.value(19)));
     QDomElement lan2MacElement = doc.createElement("lan2_mac");
     root.appendChild(lan2MacElement);
-    lan2MacElement.appendChild(doc.createTextNode(""));
+    lan2MacElement.appendChild(doc.createTextNode(apiOut.value(20)));
 
     QDomElement manufacturerElement = doc.createElement("manufacturer");
     root.appendChild(manufacturerElement);
-    manufacturerElement.appendChild(doc.createTextNode(""));
+    manufacturerElement.appendChild(doc.createTextNode(apiOut.value(21)));
     QDomElement productElement = doc.createElement("product");
     root.appendChild(productElement);
-    productElement.appendChild(doc.createTextNode(""));
+    productElement.appendChild(doc.createTextNode(apiOut.value(22)));
 
     QDomElement batteryElement = doc.createElement("battery");
     root.appendChild(batteryElement);
-    batteryElement.appendChild(doc.createTextNode(""));
+    batteryElement.appendChild(doc.createTextNode(apiOut.value(23)));
     QDomElement upsStatusElement = doc.createElement("ups_status");
     root.appendChild(upsStatusElement);
-    upsStatusElement.appendChild(doc.createTextNode(""));
+    upsStatusElement.appendChild(doc.createTextNode(apiOut.value(24)));
     QDomElement upsTypeElement = doc.createElement("ups_type");
     root.appendChild(upsTypeElement);
-    upsTypeElement.appendChild(doc.createTextNode(""));
+    upsTypeElement.appendChild(doc.createTextNode(apiOut.value(25)));
 
     QDomElement flashInfoElement = doc.createElement("flash_info");
     root.appendChild(flashInfoElement);
-    flashInfoElement.appendChild(doc.createTextNode(""));
+
+    QVector<QString> flashInfoContentElement;
+    flashInfoContentElement << "Manufacturer" << "Product" << "Partition";
+
+    for(int i = 0; i < apiOut.value(26).split("#").size(); i++) {
+        int eleNameIdx = i;
+        if(eleNameIdx > flashInfoContentElement.size() - 1)
+            eleNameIdx = flashInfoContentElement.size() - 1;
+        QDomElement element = doc.createElement(flashInfoContentElement.at(eleNameIdx));
+        flashInfoElement.appendChild(element);
+        element.appendChild(doc.createTextNode(apiOut.value(26).split("#").value(i)));
+    }
+
     QDomElement uptimeElement = doc.createElement("uptime");
     root.appendChild(uptimeElement);
-    uptimeElement.appendChild(doc.createTextNode(""));
+    uptimeElement.appendChild(doc.createTextNode(apiOut.value(27)));
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateStatusVolumeInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_hdd_volume_info");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    //for
-    QDomElement itmeElement = doc.createElement("item");
-    root.appendChild(itmeElement);
+    for(QString entry : apiOut) {
+        QDomElement itmeElement = doc.createElement("item");
+        root.appendChild(itmeElement);
 
-    QDomElement volumeElement = doc.createElement("volume");
-    root.appendChild(volumeElement);
-    volumeElement.appendChild(doc.createTextNode("2"));
-    QDomElement raidModeElement = doc.createElement("raid_mode");
-    root.appendChild(raidModeElement);
-    raidModeElement.appendChild(doc.createTextNode("standard"));
+        QDomElement volumeElement = doc.createElement("volume");
+        itmeElement.appendChild(volumeElement);
+        volumeElement.appendChild(doc.createTextNode(entry.split(";").value(0)));
+        QDomElement raidModeElement = doc.createElement("raid_mode");
+        itmeElement.appendChild(raidModeElement);
+        raidModeElement.appendChild(doc.createTextNode(entry.split(";").value(1)));
 
-    QDomElement statusElement = doc.createElement("status");
-    root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("0"));
-    QDomElement totalSizeElement = doc.createElement("total_size");
-    root.appendChild(totalSizeElement);
-    totalSizeElement.appendChild(doc.createTextNode("1920264152"));
-    QDomElement useSizeElement = doc.createElement("use_size");
-    root.appendChild(useSizeElement);
-    useSizeElement.appendChild(doc.createTextNode("200140"));
+        QDomElement statusElement = doc.createElement("status");
+        itmeElement.appendChild(statusElement);
+        statusElement.appendChild(doc.createTextNode(entry.split(";").value(2)));
+        QDomElement totalSizeElement = doc.createElement("total_size");
+        itmeElement.appendChild(totalSizeElement);
+        totalSizeElement.appendChild(doc.createTextNode(entry.split(";").value(3)));
+        QDomElement useSizeElement = doc.createElement("use_size");
+        itmeElement.appendChild(useSizeElement);
+        useSizeElement.appendChild(doc.createTextNode(entry.split(";").value(4)));
 
-    QDomElement freeSizeElement = doc.createElement("free_size");
-    root.appendChild(freeSizeElement);
-    freeSizeElement.appendChild(doc.createTextNode(""));
-    QDomElement usedRateElement = doc.createElement("used_rate");
-    root.appendChild(usedRateElement);
-    usedRateElement.appendChild(doc.createTextNode("0"));
-
+        QDomElement freeSizeElement = doc.createElement("free_size");
+        itmeElement.appendChild(freeSizeElement);
+        freeSizeElement.appendChild(doc.createTextNode(entry.split(";").value(5)));
+        QDomElement usedRateElement = doc.createElement("used_rate");
+        itmeElement.appendChild(usedRateElement);
+        usedRateElement.appendChild(doc.createTextNode(entry.split(";").value(6)));
+    }
 }
 
 void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
