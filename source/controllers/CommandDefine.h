@@ -73,6 +73,7 @@ enum CGI_COMMAND {
     CMD_PORTFORWARDING_ADD,         /* cgi_portforwarding_add */
     CMD_PORTFORWARDING_MODIFY,      /* cgi_portforwarding_modify */
     CMD_PORTFORWARDING_DEL,         /* cgi_portforwarding_del */
+    CMD_PORTFORWARDING_GET_PORT,    /* cgi_portforwarding_get_port */
 
     CMD_GET_SSH_PORT,               /* cgi_get_ssh_port */
     CMD_SET_SSH_PORT,               /* cgi_set_ssh_port */
@@ -404,6 +405,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_portforwarding_add",
     "cgi_portforwarding_modify",
     "cgi_portforwarding_del",
+    "cgi_portforwarding_get_port",
 
     "cgi_get_ssh_port",
     "cgi_set_ssh_port",
@@ -744,6 +746,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_PORTFORWARDING_ADD,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_add */
     { CMD_PORTFORWARDING_MODIFY,        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_modify */
     { CMD_PORTFORWARDING_DEL,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },          /* cgi_portforwarding_del */
+    { CMD_PORTFORWARDING_GET_PORT,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_portforwarding_get_port */
+
     { CMD_GET_SSH_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ssh_port */
     { CMD_SET_SSH_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_set_ssh_port */
 //    CMD_NETWORK_END,

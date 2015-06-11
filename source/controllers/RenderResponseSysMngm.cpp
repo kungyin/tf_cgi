@@ -2,6 +2,7 @@
 
 #include <QTimeZone>
 #include <QFileInfo>
+#include <QDir>
 
 RenderResponseSysMngm::RenderResponseSysMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -690,51 +691,79 @@ void RenderResponseSysMngm::generateLogSystem(QString &str) {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "{\"rows\":[],\"total\":\"0\",\"page\":\"1\"}";
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_GET + " all");
+
+    QString rows = "{\"rows\":[\
+                    %1],\n\
+                    \"total\":\"%2\",\n\
+                    \"page\":\"%3\"\n";
+    QString rowsEmpty = "{\"rows\":[],\"total\":\"0\",\"page\":\"1\"}";
+    QString logContents = "\n{\"id\":\"%1\",\"cell\":[\"%2\",\"%3\",\"%4\"]},";
+    QString logOut;
+
+    int logStart = (paraPage.toInt()-1) * paraRp.toInt();
+    int logEnd = logStart + paraRp.toInt();
+    if(logEnd > apiOut.size())
+        logEnd = apiOut.size();
+    for(int i = logStart; i < logEnd; i++) {
+        QString logDate = apiOut.value(i).section(" ", 0, 2);
+        QString logTime = apiOut.value(i).section(" ", 3, 3);
+        QString logContent = apiOut.value(i).section(" ", 4);
+        logOut += logContents.arg(QString::number(i+1)).arg(logDate).arg(logTime).arg(logContent);
+    }
+
+    if(apiOut.isEmpty())
+        str = rowsEmpty;
+    else {
+        int total = 1;
+        if(paraRp.toInt() != 0)
+            total = apiOut.size() / paraRp.toInt() + (apiOut.size() % paraRp.toInt() != 0);
+        str = rows.arg(logOut).arg(QString::number(total)).arg(paraPage.toInt());
+    }
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetLogInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " get_cfg", true, ";");
 
     QDomElement root = doc.createElement("log");
     doc.appendChild(root);
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("0"));
+    enableElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement ipElement = doc.createElement("ip");
     root.appendChild(ipElement);
-    ipElement.appendChild(doc.createTextNode(""));
+    ipElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode("514"));
+    portElement.appendChild(doc.createTextNode(apiOut.value(2)));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateLogServer() {
     QString paraEnable = m_pReq->allParameters().value("f_enable").toString();
     QString paraIp = m_pReq->allParameters().value("f_ip").toString();
     QString paraPort = m_pReq->allParameters().value("f_port").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API +
+                                      " set_cfg " + paraEnable +
+                                      " " + paraIp +
+                                      " " + paraPort);
 }
 
 /* todo */
 void RenderResponseSysMngm::generateSendLogTest() {
     QString paraIp = m_pReq->allParameters().value("f_ip").toString();
     QString paraPort = m_pReq->allParameters().value("f_port").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " get_cfg", true, ";");
 }
 
-/* todo */
 void RenderResponseSysMngm::generateLogBackup(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    //sendFile();
+    QFileInfo file(SENDOUT_LOGFILE);
+    if(file.exists() && file.isFile())
+        str = SENDOUT_LOGFILE;
 }
 
-/* todo */
 void RenderResponseSysMngm::generateLogClear() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " clear");
 }
 
 /* todo */

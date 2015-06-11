@@ -5,11 +5,12 @@
 # 2005/08/23    VBird   First release
 
 [ $1 == '-L' ] && echo -e "FTP,TCP,6990,6990,1,OK" && echo -e "FTP,UDP,6991,6991,0,ERROR"
-[ $1 == '-T' ] && echo -e "Not Found"
+[ $1 == '-t' ] && echo -e "Not Found"
 [ $1 == '-C' ] && echo -e "23"
 [ $1 == '-D' ] && echo -e "BitTorrent,TCP,6881" && echo -e "FTP,TCP,21" && echo -e "aMule,TCP,4662"
 [ $1 == '-a' ] && [ $2 == 'add_scan' ]&& echo -e "ok"
 [ $1 == '-a' ] && [ $2 == 'add' ]&& echo -e "OK1"
 [ $1 == '-m' ] && echo -e "OK1"
 [ $1 == '-d' ] && echo -e "ok"
+[ $1 == '-P' ] && echo -e "6883,TCP,BitTorrent,6883" && echo -e "6885,TCP,BitTorrent,6885"
 

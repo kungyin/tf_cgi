@@ -1,0 +1,1 @@
+Jun  9 19:18:05 DNS-320 ERROR: [samba] settings failed.

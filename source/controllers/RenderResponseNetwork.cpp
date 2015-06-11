@@ -83,6 +83,9 @@ void RenderResponseNetwork::preRender() {
     case CMD_PORTFORWARDING_DEL:
         generatePortFrowardingDel(str);
         break;
+    case CMD_PORTFORWARDING_GET_PORT:
+        generatePortFrowardingGetPort(doc);
+        break;
     case CMD_GET_SSH_PORT:
         generateGetSshPort(doc);
         break;
@@ -547,13 +550,13 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
 }
 
 void RenderResponseNetwork::generateUpnpTest() {
-    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -T", true);
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -t", true);
 }
 
 
 void RenderResponseNetwork::generateUpnpTestResult(QString &str) {
     QMap<QString, QString> upnpInfo = getNasCfg("upnp");
-    str = upnpInfo.value("upnp_test");
+    str = upnpInfo.value("upnp_test_result");
 }
 
 void RenderResponseNetwork::generatePortForwardingTotal(QString &str) {
@@ -658,6 +661,31 @@ void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
                                                                         " -s " + paraService
                                                                         , true);
     str = apiOutList.value(0);
+}
+
+void RenderResponseNetwork::generatePortFrowardingGetPort(QDomDocument &doc) {
+
+    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -P");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+    for(QString e : apiOutList) {
+
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        QDomElement ePortElement = doc.createElement("e_port");
+        rowElement.appendChild(ePortElement);
+        ePortElement.appendChild(doc.createTextNode(e.split(",").value(0)));
+        QDomElement protocolElement = doc.createElement("protocol");
+        rowElement.appendChild(protocolElement);
+        protocolElement.appendChild(doc.createTextNode(e.split(",").value(1)));
+        QDomElement serviceElement = doc.createElement("service");
+        rowElement.appendChild(serviceElement);
+        serviceElement.appendChild(doc.createTextNode(e.split(",").value(2)));
+        QDomElement localPortElement = doc.createElement("local_port");
+        rowElement.appendChild(localPortElement);
+        localPortElement.appendChild(doc.createTextNode(e.split(",").value(3)));
+    }
 }
 
 void RenderResponseNetwork::generateGetSshPort(QDomDocument &doc) {

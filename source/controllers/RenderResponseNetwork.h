@@ -34,6 +34,7 @@ private:
     void generatePortFrowardingAdd(QString &);
     void generatePortFrowardingModify(QString &);
     void generatePortFrowardingDel(QString &);
+    void generatePortFrowardingGetPort(QDomDocument &);
 
     void generateGetSshPort(QDomDocument &);
     void generateSetSshPort(QDomDocument &);

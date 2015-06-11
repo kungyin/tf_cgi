@@ -33,7 +33,8 @@ const QString SCRIPT_CONFIG_API     =   "sysapi_config";
 const QString SCRIPT_LED_API        =   "cled";
 const QString SCRIPT_APPAPI_FTP     =   "appapi_ftp2";
 const QString SCRIPT_APPAPI_TMM     =   "appapi_tmm";
-
+const QString SCRIPT_SYSLOG_GET     =   "syslog_get";
+const QString SCRIPT_SYSLOG_API     =   "sysapi_syslog";
 
 #ifndef SIMULATOR_MODE
 
@@ -41,6 +42,8 @@ const QString API_PATH = "";
 const QString ENV_PATH = "";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backupconfig.tar";
+
+const QString SENDOUT_LOGFILE = "/tmp/log.txt";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
 
@@ -50,6 +53,7 @@ const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
 const QString SYS_CONFIG_FILE = "./faked_api/sys_config";
 const QString USER_IMPORT_FILE = "./faked_api/backupconfig.tar";
+const QString SENDOUT_LOGFILE = "./faked_api/log.txt";
 
 #endif
 
