@@ -150,3 +150,10 @@ QString RenderResponse::allParametersToString() {
 
     return ret;
 }
+
+int RenderResponse::getTotalPages(int perPage, int itemNumber) {
+    int iTotals = 1;
+    if(perPage > 0 && itemNumber > 0)
+        iTotals = itemNumber / perPage + (itemNumber % perPage != 0);
+    return iTotals;
+}

@@ -1,4 +1,6 @@
 #include "RenderResponseSysStatus.h"
+#include <cassert>
+#include <THttpUtility>
 
 RenderResponseSysStatus::RenderResponseSysStatus(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -278,338 +280,334 @@ void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateMtpInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_mtp_info");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
 
+    QList<QString> mtpContentElement;
+    mtpContentElement << "usb_port" << "manufacturer" << "product";
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement mtpElement = doc.createElement("mtp");
+        root.appendChild(mtpElement);
+        if( mtpContentElement.size() != apiOut.value(i).split(";").size() ) {
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+
+                QDomElement element = doc.createElement(mtpContentElement.value(j));
+                mtpElement.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateMtpInfo(): "
+                   "mtpContentElement size is not equal to apiOut size.");
+        }
+    }
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateUsbPrinterInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_usb_printer_info");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+
+    QList<QString> printerContentElement;
+    printerContentElement << "usb_port" << "manufacturer" << "product" << "printer_name";
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement printerElement = doc.createElement("printer");
+        root.appendChild(printerElement);
+        if( printerContentElement.size() != apiOut.value(i).split(";").size() ) {
+
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+
+                QDomElement element = doc.createElement(printerContentElement.value(j));
+                printerElement.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
+                   "printerContentElement size is not equal to apiOut size.");
+        }
+    }
 
 }
 
 
-/* todo: need API */
 void RenderResponseSysStatus::generateUpsInfo2(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_ups_info2");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+
+    QList<QString> upsContentElement(QList<QString>() << "usb_port" << "manufacturer" << "product");
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement upsElement = doc.createElement("ups");
+        root.appendChild(upsElement);
+        if( upsContentElement.size() != apiOut.value(i).split(";").size() ) {
+
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+
+                QDomElement element = doc.createElement(upsContentElement.value(j));
+                upsElement.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateUpsInfo2(): "
+                   "upsContentElement size is not equal to apiOut size.");
+        }
+    }
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QString paraPage = m_pReq->parameter("page");
+    QString paraRp = m_pReq->parameter("rp");
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    /* todo */
+    QString uiContent = /*THttpUtility::htmlEscape(*/"&lt;a href=javascript:onclick=GetSmartInfo(&apos;sda&apos;,&apos;0&apos;)"
+            ";&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/normal.png&apos; alt=&apos;"
+            "Normal&apos;&gt;&lt;/a&gt;"/*)*/;
 
+    for(int i = 0; i < apiOut.size(); i++) {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        QDomElement cellElement1 = doc.createElement("cell");
-        rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("Disk1"));
+        if( 6 != apiOut.value(i).split(";").size() ) {
+
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+
+                QDomElement cellElement = doc.createElement("cell");
+                rowElement.appendChild(cellElement);
+                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateSmartXmlCreateDeviceList(): "
+                   "element size is not equal to apiOut size.");
+        }
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("Seagate"));
+        cellElement2.appendChild(doc.createTextNode(uiContent));
 
-        QDomElement cellElement3 = doc.createElement("cell");
-        rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode("ST3000DM001-9YN166"));
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode("S1F0HYJ4"));
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode("32"));
-
-        QDomElement cellElement6 = doc.createElement("cell");
-        rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode("2930266584"));
-        QDomElement cellElement7 = doc.createElement("cell");
-        rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode("&lt;a href=javascript:onclick=GetSmartInfo\
-            (&apos;sdb&apos;,&apos;1&apos;);&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images\
-            /normal.png&apos; alt=&apos;Normal&apos;&gt;&lt;/a&gt;"));
-
-        rowElement.setAttribute("id", "1");
-    //}
+        rowElement.setAttribute("id", QString::number(i));
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("2"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QString paraPage = m_pReq->parameter("page");
+    QString paraRp = m_pReq->parameter("rp");
+    QString paraField = m_pReq->parameter("f_field");
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_list " + paraField);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    /* todo: page maybe wrong */
+    for(int i = 0; i < apiOut.size(); i++) {
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        QDomElement cellElement1 = doc.createElement("cell");
-        rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("1"));
-        QDomElement cellElement2 = doc.createElement("cell");
-        rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("Raw_Read_Error_Rate"));
+        if( 6 != apiOut.value(i).split(";").size() ) {
 
-        QDomElement cellElement3 = doc.createElement("cell");
-        rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode("117"));
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode("100"));
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode("6"));
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
-        QDomElement cellElement6 = doc.createElement("cell");
-        rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode("132806608"));
+                QDomElement cellElement = doc.createElement("cell");
+                rowElement.appendChild(cellElement);
+                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(): "
+                   "element size is not equal to apiOut size.");
+        }
 
-        rowElement.setAttribute("id", "1");
-    //}
+        rowElement.setAttribute("id", QString::number(i));
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("3"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 
 
-/* todo: need API */
 void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info");
 
     QDomElement root = doc.createElement("xml");
     doc.appendChild(root);
 
-    QDomElement bondingEnableElement = doc.createElement("bonding_enable");
-    root.appendChild(bondingEnableElement);
-    bondingEnableElement.appendChild(doc.createTextNode("0"));
-    QDomElement lanRSpeedElement = doc.createElement("lan_r_speed");
-    root.appendChild(lanRSpeedElement);
-    lanRSpeedElement.appendChild(doc.createTextNode("4954335"));
+    QList<QString> resourceContentElement(QList<QString>()
+        << "bonding_enable" << "lan_r_speed" << "lan_t_speed" << "lan2_r_speed" << "lan2_t_speed"
+        << "mem_total" << "mem_free" << "buffers" << "cached" << "now_time" << "cpu");
 
-    QDomElement lanTSpeedElement = doc.createElement("lan_t_speed");
-    root.appendChild(lanTSpeedElement);
-    lanTSpeedElement.appendChild(doc.createTextNode("24244223"));
-    QDomElement lan2RSpeedElement = doc.createElement("lan2_r_speed");
-    root.appendChild(lan2RSpeedElement);
-    lan2RSpeedElement.appendChild(doc.createTextNode("0"));
-    QDomElement lan2TSpeedElement = doc.createElement("lan2_t_speed");
-    root.appendChild(lan2TSpeedElement);
-    lan2TSpeedElement.appendChild(doc.createTextNode("0"));
+    if( resourceContentElement.size() != apiOut.value(0).split(";").size() ) {
 
-    QDomElement memTotalElement = doc.createElement("mem_total");
-    root.appendChild(memTotalElement);
-    memTotalElement.appendChild(doc.createTextNode("509748"));
-    QDomElement memFreeElement = doc.createElement("mem_free");
-    root.appendChild(memFreeElement);
-    memFreeElement.appendChild(doc.createTextNode("346748"));
-    QDomElement buffersElement = doc.createElement("buffers");
-    root.appendChild(buffersElement);
-    buffersElement.appendChild(doc.createTextNode("10404"));
+        for(int i=0; i < apiOut.value(0).split(";").size(); i++) {
+            QDomElement element = doc.createElement(resourceContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(0).split(";").value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateResource() :"
+            "resourceContentElement size is not equal to apiOut size.");
+    }
 
-    QDomElement cachedElement = doc.createElement("cached");
-    root.appendChild(cachedElement);
-    cachedElement.appendChild(doc.createTextNode("84924"));
-    QDomElement nowTimeElement = doc.createElement("now_time");
-    root.appendChild(nowTimeElement);
-    nowTimeElement.appendChild(doc.createTextNode("1430112389"));
-    QDomElement cpuElement = doc.createElement("cpu");
-    root.appendChild(cpuElement);
-    cpuElement.appendChild(doc.createTextNode("0%"));
-
-    //for(int i=0; i < apiOut.size(); i++) {
+    for(int i=1; i < apiOut.size(); i++) {
 
         QDomElement processMainElement = doc.createElement("process_main");
         root.appendChild(processMainElement);
-        QDomElement commandElement = doc.createElement("command");
-        processMainElement.appendChild(commandElement);
-        commandElement.appendChild(doc.createTextNode("/usr/libexec/mysqld"));
-        QDomElement userElement = doc.createElement("user");
-        processMainElement.appendChild(userElement);
-        userElement.appendChild(doc.createTextNode("root"));
 
-        QDomElement pidElement = doc.createElement("pid");
-        processMainElement.appendChild(pidElement);
-        pidElement.appendChild(doc.createTextNode("2332"));
-
-        QDomElement processCpuElement = doc.createElement("cpu");
-        processMainElement.appendChild(processCpuElement);
-        processCpuElement.appendChild(doc.createTextNode("0.0"));
-
-        QDomElement memElement = doc.createElement("mem");
-        processMainElement.appendChild(memElement);
-        memElement.appendChild(doc.createTextNode("5.2"));
-
-    //}
-
+        QList<QString> processContentElement(QList<QString>()
+            << "command" << "user" << "pid" << "cpu" << "mem");
+        if( processContentElement.size() != apiOut.value(i).split(";").size() ) {
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+                QDomElement element = doc.createElement(processContentElement.value(j));
+                processMainElement.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j).remove("%")));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateResource(): "
+                   "processContentElement size is not equal to apiOut size.");
+        }
+    }
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateGetService(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("service");
     doc.appendChild(root);
 
+    QList<QString> serviceContentElement(QList<QString>()
+        << "afp_enable" << "nfs_enable" << "ddns_enable" << "ddns_status" << "upnp_enable"
+        << "tm_enable" << "ftp_enable" << "p2p_enable" << "syslog_enable" << "syslog_status"
+        << "syslog_folder");
 
-    QDomElement afpEnableElement = doc.createElement("afp_enable");
-    root.appendChild(afpEnableElement);
-    afpEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement nfsEnableElement = doc.createElement("nfs_enable");
-    root.appendChild(nfsEnableElement);
-    nfsEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement ddnsEnableElement = doc.createElement("ddns_enable");
-    root.appendChild(ddnsEnableElement);
-    ddnsEnableElement.appendChild(doc.createTextNode("1"));
-
-    QDomElement ddnsStatusElement = doc.createElement("ddns_status");
-    root.appendChild(ddnsStatusElement);
-    ddnsStatusElement.appendChild(doc.createTextNode("off"));
-
-    QDomElement upnpEnableElement = doc.createElement("upnp_enable");
-    root.appendChild(upnpEnableElement);
-    upnpEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement tmEnableElement = doc.createElement("tm_enable");
-    root.appendChild(tmEnableElement);
-    tmEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement ftpEnableElement = doc.createElement("ftp_enable");
-    root.appendChild(ftpEnableElement);
-    ftpEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement p2pEnableElement = doc.createElement("p2p_enable");
-    root.appendChild(p2pEnableElement);
-    p2pEnableElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement syslogEnableElement = doc.createElement("syslog_enable");
-    root.appendChild(syslogEnableElement);
-    syslogEnableElement.appendChild(doc.createTextNode(""));
-
-    QDomElement syslogStatusElement = doc.createElement("syslog_status");
-    root.appendChild(syslogStatusElement);
-    syslogStatusElement.appendChild(doc.createTextNode(""));
-
-    QDomElement syslogFolderElement = doc.createElement("syslog_folder");
-    root.appendChild(syslogFolderElement);
-    syslogFolderElement.appendChild(doc.createTextNode("Volume_1"));
+    if( serviceContentElement.size() != apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(serviceContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateGetService(): "
+               "serviceContentElement size is not equal to apiOut size.");
+    }
 
 }
 
-/* todo: need API */
 void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QString paraPage = m_pReq->parameter("page");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_package_list");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
 
-    QDomElement rowElement = doc.createElement("row");
-    root.appendChild(rowElement);
-    QDomElement cellElement1 = doc.createElement("cell");
-    rowElement.appendChild(cellElement1);
-    cellElement1.appendChild(doc.createTextNode("1"));
+        if( 3 == apiOut.value(i).split(";").size() ) {
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+                QDomElement cellElement = doc.createElement("cell");
+                rowElement.appendChild(cellElement);
+                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateModuleList(): "
+                   "element size is not equal to apiOut size.");
+        }
 
-    QDomElement cellElement2 = doc.createElement("cell");
-    rowElement.appendChild(cellElement2);
-    cellElement2.appendChild(doc.createTextNode("Transmission"));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createTextNode(
+                                     "&lt;img border=&apos;0&apos; src=&apos;/web/images/sign_ok.png&apos;&gt;"));
 
-    QDomElement cellElement3 = doc.createElement("cell");
-    rowElement.appendChild(cellElement3);
-    cellElement3.appendChild(doc.createTextNode("1.00"));
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode(
+                                     "&lt;img border=&apos;0&apos; src=&apos;/web/images/off.png&apos;&gt;"));
 
-    QDomElement cellElement4 = doc.createElement("cell");
-    rowElement.appendChild(cellElement4);
-    cellElement4.appendChild(doc.createTextNode(
-          "&lt;img border=&apos;0&apos; src=&apos;/web/images/sign_ok.png&apos;&gt;"));
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createTextNode(
+                                     "&lt;a href=javascript:enable(&apos;Transmission&apos;,&apos;1&apos;,&apos;app&apos;)\
+                                     &gt;&lt;img border=&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;"));
 
-    QDomElement cellElement5 = doc.createElement("cell");
-    rowElement.appendChild(cellElement5);
-    cellElement5.appendChild(doc.createTextNode(
-          "&lt;img border=&apos;0&apos; src=&apos;/web/images/off.png&apos;&gt;"));
+        QDomElement cellElement7 = doc.createElement("cell");
+        rowElement.appendChild(cellElement7);
+        cellElement7.appendChild(doc.createTextNode(
+                                     "&lt;a href=javascript:del_module(&apos;Transmission&apos;,&apos;app&apos;)&gt;&lt;img \
+                                     border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;"));
 
-    QDomElement cellElement6 = doc.createElement("cell");
-    rowElement.appendChild(cellElement6);
-    cellElement6.appendChild(doc.createTextNode(
-          "&lt;a href=javascript:enable(&apos;Transmission&apos;,&apos;1&apos;,&apos;app&apos;)\
-          &gt;&lt;img border=&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;"));
+        rowElement.setAttribute("id", QString::number(i));
 
-    QDomElement cellElement7 = doc.createElement("cell");
-    rowElement.appendChild(cellElement7);
-    cellElement7.appendChild(doc.createTextNode(
-          "&lt;a href=javascript:del_module(&apos;Transmission&apos;,&apos;app&apos;)&gt;&lt;img \
-          border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;"));
-
-    rowElement.setAttribute("id", "0");
-
-    //}
+    }
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("1"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
 }
 

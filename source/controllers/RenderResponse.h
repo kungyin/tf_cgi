@@ -25,6 +25,8 @@ protected:
     QMap<QString, QString> getNasCfg(QString);
     QString allParametersToString();
 
+    inline int getTotalPages(int, int);
+
     CGI_COMMAND m_cmd;
     QDomDocument m_doc;
     QString m_str;
