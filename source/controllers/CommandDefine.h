@@ -348,6 +348,21 @@ enum CGI_COMMAND {
     CMD_DOWNLOADS_SCHEDULE_TEST,             /* Downloads_Schedule_Test */
     CMD_APP_DOWNLOAD_END,
 
+    /**** Add-on ****/
+    CMD_MODULE_SHOW_INSTALL_STATUS,          /* module_show_install_status */
+    CMD_GET_ALLAPPS,                         /* cgi_get_allapps */
+    CMD_GET_APKG_DETAIL,                     /* cgi_get_apkg_detail */
+    CMD_MYFAV_CHECK_IMG,                     /* cgi_myfavorite_check_img */
+    CMD_CHK_HDD_FREE_SIZE,                   /* cgi_chk_hdd_free_size */
+    CMD_DOWNLOAD_INSTALL_ADDON,              /* download_install_addon */
+    CMD_CLEAR_ADDON_FILES,                   /* clear_addon_files */
+    CMD_MODULE_RE_INSTALL,                   /* module_re_install */
+    CMD_INSTALL_3_PARTY_APKG,                /* install_3_party_apkg */
+    CMD_UNINSTALL_ADDON,                     /* uninstall_addon */
+    CMD_MODULE_ENABLE_DISABLE,               /* module_enable_disable */
+    CMD_MODULE_UNINSTALL,                    /* module_uninstall */
+    CMD_ADD_ON_END,
+
     CMD_SIZE
 
 };
@@ -676,6 +691,21 @@ const char CGI_PARA_COMMANDS[][255] = {
     "Downloads_Schedule_Renew",
     "Downloads_Schedule_Del",
     "Downloads_Schedule_Test",
+    "",
+
+    /**** Add-on ****/
+    "module_show_install_status",
+    "cgi_get_allapps",
+    "cgi_get_apkg_detail",
+    "cgi_myfavorite_check_img",
+    "cgi_chk_hdd_free_size",
+    "download_install_addon",
+    "clear_addon_files",
+    "module_re_install",
+    "install_3_party_apkg",
+    "uninstall_addon",
+    "module_enable_disable",
+    "module_uninstall",
     ""
 
 };
@@ -1006,20 +1036,33 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     /**** Setup Wizard ****/
     { CMD_CHK_ADMIN_PW,                 RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_chk_admin_pw */
-    { CMD_SET_LED,                      RENDER_TYPE_NULL,           OPENED_CMDS          },         /* cgi_set_led */
+    { CMD_SET_LED,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_led */
     { CMD_GET_WIZARD,                   RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_wizard */
     //CMD_SETUP_WIZARD_END,
 
     /**** Application FTP/HTTP download ****/
-    { CMD_DOWNLOADS_SCHEDULE_NOW,        RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Now */
-    { CMD_DOWNLOADS_SCHEDULE_LIST,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_List */
-    { CMD_DOWNLOADS_SCHEDULE_ADD,        RENDER_TYPE_STRING,         OPENED_CMDS          },         /* Downloads_Schedule_Add */
-    { CMD_DOWNLOADS_SCHEDULE_INFO,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Info */
-    { CMD_DOWNLOADS_SCHEDULE_RENEW,      RENDER_TYPE_STRING,         OPENED_CMDS          },         /* Downloads_Schedule_Renew */
-    { CMD_DOWNLOADS_SCHEDULE_DEL,        RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Del */
-    { CMD_DOWNLOADS_SCHEDULE_TEST,       RENDER_TYPE_XML,            OPENED_CMDS          },         /* Downloads_Schedule_Test */
+    { CMD_DOWNLOADS_SCHEDULE_NOW,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Now */
+    { CMD_DOWNLOADS_SCHEDULE_LIST,       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_List */
+    { CMD_DOWNLOADS_SCHEDULE_ADD,        RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Add */
+    { CMD_DOWNLOADS_SCHEDULE_INFO,       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Info */
+    { CMD_DOWNLOADS_SCHEDULE_RENEW,      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Renew */
+    { CMD_DOWNLOADS_SCHEDULE_DEL,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Del */
+    { CMD_DOWNLOADS_SCHEDULE_TEST,       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Test */
 
     //CMD_APP_DOWNLOAD_END,
+
+    { CMD_MODULE_SHOW_INSTALL_STATUS,    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_show_install_status */
+    { CMD_GET_ALLAPPS,                   RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_allapps */
+    { CMD_GET_APKG_DETAIL,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_apkg_detail */
+    { CMD_MYFAV_CHECK_IMG,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_check_img */
+    { CMD_CHK_HDD_FREE_SIZE,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_hdd_free_size */
+    { CMD_DOWNLOAD_INSTALL_ADDON,        RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* download_install_addon */
+    { CMD_CLEAR_ADDON_FILES,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* clear_addon_files */
+    { CMD_UNINSTALL_ADDON,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* uninstall_addon */
+    { CMD_MODULE_ENABLE_DISABLE,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_enable_disable */
+    { CMD_MODULE_UNINSTALL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_uninstall */
+
+    //CMD_ADD_ON_END,
 
 
 //    CMD_SIZE

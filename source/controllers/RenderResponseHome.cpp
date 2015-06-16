@@ -151,8 +151,7 @@ void RenderResponseHome::generateLogin(QString &str) {
     }
 
     QDateTime expire = QDateTime::currentDateTime();
-    if(paraC1.compare("ON") == 0)
-        expire = expire.addSecs(31536000);    // 1 year in seconds.
+    expire = expire.addSecs(31536000);    // 1 year in seconds.
 
     TCookie cookieName("uname", paraUsername.toLocal8Bit());
     cookieName.setExpirationDate(expire);
@@ -164,7 +163,8 @@ void RenderResponseHome::generateLogin(QString &str) {
     cookiePwd.setExpirationDate(expire);
     cookiePwd.setPath("/");
     m_cookies.append(cookieName);
-    m_cookies.append(cookieRemMe);
+    if(paraC1.compare("ON") == 0 && !paraSsl.compare("1") == 0)
+        m_cookies.append(cookieRemMe);
     m_cookies.append(cookiePwd);
 
     if(apiOut.value(0).compare("1") == 0) {

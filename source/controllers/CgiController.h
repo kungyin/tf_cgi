@@ -17,6 +17,7 @@ public slots:
 
 private:
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
+    //bool verifyRequest(const THttpRequest &request) const;
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);
