@@ -13,14 +13,14 @@ public:
 
 private:
 
-    void timeGetInfo(QDomDocument &);
-    void timeGetList(QDomDocument &);
-    void timeGetSmbList(QDomDocument &);
-    void timeSet();
-    void timeGetShareName(QDomDocument &);
-    void timeSetShare(QDomDocument &);
-    void timeDelShare();
-    void timeDelAllShare();
+    void generateTmGetInfo(QDomDocument &);
+    void generateTmGetList(QDomDocument &);
+    void generateTmGetSmbList(QDomDocument &);
+    void generateTmSet(QString &);
+    void generateTmGetShareName(QDomDocument &);
+    void generateTmSetShare(QDomDocument &);
+    void generateTmDelShare(QString &);
+    void generateTmDelAllShare(QString &);
 
 };
 

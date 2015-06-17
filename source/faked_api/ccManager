@@ -32,4 +32,10 @@
 [ $1 == 'system_get_resource_info' ] && echo -e "0;0;0;0;;246140;193436;0;22716;3628;0%" && echo -e "php-cgi;root;1024;0%;11%" && echo -e "php-cgi;root;1052;0%;11%" && echo -e "php-cgi;root;1053;0%;11%" && echo -e "/usr/bin/tadpole;root;1097;0%;8%" && echo -e "treefrog;root;1072;0%;8%" && echo -e "smbd;root;1030;0%;6%"
 [ $1 == 'system_get_system_services' ] && echo -e "0;0;0;off;;0;1;0;;;"
 [ $1 == 'service_get_package_list' ] && echo -e "1;Transmission;1.00" && echo -e "0;GoogleMap;3.1.1"
+[ $1 == 'service_get_tm_info' ] && echo -e "1;0"
+[ $1 == 'service_get_tm_list' ] && echo -e "ggg;Volume_2/ggg" && echo -e "web1;Volume_2/web1"
+[ $1 == 'service_get_samba_list' ] && echo -e "Volume_1;Volume_1" && echo -e "Volume_2;Volume_2" && echo -e "ggg;Volume_1/ggg"
+[ $1 == 'service_set_tm_status' ] && echo -e "1"
+[ $1 == 'service_set_del_tm_share' ] && echo -e "1"
+[ $1 == 'service_set_del_all_share' ] && echo -e "1"
 

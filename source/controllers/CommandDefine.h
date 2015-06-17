@@ -322,8 +322,8 @@ enum CGI_COMMAND {
 
     /**** Time Machine ****/
 
-    CMD_GET_TM_INFO,                        /* cgi_tm_get_info */
-    CMD_GET_TM_LIST,                        /* cgi_tm_get_list */
+    CMD_TM_GET_INFO,                        /* cgi_tm_get_info */
+    CMD_TM_GET_LIST,                        /* cgi_tm_get_list */
     CMD_TM_GET_SMB_LIST,                    /* cgi_tm_get_smb_list */
     CMD_TM_SET,                             /* cgi_tm_set */
     CMD_TM_GET_SHARENAME,                   /* cgi_tm_get_sharename */
@@ -1024,8 +1024,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    CMD_FTP_SERVER_END,
 
 //    /**** Time Machine ****/
-    { CMD_GET_TM_INFO,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_info */
-    { CMD_GET_TM_LIST,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_list */
+    { CMD_TM_GET_INFO,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_info */
+    { CMD_TM_GET_LIST,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_list */
     { CMD_TM_GET_SMB_LIST,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_smb_list */
     { CMD_TM_SET,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_set */
     { CMD_TM_GET_SHARENAME,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_sharename */
@@ -1058,6 +1058,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_CHK_HDD_FREE_SIZE,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_hdd_free_size */
     { CMD_DOWNLOAD_INSTALL_ADDON,        RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* download_install_addon */
     { CMD_CLEAR_ADDON_FILES,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* clear_addon_files */
+    { CMD_MODULE_RE_INSTALL,             RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* module_re_install */
+    { CMD_INSTALL_3_PARTY_APKG,          RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* install_3_party_apkg */
     { CMD_UNINSTALL_ADDON,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* uninstall_addon */
     { CMD_MODULE_ENABLE_DISABLE,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_enable_disable */
     { CMD_MODULE_UNINSTALL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_uninstall */

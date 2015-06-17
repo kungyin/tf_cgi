@@ -463,7 +463,7 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc)
                    "element size is not equal to apiOut size.");
         }
 
-        rowElement.setAttribute("id", QString::number(i));
+        rowElement.setAttribute("id", QString::number(i+1));
     }
 
     QDomElement pageElement = doc.createElement("page");
@@ -599,7 +599,7 @@ void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
                                      "&lt;a href=javascript:del_module(&apos;Transmission&apos;,&apos;app&apos;)&gt;&lt;img \
                                      border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;"));
 
-        rowElement.setAttribute("id", QString::number(i));
+        rowElement.setAttribute("id", QString::number(i+1));
 
     }
     QDomElement pageElement = doc.createElement("page");
