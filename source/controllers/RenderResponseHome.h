@@ -21,6 +21,7 @@ private:
     void generateFWStatus(QString &);
     void generateLogin(QString &);
     void generateLogout(QString &);
+    void generateGetLogItem(QDomDocument &);
 
 };
 

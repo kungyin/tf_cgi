@@ -689,22 +689,35 @@ void RenderResponseNetwork::generatePortFrowardingGetPort(QDomDocument &doc) {
 }
 
 void RenderResponseNetwork::generateGetSshPort(QDomDocument &doc) {
-    //QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
+    QMap<QString, QString> sshdInfo = getNasCfg("sshd");
 
     QDomElement root = doc.createElement("ssh_info");
     doc.appendChild(root);
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
+    enableElement.appendChild(doc.createTextNode(sshdInfo.value("enable")));
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode("22"));
+    portElement.appendChild(doc.createTextNode(sshdInfo.value("port")));
 }
 
 void RenderResponseNetwork::generateSetSshPort(QDomDocument &doc) {
-    //QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
+    QString paraEnable = m_pReq->parameter("ssh_enable");
+    QString paraPort = m_pReq->parameter("ssh_port");
+    QString ret = "1";
+
+    QMap<QString, QString> map;
+    map.insert("enable", paraEnable);
+    map.insert("port", paraPort);
+
+    if(setNasCfg("sshd", map)) {
+        QString sshCmd = paraEnable.compare("1") == 0 ? "service_ssh_start" : "service_ssh_stop";
+        getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " " + sshCmd);
+    }
+    else
+        ret = "0";
 
     QDomElement root = doc.createElement("ret");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode("1"));
+    root.appendChild(doc.createTextNode(ret));
 }

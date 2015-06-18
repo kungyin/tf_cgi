@@ -42,6 +42,9 @@ void RenderResponseHome::preRender() {
     case CMD_LOGOUT:
         generateLogout(str);
         break;
+    case CMD_GET_LOG_ITEM:
+        generateGetLogItem(doc);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -193,3 +196,24 @@ void RenderResponseHome::generateLogout(QString &str) {
     str = "..";
 
 }
+
+/* todo */
+void RenderResponseHome::generateGetLogItem(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QDomElement root = doc.createElement("log");
+    doc.appendChild(root);
+
+    //for
+    QDomElement itemElement = doc.createElement("item");
+    root.appendChild(itemElement);
+    QStringList itemContent(QStringList() << "date" << "info");
+    //if( itemContent.size() != apiOut.value(i).split(";").size() ) {
+
+        //for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+            QDomElement element = doc.createElement(itemContent.value(0));
+            itemElement.appendChild(element);
+            element.appendChild(doc.createTextNode(""));
+        //}
+}
+

@@ -49,6 +49,7 @@ enum CGI_COMMAND {
     CMD_LOGIN,                      /* login */
     CMD_LOGOUT,                     /* logout */
     CMD_SET_USER_LANGUAGE,          /* cgi_set_user_language */
+    CMD_GET_LOG_ITEM,               /* cgi_get_log_item */
     CMD_LONGIN_END,
 
     /**** Network ****/
@@ -396,6 +397,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "login",
     "logout",
     "cgi_set_user_language",
+    "cgi_get_log_item",
     "",
 
     /**** Network ****/
@@ -752,6 +754,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LOGIN,                        RENDER_TYPE_REDIRECT_WITH_COOKIE, LOGIN_CMDS    },          /* login */
     { CMD_LOGOUT,                       RENDER_TYPE_REDIRECT,       LOGIN_CMDS          },          /* logout */
     { CMD_SET_USER_LANGUAGE,            RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_set_user_language */
+    { CMD_GET_LOG_ITEM,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS     },          /* cgi_get_log_item */
+
 //    CMD_LONGIN_END,
 
     /**** Network ****/
