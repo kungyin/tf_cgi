@@ -41,6 +41,39 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     return ret;
 }
 
+QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QString splitChar) {
+    QStringList ret;
+
+    tDebug("RenderResponse::getAPIFileOut() -- filePath: %s", filePath.toLocal8Bit().data());
+
+    QFileInfo fileInfo(filePath);
+    if ( !fileInfo.exists() || !fileInfo.isFile() ) {
+        tError("RenderResponse::getAPIFileOut() -- file %s does not exist", filePath.toLocal8Bit().data());
+        return ret;
+    }
+
+    QFile file(filePath);
+    file.open(QIODevice::ReadOnly);
+    QString allOut = QString(file.readAll());
+    ret = allOut.split("\n");
+    tDebug("RenderResponse::getAPIFileOut() -- apiOut: %s", allOut.toLocal8Bit().data());
+
+    if(bOneLine) {
+        if(!ret.isEmpty())
+            ret = ret.at(0).split(splitChar);
+        else
+            ret = QStringList();
+    }
+    else {
+        while(!ret.isEmpty() && ret.last().isEmpty())
+            ret.removeLast();
+    }
+
+    file.close();
+
+    return ret;
+}
+
 bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
     QString sectionTitle =  QString("[%1]").arg(title);
 

@@ -364,7 +364,7 @@ void RenderResponseSysMngm::generateBackupConf(QString &str) {
 void RenderResponseSysMngm::generateRestoreConf(QString &str) {
 
     if(!m_pReq->multipartFormData().isEmpty()) {
-        if(m_pReq->multipartFormData().renameUploadedFile("name", USER_IMPORT_FILE, true)) {
+        if(m_pReq->multipartFormData().renameUploadedFile("file", USER_IMPORT_FILE, true)) {
             QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
             if(apiOut.value(0).compare("0") == 0) {
                 str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
@@ -834,67 +834,53 @@ void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateFirmVXml(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QMap<QString, QString> systemInfo = getNasCfg("system");
 
     QDomElement root = doc.createElement("version");
     doc.appendChild(root);
     QDomElement fwElement = doc.createElement("fw");
     root.appendChild(fwElement);
-    fwElement.appendChild(doc.createTextNode("1.01.0905.2014"));
+    fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
     QDomElement oledElement = doc.createElement("oled");
     root.appendChild(oledElement);
-    oledElement.appendChild(doc.createTextNode("1.07"));
+    oledElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver").section('.', 0, 2)));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateCheckPowerSch(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "ok";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " check_power_sch", true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateFirmwareInitUpload(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "success";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " fw_init_upload_status", true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateFirmwareUpload(QString &str) {
     if(!m_pReq->multipartFormData().isEmpty()) {
-        tDebug("11111111111");
-        if(m_pReq->multipartFormData().entity("name").renameUploadedFile("./faked_api/ys.tar", true)) {
-            tDebug("222222222");
-
-            //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
-            //if(apiOut.value(0).compare("0") == 0) {
-                str = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
-            //}
+        if(m_pReq->multipartFormData().renameUploadedFile("file", FIRMWARE_FILE, true)) {
+            str = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
         }
     }
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetPercentage(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "-1";
+    QStringList apiOut = this->getAPIFileOut(FIRMWARE_PERCENTAGE_FILE, true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetFirmwareVerify(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "4";
+    QStringList apiOut = getAPIFileOut(FIRMWARE_VERIFY_STATUS_FILE, true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateGetUpFw(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    str = "NO";
+    QStringList apiOut = getAPIFileOut(FIRMWARE_RESULT_FILE, true);
+    str = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseSysMngm::generateReboot(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " system_reboot", true);
     str = "N/A";
 }

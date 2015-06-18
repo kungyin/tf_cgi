@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == 'check_power_sch' ] && echo -e "ok"
+[ $1 == 'fw_init_upload_status' ] && echo -e "success"

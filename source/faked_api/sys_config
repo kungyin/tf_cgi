@@ -99,6 +99,6 @@ ip=
 [upnp] 
 upnp_test = Not Found  
 
-
-
+[system]
+sw_ver = 0.0.7.0616.2015
 

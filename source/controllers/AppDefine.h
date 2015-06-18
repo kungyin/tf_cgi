@@ -35,6 +35,7 @@ const QString SCRIPT_APPAPI_FTP     =   "appapi_ftp2";
 const QString SCRIPT_APPAPI_TMM     =   "appapi_tmm";
 const QString SCRIPT_SYSLOG_GET     =   "syslog_get";
 const QString SCRIPT_SYSLOG_API     =   "sysapi_syslog";
+const QString SCRIPT_FW_UPGRADE_MGR =   "ccFwupgrade";
 
 #ifndef SIMULATOR_MODE
 
@@ -42,7 +43,10 @@ const QString API_PATH = "";
 const QString ENV_PATH = "";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backupconfig.tar";
-
+const QString FIRMWARE_FILE = "/mnt/HD_a4/genius_fw.bin";
+const QString FIRMWARE_PERCENTAGE_FILE = "/tmp/.fw_percentage";
+const QString FIRMWARE_VERIFY_STATUS_FILE = "/tmp/.verify_status";
+const QString FIRMWARE_RESULT_FILE = "/tmp/.fw_result";
 const QString SENDOUT_LOGFILE = "/tmp/log.txt";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
@@ -51,9 +55,13 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 
 const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
-const QString SYS_CONFIG_FILE = "./faked_api/sys_config";
-const QString USER_IMPORT_FILE = "./faked_api/backupconfig.tar";
-const QString SENDOUT_LOGFILE = "./faked_api/log.txt";
+const QString SYS_CONFIG_FILE = API_PATH + "sys_config";
+const QString USER_IMPORT_FILE = API_PATH + "backupconfig.tar";
+const QString FIRMWARE_FILE = API_PATH + "genius_fw.bin";
+const QString FIRMWARE_PERCENTAGE_FILE = "./faked_api/.fw_percentage";
+const QString FIRMWARE_VERIFY_STATUS_FILE = API_PATH + ".verify_status";
+const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
+const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
 
 #endif
 
