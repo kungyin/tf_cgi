@@ -1033,7 +1033,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_TM_GET_SMB_LIST,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_smb_list */
     { CMD_TM_SET,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_set */
     { CMD_TM_GET_SHARENAME,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_get_sharename */
-    { CMD_TM_SET_SHARE,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_tm_set_share */
+    { CMD_TM_SET_SHARE,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_tm_set_share */
     { CMD_TM_DEL_SHARE,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_del_share */
     { CMD_TM_DEL_ALL_SHARE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_tm_del_all_share */
 //  CMD_TIME_MACHINE_END

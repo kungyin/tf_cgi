@@ -34,7 +34,7 @@ void RenderResponseTimeMachine::preRender() {
         generateTmGetShareName(doc);
         break;
     case CMD_TM_SET_SHARE:
-        generateTmSetShare(doc);
+        generateTmSetShare(str);
         break;
     case CMD_TM_DEL_SHARE:
         generateTmDelShare(str);
@@ -162,57 +162,28 @@ void RenderResponseTimeMachine::generateTmSet(QString &str) {
 
 }
 
-/* todo */
 void RenderResponseTimeMachine::generateTmGetShareName(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_tm_status", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_share_name", true, ";");
 
     QDomElement root = doc.createElement("tm_share");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode(""));
+
+    for(QString e : apiOut) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        QDomElement nameElement = doc.createElement("name");
+        itemElement.appendChild(nameElement);
+        nameElement.appendChild(doc.createTextNode(e));
+    }
 
 }
 
-/* todo */
-void RenderResponseTimeMachine::generateTmSetShare(QDomDocument &doc) {
-
+void RenderResponseTimeMachine::generateTmSetShare(QString &str) {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
             " service_set_add_tm_share " + allParametersToString(), true);
 
-    QDomElement root = doc.createElement("service-group");
-    doc.appendChild(root);
-
-    QDomElement nameElement = doc.createElement("name");
-    root.appendChild(nameElement);
-    nameElement.setAttribute("replace-wildcards", "yes");
-    nameElement.appendChild(doc.createTextNode("%h_AFP_ggg"));
-
-    QDomElement serviceElement = doc.createElement("service");
-    root.appendChild(serviceElement);
-
-    QDomElement typeElement = doc.createElement("type");
-    serviceElement.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode("_afpovertcp._tcp"));
-    QDomElement portElement = doc.createElement("port");
-    serviceElement.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode("548"));
-
-    QDomElement serviceElement1 = doc.createElement("service");
-    root.appendChild(serviceElement1);
-
-    QDomElement typeElement1 = doc.createElement("type");
-    serviceElement1.appendChild(typeElement1);
-    typeElement1.appendChild(doc.createTextNode("_adisk._tcp"));
-    QDomElement portElement1 = doc.createElement("port");
-    serviceElement1.appendChild(portElement1);
-    portElement1.appendChild(doc.createTextNode("9"));
-    QDomElement txtrecordElement = doc.createElement("txt-record");
-    serviceElement1.appendChild(txtrecordElement);
-    txtrecordElement.appendChild(doc.createTextNode("sys=waMA=CC:B2:55:8B:21:F7"));
-    QDomElement txtrecordElement1 = doc.createElement("txt-record");
-    serviceElement1.appendChild(txtrecordElement1);
-    txtrecordElement1.appendChild(doc.createTextNode("dk2=adVF=0x83,adVN=ggg,adVU=12345678-1234-1234-1234-CCB2558B21F7"));
-
+    str = "N/A";
 }
 
 void RenderResponseTimeMachine::generateTmDelShare(QString &str) {

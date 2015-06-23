@@ -18,7 +18,7 @@ private:
     void generateTmGetSmbList(QDomDocument &);
     void generateTmSet(QString &);
     void generateTmGetShareName(QDomDocument &);
-    void generateTmSetShare(QDomDocument &);
+    void generateTmSetShare(QString &);
     void generateTmDelShare(QString &);
     void generateTmDelAllShare(QString &);
 
