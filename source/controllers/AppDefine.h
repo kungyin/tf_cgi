@@ -36,6 +36,7 @@ const QString SCRIPT_APPAPI_TMM     =   "appapi_tmm";
 const QString SCRIPT_SYSLOG_GET     =   "syslog_get";
 const QString SCRIPT_SYSLOG_API     =   "sysapi_syslog";
 const QString SCRIPT_FW_UPGRADE_MGR =   "ccFwupgrade";
+const QString SCRIPT_AFP_CTL        =   "afpctl";
 
 #ifndef SIMULATOR_MODE
 

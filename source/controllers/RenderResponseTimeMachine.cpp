@@ -54,18 +54,19 @@ void RenderResponseTimeMachine::preRender() {
 
 void RenderResponseTimeMachine::generateTmGetInfo(QDomDocument &doc) {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_info", true, ";");
+    QMap<QString, QString> tmInfo = getNasCfg("time_machine");
+    QMap<QString, QString> sambaInfo = getNasCfg("samba");
 
     QDomElement root = doc.createElement("tm_info");
     doc.appendChild(root);
 
     QDomElement tm_enableElement = doc.createElement("tm_enable");
     root.appendChild(tm_enableElement);
-    tm_enableElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    tm_enableElement.appendChild(doc.createTextNode(tmInfo.value("enable")));
 
     QDomElement ads_enableElement = doc.createElement("ads_enable");
     root.appendChild(ads_enableElement);
-    ads_enableElement.appendChild(doc.createTextNode(apiOut.value(1)));
+    ads_enableElement.appendChild(doc.createTextNode(sambaInfo.value("ads_enable")));
 
 }
 
@@ -156,8 +157,11 @@ void RenderResponseTimeMachine::generateTmSet(QString &str) {
 
     QString paraEnable = m_pReq->parameter("enable");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_tm_status enable="
-                                      + paraEnable, true);
+    if(setNasCfg("time_machine", "enable", paraEnable))
+        getAPIStdOut(API_PATH + SCRIPT_AFP_CTL + " restart", true);
+    else
+        tDebug("RenderResponseTimeMachine::generateTmSet(): setNasCfg time_machine failed");
+
     str = "N/A";
 
 }

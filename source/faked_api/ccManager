@@ -35,7 +35,6 @@
 [ $1 == 'service_get_tm_info' ] && echo -e "1;0"
 [ $1 == 'service_get_tm_list' ] && echo -e "ggg;Volume_2/ggg" && echo -e "web1;Volume_2/web1"
 [ $1 == 'service_get_samba_list' ] && echo -e "Volume_1;Volume_1" && echo -e "Volume_2;Volume_2" && echo -e "ggg;Volume_1/ggg"
-[ $1 == 'service_set_tm_status' ] && echo -e "1"
 [ $1 == 'service_get_tm_share_name' ] && echo -e "Volume_1;Volume_2;bbbb"
 [ $1 == 'service_set_add_tm_share' ] && echo -e "1"
 [ $1 == 'service_set_del_tm_share' ] && echo -e "1"

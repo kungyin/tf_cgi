@@ -129,27 +129,6 @@ void RenderResponseAccount::preRender() {
     case CMD_SET_QUOTA_ONOFF:
         generateSetQuotaOnOff();
         break;
-    case CMD_MODULE_GET_INFO:
-        generateModuleGetInfo(doc);
-        break;
-    case CMD_GET_ADS_INFO:
-        generateGetAdsInfo(doc);
-        break;
-    case CMD_GET_SESSION:
-        generateGetSession(doc);
-        break;
-    case CMD_GET_ISO_SHARE:
-        generateGetIsoShare(doc);
-        break;
-    case CMD_GET_AFP_INFO:
-        generateGetAfpInfo(doc);
-        break;
-    case CMD_GET_NFS_INFO:
-        generateGetNfsInfo(doc);
-        break;
-    case CMD_ISO_PERCENTAGE:
-        generateIsoPrecentage(str);
-        break;
     case CMD_NONE:
     default:
         break;

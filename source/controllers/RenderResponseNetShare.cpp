@@ -336,16 +336,15 @@ void RenderResponseNetShare::generateGetIsoShare(QDomDocument &doc) {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetAfpInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QMap<QString, QString> afpInfo = getNasCfg("afp");
 
     QDomElement root = doc.createElement("afp_info");
     doc.appendChild(root);
 
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
+    enableElement.appendChild(doc.createTextNode(afpInfo.value("enable")));
 }
 
 /* todo: need API */
