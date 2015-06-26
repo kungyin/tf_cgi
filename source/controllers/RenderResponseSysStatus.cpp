@@ -297,7 +297,7 @@ void RenderResponseSysStatus::generateMtpInfo(QDomDocument &doc) {
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement mtpElement = doc.createElement("mtp");
         root.appendChild(mtpElement);
-        if( mtpContentElement.size() != apiOut.value(i).split(";").size() ) {
+        if( mtpContentElement.size() == apiOut.value(i).split(";").size() ) {
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
                 QDomElement element = doc.createElement(mtpContentElement.value(j));
@@ -330,7 +330,7 @@ void RenderResponseSysStatus::generateUsbPrinterInfo(QDomDocument &doc) {
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement printerElement = doc.createElement("printer");
         root.appendChild(printerElement);
-        if( printerContentElement.size() != apiOut.value(i).split(";").size() ) {
+        if( printerContentElement.size() == apiOut.value(i).split(";").size() ) {
 
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
@@ -365,7 +365,7 @@ void RenderResponseSysStatus::generateUpsInfo2(QDomDocument &doc) {
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement upsElement = doc.createElement("ups");
         root.appendChild(upsElement);
-        if( upsContentElement.size() != apiOut.value(i).split(";").size() ) {
+        if( upsContentElement.size() == apiOut.value(i).split(";").size() ) {
 
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
@@ -401,7 +401,7 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        if( 6 != apiOut.value(i).split(";").size() ) {
+        if( 6 == apiOut.value(i).split(";").size() ) {
 
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
@@ -448,7 +448,7 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc)
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        if( 6 != apiOut.value(i).split(";").size() ) {
+        if( 6 == apiOut.value(i).split(";").size() ) {
 
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
 
@@ -488,7 +488,7 @@ void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
         << "bonding_enable" << "lan_r_speed" << "lan_t_speed" << "lan2_r_speed" << "lan2_t_speed"
         << "mem_total" << "mem_free" << "buffers" << "cached" << "now_time" << "cpu");
 
-    if( resourceContentElement.size() != apiOut.value(0).split(";").size() ) {
+    if( resourceContentElement.size() == apiOut.value(0).split(";").size() ) {
 
         for(int i=0; i < apiOut.value(0).split(";").size(); i++) {
             QDomElement element = doc.createElement(resourceContentElement.value(i));
@@ -500,6 +500,10 @@ void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
         //assert(0);
         tError("RenderResponseSysStatus::generateResource() :"
             "resourceContentElement size is not equal to apiOut size.");
+
+        tDebug(" %d", apiOut.value(0).split(";").size());
+        tDebug(" %d", resourceContentElement.size());
+
     }
 
     for(int i=1; i < apiOut.size(); i++) {
@@ -509,7 +513,7 @@ void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
 
         QList<QString> processContentElement(QList<QString>()
             << "command" << "user" << "pid" << "cpu" << "mem");
-        if( processContentElement.size() != apiOut.value(i).split(";").size() ) {
+        if( processContentElement.size() == apiOut.value(i).split(";").size() ) {
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
                 QDomElement element = doc.createElement(processContentElement.value(j));
                 processMainElement.appendChild(element);
@@ -536,7 +540,7 @@ void RenderResponseSysStatus::generateGetService(QDomDocument &doc) {
         << "tm_enable" << "ftp_enable" << "p2p_enable" << "syslog_enable" << "syslog_status"
         << "syslog_folder");
 
-    if( serviceContentElement.size() != apiOut.size() ) {
+    if( serviceContentElement.size() == apiOut.size() ) {
         for(int i = 0; i < apiOut.size(); i++) {
             QDomElement element = doc.createElement(serviceContentElement.value(i));
             root.appendChild(element);

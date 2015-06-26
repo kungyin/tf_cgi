@@ -15,6 +15,8 @@ include(../appbase.pri)
 unix:!macx {
 
     linux-arm-gnueabihf-g++ {
+        LIBS += -L$$PWD/ext_libs/arm -lhttpftpdownload
+       # DEPENDPATH += /opt/app/lib
 
     } else {
         LIBS += -L$$PWD/ext_libs/x86/ -lhttpftpdownload

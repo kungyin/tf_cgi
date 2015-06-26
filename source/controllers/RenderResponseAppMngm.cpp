@@ -1,6 +1,8 @@
 #include "RenderResponseAppMngm.h"
 #include "http_ftp_download.h"
 
+#include <QDateTime>
+
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -851,101 +853,154 @@ void RenderResponseAppMngm::generateSyslogClear() {
 /* todo */
 void RenderResponseAppMngm::generateLocalBackupNow(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
-
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
+    QDateTime curDatetime = QDateTime::currentDateTime();
     QDomElement dateElement = doc.createElement("date");
     root.appendChild(dateElement);
-    dateElement.appendChild(doc.createTextNode("05/24/2015"));
+    dateElement.appendChild(doc.createTextNode(curDatetime.toString("MM/dd/yyyy")));
 
     QDomElement hourElement = doc.createElement("hour");
     root.appendChild(hourElement);
-    hourElement.appendChild(doc.createTextNode("13"));
+    hourElement.appendChild(doc.createTextNode(curDatetime.toString("hh")));
 
     QDomElement minsElement = doc.createElement("mins");
     root.appendChild(minsElement);
-    minsElement.appendChild(doc.createTextNode("47"));
+    minsElement.appendChild(doc.createTextNode(curDatetime.toString("mm")));
 
 }
 
-/* todo */
-void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
+QString RenderResponseAppMngm::getIcon(QString status) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    //0=status_queue, 2=status_queue or status_download, 3=status_ok, 4=status_fail, 6=icon_stop
+
+    QString img = "/web/images/%1.png";
+    QString ret;
+    if(status == "0")
+        ret = img.arg("status_queue");
+    else if(status == "2")
+        ret = img.arg("status_download");
+    else if(status == "3")
+        ret = img.arg("status_ok");
+    else if(status == "4")
+        ret = img.arg("status_fail");
+    else if(status == "5")
+        ret = img.arg("icon_stop");
+
+    return ret;
+}
+
+
+void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
 
     QString strProgressBar = "&lt;span class=&apos;progressBar&apos; id=&apos;progressbar_row%1&apos;&gt;%2&lt;/span&gt;";
     QString strImage = "&lt;IMG src=&apos;%1&apos;&gt;";
-    QString strBackupStart = "&lt;a href=javascript:localbackup_start(&apos;%1&apos;)&gt;&lt;IMG border\
-            =&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;";
+    QString strBackupStart = "&lt;a href=javascript:%1_%2(&apos;%3&apos;)&gt;&lt;IMG border\
+            =&apos;0&apos; src=&apos;/web/images/%2.png&apos;&gt;&lt;/a&gt;";
+
+    DOWNLOAD_LIST *taskList;
+    int total = 0, pageCount = 0;
+    int page = m_pReq->parameter("page").toInt();
+    int rp = m_pReq->parameter("rp").toInt();
+    memset(&taskList, 0, sizeof(DOWNLOAD_LIST*));
+    GetListXmlValue(0, page, rp, &total, &pageCount, &taskList);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i<apiOutList.size(); i++) {
+    for (int i = 0; i < pageCount; i++)
+    {
+        UpdateTaskPercent(taskList[i].task_id);
+        //printf("DOWNLOAD_LIST[%s %s %s %s %s %s %s]\n",
+        //        task_list[i].task_id, task_list[i].src, task_list[i].dest, task_list[i].percent, task_list[i].status, task_list[i].speed, task_list[i].execat, task_list[i].comment);
 
         QDomElement rowElement1 = doc.createElement("row");
         root.appendChild(rowElement1);
-        rowElement1.setAttribute("id", "1");
+        rowElement1.setAttribute("id", QString::number(i+1));
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        QDomText cellValue1 = doc.createTextNode("Volume_1/photo.db");
-        cellElement1.appendChild(cellValue1);
+        cellElement1.appendChild(doc.createTextNode(QString(taskList[i].src)));
+
+        /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
+        QString dest = QString(taskList[i].dest);
+        dest.replace("/mnt/HD/HD_a2", "Volume_1");
+        dest.replace("/mnt/HD/HD_b2", "Volume_2");
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
-        QDomText cellValue2 = doc.createTextNode("Volume_2/");
-        cellElement2.appendChild(cellValue2);
+        cellElement2.appendChild(doc.createTextNode(dest));
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        QDomText cellValue3 = doc.createTextNode(strProgressBar.arg("1").arg("100"));
-        cellElement3.appendChild(cellValue3);
+        cellElement3.appendChild(doc.createTextNode(strProgressBar.arg(QString::number(i+1))
+                                                    .arg(QString(taskList[i].percent))));
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
-        QDomText cellValue4 = doc.createTextNode(strImage.arg("/web/images/icon_stop.png"));
-        cellElement4.appendChild(cellValue4);
+        cellElement4.appendChild(doc.createTextNode(strImage.arg(getIcon(QString(taskList[i].status)))));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);
-        QDomText cellValue5 = doc.createTextNode("0 KB");
-        cellElement5.appendChild(cellValue5);
+        cellElement5.appendChild(doc.createTextNode(QString(taskList[i].speed)));
 
+        QDateTime execat = QDateTime::fromString(QString(taskList[i].execat), "yyyyMMddhhmm");
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);
-        QDomText cellValue6 = doc.createTextNode("06/10/15 00:30");
-        cellElement6.appendChild(cellValue6);
+        cellElement6.appendChild(doc.createTextNode(execat.toString("MM/dd/yy hh:mm")));
 
+
+        QString arg1;
+        if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+            arg1 = "downloads";
+        else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+            arg1 = "localbackup";
+
+        /* todo: "--" */
+        QString arg2 = "start";
+        if(QString(taskList[i].percent) == "100")
+            arg2 = "stop";
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement1.appendChild(cellElement7);
-        QDomText cellValue7 = doc.createTextNode(strBackupStart.arg("00000014326443120151"));
-        cellElement4.appendChild(cellValue7);
+        cellElement7.appendChild(doc.createTextNode(strBackupStart
+                                .arg(arg1).arg(arg2).arg(QString(taskList[i].task_id))));
 
+        QString comment = "-";
+        if(!QString(taskList[i].comment).isEmpty()) {
+            QString commentStr = "%1 %2";
+            QString arg1;
+            if(QString(taskList[i].comment).at(0) == '1')
+                arg1 = "Fail";
+            else if(QString(taskList[i].comment).at(0) == '0')
+                arg1 = "Success";
+            QString subComment = QString(taskList[i].comment).mid(1);
+            QDateTime datetime = QDateTime::fromString(subComment, "yyyyMMddhhmm");
+            comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy mm:ss"));
+        }
         QDomElement cellElement8 = doc.createElement("cell");
         rowElement1.appendChild(cellElement8);
-        QDomText cellValue8 = doc.createTextNode("-");
-        cellElement4.appendChild(cellValue8);
+        cellElement8.appendChild(doc.createTextNode(comment));
 
         QDomElement cellElement9 = doc.createElement("cell");
         rowElement1.appendChild(cellElement9);
-        QDomText cellValue9 = doc.createTextNode("00000014326443120151");
-        cellElement4.appendChild(cellValue9);
+        cellElement9.appendChild(doc.createTextNode(QString(taskList[i].task_id)));
 
         QDomElement cellElement10 = doc.createElement("cell");
         rowElement1.appendChild(cellElement10);
-        QDomText cellValue10 = doc.createTextNode("0");
-        cellElement4.appendChild(cellValue10);
+        cellElement10.appendChild(doc.createTextNode("0"));
 
-    //}
+        FreeList(&taskList[i]);
+
+    }
+
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(m_pReq->parameter("page")));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("2"));
+    totalElement.appendChild(doc.createTextNode(QString::number(total)));
+
 }
 
 /* todo */
@@ -966,18 +1021,21 @@ void RenderResponseAppMngm::generateLocalBackupSambaFormat(QDomDocument &doc) {
 
 }
 
-/* todo */
-void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
-//     = {
-//        .is_download = 1,
-//        .is_src_login
 
-//    };
+/* renew: false
+   add  : true  */
+
+void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
 
     QString paraLoginMethod = m_pReq->parameter("f_login_method");
     DOWNLOAD_TASK_INFO taskInfo;
+
     taskInfo.is_download = 1;
+    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+        taskInfo.is_download = 1;
+    else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+        taskInfo.is_download = 0;
+
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
     taskInfo.is_file = m_pReq->parameter("f_type").toInt() ? 0 : 1;
@@ -987,12 +1045,11 @@ void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
     taskInfo.src_user = m_pReq->parameter("f_user").toLocal8Bit().data();
     taskInfo.src_pwd = m_pReq->parameter("f_pwd").toLocal8Bit().data();
 
-    if(m_pReq->parameter("f_dir").compare("Volume_1") == 0)
-        taskInfo.dest = "/mnt/HD/HD_a2";
-    if(m_pReq->parameter("f_dir").compare("Volume_2") == 0)
-        taskInfo.dest = "/mnt/HD/HD_b2";
-
-    taskInfo.dest = m_pReq->parameter("f_pwd").toLocal8Bit().data();
+    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
+    QString dest = m_pReq->parameter("f_dir");
+    dest.replace("Volume_1", "/mnt/HD/HD_a2");
+    dest.replace("Volume_2", "/mnt/HD/HD_b2");
+    taskInfo.dest = dest.toLocal8Bit().data();
 
     taskInfo.dst_user = NULL;
     taskInfo.dst_pwd = NULL;
@@ -1014,132 +1071,197 @@ void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
     taskInfo.is_inc = 1;
     taskInfo.rename = m_pReq->parameter("f_rename").toLocal8Bit().data();
     taskInfo.charset = m_pReq->parameter("f_lang").toLocal8Bit().data();
-            tDebug("taskInfo: %s", taskInfo.rename);
 
-    str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+    char *taskId = NULL;
+    if(!bAdd)
+        taskId = m_pReq->parameter("f_idx").toLocal8Bit().data();
+    if(SaveTaskXml(taskInfo, &taskId) != RET_SUCCESS)
+        tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
+
+    if(taskId)
+        free(taskId);
 }
 
-/* todo */
+
+void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
+
+    renewOrAdd(true);
+
+    if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Add"))
+        str = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
+    else if(m_pReq->parameter("cmd") == QString("Local_Backup_Add"))
+        str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+
+}
+
 void RenderResponseAppMngm::generateLocalBackupInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QString idx = m_pReq->parameter("f_idx");
+
+    DOWNLOAD_TASK task;
+    memset(&task, 0, sizeof(DOWNLOAD_TASK));
+    GetTaskXmlValue(idx.toLocal8Bit().data(), TAG_ALL, &task);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement idxElement = doc.createElement("idx");
     root.appendChild(idxElement);
-    idxElement.appendChild(doc.createTextNode("00000014326443120151"));
+    idxElement.appendChild(doc.createTextNode(idx));
 
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("3"));
+    statusElement.appendChild(doc.createTextNode(QString(task.status)));
 
     QDomElement periodElement = doc.createElement("period");
     root.appendChild(periodElement);
-    periodElement.appendChild(doc.createTextNode("0"));
+    periodElement.appendChild(doc.createTextNode(QString(task.period)));
 
     QDomElement recurDateElement = doc.createElement("recur_date");
     root.appendChild(recurDateElement);
-    recurDateElement.appendChild(doc.createTextNode("0"));
+    recurDateElement.appendChild(doc.createTextNode(QString(task.recur_date)));
 
     QDomElement fileTypeElement = doc.createElement("file_type");
     root.appendChild(fileTypeElement);
-    fileTypeElement.appendChild(doc.createTextNode("0"));
+    fileTypeElement.appendChild(doc.createTextNode(QString(task.is_file) == "1" ? "0" : "1"));
 
     QDomElement srcElement = doc.createElement("src");
     root.appendChild(srcElement);
-    srcElement.appendChild(doc.createTextNode("Volume_1/photo.db"));
+    srcElement.appendChild(doc.createTextNode(QString(task.src)));
 
+    /* todo */
+    QString dest = QString(task.src);
+    dest.replace("/mnt/HD/HD_a2", "Volume_1");
+    dest.replace("/mnt/HD/HD_b2", "Volume_2");
     QDomElement destElement = doc.createElement("dest");
     root.appendChild(destElement);
-    destElement.appendChild(doc.createTextNode("Volume_2"));
+    destElement.appendChild(doc.createTextNode(dest));
 
     QDomElement srcUserElement = doc.createElement("src_user");
     root.appendChild(srcUserElement);
-    srcUserElement.appendChild(doc.createTextNode(""));
+    srcUserElement.appendChild(doc.createTextNode(QString(task.src_user)));
 
     QDomElement srcPasswdElement = doc.createElement("src_passwd");
     root.appendChild(srcPasswdElement);
-    srcPasswdElement.appendChild(doc.createTextNode(""));
+    srcPasswdElement.appendChild(doc.createTextNode(QString(task.src_pwd)));
 
     QDomElement dstUserElement = doc.createElement("dst_user");
     root.appendChild(dstUserElement);
-    dstUserElement.appendChild(doc.createTextNode(""));
+    dstUserElement.appendChild(doc.createTextNode(QString(task.dst_user)));
 
     QDomElement dstPasswdElement = doc.createElement("dst_passwd");
     root.appendChild(dstPasswdElement);
-    dstPasswdElement.appendChild(doc.createTextNode(""));
+    dstPasswdElement.appendChild(doc.createTextNode(QString(task.dst_pwd)));
 
     QDomElement execatElement = doc.createElement("execat");
     root.appendChild(execatElement);
-    execatElement.appendChild(doc.createTextNode("201505261244"));
+    execatElement.appendChild(doc.createTextNode(QString(task.execat)));
 
     QDomElement renameElement = doc.createElement("rename");
     root.appendChild(renameElement);
-    renameElement.appendChild(doc.createTextNode(""));
+    renameElement.appendChild(doc.createTextNode(QString(task.rename)));
 
-    QDomElement incElement = doc.createElement("inc");
+    QString elementName, elementValue;
+    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_")) {
+        elementName = "lang";
+        elementValue = QString(task.option.lang);
+    }
+    else if(m_pReq->parameter("cmd").contains("Local_Backup_")) {
+        elementName = "inc";
+        elementValue = QString(task.option.inc);
+    }
+
+    QDomElement incElement = doc.createElement(elementName);
     root.appendChild(incElement);
-    incElement.appendChild(doc.createTextNode("0"));
+    incElement.appendChild(doc.createTextNode(elementValue));
+
+    FreeTask(&task);
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateLocalBackupRenew(QString &str) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    renewOrAdd(false);
 
-    str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+    if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Renew"))
+        str = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
+    else if(m_pReq->parameter("cmd") == QString("Local_Backup_Renew"))
+        str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 }
 
-/* todo */
 void RenderResponseAppMngm::generateLocalBackupDel(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
-
+    RESULT_STATUS result = DeleteTaskXml(m_pReq->parameter("f_idx").toLocal8Bit().data());
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement idxElement = doc.createElement("idx");
     root.appendChild(idxElement);
-    idxElement.appendChild(doc.createTextNode("00000014326172430977"));
+    idxElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx")));
 
     QDomElement fnameElement = doc.createElement("fname");
     root.appendChild(fnameElement);
-    fnameElement.appendChild(doc.createTextNode("00000014326172430977.xml"));
+    fnameElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx") + ".xml"));
 
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
     resultElement.appendChild(doc.createTextNode("0"));
 }
 
-/* todo */
 void RenderResponseAppMngm::generateLocalBackupTest(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    DOWNLOAD_TEST_RESULT *testResult = NULL;
+    QString user = m_pReq->parameter("f_user");
+    QString pwd = m_pReq->parameter("f_pwd");
+
+    if(user == "*****") {
+        user.clear();
+        pwd.clear();
+    }
+
+    /* Null user is anonymount. */
+    /* type ? */
+    RESULT_STATUS resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
+                                            user.isEmpty() ? NULL : user.toLocal8Bit().data(),
+                                            pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
+                                            m_pReq->parameter("f_lang").toLocal8Bit().data(),
+                                            m_pReq->parameter("f_src").toLocal8Bit().data(),
+                                            testResult);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement suserElement = doc.createElement("f_suser");
     root.appendChild(suserElement);
-    suserElement.appendChild(doc.createTextNode("admin"));
+    suserElement.appendChild(doc.createTextNode(user));
 
     QDomElement spasswdElement = doc.createElement("f_spasswd");
     root.appendChild(spasswdElement);
-    spasswdElement.appendChild(doc.createTextNode("000000"));
+    spasswdElement.appendChild(doc.createTextNode(pwd));
+
+    if(!m_pReq->parameter("f_lang").isEmpty()) {
+        QDomElement langElement = doc.createElement("f_lang");
+        root.appendChild(langElement);
+        langElement.appendChild(doc.createTextNode(m_pReq->parameter("f_lang")));
+    }
 
     QDomElement srcElement = doc.createElement("src");
     root.appendChild(srcElement);
-    srcElement.appendChild(doc.createTextNode("\\192.168.100.9\d\Jerry\app\popup.js"));
+    srcElement.appendChild(doc.createTextNode(m_pReq->parameter("f_src")));
+
+    int result = -1;
+    int size = -1;
+    if(testResult) {
+        result = testResult->result;
+        size = testResult->size;
+    }
 
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
-    resultElement.appendChild(doc.createTextNode("-1"));
+    resultElement.appendChild(doc.createTextNode(QString::number(result)));
 
     QDomElement sizeElement = doc.createElement("size");
     root.appendChild(sizeElement);
-    sizeElement.appendChild(doc.createTextNode("-1"));
+    sizeElement.appendChild(doc.createTextNode(QString::number(size)));
 }
 
 /* todo */

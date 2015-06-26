@@ -36,15 +36,15 @@ void RenderResponseSetupWizard::preRender() {
 
 }
 
-/* todo: need API */
 void RenderResponseSetupWizard::generateChkAdminPw(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API
+                                      + " " + m_pReq->parameter("pw"), true);
 
     QDomElement root = doc.createElement("chk_info");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 

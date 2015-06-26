@@ -66,6 +66,11 @@ private:
     void generateDelSchedule(QString &);
     void generateEnableDisableSchedule(QString &);
     void generateBackupNow(QString &);
+
+private:
+    void renewOrAdd(bool);
+    QString getIcon(QString);
+
 };
 
 
