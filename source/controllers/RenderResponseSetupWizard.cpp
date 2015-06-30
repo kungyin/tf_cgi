@@ -154,7 +154,7 @@ void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
 
     QDomElement nameElement = doc.createElement("name");
     systemElement.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(sambaInfo.value("netbios_name"));
+    nameElement.appendChild(doc.createTextNode(sambaInfo.value("netbios_name")));
 
     QDomElement workgroupElement = doc.createElement("workgroup");
     systemElement.appendChild(workgroupElement);
