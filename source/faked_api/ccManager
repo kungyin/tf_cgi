@@ -40,3 +40,4 @@
 [ $1 == 'service_set_del_tm_share' ] && echo -e "1"
 [ $1 == 'service_set_del_all_share' ] && echo -e "1"
 [ $1 == 'system_chk_admin_pw' ] && echo -e "1"
+[ $1 == 'system_get_system_temperature' ] && echo -e "104:40"

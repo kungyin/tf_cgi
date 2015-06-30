@@ -304,16 +304,28 @@ void RenderResponseSysMngm::generateGetIdle(QString &str) {
 }
 
 void RenderResponseSysMngm::generateGetTemperature(QDomDocument &doc) {
-    QMap<QString, QString> mailEventInfo = getNasCfg("mail_event");
 
-    QDomElement root = doc.createElement("mail_info");
-    doc.appendChild(root);
-    QDomElement kotElement = doc.createElement("kot");
-    root.appendChild(kotElement);
-    kotElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_kot")));
-    QDomElement temperatureElement = doc.createElement("temperature");
-    root.appendChild(temperatureElement);
-    temperatureElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_temperature")));
+    if(m_pReq->header().path().contains("status_mgr.cgi")) {
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
+
+        QDomElement root = doc.createElement("status");
+        doc.appendChild(root);
+        QDomElement temperatureElement = doc.createElement("temperature");
+        root.appendChild(temperatureElement);
+        temperatureElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    }
+    else {
+        QMap<QString, QString> mailEventInfo = getNasCfg("mail_event");
+
+        QDomElement root = doc.createElement("mail_info");
+        doc.appendChild(root);
+        QDomElement kotElement = doc.createElement("kot");
+        root.appendChild(kotElement);
+        kotElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_kot")));
+        QDomElement temperatureElement = doc.createElement("temperature");
+        root.appendChild(temperatureElement);
+        temperatureElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_temperature")));
+    }
 
 }
 
