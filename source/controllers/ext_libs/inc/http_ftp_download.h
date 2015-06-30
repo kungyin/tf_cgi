@@ -1,6 +1,10 @@
 #ifndef __HTTP_FTP_DOWNLOAD_H__
 #define __HTTP_FTP_DOWNLOAD_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     RET_SUCCESS = 0,
@@ -231,5 +235,9 @@ void FreeRemoteList(REMOTE_LIST *list);
 
 int GetAllRemoteTaskName(char ***name_list);
 void FreeRemoteTaskName(int count, char ***name_list);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

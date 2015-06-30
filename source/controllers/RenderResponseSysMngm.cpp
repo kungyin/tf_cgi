@@ -778,71 +778,72 @@ void RenderResponseSysMngm::generateLogClear() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " clear");
 }
 
-/* todo */
 void RenderResponseSysMngm::generateUpsInfo(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_info", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement upsPlugmodeElement = doc.createElement("ups_plugmode");
     root.appendChild(upsPlugmodeElement);
-    upsPlugmodeElement.appendChild(doc.createTextNode("0"));
+    upsPlugmodeElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement upsModeElement = doc.createElement("ups_mode");
     root.appendChild(upsModeElement);
-    upsModeElement.appendChild(doc.createTextNode("0"));
+    upsModeElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement masterIpElement = doc.createElement("master_ip");
     root.appendChild(masterIpElement);
-    masterIpElement.appendChild(doc.createTextNode("none"));
+    masterIpElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement upsNetworkElement = doc.createElement("ups_network");
     root.appendChild(upsNetworkElement);
-    upsNetworkElement.appendChild(doc.createTextNode("0"));
+    upsNetworkElement.appendChild(doc.createTextNode(apiOut.value(3)));
 }
 
-/* todo */
 void RenderResponseSysMngm::generateUpsSlaveSetting(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_slave "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateUpsPs(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_check_ups_ps ", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateUsbStorageUmount(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " service_set_usb_storage_umount "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_print_queue", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
