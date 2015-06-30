@@ -83,9 +83,8 @@ void RenderResponseSetupWizard::generateSetLed() {
 
 }
 
-/* todo: need API */
 void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
+
     QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
     QVector<QMap<QString, QString>> lanInfo;
@@ -150,21 +149,24 @@ void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
     QDomElement systemElement = doc.createElement("system");
     root.appendChild(systemElement);
 
+    QMap<QString, QString> sambaInfo = getNasCfg("samba");
+    QMap<QString, QString> timeInfo = getNasCfg("time");
+
     QDomElement nameElement = doc.createElement("name");
     systemElement.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("dlink-8B21F7dd"));
+    nameElement.appendChild(doc.createTextNode(sambaInfo.value("netbios_name"));
 
     QDomElement workgroupElement = doc.createElement("workgroup");
     systemElement.appendChild(workgroupElement);
-    workgroupElement.appendChild(doc.createTextNode("workgroup"));
+    workgroupElement.appendChild(doc.createTextNode(sambaInfo.value("workgroup")));
 
     QDomElement descriptionElement = doc.createElement("description");
     systemElement.appendChild(descriptionElement);
-    descriptionElement.appendChild(doc.createTextNode("DNS-340Ldd2"));
+    descriptionElement.appendChild(doc.createTextNode(sambaInfo.value("server_string")));
 
     QDomElement timezoneElement = doc.createElement("timezone");
     systemElement.appendChild(timezoneElement);
-    timezoneElement.appendChild(doc.createTextNode("3"));
+    timezoneElement.appendChild(doc.createTextNode(timeInfo.value("timezone")));
 
 }
 
