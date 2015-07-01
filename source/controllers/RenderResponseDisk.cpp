@@ -76,9 +76,6 @@ void RenderResponseDisk::preRender() {
 }
 
 void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
-//    QString paraFlag;
-//    if(m_pReq->allParameters().contains("f_flag"))
-//        paraFlag = m_pReq->allParameters().value("f_flag").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_disk_volume_status", true);
 
@@ -86,11 +83,11 @@ void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("flag");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.value(0));
+    QDomText t1 = doc.createTextNode(m_pReq->parameter("f_flag"));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("state");
     root.appendChild(tag2);
-    QDomText t2 = doc.createTextNode(apiOut.value(1));
+    QDomText t2 = doc.createTextNode(apiOut.value(0));
     tag2.appendChild(t2);
 }
 
