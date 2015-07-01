@@ -10,21 +10,27 @@ INCLUDEPATH += ../helpers ../models \
 DEPENDPATH  += ../helpers ../models
 LIBS += -L../lib -lhelper -lmodel
 
-include(../appbase.pri)
+
 
 unix:!macx {
 
     linux-arm-gnueabihf-g++ {
         LIBS += -L$$PWD/ext_libs/arm -lhttpftpdownload
-       # DEPENDPATH += /opt/app/lib
+        #QMAKE_RPATHDIR += /opt/app/lib
+    }
+    else {
+	LIBS += -L$$PWD/ext_libs/x86 -lhttpftpdownload
+        QMAKE_RPATHDIR += $$PWD/ext_libs/x86
 
-    } else {
-        LIBS += -L$$PWD/ext_libs/x86/ -lhttpftpdownload
-        DEPENDPATH += $$PWD/ext_libs/x86
+        #QMAKE_LFLAGS += '-Wl,-rpath=/home/ian/work/cgitf/source/controllers/ext_libs/x86'
+        #QMAKE_LFLAGS_RPATH += $$PWD/ext_libs/x86
+
         DEFINES += SIMULATOR_MODE
     }
 
 }
+
+include(../appbase.pri)
 
 HEADERS += applicationcontroller.h \
     CgiController.h \

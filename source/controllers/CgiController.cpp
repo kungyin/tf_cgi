@@ -1,4 +1,5 @@
 #include <QFileInfo>
+#include <QCryptographicHash>
 
 #include "AppDefine.h"
 #include "CgiController.h"
@@ -21,6 +22,12 @@
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
+const char VALID_CLIENT_ID[][255] = {
+    "CURIOSITY_SUW",
+    "CURIOSITY_FDR",
+    "CURIOSITY_MBA"
+};
+
 CgiController::CgiController(const CgiController &other)
     : ApplicationController()
 {}
@@ -28,6 +35,7 @@ CgiController::CgiController(const CgiController &other)
 void CgiController::index()
 {
 
+/* Parse command */
     QVariantMap parasMap = httpRequest().allParameters();
     QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
     tDebug("CgiController::index() -- command: %s", paraCmd.toLocal8Bit().data());
@@ -39,11 +47,13 @@ void CgiController::index()
         return;
     }
 
+/* Verify client which ia valid */
+
 #ifdef SIMULATOR_MODE
     tDebug("SIMULATOR_MODE is enabled.");
 #else
     if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
-        if(httpRequest().cookie("username").isEmpty()) {
+        if(!isValidClient()) {
             renderErrorResponse(Tf::NotFound);
             return;
         }
@@ -61,6 +71,9 @@ void CgiController::index()
 //    tDebug("id -- %s", id.data());
 
 //    tDebug("CgiController::index() -- %s", authenticityToken().data());
+
+//    tDebug("size -- %d", httpRequest().multipartFormData().size("file"));
+//    tDebug("size -- %d", httpRequest().multipartFormData().entity("name").fileSize());
 
     RenderResponse *pRrep = NULL;
     pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
@@ -151,36 +164,49 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
 
 }
 
-//bool TActionController::verifyRequest(const THttpRequest &request) const
-//{
-//    if (Tf::appSettings()->value(Tf::SessionStoreType).toString().toLower() != QLatin1String("cookie")) {
-//        if (session().id().isEmpty()) {
-//            throw SecurityException("Request Forgery Protection requires a valid session", __FILE__, __LINE__);
-//        }
-//    }
+bool CgiController::isValidClient() {
+    bool bValidClient = false;
 
-//    QByteArray postAuthToken = request.parameter("authenticity_token").toLatin1();
-//    if (postAuthToken.isEmpty()) {
-//        throw SecurityException("Authenticity token is empty", __FILE__, __LINE__);
-//    }
+    if(httpRequest().cookie("username").isEmpty()) {
+        if(     httpRequest().header().hasRawHeader("Security-Token")
+             && httpRequest().header().hasRawHeader("Client-ID")
+             && httpRequest().header().hasRawHeader("Time-Stamp")) {
 
-//    tSystemDebug("postAuthToken: %s", postAuthToken.data());
-//    return (postAuthToken == authenticityToken());
-//}
+            QByteArray securityTokenLine = httpRequest().header().rawHeader("Security-Token");
+            QByteArray clientIdLine = httpRequest().header().rawHeader("Client-ID");
+            QByteArray timeStampLine = httpRequest().header().rawHeader("Time-Stamp");
 
-//QByteArray TActionController::authenticityToken() const
-//{
-//    if (Tf::appSettings()->value(Tf::SessionStoreType).toString().toLower() == QLatin1String("cookie")) {
-//        QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
-//        QByteArray csrfId = session().value(key).toByteArray();
+            QByteArray securityTokenValue = securityTokenLine.mid(securityTokenLine.indexOf(":") + 1);
+            QByteArray clientIdValue = clientIdLine.mid(clientIdLine.indexOf(":") + 1);
+            QByteArray timeStampValue = timeStampLine.mid(timeStampLine.indexOf(":") + 1);
 
-//        if (csrfId.isEmpty()) {
-//            throw RuntimeException("CSRF protectionsession value is empty", __FILE__, __LINE__);
-//        }
-//        return csrfId;
-//    } else {
-//        return QCryptographicHash::hash(session().id() + Tf::appSettings()->value(Tf::SessionSecret).toByteArray(), QCryptographicHash::Sha1).toHex();
-//    }
-//}
+            bool bValidClientId = false;
+            int size = sizeof(VALID_CLIENT_ID)/sizeof(VALID_CLIENT_ID[0]);
+            for(int i = 0; i < size; i++)
+                if(clientIdValue == QByteArray(VALID_CLIENT_ID[i]))
+                    bValidClientId = true;
+
+            if(bValidClientId) {
+
+                //key[0-10] + Client-ID + key[11-23] + Time-Stamp + key[24-31]
+                QByteArray key = "23ee20abd0cc6add605da13f4c31d5e3";
+                QByteArray token = key.insert(24, timeStampValue).insert(11, clientIdValue);
+                QByteArray hash = QCryptographicHash::hash(token, QCryptographicHash::Sha1).toHex();
+
+                if(hash == securityTokenValue) {
+                    bValidClient = true;
+                    tDebug("Valid client has been checked.");
+                }
+                else {
+                    tDebug("securityTokenValue: %s, current hash: %s", securityTokenValue.data(), hash.data());
+                }
+            }
+        }
+    }
+    else
+        bValidClient = true;
+
+    return bValidClient;
+}
 
 T_REGISTER_CONTROLLER(cgicontroller);
