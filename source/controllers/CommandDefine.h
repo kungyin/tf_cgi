@@ -904,7 +904,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     /**** Syslog Server ****/
     { CMD_SYSLOG_SEARCH,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Search */
-    { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Get_Volume_Info */
+    { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            OPENED_CMDS          },         /* Get_Volume_Info */
     { CMD_SYSLOG_GET_LOG_FILE_OPTION,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Log_File_Option */
     { CMD_SYSLOG_GET_CONFIG,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Config */
     { CMD_SYSLOG_GET_SELECT_OPTION,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Select_Option */
