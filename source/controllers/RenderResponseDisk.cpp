@@ -192,15 +192,13 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
 
     QStringList apiOut;
     QStringList paraList = paraCreateVolumeInfo.split("%2C");
-    if(paraList.size() != 30) {
-        return;
-    }
-    else {
+    if(paraList.size() == 15 || paraList.size() == 30) {
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
         QStringList paraSubList2 = paraList.mid(15, 15);
         args1 = getFMTArgs(paraSubList1);
-        args2 = getFMTArgs(paraSubList2);
+        if(paraList.size() == 30)
+            args2 = getFMTArgs(paraSubList2);
 
         QString strArg1 =   "-" + args1.volNameArg + " " +
                             "-" + args1.raidModeArg + " " +
@@ -208,17 +206,21 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
                             "-" + args1.volSizeArg + " " +
                             "-" + args1.devNameArg;
 
-        QString strArg2 =  args2.createVolume ?
-                            "-" + args2.volNameArg + " " +
-                            "-" + args2.raidModeArg + " " +
-                            "-" + args2.fileSystemTypeArg + " " +
-                            "-" + args2.volSizeArg + " " +
-                            "-" + args2.devNameArg
-                            : "";
+        QString strArg2;
+        if(paraList.size() == 30)
+            strArg2 =  args2.createVolume ?
+                        "-" + args2.volNameArg + " " +
+                        "-" + args2.raidModeArg + " " +
+                        "-" + args2.fileSystemTypeArg + " " +
+                        "-" + args2.volSizeArg + " " +
+                        "-" + args2.devNameArg
+                        : "";
 
+        QString strArg2WithBlank;
+        if(!strArg2.isEmpty())
+            strArg2WithBlank = " " + strArg2;
         apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
-                                         strArg1 + " " +
-                                         strArg2,
+                                         strArg1 + strArg2WithBlank,
                                          true
                                      );
     }
