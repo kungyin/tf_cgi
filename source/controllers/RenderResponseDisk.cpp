@@ -1,3 +1,4 @@
+#include <QProcess>
 #include <cassert>
 
 #include "RenderResponseDisk.h"
@@ -219,17 +220,21 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
         QString strArg2WithBlank;
         if(!strArg2.isEmpty())
             strArg2WithBlank = " " + strArg2;
-        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
-                                         strArg1 + strArg2WithBlank + " &",
-                                         true
-                                     );
+
+        tDebug("strArg1: %s, strArg2: %s", strArg1.toLocal8Bit().data(), strArg2.toLocal8Bit().data());
+        if(!QProcess::startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1 << strArg2))
+            ;
+//        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
+//                                         strArg1 + strArg2WithBlank,
+//                                         true
+//                                     );
     }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.value(0));
+    QDomText t1 = doc.createTextNode("1" /*apiOut.value(0)*/);
     tag1.appendChild(t1);
 }
 
