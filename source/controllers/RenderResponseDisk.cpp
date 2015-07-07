@@ -183,15 +183,13 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     QString paraCreateVolumeInfo;
     QString paraAutoSync;
 
-    if(m_pReq->allParameters().contains("f_create_type"))
-        paraCreateType = m_pReq->allParameters().value("f_create_type").toString();
-    if(m_pReq->allParameters().contains("f_create_volume_info"))
-        paraCreateVolumeInfo = m_pReq->allParameters().value("f_create_volume_info").toString();
-    if(m_pReq->allParameters().contains("f_auto_sync"))
-        paraAutoSync = m_pReq->allParameters().value("f_auto_sync").toString();
+    paraCreateType = m_pReq->parameter("f_create_type");
+    paraCreateVolumeInfo = QUrl::fromPercentEncoding(m_pReq->parameter("f_create_volume_info").toLocal8Bit());
+    paraAutoSync = m_pReq->parameter("f_auto_sync");
 
     QStringList apiOut;
-    QStringList paraList = paraCreateVolumeInfo.split("%2C");
+    QStringList paraList = paraCreateVolumeInfo.split(",");
+
     if(paraList.size() == 15 || paraList.size() == 30) {
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);

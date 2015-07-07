@@ -51,7 +51,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseSetupWizard.h \
     RenderResponseAppDownloads.h \
     ext_libs/inc/http_ftp_download.h \
-    RenderResponseAddOn.h
+    RenderResponseAddOn.h \
+    RenderResponseDashboard.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -68,4 +69,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseTimeMachine.cpp \
     RenderResponseSetupWizard.cpp \
     RenderResponseAppDownloads.cpp \
-    RenderResponseAddOn.cpp
+    RenderResponseAddOn.cpp \
+    RenderResponseDashboard.cpp
