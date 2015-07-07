@@ -220,7 +220,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
         if(!strArg2.isEmpty())
             strArg2WithBlank = " " + strArg2;
         apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
-                                         strArg1 + strArg2WithBlank,
+                                         strArg1 + strArg2WithBlank + " &",
                                          true
                                      );
     }
