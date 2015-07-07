@@ -190,6 +190,8 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     QStringList apiOut;
     QStringList paraList = paraCreateVolumeInfo.split(",");
 
+    tDebug("paraList size: %d", paraList.size());
+
     if(paraList.size() == 15 || paraList.size() == 30) {
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
