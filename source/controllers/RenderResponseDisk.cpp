@@ -142,7 +142,7 @@ void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
 FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
 
     FMT_ARGS args;
-    args.volNameArg = fmtArgs.value(0);
+    args.volNameArg = "v" + fmtArgs.value(0);
     args.raidModeArg = "m1";
     if(fmtArgs.value(1).compare("standard") == 0)
         args.raidModeArg = "m1";
