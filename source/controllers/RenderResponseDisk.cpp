@@ -96,18 +96,15 @@ void RenderResponseDisk::generateFMTGetSyncState(QDomDocument &doc) {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g sync_state", true);
 
-    if(apiOut.size() < 2)
-        return;
-
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.at(0));
+    QDomText t1 = doc.createTextNode(apiOut.value(0));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("wait_sync");
     root.appendChild(tag2);
-    QDomText t2 = doc.createTextNode(apiOut.at(1));
+    QDomText t2 = doc.createTextNode(apiOut.value(1));
     tag2.appendChild(t2);
 }
 
@@ -119,7 +116,7 @@ void RenderResponseDisk::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("auto_sync");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.isEmpty() ? "" : apiOut.at(0));
+    QDomText t1 = doc.createTextNode(apiOut.value(0));
     tag1.appendChild(t1);
 }
 

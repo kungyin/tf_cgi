@@ -224,6 +224,7 @@ RESULT_STATUS DeleteRemoteTaskXml(char *task_name);
 RESULT_STATUS UpdateRemoteXmlStatus(char *task_name, char *state, char *comment, char *enable);
 
 void GetRsyncSharePath(char *name, char **path); // return values(*path) need free
+void GetRemoteRsyncSharePath(char *ip, int *count, char ***path); // return values(*path) need free
 void GetLocalDeviceSizeString(char *path, char *exclude_file_path, char **size_string); // return values need free
 int TestSSHConnect(char *ip, char *ssh_user, char *ssh_pwd); // nas to nas use ssh direct, remote share node and size need another api(use root default ssh login to get).
 int TestRsyncConnect(char *ip, int s_type, int direction, char *task, char *local_path, int encryption, int keep_exist_file, char *rsync_user, char *rsync_pw, char *ssh_user, char *ssh_pwd);
