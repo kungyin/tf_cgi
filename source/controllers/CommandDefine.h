@@ -395,6 +395,10 @@ enum CGI_COMMAND {
 //    CMD_CHK_REFRESH_STATUS,                  /* cgi_chk_refresh_status */
 //    CMD_PHOTO_END,
 
+    /**** File ****/
+    CMD_FOLDER_CONTENT,                      /* cgi_folder_content */
+    CMD_FILE_END,
+
     CMD_SIZE
 
 };
@@ -772,6 +776,9 @@ const char CGI_PARA_COMMANDS[][255] = {
 //    "cgi_chk_refresh_status",
 //    ""
 
+    /**** File ****/
+    "cgi_folder_content",
+    ""
 };
 
 const int EQUAL_COMMANDS[][2] {
@@ -1162,8 +1169,10 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    { CMD_ROTATE_IMAGE,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_rotate_image */
 //    { CMD_GET_COOLIRIS,                  RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_get_cooliris */
 //    { CMD_CHK_REFRESH_STATUS,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_refresh_status */
-
     //CMD_PHOTO_END,
+
+    { CMD_FOLDER_CONTENT,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_folder_content */
+    //CMD_FILE_END,
 
 //    CMD_SIZE
 

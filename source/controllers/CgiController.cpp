@@ -19,6 +19,8 @@
 #include "RenderResponseAppDownloads.h"
 #include "RenderResponseAddOn.h"
 #include "RenderResponseDashboard.h"
+#include "RenderResponseFileStation.h"
+
 
 //#include <TAppSettings>
 
@@ -165,6 +167,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseAddOn(req, cmd);
     else if(cmd < CMD_DASHBOARD_END)
         pRrep = new RenderResponseDashboard(req, cmd);
+    else if(cmd < CMD_FILE_END)
+        pRrep = new RenderResponseFileStation(req, cmd);
 
     return pRrep;
 
