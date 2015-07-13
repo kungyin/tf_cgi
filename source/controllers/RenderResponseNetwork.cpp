@@ -41,6 +41,18 @@ void RenderResponseNetwork::preRender() {
     case CMD_IP:
         generateIP();
         break;
+    case CMD_DEFAULT_GW:
+        generateDefaultGw();
+        break;
+    case CMD_SET_IPV6:
+        generateSetIPv6();
+        break;
+    case CMD_CHK_IPV6_ADDR:
+        generateChkIPv6Addr();
+        break;
+    case CMD_CHK_GW_ADDR:
+        generateChkGwAddr();
+        break;
     case CMD_SPEED:
         generateSpeed();
         break;
@@ -219,6 +231,21 @@ void RenderResponseNetwork::generateLanXml(QDomDocument &doc) {
 /* todo */
 void RenderResponseNetwork::generateIPV6(QDomDocument &doc) {
 
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+
+    QDomElement root = doc.createElement("ipv6");
+    doc.appendChild(root);
+
+    QStringList ipv6ContentElement(QStringList()
+        << "bonding_enable" << "bonding_mode" << "local_addr");
+
+    //for
+    QDomElement interfaceElement = doc.createElement("interface");
+    root.appendChild(interfaceElement);
+
+    QStringList interfaceContentElement(QStringList()
+        << "mode" << "item" << "gw" << "dns1" << "dns2");
+    //interfaceElement.appendChild(doc.createTextNode(apiOutList.value(0)));
 }
 
 void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
@@ -317,6 +344,44 @@ void RenderResponseNetwork::generateIP() {
         if(!setNasCfg("lan0", map))
             tDebug("setNasCfg lan0 failed");
     }
+}
+
+/* todo */
+void RenderResponseNetwork::generateDefaultGw() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+
+    QString paraDefaultGw = m_pReq->parameter("default_gw");
+}
+
+/* todo */
+void RenderResponseNetwork::generateSetIPv6() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+
+    QString paraLan = m_pReq->parameter("f_lan");
+    QString paraIPv6Mode = m_pReq->parameter("f_ipv6_mode");
+    QString paraIPv6Addr = m_pReq->parameter("f_ipv6_addr");
+    QString paraIPv6Gw = m_pReq->parameter("f_ipv6_gw");
+    QString paraIPv6Prefix = m_pReq->parameter("f_ipv6_prefix");
+    QString paraIPv6Dns1 = m_pReq->parameter("f_ipv6_dns1");
+    QString paraIPv6Dns2 = m_pReq->parameter("f_ipv6_dns2");
+
+}
+
+/* todo */
+void RenderResponseNetwork::generateChkIPv6Addr() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+
+    QString paraAddr = m_pReq->parameter("addr");
+}
+
+/* todo */
+void RenderResponseNetwork::generateChkGwAddr() {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+
+    QString paraIPv6Addr = m_pReq->parameter("ipv6Addr");
+    QString paraGateway = m_pReq->parameter("gateway");
+    QString paraPrefixLength = m_pReq->parameter("prefix_length");
+
 }
 
 void RenderResponseNetwork::generateSpeed() {

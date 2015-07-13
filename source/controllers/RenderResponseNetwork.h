@@ -20,6 +20,10 @@ private:
     void generateLanXml2(QDomDocument &);
     void generateSetIPLock();
     void generateIP();
+    void generateDefaultGw();
+    void generateSetIPv6();
+    void generateChkIPv6Addr();
+    void generateChkGwAddr();
     void generateSpeed();
     void generateLLTD(QDomDocument &);
     void generateGetDdns(QDomDocument &);

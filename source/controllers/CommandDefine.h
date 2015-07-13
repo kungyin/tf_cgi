@@ -60,6 +60,10 @@ enum CGI_COMMAND {
     CMD_LAN_XML2,                   /* cgi_get_lan_xml2 */
     CMD_SETIP_LOCK,                 /* cgi_setip_lock */
     CMD_IP,                         /* cgi_ip */
+    CMD_DEFAULT_GW,                 /* cgi_default_gw */
+    CMD_SET_IPV6,                   /* cgi_set_ipv6 */
+    CMD_CHK_IPV6_ADDR,              /* cgi_chk_ipv6_addr */
+    CMD_CHK_GW_ADDR,                /* cgi_chk_gw_addr */
     CMD_SPEED,                      /* cgi_speed */
     CMD_LLTD,                       /* cgi_lltd */
     CMD_GET_DDNS,                   /* cgi_get_ddns */
@@ -368,6 +372,24 @@ enum CGI_COMMAND {
     CMD_GET_DEVICE_DETAIL_INFO,              /* cgi_get_device_detail_info */
     CMD_DASHBOARD_END,
 
+    /**** Photo ****/
+//    CMD_GET_MEDIA_FOLDER,                    /* cgi_get_media_folder */
+//    CMD_GET_ALBUMS,                          /* cgi_get_albums */
+//    CMD_GET_CURRENT_PATH,                    /* cgi_get_current_path */
+//    CMD_CREATE_ALBUM,                        /* cgi_create_album */
+//    CMD_GET_CURRENT_ALBUM_PATH,              /* cgi_get_current_album_path */
+//    CMD_RELOAD_ALBUM_DB,                     /* cgi_reload_album_db */
+//    CMD_GET_PERCENT,                         /* cgi_get_percent */
+//    CMD_DEL_ALBUM,                           /* cgi_del_album */
+//    CMD_MOVE_ALBUM,                          /* cgi_move_album */
+//    CMD_GET_PHOTOS,                          /* cgi_get_photos */
+//    CMD_GET_FULLSCREEN_PHOTOS,               /* cgi_get_fullscreen_photos */
+//    CMD_GET_AIRPLAY_DEVICE,                  /* cgi_get_airplay_device */
+//    CMD_ROTATE_IMAGE,                        /* cgi_rotate_image */
+//    CMD_GET_COOLIRIS,                        /* cgi_get_cooliris */
+//    CMD_CHK_REFRESH_STATUS,                  /* cgi_chk_refresh_status */
+//    CMD_PHOTO_END,
+
     CMD_SIZE
 
 };
@@ -412,6 +434,10 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_lan_xml2",
     "cgi_setip_lock",
     "cgi_ip",
+    "cgi_default_gw",
+    "cgi_set_ipv6",
+    "cgi_chk_ipv6_addr",
+    "cgi_chk_gw_addr",
     "cgi_speed",
     "cgi_lltd",
     "cgi_get_ddns",
@@ -716,7 +742,25 @@ const char CGI_PARA_COMMANDS[][255] = {
 
     /**** Dashboard ****/
     "cgi_get_device_detail_info",
-    ""
+    "",
+
+//    /**** Photo ****/
+//    "cgi_get_media_folder",
+//    "cgi_get_albums",
+//    "cgi_get_current_path",
+//    "cgi_create_album",
+//    "cgi_get_current_album_path",
+//    "cgi_reload_album_db",
+//    "cgi_get_percent",
+//    "cgi_del_album",
+//    "cgi_move_album",
+//    "cgi_get_photos",
+//    "cgi_get_fullscreen_photos",
+//    "cgi_get_airplay_device",
+//    "cgi_rotate_image",
+//    "cgi_get_cooliris",
+//    "cgi_chk_refresh_status",
+//    ""
 
 };
 
@@ -774,6 +818,10 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LAN_XML2,                     RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_xml2 */
     { CMD_SETIP_LOCK,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_setip_lock */
     { CMD_IP,                           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ip */
+    { CMD_DEFAULT_GW,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_default_gw */
+    { CMD_SET_IPV6,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_set_ipv6 */
+    { CMD_CHK_IPV6_ADDR,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_chk_ipv6_addr */
+    { CMD_CHK_GW_ADDR,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_chk_gw_addr */
     { CMD_SPEED,                        RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_speed */
     { CMD_LLTD,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_lltd */
     { CMD_GET_DDNS,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns */
@@ -1081,8 +1129,25 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     { CMD_GET_DEVICE_DETAIL_INFO,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_device_detail_info */
 
-    //CMD_ADD_ON_END,
+    //CMD_DASHBOARD_END,
 
+//    { CMD_GET_MEDIA_FOLDER,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_media_folder */
+//    { CMD_GET_ALBUMS,                    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_albums */
+//    { CMD_GET_CURRENT_PATH,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_current_path */
+//    { CMD_CREATE_ALBUM,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_create_album */
+//    { CMD_GET_CURRENT_ALBUM_PATH,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_current_album_path */
+//    { CMD_RELOAD_ALBUM_DB,               RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_reload_album_db */
+//    { CMD_GET_PERCENT,                   RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_percent */
+//    { CMD_DEL_ALBUM,                     RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_del_album */
+//    { CMD_MOVE_ALBUM,                    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_move_album */
+//    { CMD_GET_PHOTOS,                    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_photos */
+//    { CMD_GET_FULLSCREEN_PHOTOS,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_fullscreen_photos */
+//    { CMD_GET_AIRPLAY_DEVICE,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_airplay_device */
+//    { CMD_ROTATE_IMAGE,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_rotate_image */
+//    { CMD_GET_COOLIRIS,                  RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_get_cooliris */
+//    { CMD_CHK_REFRESH_STATUS,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_refresh_status */
+
+    //CMD_PHOTO_END,
 
 //    CMD_SIZE
 
