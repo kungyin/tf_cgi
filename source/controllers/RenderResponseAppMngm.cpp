@@ -1364,17 +1364,26 @@ void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateGetAllTaskName(QDomDocument &doc) {
 
-    char **list;
-    int cnt = GetAllRemoteTaskName(&list);
-    for (int i = 0; i < cnt; i++)
-        ;//printf("TASK NAME LIST[%d %s]\n", i, list[i]);
-    FreeRemoteTaskName(cnt, &list);
+    char **nameList;
+    int taskNum = GetAllRemoteTaskName(&nameList);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
+
+    for (int i = 0; i < taskNum; i++) {
+
+        QDomElement taskElement = doc.createElement("task");
+        root.appendChild(taskElement);
+
+        QDomElement nameElement = doc.createElement("name");
+        taskElement.appendChild(nameElement);
+        nameElement.appendChild(doc.createTextNode(QString(nameList[i])));
+
+    }
+
+    FreeRemoteTaskName(taskNum, &nameList);
 }
 
 /* s_type= 1 | 2 (int)
