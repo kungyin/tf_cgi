@@ -255,10 +255,10 @@ void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
             totalSizeElement.appendChild(doc.createTextNode(e.split(";").value(5)));
 
             QDomElement partitionsElement = doc.createElement("partitions");
-            root.appendChild(partitionsElement);
+            usbElement.appendChild(partitionsElement);
             for(QString partitionEntry : e.split(";").value(6).split("#")) {
                 QDomElement partitionElement = doc.createElement("partition");
-                root.appendChild(partitionElement);
+                partitionsElement.appendChild(partitionElement);
                 QDomElement shareNameElement = doc.createElement("share_name");
                 partitionElement.appendChild(shareNameElement);
                 shareNameElement.appendChild(doc.createTextNode(partitionEntry.split(",").value(0)));

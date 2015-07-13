@@ -18,6 +18,8 @@
 #include "RenderResponseTimeMachine.h"
 #include "RenderResponseSetupWizard.h"
 #include "RenderResponseAppDownloads.h"
+#include "RenderResponseAddOn.h"
+#include "RenderResponseDashboard.h"
 
 //#include <TAppSettings>
 
@@ -178,6 +180,10 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseSetupWizard(req, cmd);
     else if(cmd < CMD_APP_DOWNLOAD_END)
         pRrep = new RenderResponseAppDownloads(req, cmd);
+    else if(cmd < CMD_ADD_ON_END)
+        pRrep = new RenderResponseAddOn(req, cmd);
+    else if(cmd < CMD_DASHBOARD_END)
+        pRrep = new RenderResponseDashboard(req, cmd);
 
     return pRrep;
 

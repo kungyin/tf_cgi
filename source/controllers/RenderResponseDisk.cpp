@@ -1,3 +1,4 @@
+#include <QProcess>
 #include <cassert>
 
 #include "RenderResponseDisk.h"
@@ -76,9 +77,6 @@ void RenderResponseDisk::preRender() {
 }
 
 void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
-//    QString paraFlag;
-//    if(m_pReq->allParameters().contains("f_flag"))
-//        paraFlag = m_pReq->allParameters().value("f_flag").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_disk_volume_status", true);
 
@@ -86,11 +84,11 @@ void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("flag");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.value(0));
+    QDomText t1 = doc.createTextNode(m_pReq->parameter("f_flag"));
     tag1.appendChild(t1);
     QDomElement tag2 = doc.createElement("state");
     root.appendChild(tag2);
-    QDomText t2 = doc.createTextNode(apiOut.value(1));
+    QDomText t2 = doc.createTextNode(apiOut.value(0));
     tag2.appendChild(t2);
 }
 
@@ -145,7 +143,7 @@ void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
 FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
 
     FMT_ARGS args;
-    args.volNameArg = fmtArgs.value(0);
+    args.volNameArg = "v" + fmtArgs.value(0);
     args.raidModeArg = "m1";
     if(fmtArgs.value(1).compare("standard") == 0)
         args.raidModeArg = "m1";
@@ -186,24 +184,22 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     QString paraCreateVolumeInfo;
     QString paraAutoSync;
 
-    if(m_pReq->allParameters().contains("f_create_type"))
-        paraCreateType = m_pReq->allParameters().value("f_create_type").toString();
-    if(m_pReq->allParameters().contains("f_create_volume_info"))
-        paraCreateVolumeInfo = m_pReq->allParameters().value("f_create_volume_info").toString();
-    if(m_pReq->allParameters().contains("f_auto_sync"))
-        paraAutoSync = m_pReq->allParameters().value("f_auto_sync").toString();
+    paraCreateType = m_pReq->parameter("f_create_type");
+    paraCreateVolumeInfo = QUrl::fromPercentEncoding(m_pReq->parameter("f_create_volume_info").toLocal8Bit());
+    paraAutoSync = m_pReq->parameter("f_auto_sync");
 
     QStringList apiOut;
-    QStringList paraList = paraCreateVolumeInfo.split("%2C");
-    if(paraList.size() != 30) {
-        return;
-    }
-    else {
+    QStringList paraList = paraCreateVolumeInfo.split(",");
+
+    tDebug("paraList size: %d", paraList.size());
+
+    if(paraList.size() == 15 || paraList.size() == 30) {
         FMT_ARGS args1, args2;
         QStringList paraSubList1 = paraList.mid(0, 15);
         QStringList paraSubList2 = paraList.mid(15, 15);
         args1 = getFMTArgs(paraSubList1);
-        args2 = getFMTArgs(paraSubList2);
+        if(paraList.size() == 30)
+            args2 = getFMTArgs(paraSubList2);
 
         QString strArg1 =   "-" + args1.volNameArg + " " +
                             "-" + args1.raidModeArg + " " +
@@ -211,26 +207,34 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
                             "-" + args1.volSizeArg + " " +
                             "-" + args1.devNameArg;
 
-        QString strArg2 =  args2.createVolume ?
-                            "-" + args2.volNameArg + " " +
-                            "-" + args2.raidModeArg + " " +
-                            "-" + args2.fileSystemTypeArg + " " +
-                            "-" + args2.volSizeArg + " " +
-                            "-" + args2.devNameArg
-                            : "";
+        QString strArg2;
+        if(paraList.size() == 30)
+            strArg2 =  args2.createVolume ?
+                        "-" + args2.volNameArg + " " +
+                        "-" + args2.raidModeArg + " " +
+                        "-" + args2.fileSystemTypeArg + " " +
+                        "-" + args2.volSizeArg + " " +
+                        "-" + args2.devNameArg
+                        : "";
 
-        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
-                                         strArg1 + " " +
-                                         strArg2,
-                                         true
-                                     );
+        QString strArg2WithBlank;
+        if(!strArg2.isEmpty())
+            strArg2WithBlank = " " + strArg2;
+
+        tDebug("strArg1: %s, strArg2: %s", strArg1.toLocal8Bit().data(), strArg2.toLocal8Bit().data());
+        if(!QProcess::startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1 << strArg2))
+            ;
+//        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
+//                                         strArg1 + strArg2WithBlank,
+//                                         true
+//                                     );
     }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement tag1 = doc.createElement("res");
     root.appendChild(tag1);
-    QDomText t1 = doc.createTextNode(apiOut.value(0));
+    QDomText t1 = doc.createTextNode("1" /*apiOut.value(0)*/);
     tag1.appendChild(t1);
 }
 

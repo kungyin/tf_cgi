@@ -710,10 +710,8 @@ void RenderResponseNetwork::generateSetSshPort(QDomDocument &doc) {
     map.insert("enable", paraEnable);
     map.insert("port", paraPort);
 
-    if(setNasCfg("sshd", map)) {
-        QString sshCmd = paraEnable.compare("1") == 0 ? "service_ssh_start" : "service_ssh_stop";
-        getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " " + sshCmd);
-    }
+    if(setNasCfg("sshd", map))
+        getAPIStdOut(API_PATH + SCRIPT_SSH_CTL + " restart");
     else
         ret = "0";
 

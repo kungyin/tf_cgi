@@ -365,6 +365,10 @@ enum CGI_COMMAND {
     CMD_MODULE_UNINSTALL,                    /* module_uninstall */
     CMD_ADD_ON_END,
 
+    /**** Dashboard ****/
+    CMD_GET_DEVICE_DETAIL_INFO,              /* cgi_get_device_detail_info */
+    CMD_DASHBOARD_END,
+
     CMD_SIZE
 
 };
@@ -709,6 +713,10 @@ const char CGI_PARA_COMMANDS[][255] = {
     "uninstall_addon",
     "module_enable_disable",
     "module_uninstall",
+    "",
+
+    /**** Dashboard ****/
+    "cgi_get_device_detail_info",
     ""
 
 };
@@ -905,7 +913,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     /**** Syslog Server ****/
     { CMD_SYSLOG_SEARCH,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Search */
-    { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Get_Volume_Info */
+    { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            OPENED_CMDS          },         /* Get_Volume_Info */
     { CMD_SYSLOG_GET_LOG_FILE_OPTION,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Log_File_Option */
     { CMD_SYSLOG_GET_CONFIG,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Config */
     { CMD_SYSLOG_GET_SELECT_OPTION,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Select_Option */
@@ -1068,6 +1076,11 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_UNINSTALL_ADDON,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* uninstall_addon */
     { CMD_MODULE_ENABLE_DISABLE,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_enable_disable */
     { CMD_MODULE_UNINSTALL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_uninstall */
+
+    //CMD_ADD_ON_END,
+
+
+    { CMD_GET_DEVICE_DETAIL_INFO,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_device_detail_info */
 
     //CMD_ADD_ON_END,
 

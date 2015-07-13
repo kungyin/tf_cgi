@@ -878,6 +878,7 @@ void RenderResponseSysMngm::generateFirmwareUpload(QString &str) {
 }
 
 void RenderResponseSysMngm::generateGetPercentage(QString &str) {
+    getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " firmware_verify", true);
     QStringList apiOut = this->getAPIFileOut(FIRMWARE_PERCENTAGE_FILE, true);
     str = apiOut.value(0);
 }
