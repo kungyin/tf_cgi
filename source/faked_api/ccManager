@@ -46,3 +46,6 @@
 [ $1 == 'service_set_ups_slave' ] && echo -e "1"
 [ $1 == 'service_set_usb_storage_umount' ] && echo -e "1"
 [ $1 == 'service_set_clear_print_queue' ] && echo -e "1"
+[ $1 == 'service_get_log_cfg' ] && echo -e "1;Volume_1;514;1;500;1;1000000;1;0;50;1;5;0;;"
+[ $1 == 'service_set_syslog_cfg' ] && echo -e "1"
+[ $1 == 'service_get_volume_info' ] && echo -e "Volume_1;Volume_2"

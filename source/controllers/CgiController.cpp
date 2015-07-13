@@ -1,5 +1,6 @@
 #include <QFileInfo>
 #include <QCryptographicHash>
+#include <QProcess>
 
 #include "AppDefine.h"
 #include "CgiController.h"
@@ -119,6 +120,24 @@ void CgiController::index()
         for(auto e : cookies)
             addCookie(e);
         redirect(QUrl(pRrep->getStr()));
+    }
+        break;
+    case RENDER_TYPE_FILE_REMOVE:
+    {
+        bool isSendOK = false;
+        QFile::remove("/tmp/syslogsendok");
+        QFileInfo file(pRrep->getStr());
+        if(file.exists() && file.isFile())
+            isSendOK = sendFile(pRrep->getStr(), "application/octet-stream", file.fileName(), true);
+        else
+            tDebug("file %s doesn't exist.", pRrep->getStr().toLocal8Bit().data());
+        if (isSendOK)
+        {
+            QProcess process;
+            process.setStandardOutputFile("/tmp/syslogsendok");
+            process.start("echo 1");
+            process.waitForFinished();
+        }
     }
         break;
     default:

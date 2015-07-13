@@ -11,6 +11,7 @@ enum RENDER_TYPE {
     RENDER_TYPE_HTML,
     RENDER_TYPE_REDIRECT,
     RENDER_TYPE_REDIRECT_WITH_COOKIE,
+    RENDER_TYPE_FILE_REMOVE,
 };
 
 enum COMMAND_ALLOW {
@@ -909,7 +910,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SYSLOG_GET_CONFIG,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Config */
     { CMD_SYSLOG_GET_SELECT_OPTION,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Select_Option */
     { CMD_SYSLOG_SET_CONFIG,            RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* Syslog_Set_Config */
-    { CMD_SYSLOG_EXPORT,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Export */
+    { CMD_SYSLOG_EXPORT,                RENDER_TYPE_FILE_REMOVE,           COOKIE_REQ_CMDS      },         /* Syslog_Export */
     { CMD_SYSLOG_GET_EXPORT_STATUS,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Export_Status */
     { CMD_SYSLOG_CLEAR,                 RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Clear */
 
