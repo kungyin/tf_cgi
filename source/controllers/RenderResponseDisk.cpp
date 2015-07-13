@@ -66,6 +66,21 @@ void RenderResponseDisk::preRender() {
     case CMD_SCANDISK_FINISH:
         generateScanDiskFinish(doc);
         break;
+    case CMD_VE_LIST:
+        generateVeList(doc);
+        break;
+    case CMD_VE_PWD_CHECK:
+        generateVePwdCheck(doc);
+        break;
+    case CMD_VE_VERIFY_KEYFILE:
+        generateVeVerifyKeyfile(doc);
+        break;
+    case CMD_VE_MODIFY:
+        generateVeModify(doc);
+        break;
+    case CMD_VE_SAVE_FILE:
+        generateVeSaveFile();
+        break;
     case CMD_NONE:
     default:
         break;
@@ -521,4 +536,77 @@ void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+}
+
+/* todo */
+void RenderResponseDisk::generateVeList(QDomDocument &doc) {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+//    if(apiOut.isEmpty()) {
+
+//        QDomElement rowElement1 = doc.createElement("row");
+//        root.appendChild(rowElement1);
+//        rowElement1.setAttribute("id", "1");
+
+//        QDomElement cellElement1 = doc.createElement("cell");
+//        rowElement1.appendChild(cellElement1);
+//        cellElement1.appendChild(doc.createTextNode("-"));
+//        QDomElement cellElement2 = doc.createElement("cell");
+//        rowElement1.appendChild(cellElement2);
+//        cellElement2.appendChild(doc.createTextNode("-"));
+//        QDomElement cellElement3 = doc.createElement("cell");
+//        rowElement1.appendChild(cellElement3);
+//        cellElement3.appendChild(doc.createTextNode("-"));
+
+//    }
+
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode("0"));
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode("1"));
+}
+
+/* todo */
+void RenderResponseDisk::generateVePwdCheck(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+}
+
+/* todo */
+void RenderResponseDisk::generateVeVerifyKeyfile(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+}
+
+/* todo */
+void RenderResponseDisk::generateVeModify(QDomDocument &doc) {
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("5"));
+}
+
+/* todo */
+void RenderResponseDisk::generateVeSaveFile() {
+//    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " save", true);
+//    QString filePath = apiOut.value(0);
+//    tDebug("file: %s", filePath.toLocal8Bit().data());
+//    QFileInfo file(filePath);
+//    if(file.exists() && file.isFile())
+//        str = filePath;
 }

@@ -38,6 +38,11 @@ enum CGI_COMMAND {
     CMD_CHECK_DISK_REMOUNT_STATUS,  /* cgi_Check_Disk_Remount_State */
     CMD_SCANDISK_RUN_E2FSCK,        /* ScanDisk_run_e2fsck */
     CMD_SCANDISK_FINISH,            /* ScanDisk_Finish */
+    CMD_VE_LIST,                    /* cgi_VE_List */
+    CMD_VE_PWD_CHECK,               /* cgi_VE_PWD_Check */
+    CMD_VE_VERIFY_KEYFILE,          /* cgi_VE_Verify_KeyFile */
+    CMD_VE_MODIFY,                  /* cgi_VE_Mofify */
+    CMD_VE_SAVE_FILE,               /* cgi_VE_Save_File */
     CMD_DISK_END,
 
     /**** Home Page ****/
@@ -412,6 +417,11 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_Check_Disk_Remount_State",
     "ScanDisk_run_e2fsck",
     "ScanDisk_Finish",
+    "cgi_VE_List",
+    "cgi_VE_PWD_Check",
+    "cgi_VE_Verify_KeyFile",
+    "cgi_VE_Mofify",
+    "cgi_VE_Save_File",
     "",
 
     /**** Home Page ****/
@@ -795,6 +805,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_CHECK_DISK_REMOUNT_STATUS,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Remount_State */
     { CMD_SCANDISK_RUN_E2FSCK,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_run_e2fsck */
     { CMD_SCANDISK_FINISH,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_Finish */
+    { CMD_VE_LIST,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_List */
+    { CMD_VE_PWD_CHECK,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_PWD_Check */
+    { CMD_VE_VERIFY_KEYFILE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Verify_KeyFile */
+    { CMD_VE_MODIFY,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Mofify */
+    { CMD_VE_SAVE_FILE,                 RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },          /* cgi_VE_Save_File */
+
     //{ CMD_DISK_END,                     RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
 
     /**** Home Page ****/
