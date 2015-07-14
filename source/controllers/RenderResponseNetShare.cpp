@@ -482,20 +482,20 @@ void RenderResponseNetShare::generateGetAllIsoShare(QDomDocument &doc) {
 }
 
 void RenderResponseNetShare::generateOpenTree(QString &str) {
-    QString paraDir = QUrl::fromPercentEncoding(m_pReq->allParameters().value("dir").toByteArray());
-    QString paraShowFile = m_pReq->allParameters().value("show_file").toString();
-    QString paraChkFlag = m_pReq->allParameters().value("chk_flag").toString();
-    QString paraFileType = m_pReq->allParameters().value("file_type").toString();
-    QString paraFuncId = m_pReq->allParameters().value("function_id").toString();
-    QString paraFilterFile = m_pReq->allParameters().value("filter_file").toString();
-    QString paraRootPath = m_pReq->allParameters().value("root_path").toString();
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("dir").toLocal8Bit());
+    QString paraShowFile = m_pReq->parameter("show_file");
+    QString paraChkFlag = m_pReq->parameter("chk_flag");
+    QString paraFileType = m_pReq->parameter("file_type");
+    QString paraFuncId = m_pReq->parameter("function_id");
+    QString paraFilterFile = m_pReq->parameter("filter_file");
+    QString paraRootPath = m_pReq->parameter("root_path");
 
-    QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n\
-                            %1\
-                         </ul>";
-    QString cssLiClass = "<li class=\"directory collapsed%1\">\n\
-                         %2%3\
-                         </li>\n";
+    QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n"
+                            "%1"
+                         "</ul>";
+    QString cssLiClass = "    <li class=\"directory collapsed%1\">\n"
+                         "%2%3"
+                         "    </li>\n";
     QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\"  src=\"%2\" rel=\"%2\">\n";
     QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
 
@@ -513,7 +513,7 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
         if(e.absoluteFilePath().compare("/mnt/HD/HD_b2") == 0)
             fileName = "Volume_2";
         QString line1 = (paraChkFlag.compare("1") == 0) ? checkboxLine.arg(e.absoluteFilePath()).arg(fileName) : QString::null;
-        QString line2 = hrefLine.arg(e.absoluteFilePath()).arg(fileName);
+        QString line2 = hrefLine.arg(e.absoluteFilePath() + "/").arg(fileName);
         content += cssLiClass.arg("").arg(line1).arg(line2);
     }
 
@@ -527,16 +527,16 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
 }
 
 void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
-    QString paraDir = m_pReq->allParameters().value("dir").toString();
-    QString paraFileName = m_pReq->allParameters().value("filename").toString();
-    QString paraShowFile = m_pReq->allParameters().value("show_file").toString();
-    QString paraChkFlag = m_pReq->allParameters().value("chk_flag").toString();
-    //QString paraFileType = m_pReq->allParameters().value("file_type").toString();
-    QString paraFuncId = m_pReq->allParameters().value("function_id").toString();
-    QString paraFilterFile = m_pReq->allParameters().value("filter_file").toString();
-    QString paraRootPath = m_pReq->allParameters().value("root_path").toString();
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("dir").toLocal8Bit());
+    QString paraFileName = m_pReq->parameter("filename");
+    QString paraShowFile = m_pReq->parameter("show_file");
+    QString paraChkFlag = m_pReq->parameter("chk_flag");
+    //QString paraFileType = m_pReq->parameter("file_type");
+    QString paraFuncId = m_pReq->parameter("function_id");
+    QString paraFilterFile = m_pReq->parameter("filter_file");
+    QString paraRootPath = m_pReq->parameter("root_path");
 
-    QDir dir(paraDir.replace("%2F", "/"));
+    QDir dir(paraDir);
     QString ret = dir.mkdir(paraFileName) ? "ok" : "error";
 
     QDomElement root = doc.createElement("mkdir");
