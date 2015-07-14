@@ -41,7 +41,7 @@ private:
     void generateSyslogGetConfig(QDomDocument &);
     void generateSyslogGetSelectOption(QDomDocument &);
     void generateSyslogSetConfig(QString &);
-    void generateSyslogExport();
+    void generateSyslogExport(QString &);
     void generateSyslogGetExportStatus(QDomDocument &);
     void generateSyslogClear();
 

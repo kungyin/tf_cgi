@@ -1,7 +1,9 @@
 #include "RenderResponseAppMngm.h"
 #include "http_ftp_download.h"
+#include "Databaseobject.h"
 
 #include <QDateTime>
+#include <QFileInfo>
 
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
@@ -104,7 +106,7 @@ void RenderResponseAppMngm::preRender() {
         generateSyslogSetConfig(str);
         break;
     case CMD_SYSLOG_EXPORT:
-        generateSyslogExport();
+        generateSyslogExport(str);
         break;
     case CMD_SYSLOG_GET_EXPORT_STATUS:
         generateSyslogGetExportStatus(doc);
@@ -598,68 +600,98 @@ void RenderResponseAppMngm::generateSyslogSearch(QDomDocument &doc) {
     QString paraLogHost = m_pReq->allParameters().value("log_host").toString();
     QString paraLogFacility = m_pReq->allParameters().value("log_facility").toString();
     QString paraLogApplication = m_pReq->allParameters().value("log_application").toString();
-    QString paraKeyword = m_pReq->allParameters().value("keyword").toString();
+    QString paraKeyword = m_pReq->allParameters().value("f_keyword").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    SyslogDbDataProvider sys;
+    QSqlError err = sys.SelectDataFromPara(paraPage, paraRp, paraSortname, paraSortorder, paraQuery, paraQType, paraField,
+                           paraUser, paraLogFile, paraDateFrom, paraDateTo, paraViewSeverity, paraLogHost,
+                           paraLogFacility, paraLogApplication, paraKeyword);
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    int size = sys.GetSize();
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QString cellContent1 = "&amp;nbsp;[origin&amp;nbsp;software=&quot;rsyslogd&quot;&amp;nbsp;swVersion=\
+    /*QString cellContent1 = "&amp;nbsp;[origin&amp;nbsp;software=&quot;rsyslogd&quot;&amp;nbsp;swVersion=\
             &quot;5.8.6&quot;&amp;nbsp;x-pid=&quot;%1&quot;&amp;nbsp;x-info=&quot;\
             http://www.rsyslog.com&quot;]&amp;nbsp;start";
     QString cellContent2 = "&amp;nbsp;[origin&amp;nbsp;software=&quot;rsyslogd&quot;&amp;nbsp;swVersion=\
             &quot;5.8.6&quot;&amp;nbsp;x-pid=&quot;%1&quot;&amp;nbsp;x-info=&quot;\
-            http://www.rsyslog.com&quot;]&amp;nbsp;exiting&amp;nbsp;on&amp;nbsp;signal&amp;nbsp;15.";
+            http://www.rsyslog.com&quot;]&amp;nbsp;exiting&amp;nbsp;on&amp;nbsp;signal&amp;nbsp;15.";*/
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    QDomElement rowElement;
+    QDomElement cellElement1;
+    QDomElement cellElement2;
+    QDomElement cellElement3;
+    QDomElement cellElement4;
+    QDomElement cellElement5;
+    QDomElement cellElement6;
+    QDomElement cellElement7;
+    QString deviceReportedTime;
+    QStringList timeList;
+    for (int i = 0; i < size; i++)
+    {
+        if (sys.GetSelectedData()->next())
+        {
+            deviceReportedTime = sys.GetSelectedData()->value("DeviceReportedTime").toString();
+            if (deviceReportedTime.isEmpty()) continue;
+            timeList = deviceReportedTime.split("T");
+            if (timeList.count() != 2) continue;
+            rowElement = doc.createElement("row");
+            root.appendChild(rowElement);
+            cellElement1 = doc.createElement("cell");
+            rowElement.appendChild(cellElement1);
+            cellElement1.appendChild(doc.createTextNode(timeList.at(0)));
+            cellElement2 = doc.createElement("cell");
+            rowElement.appendChild(cellElement2);
+            cellElement2.appendChild(doc.createTextNode(timeList.at(1)));
 
-        QDomElement rowElement = doc.createElement("row");
-        root.appendChild(rowElement);
-        QDomElement cellElement1 = doc.createElement("cell");
-        rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("2015-05-11"));
-        QDomElement cellElement2 = doc.createElement("cell");
-        rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("23:18:29"));
+            cellElement3 = doc.createElement("cell");
+            rowElement.appendChild(cellElement3);
+            cellElement3.appendChild(doc.createTextNode(sys.GetSelectedData()->value("Facility").toString()));
+            cellElement4 = doc.createElement("cell");
+            rowElement.appendChild(cellElement4);
+            cellElement4.appendChild(doc.createTextNode(sys.GetSelectedData()->value("FromHost").toString()));
+            cellElement5 = doc.createElement("cell");
+            rowElement.appendChild(cellElement5);
+            cellElement5.appendChild(doc.createTextNode(sys.GetSelectedData()->value("Priority").toString()));
 
-        QDomElement cellElement3 = doc.createElement("cell");
-        rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode("6"));
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode("dlink-8B21F7dd"));
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode("5"));
+            cellElement6 = doc.createElement("cell");
+            rowElement.appendChild(cellElement6);
+            cellElement6.appendChild(doc.createTextNode(sys.GetSelectedData()->value("SysLogTag").toString()));
+            cellElement7 = doc.createElement("cell");
+            /*QUrl url(sys.GetSelectedData()->value("Message").toString());
+            rowElement.appendChild(cellElement7);
+            cellElement7.appendChild(doc.createTextNode(url.toEncoded().data()));*/
+            rowElement.appendChild(cellElement7);
+            cellElement7.appendChild(doc.createTextNode(sys.GetSelectedData()->value("Message").toString()));
 
-        QDomElement cellElement6 = doc.createElement("cell");
-        rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode("rsyslogd"));
-        QDomElement cellElement7 = doc.createElement("cell");
-        rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode(cellContent1.arg("18799")));
-
-        rowElement.setAttribute("id", "1");
-    //}
+            rowElement.setAttribute("id", QString::number(i + 1));
+        }
+        else break;
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("15"));
+    totalElement.appendChild(doc.createTextNode(QString::number(size)));
 }
 
 /* todo */
 void RenderResponseAppMngm::generateGetVolumeInfo(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_volume_info");
+    QStringList apiArgs;
+    if (!apiOut.isEmpty()) apiArgs = apiOut.at(0).split(";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -669,15 +701,18 @@ void RenderResponseAppMngm::generateGetVolumeInfo(QDomDocument &doc) {
 //            continue;
 //        if(apiOut.at(i).split(",").size() < 2)
 //            continue;
-
-        QDomElement itemElement = doc.createElement("item");
+    QDomElement itemElement, optValueElement, guiValueElement;
+    for(int i = 0; i < apiArgs.size(); i++)
+    {
+        itemElement = doc.createElement("item");
         root.appendChild(itemElement);
-        QDomElement optValueElement = doc.createElement("opt_value");
+        optValueElement = doc.createElement("opt_value");
         itemElement.appendChild(optValueElement);
-        optValueElement.appendChild(doc.createTextNode("Volume_1"));
-        QDomElement guiValueElement = doc.createElement("gui_value");
+        optValueElement.appendChild(doc.createTextNode(apiArgs.at(i)));
+        guiValueElement = doc.createElement("gui_value");
         itemElement.appendChild(guiValueElement);
-        guiValueElement.appendChild(doc.createTextNode("Volume_1"));
+        guiValueElement.appendChild(doc.createTextNode(apiArgs.at(i)));
+    }
 
     //}
 
@@ -688,70 +723,99 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption(QDomDocument &doc) {
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
-    QDomElement root = doc.createElement("row");
+    SyslogDbDataProvider sys;
+    QSqlError err = sys.GetAllDatabase();
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    int size = sys.GetSize();
+
+    QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
+    QString dbName;
+    QDomElement cellElement;
+    for (int i = 0; i < size; i++)
+    {
+        if (sys.GetSelectedData()->next())
+        {
+            dbName = sys.GetSelectedData()->value(0).toString();
+            if (dbName.indexOf("Syslog_") >= 0)
+            {
+                cellElement = doc.createElement("cell");
+                root.appendChild(cellElement);
+                cellElement.appendChild(doc.createTextNode(dbName));
+            }
+        }
+    }
 }
 
 /* todo */
 void RenderResponseAppMngm::generateSyslogGetConfig(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
-
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_log_cfg");
+    QStringList apiArgs;
+    if (!apiOut.isEmpty()) apiArgs = apiOut.at(0).split(";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
+    if (apiArgs.size() != 15) return;
+
     QDomElement syslogEnableElement = doc.createElement("syslog_enable");
     root.appendChild(syslogEnableElement);
-    syslogEnableElement.appendChild(doc.createTextNode(""));
+    syslogEnableElement.appendChild(doc.createTextNode(apiArgs.at(0)));
     QDomElement syslogFolderElement = doc.createElement("syslog_folder");
     root.appendChild(syslogFolderElement);
-    syslogFolderElement.appendChild(doc.createTextNode("Volume_1"));
+    syslogFolderElement.appendChild(doc.createTextNode(apiArgs.at(1)));
     QDomElement syslogUdpElement = doc.createElement("syslog_udp");
     root.appendChild(syslogUdpElement);
-    syslogUdpElement.appendChild(doc.createTextNode("514"));
+    syslogUdpElement.appendChild(doc.createTextNode(apiArgs.at(2)));
 
     QDomElement archiveSizeEnElement = doc.createElement("archive_size_en");
     root.appendChild(archiveSizeEnElement);
-    archiveSizeEnElement.appendChild(doc.createTextNode(""));
+    archiveSizeEnElement.appendChild(doc.createTextNode(apiArgs.at(3)));
     QDomElement archiveSizeElement = doc.createElement("archive_size");
     root.appendChild(archiveSizeElement);
-    archiveSizeElement.appendChild(doc.createTextNode(""));
+    archiveSizeElement.appendChild(doc.createTextNode(apiArgs.at(4)));
 
     QDomElement archiveNumEnElement = doc.createElement("archive_num_en");
     root.appendChild(archiveNumEnElement);
-    archiveNumEnElement.appendChild(doc.createTextNode(""));
+    archiveNumEnElement.appendChild(doc.createTextNode(apiArgs.at(5)));
     QDomElement archiveNumElement = doc.createElement("archive_num");
     root.appendChild(archiveNumElement);
-    archiveNumElement.appendChild(doc.createTextNode(""));
+    archiveNumElement.appendChild(doc.createTextNode(apiArgs.at(6)));
 
     QDomElement archiveCycleEnElement = doc.createElement("archive_cycle_en");
     root.appendChild(archiveCycleEnElement);
-    archiveCycleEnElement.appendChild(doc.createTextNode(""));
+    archiveCycleEnElement.appendChild(doc.createTextNode(apiArgs.at(7)));
     QDomElement archiveCycleElement = doc.createElement("archive_cycle");
     root.appendChild(archiveCycleElement);
-    archiveCycleElement.appendChild(doc.createTextNode(""));
+    archiveCycleElement.appendChild(doc.createTextNode(apiArgs.at(8)));
 
     QDomElement folderQuotaSizeElement = doc.createElement("folder_quota_size");
     root.appendChild(folderQuotaSizeElement);
-    folderQuotaSizeElement.appendChild(doc.createTextNode("50"));
+    folderQuotaSizeElement.appendChild(doc.createTextNode(apiArgs.at(9)));
 
     QDomElement emailEnableElement = doc.createElement("email_enable");
     root.appendChild(emailEnableElement);
-    emailEnableElement.appendChild(doc.createTextNode(""));
+    emailEnableElement.appendChild(doc.createTextNode(apiArgs.at(10)));
     QDomElement emailSeverityElement = doc.createElement("email_severity");
     root.appendChild(emailSeverityElement);
-    emailSeverityElement.appendChild(doc.createTextNode(""));
+    emailSeverityElement.appendChild(doc.createTextNode(apiArgs.at(11)));
     QDomElement sendMailElement = doc.createElement("send_mail");
     root.appendChild(sendMailElement);
-    sendMailElement.appendChild(doc.createTextNode("0"));
+    sendMailElement.appendChild(doc.createTextNode(apiArgs.at(12)));
 
     QDomElement syslogStatusElement = doc.createElement("syslog_status");
     root.appendChild(syslogStatusElement);
-    syslogStatusElement.appendChild(doc.createTextNode(""));
+    syslogStatusElement.appendChild(doc.createTextNode(apiArgs.at(13)));
     QDomElement archiveStatusElement = doc.createElement("archive_status");
     root.appendChild(archiveStatusElement);
-    archiveStatusElement.appendChild(doc.createTextNode(""));
+    archiveStatusElement.appendChild(doc.createTextNode(apiArgs.at(14)));
 }
 
 /* todo */
@@ -764,29 +828,111 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption(QDomDocument &doc) {
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement severityElement = doc.createElement("severity");
-    root.appendChild(severityElement);
-    QDomElement severityCellElement = doc.createElement("cell");
-    severityElement.appendChild(severityCellElement);
-    severityCellElement.appendChild(doc.createTextNode("6"));
+    SyslogDbDataProvider sys;
+    QSqlError err = sys.SelectAllServerity(paraDatabase);
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    int size = sys.GetSize(), i = 0;
 
-    QDomElement hostElement = doc.createElement("host");
-    root.appendChild(hostElement);
-    QDomElement hostCellElement = doc.createElement("cell");
-    hostElement.appendChild(hostCellElement);
-    hostCellElement.appendChild(doc.createTextNode("dlink-8B21F7dd"));
+    QDomElement severityElement;
+    QDomElement severityCellElement;
+    if (size > 0)
+    {
+        severityElement = doc.createElement("severity");
+        root.appendChild(severityElement);
+        for (i = 0; i < size; i++)
+        {
+            if (sys.GetSelectedData()->next())
+            {
+                severityCellElement = doc.createElement("cell");
+                severityElement.appendChild(severityCellElement);
+                severityCellElement.appendChild(doc.createTextNode(sys.GetSelectedData()->value(0).toString()));
+            }
+        }
+    }
 
-    QDomElement facilityElement = doc.createElement("facility");
-    root.appendChild(facilityElement);
-    QDomElement facilityCellElement = doc.createElement("cell");
-    facilityElement.appendChild(facilityCellElement);
-    facilityCellElement.appendChild(doc.createTextNode("5"));
+    err = sys.SelectAllHost(paraDatabase);
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    size = sys.GetSize();
+    QDomElement hostElement;
+    QDomElement hostCellElement;
+    if (size > 0)
+    {
+        hostElement = doc.createElement("host");
+        root.appendChild(hostElement);
+        for (i = 0; i < size; i++)
+        {
+            if (sys.GetSelectedData()->next())
+            {
+                hostCellElement = doc.createElement("cell");
+                hostElement.appendChild(hostCellElement);
+                hostCellElement.appendChild(doc.createTextNode(sys.GetSelectedData()->value(0).toString()));
+            }
+        }
+    }
 
-    QDomElement applicationElement = doc.createElement("application");
-    root.appendChild(applicationElement);
-    QDomElement applicationCellElement = doc.createElement("cell");
-    applicationElement.appendChild(applicationCellElement);
-    applicationCellElement.appendChild(doc.createTextNode("rsyslogd"));
+    err = sys.SelectAllFacility(paraDatabase);
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    size = sys.GetSize();
+    QDomElement facilityElement;
+    QDomElement facilityCellElement;
+    if (size > 0)
+    {
+        facilityElement = doc.createElement("facility");
+        root.appendChild(facilityElement);
+        for (i = 0; i < size; i++)
+        {
+            if (sys.GetSelectedData()->next())
+            {
+                facilityCellElement = doc.createElement("cell");
+                facilityElement.appendChild(facilityCellElement);
+                facilityCellElement.appendChild(doc.createTextNode(sys.GetSelectedData()->value(0).toString()));
+            }
+        }
+    }
+
+    err = sys.SelectAllApplication(paraDatabase);
+    if (err.isValid())
+    {
+        QDomElement db_error = doc.createElement("error");
+        doc.appendChild(db_error);
+        db_error.appendChild(doc.createTextNode(err.text()));
+        return;
+    }
+    size = sys.GetSize();
+    QDomElement applicationElement;
+    QDomElement applicationCellElement;
+    if (size > 0)
+    {
+        applicationElement = doc.createElement("application");
+        root.appendChild(applicationElement);
+        for (i = 0; i < size; i++)
+        {
+            if (sys.GetSelectedData()->next())
+            {
+                applicationCellElement = doc.createElement("cell");
+                applicationElement.appendChild(applicationCellElement);
+                applicationCellElement.appendChild(doc.createTextNode(sys.GetSelectedData()->value(0).toString()));
+            }
+        }
+    }
 }
 
 /* todo */
@@ -806,14 +952,31 @@ void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
     QString paraIsSendmail = m_pReq->allParameters().value("is_sendmail").toString();
     QString paraNewLogFolder = m_pReq->allParameters().value("f_new_log_folder").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QString args = QString(" f_syslog_enable=%1#f_syslog_folder=%2#f_syslog_udp=%3#"
+                           "f_archive_size_en=%4#f_archive_size=%5#f_archive_num_en=%6#"
+                           "f_archive_cycle_en=%7#f_archive_cycle=%8#f_folder_quota_size=%9#"
+                           "f_email_severity=%10#f_email_enable=%11#is_sendmail=%12#f_new_log_folder=%13")
+            .arg(paraSyslogEnable)
+            .arg(paraSyslogFolder)
+            .arg(paraSyslogUdp)
+            .arg(paraArchiveSizeEn)
+            .arg(paraArchiveSize)
+            .arg(paraArchiveNumEn)
+            .arg(paraArchiveCycleEn)
+            .arg(paraArchiveCycle)
+            .arg(paraFolderQuotaSize)
+            .arg(paraEmailSeverity)
+            .arg(paraEmailEnable)
+            .arg(paraIsSendmail)
+            .arg(paraNewLogFolder);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + args);
 
     str = "<script>location.href='/web/app_mgr/log_server.html?id=8401878'</script>";
 
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogExport() {
+void RenderResponseAppMngm::generateSyslogExport(QString &str) {
 
     QString paraLogFile = m_pReq->allParameters().value("log_file").toString();
     QString paraDateFrom = m_pReq->allParameters().value("f_date_from").toString();
@@ -822,8 +985,11 @@ void RenderResponseAppMngm::generateSyslogExport() {
     QString paraLogHost = m_pReq->allParameters().value("log_host").toString();
     QString paraLogFacility = m_pReq->allParameters().value("log_facility").toString();
     QString paraLogApplication = m_pReq->allParameters().value("log_application").toString();
-    QString paraKeyword = m_pReq->allParameters().value("keyword").toString();
+    QString paraKeyword = m_pReq->allParameters().value("f_keyword").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
+
+    SyslogDbDataProvider sys;
+    str = sys.DumpDataFromPara(paraLogFile, paraDateFrom, paraDateTo, paraViewSeverity, paraLogHost, paraLogFacility, paraLogApplication, paraKeyword, paraRp);
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -839,8 +1005,12 @@ void RenderResponseAppMngm::generateSyslogGetExportStatus(QDomDocument &doc) {
 
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
-
+    QFileInfo f("/tmp/syslogsendok");
+    if (f.exists())
+        statusElement.appendChild(doc.createTextNode("1"));
+    else
+        statusElement.appendChild(doc.createTextNode("-1"));
+    QFile::remove("/tmp/syslogsendok");
 }
 
 /* todo */

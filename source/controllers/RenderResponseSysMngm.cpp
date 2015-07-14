@@ -186,8 +186,7 @@ void RenderResponseSysMngm::preRender() {
 
 void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
-
-    QDateTime currentTime = QDateTime::currentDateTime();
+    //QDateTime currentTime = QDateTime::currentDateTime();
 
     QDomElement root = doc.createElement("time");
     doc.appendChild(root);
@@ -202,23 +201,23 @@ void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
     ntpServerElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement yearElement = doc.createElement("year");
     root.appendChild(yearElement);
-    yearElement.appendChild(doc.createTextNode(QString::number(currentTime.date().year())));
+    yearElement.appendChild(doc.createTextNode(apiOut.value(3)));
     QDomElement monElement = doc.createElement("mon");
     root.appendChild(monElement);
-    monElement.appendChild(doc.createTextNode(QString::number(currentTime.date().month())));
+    monElement.appendChild(doc.createTextNode(apiOut.value(4)));
     QDomElement dayElement = doc.createElement("day");
     root.appendChild(dayElement);
-    dayElement.appendChild(doc.createTextNode(QString::number(currentTime.date().day())));
+    dayElement.appendChild(doc.createTextNode(apiOut.value(5)));
 
     QDomElement hourElement = doc.createElement("hour");
     root.appendChild(hourElement);
-    hourElement.appendChild(doc.createTextNode(QString::number(currentTime.time().hour())));
+    hourElement.appendChild(doc.createTextNode(apiOut.value(6)));
     QDomElement minElement = doc.createElement("min");
     root.appendChild(minElement);
-    minElement.appendChild(doc.createTextNode(QString::number(currentTime.time().minute())));
+    minElement.appendChild(doc.createTextNode(apiOut.value(7)));
     QDomElement secElement = doc.createElement("sec");
     root.appendChild(secElement);
-    secElement.appendChild(doc.createTextNode(QString::number(currentTime.time().second())));
+    secElement.appendChild(doc.createTextNode(apiOut.value(8)));
 }
 
 void RenderResponseSysMngm::generateManualTime() {
