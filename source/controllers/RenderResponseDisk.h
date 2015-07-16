@@ -62,6 +62,11 @@ private:
     void generateCheckDiskRemountState(QDomDocument &);
     void generateScanDiskRunE2fsck(QDomDocument &);
     void generateScanDiskFinish(QDomDocument &);
+    void generateVeList(QDomDocument &);
+    void generateVePwdCheck(QDomDocument &);
+    void generateVeVerifyKeyfile(QDomDocument &);
+    void generateVeModify(QDomDocument &);
+    void generateVeSaveFile();
 
 };
 

@@ -53,7 +53,8 @@ HEADERS += applicationcontroller.h \
     ext_libs/inc/http_ftp_download.h \
     RenderResponseAddOn.h \
     Databaseobject.h \
-    RenderResponseDashboard.h
+    RenderResponseDashboard.h \
+    RenderResponseFileStation.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -72,4 +73,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseAppDownloads.cpp \
     RenderResponseAddOn.cpp \
     Databaseobject.cpp \
-    RenderResponseDashboard.cpp
+    RenderResponseDashboard.cpp \
+    RenderResponseFileStation.cpp
