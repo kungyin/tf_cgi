@@ -174,7 +174,18 @@ void RenderResponseAppMngm::preRender() {
     case CMD_BACKUP_NOW:
         generateBackupNow(str);
         break;
-
+    case CMD_MTP_INFO_GET:
+        generateMtpInfoGet(doc);
+        break;
+    case CMD_USB_BACKUP_INFO_GET:
+        generateUsbBackupInfoGet(doc);
+        break;
+    case CMD_MTP_INFO_SET:
+        generateMtpInfoSet(doc);
+        break;
+    case CMD_USB_BACKUP_INFO_SET:
+        generateUsbBackupInfoSet(doc);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -1719,7 +1730,7 @@ void RenderResponseAppMngm::generateSetSchedule(QString &str) {
     //QDateTime execat = QDateTime::fromString(QString(taskList[i].execat), "yyyyMMddhhmm");
     //    crond_type= 1 | 2 | 3 (int) //1->Monthly, 2-> Weekly 3-> (defualt)
     //    recur_type= 0~4(int) //0=none, 1=day, 2=week, 3=month if schedule_mode=3
-    //    recur_date= 0~6 | 1~31 (int) //recur_type=2 -> 0~6=Sun、Mon、Tue、Wed、Thu、Fri、Sat . recur_type=3 -> 1~31
+    //    recur_date= 0~6 | 1~31 (int) //recur_type=2 -> 0~6=Sun, Mon, Tue, Wed, Thu, Fri, Sat . recur_type=3 -> 1~31
 
     /* todo */
     r_info.execat = "1230";
@@ -1831,3 +1842,89 @@ void RenderResponseAppMngm::generateBackupNow(QString &str) {
     str = "N/A";
 
 }
+
+/* todo */
+void RenderResponseAppMngm::generateMtpInfoGet(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QStringList configContentElement(QStringList()
+        << "backup_date" << "state" << "dest_dir" << "mtp_status");
+
+    //for
+//    QDomElement jobNameElement = doc.createElement("job_name");
+//    root.appendChild(jobNameElement);
+//    jobNameElement.appendChild(doc.createTextNode(m_pReq->parameter("name")));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+
+    QStringList configContentElement(QStringList()
+        << "front_usb" << "state" << "direction" << "source_dir"
+        << "dest_dir" << "type" << "backup_status");
+
+    //for
+//    QDomElement jobNameElement = doc.createElement("job_name");
+//    root.appendChild(jobNameElement);
+//    jobNameElement.appendChild(doc.createTextNode(m_pReq->parameter("name")));
+}
+
+/* todo */
+void RenderResponseAppMngm::generateMtpInfoSet(QDomDocument &doc) {
+
+    QString paraEnable = m_pReq->parameter("f_enable");
+    QString paraDestDir = m_pReq->parameter("f_dest_dir");
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("0"));
+
+    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
+    QString dest = "/mnt/HD/HD_a2";
+    if(paraDestDir == "Volume_2")
+        dest = "/mnt/HD/HD_b2";
+
+    QDomElement destElement = doc.createElement("dest");
+    root.appendChild(destElement);
+    destElement.appendChild(doc.createTextNode(dest));
+
+}
+
+/* todo */
+void RenderResponseAppMngm::generateUsbBackupInfoSet(QDomDocument &doc) {
+
+    QString paraEnable = m_pReq->parameter("f_enable");
+    QString paraDirection = m_pReq->parameter("f_direction");
+    QString paraSourceDir = m_pReq->parameter("f_source_dir");
+    QString paraDestDir = m_pReq->parameter("f_dest_dir");
+    QString paraType = m_pReq->parameter("f_type");
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+
+}
+

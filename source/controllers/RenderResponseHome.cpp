@@ -105,8 +105,8 @@ void RenderResponseHome::generateUICheckWto(QString &str) {
 }
 
 void RenderResponseHome::generateFWStatus(QString &str) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g fw_status", true);
-    str = apiOut.isEmpty() ? "" : apiOut.at(0);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_fw_status", true);
+    str = apiOut.value(0);
 }
 
 void RenderResponseHome::generateLogin(QString &str) {

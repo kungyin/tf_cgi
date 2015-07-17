@@ -241,6 +241,10 @@ enum CGI_COMMAND {
     CMD_DEL_SCHEDULE,                       /* cgi_del_schedule */
     CMD_ENABLE_DISABLE_SCHEDULE,            /* cgi_enable_disable_schedule */
     CMD_BACKUP_NOW,                         /* cgi_backup_now */
+    CMD_MTP_INFO_GET,                       /* cgi_mtp_info_get */
+    CMD_USB_BACKUP_INFO_GET,                /* cgi_usb_backup_info_get */
+    CMD_MTP_INFO_SET,                       /* cgi_mtp_info_set */
+    CMD_USB_BACKUP_INFO_SET,                /* cgi_usb_backup_info_set */
     CMD_APP_MNGM_END,
 
     /**** System Management ****/
@@ -625,6 +629,12 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_del_schedule",
     "cgi_enable_disable_schedule",
     "cgi_backup_now",
+
+    /**** Usb Backup ****/
+    "cgi_mtp_info_get",
+    "cgi_usb_backup_info_get",
+    "cgi_mtp_info_set",
+    "cgi_usb_backup_info_set",
     "",
 
     /**** System Management ****/
@@ -1016,6 +1026,11 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_DEL_SCHEDULE,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_del_schedule */
     { CMD_ENABLE_DISABLE_SCHEDULE,      RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_enable_disable_schedule */
     { CMD_BACKUP_NOW,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_backup_now */
+
+    { CMD_MTP_INFO_GET,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info_get */
+    { CMD_USB_BACKUP_INFO_GET,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_backup_info_get */
+    { CMD_MTP_INFO_SET,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info_set */
+    { CMD_USB_BACKUP_INFO_SET,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_backup_info_set */
 
 //    CMD_APP_MNGM_END,
 

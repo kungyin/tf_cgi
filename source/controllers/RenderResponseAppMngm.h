@@ -67,6 +67,11 @@ private:
     void generateEnableDisableSchedule(QString &);
     void generateBackupNow(QString &);
 
+    void generateMtpInfoGet(QDomDocument &);
+    void generateUsbBackupInfoGet(QDomDocument &);
+    void generateMtpInfoSet(QDomDocument &);
+    void generateUsbBackupInfoSet(QDomDocument &);
+
 private:
     void renewOrAdd(bool);
     QString getIcon(QString);
