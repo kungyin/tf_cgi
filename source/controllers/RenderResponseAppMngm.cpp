@@ -328,25 +328,32 @@ void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState(QDomDocument &doc)
 
 void RenderResponseAppMngm::generateGuiCodepageGetList(QDomDocument &doc) {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    char *name = NULL, *desc = NULL;
+    int codepage_cnt = GetCodepageList(1, &name, &desc);
+    free(name);
+    free(desc);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(QString::number(codepage_cnt)));
 
-    for (auto e : apiOut) {
+    for (int i = 0; i < codepage_cnt; i++) {
+        GetCodepageList(i + 1, &name, &desc);
         QDomElement itemElement = doc.createElement("item");
         root.appendChild(itemElement);
 
         QDomElement langElement = doc.createElement("lang");
         itemElement.appendChild(langElement);
-        langElement.appendChild(doc.createTextNode(e.split(",").value(0)));
+        langElement.appendChild(doc.createTextNode(QString(name)));
 
         QDomElement descElement = doc.createElement("desc");
         itemElement.appendChild(descElement);
-        descElement.appendChild(doc.createTextNode(e.split(",").value(1)));
+        descElement.appendChild(doc.createTextNode(QString(desc)));
+        free(name);
+        free(desc);
     }
 
 }

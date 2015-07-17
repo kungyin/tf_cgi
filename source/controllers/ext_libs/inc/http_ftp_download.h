@@ -237,6 +237,8 @@ void FreeRemoteList(REMOTE_LIST *list);
 int GetAllRemoteTaskName(char ***name_list);
 void FreeRemoteTaskName(int count, char ***name_list);
 
+void StartUSBTask();
+
 #ifdef __cplusplus
 }
 #endif
