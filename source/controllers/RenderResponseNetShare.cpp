@@ -126,9 +126,6 @@ void RenderResponseNetShare::preRender() {
     case CMD_ISO_SIZE:
         generateIsoSize(str);
         break;
-    case CMD_DEL:
-        generateDel(doc);
-        break;
     case CMD_ISO_CREATE_IMAGE:
         generateIsoCreateImage();
         break;
@@ -249,21 +246,17 @@ void RenderResponseNetShare::generateGetSession(QDomDocument &doc) {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QString cellContentCifs =
-            "&lt;img src=&apos;../images/detail.png&apos; onclick=&apos;show_cifs_detail(&quot;%1&quot;);&apos;&gt;";
+            "<img src='../images/detail.png' onclick='show_cifs_detail(\"%1\");'>";
     QString cellContentFtp =
-            "&lt;img src=&apos;../images/detail.png&apos; onclick=&apos;show_ftp_detail\
-            (&quot;%1&quot;,&quot;#flex1&quot;);&apos;&gt;";
+            "<img src='../images/detail.png' onclick='show_ftp_detail(\"%1\",\"#flex1\");'>";
     // prefix "-"
     QString cellContentNfsPart1 =
-            "&lt;img src=&apos;../images/detail.png&apos; onclick=&apos;show_nfs_detail\
-            (&quot;%1&quot;,&quot;#flex1&quot;)&apos;&gt;";
+            "<img src='../images/detail.png' onclick='show_nfs_detail(\"%1\",\"#flex1\")'>";
     QString cellContentNfsPart2 =
-            "&lt;input type=&quot;hidden&quot; \
-            name=&quot;%1&quot; id=&quot;%1&quot; value=&quot;%2:%3&quot;&gt;";
+            "<input type='hidden' name=\"%1\" id=\"%1\" value=\"%2:%3\">";
     QString cellContentWebdav =
-            "&lt;img src=&apos;../images/detail.png&apos; onclick=&apos;show_webdav_detail\
-            (&quot;%1&quot;,&quot;#flex1&quot;)&apos;&gt;&lt;input type=&quot;hidden&quot; \
-            name=&quot;%2&quot; id=&quot;%2&quot; value=&quot;%3:%4&quot;&gt;";
+            "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#flex1\")'>"
+            "<input type=\"hidden\" name=\"%2\" id=\"%2\" value=\"%3:%4\">";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -386,8 +379,7 @@ void RenderResponseNetShare::generateUserList(QDomDocument &doc) {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    QString cellContent("&lt;input type=&apos;checkbox&apos; name\
-                        =&apos;C_%1&apos; value=&apos;%2&apos; rel=&apos;%3&apos;&gt;");
+    QString cellContent("<input type='checkbox' name='C_%1' value='%2&' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -432,8 +424,7 @@ void RenderResponseNetShare::generateGroupList(QDomDocument &doc) {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    QString cellContent("&lt;input type=&apos;checkbox&apos; name\
-                        =&apos;C_%1&apos; value=&apos;%2&apos; rel=&apos;%3&apos;&gt;");
+    QString cellContent("<input type='checkbox' name='C_%1' value='%2' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -486,24 +477,40 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
     QString paraShowFile = m_pReq->parameter("show_file");
     QString paraChkFlag = m_pReq->parameter("chk_flag");
     QString paraFileType = m_pReq->parameter("file_type");
-    QString paraFuncId = m_pReq->parameter("function_id");
-    QString paraFilterFile = m_pReq->parameter("filter_file");
-    QString paraRootPath = m_pReq->parameter("root_path");
+//    QString paraFuncId = m_pReq->parameter("function_id");
+//    QString paraFilterFile = m_pReq->parameter("filter_file");
+//    QString paraRootPath = m_pReq->parameter("root_path");
 
     QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n"
                             "%1"
                          "</ul>";
-    QString cssLiClass = "    <li class=\"directory collapsed%1\">\n"
-                         "%2%3"
-                         "    </li>\n";
-    QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\"  src=\"%2\" rel=\"%2\">\n";
+    QString cssLiClass =        "    <li class=\"directory collapsed %1\">\n"
+                                "%2%3"
+                                "    </li>\n";
+    /* todo */
+    QString cssLiClassWithID =  "    <li id=\"eve_test_456\" class=\"file ext_zip\">\n"
+                                "%1%2"
+                                "    </li>\n";
+    QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\" %2rel=\"%3\">\n";
+    QString checkboxSrc = "src=\"%1\" ";
     QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
 
     QDir dir(paraDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
     if(paraShowFile.compare("1") == 0)
         filters |= QDir::AllEntries;
-    QFileInfoList fileList= dir.entryInfoList(filters);
+    QFileInfoList fileList = dir.entryInfoList(filters);
+
+    for(QFileInfo e : fileList) {
+        if(!paraFileType.isEmpty())
+            if(!e.isDir() && e.suffix() != paraFileType)
+                fileList.removeOne(e);
+        if(        e.fileName() == "lost+found"
+                || e.fileName() == "Nas_Prog"
+                || e.fileName() == "aMule"
+                || e.fileName() == "ShareCenter_Sync")
+            fileList.removeOne(e);
+    }
 
     QString content;
     for(QFileInfo e : fileList) {
@@ -512,15 +519,28 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
             fileName = "Volume_1";
         if(e.absoluteFilePath().compare("/mnt/HD/HD_b2") == 0)
             fileName = "Volume_2";
-        QString line1 = (paraChkFlag.compare("1") == 0) ? checkboxLine.arg(e.absoluteFilePath()).arg(fileName) : QString::null;
-        QString line2 = hrefLine.arg(e.absoluteFilePath() + "/").arg(fileName);
-        content += cssLiClass.arg("").arg(line1).arg(line2);
+
+        QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
+        if(e.isDir()) {
+            QString line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
+            content += cssLiClass.arg("").arg(line1).arg(line2);
+        }
+        else {
+            QString fileVolumePath = e.absoluteFilePath();
+            fileVolumePath.replace("/mnt/HD/HD_a2", "Volume_1");
+            fileVolumePath.replace( "/mnt/HD/HD_b2", "Volume_2");
+
+            QString line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
+            content += cssLiClassWithID.arg(line1).arg(line2);
+        }
     }
 
     /* If it was not rooted path, we can add folder. */
     if(dir.absolutePath().compare("/mnt/HD") != 0) {
         QString line2 = hrefLine.arg(dir.absolutePath() + "/new/").arg("New");
-        content += cssLiClass.arg(" add").arg("").arg(line2);
+        content += cssLiClass.arg("add").arg("").arg(line2);
     }
 
     str = cssUlClass.arg(content);
@@ -537,7 +557,10 @@ void RenderResponseNetShare::generateOpenNewFolder(QDomDocument &doc) {
     QString paraRootPath = m_pReq->parameter("root_path");
 
     QDir dir(paraDir);
-    QString ret = dir.mkdir(paraFileName) ? "ok" : "error";
+    bool bMkdir = dir.mkdir(paraFileName);
+    if(bMkdir)
+        QFile(paraDir).setPermissions((QFileDevice::Permission)0x0775);
+    QString ret = bMkdir ? "ok" : "error";
 
     QDomElement root = doc.createElement("mkdir");
     doc.appendChild(root);
@@ -779,7 +802,7 @@ void RenderResponseNetShare::generateGetShareInfo(QDomDocument &doc) {
     readListElement.appendChild(doc.createTextNode("test"));
     QDomElement writeListElement = doc.createElement("write_list");
     root.appendChild(writeListElement);
-    writeListElement.appendChild(doc.createTextNode("&lt;b&gt;aaaa&lt;/b&gt;&lt;br&gt;jerry"));
+    writeListElement.appendChild(doc.createTextNode("<b>aaaa</b><br>jerry"));
     QDomElement invalidUsersElement = doc.createElement("invalid_users");
     root.appendChild(invalidUsersElement);
     invalidUsersElement.appendChild(doc.createTextNode(" - "));
@@ -836,7 +859,7 @@ void RenderResponseNetShare::generateGetFtp(QDomDocument &doc) {
     readListElement.appendChild(doc.createTextNode("test"));
     QDomElement writeListElement = doc.createElement("write_list");
     root.appendChild(writeListElement);
-    writeListElement.appendChild(doc.createTextNode("&lt;b&gt;aaaa&lt;/b&gt;&lt;br&gt;jerry"));
+    writeListElement.appendChild(doc.createTextNode("<b>aaaa</b><br>jerry"));
     QDomElement denyAccessListElement = doc.createElement("deny_access_list");
     root.appendChild(denyAccessListElement);
     denyAccessListElement.appendChild(doc.createTextNode(" - "));
@@ -1017,18 +1040,6 @@ void RenderResponseNetShare::generateIsoCreatePath() {
 void RenderResponseNetShare::generateIsoSize(QString &str) {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     str = "874.0k";
-}
-
-/* todo: need API */
-void RenderResponseNetShare::generateDel(QDomDocument &doc) {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-
-    QDomElement root = doc.createElement("result");
-    doc.appendChild(root);
-
-    QDomElement statusElement = doc.createElement("status");
-    doc.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("ok"));
 }
 
 /* todo: need API */

@@ -234,9 +234,9 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList(QDomDocument &doc) {
 //    if(setNasCfg("nfs", "enable", paraNfsStatus))
 //        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
 
-    QString cellcontent3 = "&lt;a href=javascript:upnp_path_refresh_one(&apos;%1');>&lt;IMG border=&apos;0&apos; \
-                            src=&apos;/web/images/refresh_over.png&apos;&gt;&lt;/a&gt;";
-    QString cellcontent4 = "&lt;IMG border=&apos;0&apos; src=&apos;/web/images/on.png&apos;&gt;";
+    QString cellcontent3 = "<a href=javascript:upnp_path_refresh_one('%1');><IMG border='0' "
+                            "src='/web/images/refresh_over.png'></a>";
+    QString cellcontent4 = "<IMG border='0' src='/web/images/on.png'>";
     //for(int i=0; i < apiOut.size(); i++) {
 //        if(apiOut.at(i).isEmpty())
 //            continue;
@@ -987,7 +987,7 @@ void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
             .arg(paraEmailEnable)
             .arg(paraIsSendmail)
             .arg(paraNewLogFolder);
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + args);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_log_cfg" + args);
 
     str = "<script>location.href='/web/app_mgr/log_server.html?id=8401878'</script>";
 
@@ -1082,10 +1082,10 @@ QString RenderResponseAppMngm::getIcon(QString status) {
 
 void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
 
-    QString strProgressBar = "&lt;span class=&apos;progressBar&apos; id=&apos;progressbar_row%1&apos;&gt;%2&lt;/span&gt;";
-    QString strImage = "&lt;IMG src=&apos;%1&apos;&gt;";
-    QString strBackupStart = "&lt;a href=javascript:%1_%2(&apos;%3&apos;)&gt;&lt;IMG border\
-            =&apos;0&apos; src=&apos;/web/images/%2.png&apos;&gt;&lt;/a&gt;";
+    QString strProgressBar = "<span class='progressBar' id='progressbar_row%1'>%2</span>";
+    QString strImage = "<IMG src='%1'>";
+    QString strBackupStart =
+            "<a href=javascript:%1_%2('%3')><IMG border='0' src='/web/images/%2.png'></a>";
 
     DOWNLOAD_LIST *taskList;
     int total = 0, pageCount = 0;
@@ -1499,10 +1499,10 @@ void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
     memset(&taskList, 0, sizeof(REMOTE_LIST*));
     GetRemoteListXmlValue(paraPage.toInt(), paraRp.toInt(), &total, &pageCount, &taskList);
 
-    QString cellcontent3 = "&lt;img border=&apos;0&apos; src=&apos;/web/images/%1.png&apos; width=&apos;27&apos"
-            "; height=&apos;17&apos; onclick=&apos;onoff_job(&quot;task&quot;,0)&apos;&gt;";
-    QString cellcontent4 = "&lt;img border=&apos;0&apos; src=&apos;/web/images/backup.png&apos; width=&apos;16&apos"
-            "; height=&apos;16&apos; onclick=&apos;backup_now(&quot;task&quot;)&apos;&gt;";
+    QString cellcontent3 = "<img border='0' src='/web/images/%1.png' width='27'"
+            " height='17' onclick='onoff_job(\"task\",0)'>";
+    QString cellcontent4 = "<img border='0' src='/web/images/backup.png' width='16'"
+            " height='16' onclick='backup_now(\"task\")'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);

@@ -1,6 +1,50 @@
 #include "RenderResponseFileStation.h"
 
 #include <QDir>
+#include <QCryptographicHash>
+
+bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = true)
+{
+    QDir dir;
+    dir.setPath(fromDir);
+
+    fromDir += QDir::separator();
+    toDir += QDir::separator();
+
+
+    foreach(QString copyFile, dir.entryList(QDir::Files)) {
+        QString from = fromDir + copyFile;
+        QString to = toDir + copyFile;
+
+        if (QFile::exists(to)) {
+            if (replaceOnConflit) {
+                if (!QFile::remove(to))
+                    return false;
+            }
+            else
+                continue;
+        }
+        if (!QFile::copy(from, to)) {
+            tDebug("Copy file fail: %s", from.toLocal8Bit().data());
+            return false;
+        }
+    }
+
+    foreach(QString copyDir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        QString from = fromDir + copyDir;
+        QString to = toDir + copyDir;
+
+        if (dir.mkpath(to))
+            QFile::setPermissions(to, (QFileDevice::Permission)0x0775);
+        else
+            return false;
+
+        if (!copyDirRecursive(from, to, replaceOnConflit))
+            return false;
+    }
+
+    return true;
+}
 
 RenderResponseFileStation::RenderResponseFileStation(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -23,7 +67,51 @@ void RenderResponseFileStation::preRender() {
     case CMD_FOLDER_CONTENT:
         generateFolderContent(doc);
         break;
-
+    case CMD_GET_USER_QUOTA:
+        generateGetUserQuota(doc);
+        break;
+    case CMD_CHK_FILE:
+        generateChkFile(str);
+        break;
+    case CMD_COMPRESS:
+        generateCompress(doc);
+        break;
+    case CMD_DOWNLOAD:
+        generateDownload(str);
+        break;
+    case CMD_CP:
+        generateCp(doc);
+        break;
+    case CMD_MOVE:
+        generateMove(doc);
+        break;
+    case CMD_DEL:
+        generateDel(doc);
+        break;
+    case CMD_RENAME:
+        generateRename(doc);
+        break;
+    case CMD_GET_PROPERTIES:
+        generateGetProperties(doc);
+        break;
+    case CMD_CHANGE_PERMISSIONS:
+        generateChangePermissions(doc);
+        break;
+    case CMD_ADD_ZIP:
+        generateAddZip(doc);
+        break;
+    case CMD_UNZIP:
+        generateUnzip(doc);
+        break;
+    case CMD_UNTAR:
+        generateUntar(doc);
+        break;
+    case CMD_GET_SECDOWNLOAD_URL:
+        generateGetSecDownloadUrl(doc);
+        break;
+    case CMD_GET_COOLIRIS_RSS:
+        generateGetCoolirisRss(str);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -44,17 +132,20 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
     QString paraField = m_pReq->parameter("f_field");
     QString paraUsedDir = QUrl::fromPercentEncoding(m_pReq->parameter("used_dir").toLocal8Bit());
 
-    /* todo */
-//    QString uiContent = /*THttpUtility::htmlEscape(*/"&lt;a href=javascript:onclick=GetSmartInfo(&apos;sda&apos;,&apos;0&apos;)"
-//            ";&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/normal.png&apos; alt=&apos;"
-//            "Normal&apos;&gt;&lt;/a&gt;"/*)*/;
-
+    QString itemContent =   "<span style='display:none'>%1</span>"
+                            "<span class='%2'><span>%3</span></span>";
 
     QDir dir(paraUsedDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::AllEntries;
     QFileInfoList fileList= dir.entryInfoList(filters);
 
-    tDebug("yyyyyy: %d", fileList.size());
+    for(QFileInfo e : fileList) {
+        if(            e.fileName() == "lost+found"
+                    || e.fileName() == "Nas_Prog"
+                    || e.fileName() == "aMule"
+                    || e.fileName() == "ShareCenter_Sync")
+            fileList.removeOne(e);
+    }
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -67,8 +158,32 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
     for(int i = start; i < end; i++) {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        QStringList cellContent(QStringList()
-            << fileList.value(i).fileName() << "" << "" << "");
+
+        // todo
+        QString fileDescription = fileList.value(i).isDir() ? "Folder" : "File";
+
+        QString fileSize;
+        if(!fileList.value(i).isDir()) {
+            if(fileList.value(i).size() > 1073741824) {
+                fileSize = QString::number(fileList.value(i).size() / 1073741824) + " GB";
+            }
+            else if(fileList.value(i).size() > 1048576) {
+                fileSize = QString::number(fileList.value(i).size() / 1048576) + " MB";
+            }
+            else if(fileList.value(i).size() > 1024) {
+                fileSize = QString::number(fileList.value(i).size() / 1024) + " KB";
+            }
+            else
+                fileSize = QString::number(fileList.value(i).size()) + " Bytes";
+        }
+
+        QString table = fileList.value(i).isDir() ? "table_folder" : "table_file";
+
+        QStringList cellContent(QStringList() <<
+            itemContent.arg(fileList.value(i).absoluteFilePath()).arg(table).arg(fileList.value(i).fileName()) <<
+            fileSize <<
+            fileDescription <<
+            fileList.value(i).lastModified().toString("yyyy-MM-dd hh:mm:ss"));
 
         for(QString e : cellContent) {
             QDomElement cellElement = doc.createElement("cell");
@@ -92,4 +207,389 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
 
 }
 
+/* todo */
+void RenderResponseFileStation::generateGetUserQuota(QDomDocument &doc) {
+    QStringList configContentElement(QStringList()
+        << "used_size" << "g_used_size" << "limit_size" << "g_limit_size" << "hdd_free_size" << "enable");
+
+    QStringList valusElement(QStringList()
+        << "0" << "0" << "0" << "0" << "2863845948" << "0");
+
+    QDomElement root = doc.createElement("quota");
+    doc.appendChild(root);
+
+    for(int i=0; i<configContentElement.size(); i++) {
+        QDomElement element = doc.createElement(configContentElement.value(i));
+        root.appendChild(element);
+        element.appendChild(doc.createTextNode(valusElement.value(i)));
+    }
+
+}
+
+void RenderResponseFileStation::generateChkFile(QString &str) {
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraName = m_pReq->parameter("name");
+
+    QDir dir(paraPath);
+    str = dir.exists(paraName) ? "0" : "1";
+}
+
+QString RenderResponseFileStation::getTempPath(const QString &path) {
+    QString tmpPath;
+    if(path.startsWith("/mnt/HD/HD_a2"))
+        tmpPath = "/mnt/HD/HD_a2/.tmp";
+    else
+        tmpPath = "/mnt/HD/HD_b2/.tmp";
+    return tmpPath;
+}
+
+void RenderResponseFileStation::generateCompress(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraName = m_pReq->parameter("name");
+
+    QString tmpPath = getTempPath(paraPath);
+    QString ret = "error";
+    QDir dir(tmpPath.left(tmpPath.lastIndexOf(QDir::separator())));
+    bool bMkdir = dir.mkdir(".tmp");
+    if(bMkdir || QDir(tmpPath).exists()) {
+
+        QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0775);
+
+        QString currentPath = QDir::currentPath();
+        QDir::setCurrent(paraPath);
+        QString compressCmd = "zip -r %1/%2 %2";
+        getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName));
+        QDir::setCurrent(currentPath);
+
+        QString zipFileName = paraName + ".zip";
+        QFileInfo zipFileInfo(tmpPath + QDir::separator() + zipFileName);
+        if(zipFileInfo.exists())
+            ret = "ok";
+
+    }
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+
+void RenderResponseFileStation::generateDownload(QString &str) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path1").toLocal8Bit());
+    QString paraName = m_pReq->parameter("name");
+
+    QString tmpPath = getTempPath(paraPath);
+    QString zipFileName = paraName + ".zip";
+    QFileInfo file(tmpPath + QDir::separator() + zipFileName);
+    if(file.exists() && file.isFile()) {
+        str = file.absoluteFilePath();
+    }
+
+}
+
+bool RenderResponseFileStation::copy(QString &source, QString &dest) {
+
+    QFileInfo sourceInfo(source);
+    if(!dest.endsWith(QDir::separator()))
+        dest += QDir::separator();
+    dest += sourceInfo.fileName();
+    if(sourceInfo.isDir()) {
+        if (QDir().mkpath(dest)) {
+            QFile::setPermissions(dest, (QFileDevice::Permission)0x0775);
+            return copyDirRecursive(source, dest);
+        }
+    }
+    else {
+        return QFile::copy(source, dest);
+    }
+
+    return false;
+}
+
+void RenderResponseFileStation::generateCp(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
+
+    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
+    QString dest = paraPath;
+    dest.replace("Volume_1", "/mnt/HD/HD_a2");
+    dest.replace("Volume_2", "/mnt/HD/HD_b2");
+
+    QString ret = copy(paraSourcePath, dest) ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateMove(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
+
+    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
+    QString dest = paraPath;
+    dest.replace("Volume_1", "/mnt/HD/HD_a2");
+    dest.replace("Volume_2", "/mnt/HD/HD_b2");
+
+    bool bRemove = false;
+    if(copy(paraSourcePath, dest)) {
+        QFileInfo fileInfo(paraSourcePath);
+        if(fileInfo.isDir())
+            bRemove = QDir(paraSourcePath).removeRecursively();
+        else
+            bRemove = QFile(paraSourcePath).remove();
+    }
+
+    QString ret = bRemove ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateDel(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+
+    QFileInfo fileInfo(paraPath);
+    bool bRemove = false;
+    if(fileInfo.isDir())
+        bRemove = QDir(paraPath).removeRecursively();
+    else
+        bRemove = QFile(paraPath).remove();
+
+    QString ret = bRemove ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateRename(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
+
+    QString ret = QDir().rename(paraSourcePath, paraPath) ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateGetProperties(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+
+    QStringList statusElement(QStringList()
+        << "change_time" << "modify_time" << "access_time" << "owner" << "group" << "permission");
+    QFileInfo fileInfo(paraPath);
+    QString filePermission = "rwxrwxrwx";
+    QFile::Permissions permissions = fileInfo.permissions();
+    QList<QFileDevice::Permission> permissionList;
+    permissionList << QFileDevice::ReadUser << QFileDevice::WriteUser << QFileDevice::ExeUser <<
+                      QFileDevice::ReadGroup << QFileDevice::WriteGroup << QFileDevice::ExeGroup <<
+                      QFileDevice::ReadOther << QFileDevice::WriteOther << QFileDevice::ExeOther;
+    for(int i = permissionList.size(); i>=0; i--)
+        if(!(permissions & permissionList.value(i)))
+            filePermission[i] = QChar('-');
+
+    QStringList contentElement(QStringList()
+        << fileInfo.created().toString("yyyy-M-d h:m")
+        << fileInfo.lastModified().toString("yyyy-M-d h:m")
+        << fileInfo.lastRead().toString("yyyy-M-d h:m")
+        << fileInfo.owner()
+        << fileInfo.group()
+        << filePermission);
+
+    QDomElement root = doc.createElement("status");
+    doc.appendChild(root);
+
+    for(int i=0; i<statusElement.size(); i++) {
+        QDomElement element = doc.createElement(statusElement.value(i));
+        root.appendChild(element);
+        element.appendChild(doc.createTextNode(contentElement.value(i)));
+    }
+
+}
+
+void RenderResponseFileStation::generateChangePermissions(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraPermission = m_pReq->parameter("permission");
+
+    bool ok = false;
+    QString ret = QFile::setPermissions(paraPath,
+                                        (QFileDevice::Permission)paraPermission.toInt(&ok, 16))
+                            ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateAddZip(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraSelectName = m_pReq->parameter("select_name");
+    QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
+    //QString paraCommand = QUrl::fromPercentEncoding(m_pReq->parameter("command").toLocal8Bit());
+
+    QString zipFileName = paraName;
+    if(paraName.startsWith(QDir::separator())) {
+        QFileInfo fileInfo(paraName);
+        zipFileName = fileInfo.fileName();
+    }
+
+    QString ret = "error";
+    QDir dir(paraPath);
+    if(dir.exists()) {
+
+        QString currentPath = QDir::currentPath();
+        QDir::setCurrent(paraPath);
+        QString compressCmd = "zip -r %1/%2 %3";
+        getAPIStdOut(compressCmd.arg(paraPath).arg(zipFileName).arg(paraSelectName.replace("*", " ")));
+        QDir::setCurrent(currentPath);
+
+        QFileInfo zipFileInfo(paraPath + QDir::separator() + zipFileName);
+        if(zipFileInfo.exists())
+            ret = "ok";
+
+    }
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString cmd) {
+    QDir dir(path);
+    if(dir.exists()) {
+        QString currentPath = QDir::currentPath();
+        QDir::setCurrent(path);
+        QString compressCmd = "%1 %2";
+        getAPIStdOut(compressCmd.arg(cmd).arg(name));
+        QDir::setCurrent(currentPath);
+
+        return true;
+    }
+    return false;
+}
+
+void RenderResponseFileStation::generateUnzip(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
+
+    QString ret = unArchive(paraPath, paraName, "unzip") ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+void RenderResponseFileStation::generateUntar(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
+
+    QString cmd;
+    QFileInfo fileInfo(paraPath + QDir::separator() + paraName);
+    if(fileInfo.completeSuffix() == "tar.gz" || fileInfo.completeSuffix() == "tgz")
+        cmd = "tar -zxvf";
+    else if(fileInfo.completeSuffix() == "tar")
+        cmd = "tar -xvf";
+
+    QString ret = "error";
+    if(!cmd.isEmpty())
+        ret = unArchive(paraPath, paraName, cmd) ? "ok" : "error";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+}
+
+/* lighttpd secret dwonload:
+ * 1. a secret string (user supplied)
+ * 2. <rel-path> (starts with /)
+ * 3. <timestamp-in-hex>
+ */
+QString RenderResponseFileStation::getSecretPath(QString filePath) {
+    QString secDownloadPath;
+
+    if(QFileInfo(filePath).exists()) {
+        filePath.remove("/mnt");
+        QByteArray hexTime = QByteArray::number(QDateTime::currentDateTime().toTime_t(), 16);
+        QByteArray hashResult = QCryptographicHash::hash("TNo5FFCWt1gT" +
+                                                         filePath.toLocal8Bit() +
+                                                         hexTime,
+                                                         QCryptographicHash::Md5)
+                                                        .toHex();
+
+        secDownloadPath = QString("/sdownload/%1/%2%3")
+                .arg(QString(hashResult))
+                .arg(QString(hexTime))
+                .arg(filePath);
+    }
+
+    return secDownloadPath;
+}
+
+
+void RenderResponseFileStation::generateGetSecDownloadUrl(QDomDocument &doc) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("f_path").toLocal8Bit());
+
+    QString secDownloadPath = getSecretPath(paraPath);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(secDownloadPath.isEmpty() ? "0" : "1"));
+    QDomElement myUrlElement = doc.createElement("my_url");
+    root.appendChild(myUrlElement);
+    myUrlElement.appendChild(doc.createTextNode(secDownloadPath));
+
+}
+
+void RenderResponseFileStation::generateGetCoolirisRss(QString &str) {
+
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+    QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
+
+    str = getSecretPath(paraPath + QDir::separator() + paraName);
+
+}
 

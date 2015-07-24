@@ -241,8 +241,7 @@ void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QString cellContent = "&lt;input type=&quot;checkbox&quot; name=&quot;C_%1\
-                            &quot; value=&quot;%2&quot; rel=&quot;%3&quot;&gt;";
+    QString cellContent = "<input type=\"checkbox\" name=\"C_%1\" value=\"%2\" rel=\"%3\">";
     for(int i=0; i < apiOut.size(); i++) {
 
         QDomElement rowElement = doc.createElement("row");

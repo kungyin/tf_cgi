@@ -274,8 +274,8 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_disk_list");
     apiOut.removeLast();
-    QString checkbox = "&lt;input type=&quot;checkbox&quot; value=&quot;%1,%2,%3&quot; \
-            id=&quot;smart_hdd_num_0&quot; name=&quot;smart_hdd_num&quot; &gt;";
+    QString checkbox = "<input type=\"checkbox\" value=\"%1,%2,%3\" "
+            "id=\"smart_hdd_num_0\" name=\"smart_hdd_num\" >";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -358,7 +358,8 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
         paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
-    QString onClick = "&lt;a href=javascript:onclick=create_schedule_wait(0)&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;";
+    QString onClick = "<a href=javascript:onclick=create_schedule_wait(0)>"
+            "<IMG border='0' src='/web/images/delete_over.png'></a>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);

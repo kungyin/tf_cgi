@@ -15,9 +15,9 @@ enum RENDER_TYPE {
 };
 
 enum COMMAND_ALLOW {
-    LOGIN_CMDS = 1,
-    OPENED_CMDS = 1 << 1,
-    COOKIE_REQ_CMDS = 1 << 2,  // login with cookie required.
+    LOGIN_CMDS      =   1,
+    OPENED_CMDS     =   1 << 1,
+    COOKIE_REQ_CMDS =   1 << 2,  // login with cookie required.
 };
 
 enum CGI_COMMAND {
@@ -177,7 +177,7 @@ enum CGI_COMMAND {
     CMD_CHK_HD_SIZE,                        /* cgi_chk_hd_size */
     CMD_ISO_CREATE_PATH,                    /* cgi_iso_create_path */
     CMD_ISO_SIZE,                           /* cgi_iso_size */
-    CMD_DEL,                                /* cgi_del */
+    //CMD_DEL,                                /* cgi_del */
     CMD_ISO_CREATE_IMAGE,                   /* cgi_iso_create_image */
     CMD_NETSHARE_END,
 
@@ -402,6 +402,21 @@ enum CGI_COMMAND {
 
     /**** File ****/
     CMD_FOLDER_CONTENT,                      /* cgi_folder_content */
+    CMD_GET_USER_QUOTA,                      /* cgi_get_user_quota */
+    CMD_CHK_FILE,                            /* chk_file */
+    CMD_COMPRESS,                            /* cgi_compress */
+    CMD_DOWNLOAD,                            /* cgi_download */
+    CMD_CP,                                  /* cgi_cp */
+    CMD_MOVE,                                /* cgi_move */
+    CMD_DEL,                                 /* cgi_del */
+    CMD_RENAME,                              /* cgi_rename */
+    CMD_GET_PROPERTIES,                      /* cgi_get_properties */
+    CMD_CHANGE_PERMISSIONS,                  /* cgi_change_permision */
+    CMD_ADD_ZIP,                             /* cgi_add_zip */
+    CMD_UNZIP,                               /* cgi_unzip */
+    CMD_UNTAR,                               /* cgi_untar */
+    CMD_GET_SECDOWNLOAD_URL,                 /* cgi_get_secdownload_url */
+    CMD_GET_COOLIRIS_RSS,                    /* get_cooliris_rss*/
     CMD_FILE_END,
 
     CMD_SIZE
@@ -564,7 +579,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_chk_hd_size",
     "cgi_iso_create_path",
     "cgi_iso_size",
-    "cgi_del",
+    //"cgi_del",
     "cgi_iso_create_image",
     "",
 
@@ -789,6 +804,21 @@ const char CGI_PARA_COMMANDS[][255] = {
 
     /**** File ****/
     "cgi_folder_content",
+    "cgi_get_user_quota",
+    "chk_file",
+    "cgi_compress",
+    "cgi_download",
+    "cgi_cp",
+    "cgi_move",
+    "cgi_del",
+    "cgi_rename",
+    "cgi_get_properties",
+    "cgi_change_permision",
+    "cgi_add_zip",
+    "cgi_unzip",
+    "cgi_untar",
+    "cgi_get_secdownload_url",
+    "get_cooliris_rss",
     ""
 };
 
@@ -963,7 +993,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_CHK_HD_SIZE,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_hd_size */
     { CMD_ISO_CREATE_PATH,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_iso_create_path */
     { CMD_ISO_SIZE,                     RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_iso_size */
-    { CMD_DEL,                          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del */
+    //{ CMD_DEL,                          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del */
     { CMD_ISO_CREATE_IMAGE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_iso_create_image */
 //    CMD_NETSHARE_END,
 
@@ -1188,6 +1218,22 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     //CMD_PHOTO_END,
 
     { CMD_FOLDER_CONTENT,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_folder_content */
+    { CMD_GET_USER_QUOTA,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_user_quota */
+    { CMD_CHK_FILE,                      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* chk_file */
+    { CMD_COMPRESS,                      RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_compress */
+    { CMD_DOWNLOAD,                      RENDER_TYPE_FILE,          COOKIE_REQ_CMDS          },         /* cgi_download */
+    { CMD_CP,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_cp */
+    { CMD_MOVE,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_move */
+    { CMD_DEL,                           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_del */
+    { CMD_RENAME,                        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_rename */
+    { CMD_GET_PROPERTIES,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_properties */
+    { CMD_CHANGE_PERMISSIONS,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_change_permision */
+    { CMD_ADD_ZIP,                       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_add_zip */
+    { CMD_UNZIP,                         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_unzip */
+    { CMD_UNTAR,                         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_untar */
+    { CMD_GET_SECDOWNLOAD_URL,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_secdownload_url */
+    { CMD_GET_COOLIRIS_RSS,              RENDER_TYPE_FILE,          COOKIE_REQ_CMDS          },         /* get_cooliris_rss */
+
     //CMD_FILE_END,
 
 //    CMD_SIZE

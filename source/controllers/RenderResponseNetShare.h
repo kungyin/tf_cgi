@@ -49,7 +49,6 @@ private:
     void generateChkHDSize(QString &);
     void generateIsoCreatePath();
     void generateIsoSize(QString &);
-    void generateDel(QDomDocument &);
     void generateIsoCreateImage();
 
 };

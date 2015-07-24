@@ -393,10 +393,8 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    /* todo */
-    QString uiContent = /*THttpUtility::htmlEscape(*/"&lt;a href=javascript:onclick=GetSmartInfo(&apos;sda&apos;,&apos;0&apos;)"
-            ";&gt;&lt;IMG border=&apos;0&apos; src=&apos;/web/images/normal.png&apos; alt=&apos;"
-            "Normal&apos;&gt;&lt;/a&gt;"/*)*/;
+    QString uiContent = "<a href=javascript:onclick=GetSmartInfo('sda','0');>"
+            "<IMG border='0' src='/web/images/normal.png' alt='Normal'></a>";
 
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement rowElement = doc.createElement("row");
@@ -584,24 +582,24 @@ void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
         cellElement4.appendChild(doc.createTextNode(
-                                     "&lt;img border=&apos;0&apos; src=&apos;/web/images/sign_ok.png&apos;&gt;"));
+                                     "<img border='0' src='/web/images/sign_ok.png'>"));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
         cellElement5.appendChild(doc.createTextNode(
-                                     "&lt;img border=&apos;0&apos; src=&apos;/web/images/off.png&apos;&gt;"));
+                                     "<img border='0' src='/web/images/off.png'>"));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
         cellElement6.appendChild(doc.createTextNode(
-                                     "&lt;a href=javascript:enable(&apos;Transmission&apos;,&apos;1&apos;,&apos;app&apos;)\
-                                     &gt;&lt;img border=&apos;0&apos; src=&apos;/web/images/start.png&apos;&gt;&lt;/a&gt;"));
+                                     "<a href=javascript:enable('Transmission','1','app')>"
+                                     "<img border='0' src='/web/images/start.png'></a>"));
 
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);
         cellElement7.appendChild(doc.createTextNode(
-                                     "&lt;a href=javascript:del_module(&apos;Transmission&apos;,&apos;app&apos;)&gt;&lt;img \
-                                     border=&apos;0&apos; src=&apos;/web/images/delete_over.png&apos;&gt;&lt;/a&gt;"));
+                                     "<a href=javascript:del_module('Transmission','app')>"
+                                     "<img border='0' src='/web/images/delete_over.png'></a>"));
 
         rowElement.setAttribute("id", QString::number(i+1));
 

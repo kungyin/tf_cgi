@@ -35,7 +35,11 @@ const char VALID_CLIENT_ID[][255] = {
 
 CgiController::CgiController(const CgiController &other)
     : ApplicationController()
-{}
+{
+#ifdef SIMULATOR_MODE
+    tDebug("SIMULATOR_MODE is enabled.");
+#endif
+}
 
 void CgiController::index()
 {
@@ -43,7 +47,8 @@ void CgiController::index()
 /* Parse command */
     QVariantMap parasMap = httpRequest().allParameters();
     QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
-    tDebug("CgiController::index() -- command: %s", paraCmd.toLocal8Bit().data());
+    tDebug("\n  ------------------------------------------------------------------");
+    tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
 
     ParseCmd parseCmd(paraCmd);
     CGI_COMMAND cmd = static_cast<CGI_COMMAND>(parseCmd.getCGICmd());
@@ -54,9 +59,7 @@ void CgiController::index()
 
 /* Verify client which ia valid */
 
-#ifdef SIMULATOR_MODE
-    tDebug("SIMULATOR_MODE is enabled.");
-#else
+#ifndef SIMULATOR_MODE
     if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
         if(!isValidClient()) {
             renderErrorResponse(Tf::NotFound);
@@ -104,9 +107,13 @@ void CgiController::index()
         break;
     case RENDER_TYPE_FILE:
     {
+        bool bRemoveFile = false;
+        if(cmd == CMD_DOWNLOAD)
+            bRemoveFile = true;
         QFileInfo file(pRrep->getStr());
+        contentType();
         if(file.exists() && file.isFile())
-            sendFile(pRrep->getStr(), "application/octet-stream", file.fileName());
+            sendFile(pRrep->getStr(), "application/octet-stream", file.fileName(), bRemoveFile);
         else
             tDebug("file %s doesn't exist.", pRrep->getStr().toLocal8Bit().data());
     }

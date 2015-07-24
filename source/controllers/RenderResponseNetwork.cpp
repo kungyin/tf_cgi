@@ -559,8 +559,8 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
 
      ********************** */
 
-    QString strCheckboxEnable = "&lt;input type='checkbox' checked disabled class='scan'&gt;";
-    QString strCheckboxDisable = "&lt;input type='checkbox' disabled class='scan'&gt;";
+    QString strCheckboxEnable = "<input type='checkbox' checked disabled class='scan'>";
+    QString strCheckboxDisable = "<input type='checkbox' disabled class='scan'>";
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
