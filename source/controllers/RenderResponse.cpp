@@ -190,3 +190,19 @@ int RenderResponse::getTotalPages(int perPage, int itemNumber) {
         iTotals = itemNumber / perPage + (itemNumber % perPage != 0);
     return iTotals;
 }
+
+QString RenderResponse::sizeHuman(qint64 size)
+{
+    double fileSize(size);
+    QStringList list;
+    list << "KB" << "MB" << "GB" << "TB";
+
+    QStringListIterator i(list);
+    QString unit("Bytes");
+
+    while(fileSize >= 1024.0 && i.hasNext()) {
+        unit = i.next();
+        fileSize /= 1024.0;
+    }
+    return QString::number(fileSize, 'f', 2) + " " + unit;
+}

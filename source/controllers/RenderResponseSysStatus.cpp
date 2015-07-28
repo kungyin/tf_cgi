@@ -415,7 +415,7 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc
         }
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(uiContent));
+        cellElement2.appendChild(doc.createCDATASection(uiContent));
 
         rowElement.setAttribute("id", QString::number(i));
     }
@@ -581,23 +581,23 @@ void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
         /* todo */
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(
+        cellElement4.appendChild(doc.createCDATASection(
                                      "<img border='0' src='/web/images/sign_ok.png'>"));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(
+        cellElement5.appendChild(doc.createCDATASection(
                                      "<img border='0' src='/web/images/off.png'>"));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode(
+        cellElement6.appendChild(doc.createCDATASection(
                                      "<a href=javascript:enable('Transmission','1','app')>"
                                      "<img border='0' src='/web/images/start.png'></a>"));
 
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode(
+        cellElement7.appendChild(doc.createCDATASection(
                                      "<a href=javascript:del_module('Transmission','app')>"
                                      "<img border='0' src='/web/images/delete_over.png'></a>"));
 

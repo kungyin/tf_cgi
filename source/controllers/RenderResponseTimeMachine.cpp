@@ -131,7 +131,7 @@ void RenderResponseTimeMachine::generateTmGetSmbList(QDomDocument &doc) {
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
         /* todo */
-        cellElement1.appendChild(doc.createTextNode(
+        cellElement1.appendChild(doc.createCDATASection(
             QString("<input type=\"checkbox\" name=\"share_box\" id=\"share_box\" value=\"%1\" "
                     "onclick=\"sel_box(this)\" rel=\"%2\">").arg(data.value(0).arg(data.value(1)))));
         QDomElement cellElement2 = doc.createElement("cell");

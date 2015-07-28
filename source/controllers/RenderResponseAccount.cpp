@@ -253,13 +253,13 @@ void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
         cellElement1.appendChild(doc.createTextNode(apiOut.at(i)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("r").arg(apiOut.value(i))));
+        cellElement2.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("r").arg(apiOut.value(i))));
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("w").arg(apiOut.value(i))));
+        cellElement3.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("w").arg(apiOut.value(i))));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("d").arg(apiOut.value(i))));
+        cellElement4.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("d").arg(apiOut.value(i))));
     }
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);

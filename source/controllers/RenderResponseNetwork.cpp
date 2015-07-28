@@ -576,7 +576,7 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
         rowElement1.setAttribute("id", QString::number(i));
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        QDomText cellValue1 = doc.createTextNode((line.at(4).compare("1") == 0) ?
+        QDomText cellValue1 = doc.createCDATASection((line.at(4).compare("1") == 0) ?
                                                  strCheckboxEnable : strCheckboxDisable);
         cellElement1.appendChild(cellValue1);
 

@@ -292,7 +292,7 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
 
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(checkbox.arg(checkboxValue1)
+        cellElement1.appendChild(doc.createCDATASection(checkbox.arg(checkboxValue1)
                                                             .arg(checkboxValue2)
                                                             .arg(checkboxValue3)));
         QDomElement cellElement2 = doc.createElement("cell");
@@ -399,7 +399,7 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
 
             QDomElement cellElement4 = doc.createElement("cell");
             rowElement1.appendChild(cellElement4);
-            cellElement4.appendChild(doc.createTextNode(onClick));
+            cellElement4.appendChild(doc.createCDATASection(onClick));
         }
     }
 

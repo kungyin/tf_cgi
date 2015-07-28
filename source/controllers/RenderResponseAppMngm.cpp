@@ -258,11 +258,11 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList(QDomDocument &doc) {
 
     QDomElement cellElement3 = doc.createElement("cell");
     rowElement.appendChild(cellElement3);
-    cellElement3.appendChild(doc.createTextNode(cellcontent3.arg("1")));
+    cellElement3.appendChild(doc.createCDATASection(cellcontent3.arg("1")));
 
     QDomElement cellElement4 = doc.createElement("cell");
     rowElement.appendChild(cellElement4);
-    cellElement4.appendChild(doc.createTextNode(cellcontent4));
+    cellElement4.appendChild(doc.createCDATASection(cellcontent4));
 
     QDomElement cellElement5 = doc.createElement("cell");
     rowElement.appendChild(cellElement5);
@@ -1121,12 +1121,12 @@ void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(strProgressBar.arg(QString::number(i+1))
+        cellElement3.appendChild(doc.createCDATASection(strProgressBar.arg(QString::number(i+1))
                                                     .arg(QString(taskList[i].percent))));
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(strImage.arg(getIcon(QString(taskList[i].status)))));
+        cellElement4.appendChild(doc.createCDATASection(strImage.arg(getIcon(QString(taskList[i].status)))));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);
@@ -1150,7 +1150,7 @@ void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
             arg2 = "stop";
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement1.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createTextNode(strBackupStart
+        cellElement7.appendChild(doc.createCDATASection(strBackupStart
                                 .arg(arg1).arg(arg2).arg(QString(taskList[i].task_id))));
 
         QString comment = "-";
@@ -1527,11 +1527,11 @@ void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
         /* what value is taskList->enable? */
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(cellcontent3.arg(QString(taskList->enable))));
+        cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg(QString(taskList->enable))));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(cellcontent4));
+        cellElement5.appendChild(doc.createCDATASection(cellcontent4));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);

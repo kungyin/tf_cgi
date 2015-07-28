@@ -278,18 +278,18 @@ void RenderResponseNetShare::generateGetSession(QDomDocument &doc) {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(cellContentCifs.arg("0")));
+        cellElement3.appendChild(doc.createCDATASection(cellContentCifs.arg("0")));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(cellContentFtp.arg("0")));
+        cellElement4.appendChild(doc.createCDATASection(cellContentFtp.arg("0")));
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(cellContentNfsPart1.arg("0") +
+        cellElement5.appendChild(doc.createCDATASection(cellContentNfsPart1.arg("0") +
                                                     cellContentNfsPart2.arg("nfs_0").arg("*").arg("/mnt/USB/USB2_b1")));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createTextNode(cellContentWebdav.arg("0")
+        cellElement6.appendChild(doc.createCDATASection(cellContentWebdav.arg("0")
                                                     .arg("webdav_0").arg("/mnt/HD/HD_a2").arg("Volume_1")));
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);

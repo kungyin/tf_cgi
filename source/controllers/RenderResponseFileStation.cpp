@@ -122,7 +122,6 @@ void RenderResponseFileStation::preRender() {
 
 }
 
-/* todo */
 void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
 
     QString paraPage = m_pReq->parameter("page");
@@ -133,18 +132,27 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
     QString paraUsedDir = QUrl::fromPercentEncoding(m_pReq->parameter("used_dir").toLocal8Bit());
 
     QString itemContent =   "<span style='display:none'>%1</span>"
-                            "<span class='%2'><span>%3</span></span>";
+                            "<span class='%2'><span>%3</span></span>"
+                            ;
 
     QDir dir(paraUsedDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::AllEntries;
     QFileInfoList fileList= dir.entryInfoList(filters);
 
-    for(QFileInfo e : fileList) {
-        if(            e.fileName() == "lost+found"
-                    || e.fileName() == "Nas_Prog"
-                    || e.fileName() == "aMule"
-                    || e.fileName() == "ShareCenter_Sync")
-            fileList.removeOne(e);
+    QListIterator<QFileInfo> iter(fileList);
+    while (iter.hasNext()) {
+        QFileInfo entry = iter.next();
+        if(            entry.fileName() == "lost+found"
+                    || entry.fileName() == "Nas_Prog"
+                    || entry.fileName() == "aMule"
+                    || entry.fileName() == "ShareCenter_Sync") {
+            fileList.removeOne(entry);
+            continue;
+        }
+
+        if(paraType == "name" && !paraQuery.isEmpty())
+            if(!entry.fileName().contains(paraQuery))
+                fileList.removeOne(entry);
     }
 
     QDomElement root = doc.createElement("rows");
@@ -163,19 +171,8 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
         QString fileDescription = fileList.value(i).isDir() ? "Folder" : "File";
 
         QString fileSize;
-        if(!fileList.value(i).isDir()) {
-            if(fileList.value(i).size() > 1073741824) {
-                fileSize = QString::number(fileList.value(i).size() / 1073741824) + " GB";
-            }
-            else if(fileList.value(i).size() > 1048576) {
-                fileSize = QString::number(fileList.value(i).size() / 1048576) + " MB";
-            }
-            else if(fileList.value(i).size() > 1024) {
-                fileSize = QString::number(fileList.value(i).size() / 1024) + " KB";
-            }
-            else
-                fileSize = QString::number(fileList.value(i).size()) + " Bytes";
-        }
+        if(!fileList.value(i).isDir())
+            fileSize = sizeHuman(fileList.value(i).size());
 
         QString table = fileList.value(i).isDir() ? "table_folder" : "table_file";
 
@@ -188,22 +185,25 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
         for(QString e : cellContent) {
             QDomElement cellElement = doc.createElement("cell");
             rowElement.appendChild(cellElement);
-            cellElement.appendChild(doc.createTextNode(e));
+            if(e == cellContent.value(0))
+                cellElement.appendChild(doc.createCDATASection(e));
+            else
+                cellElement.appendChild(doc.createTextNode(e));
         }
 
-        rowElement.setAttribute("id", QString::number( i - start + 1 ));
+        rowElement.setAttribute("id", i - start + 1);
     }
 
-    int total = 1;
-    if(paraRp.toInt() != 0)
-        total = fileList.size() / paraRp.toInt() + (fileList.size() % paraRp.toInt() != 0);
+//    int total = 1;
+//    if(paraRp.toInt() != 0)
+//        total = fileList.size() / paraRp.toInt() + (fileList.size() % paraRp.toInt() != 0);
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
     pageElement.appendChild(doc.createTextNode(paraPage));
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode(QString::number(total)));
+    totalElement.appendChild(doc.createTextNode(QString::number(fileList.size())));
 
 }
 
