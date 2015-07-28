@@ -501,15 +501,20 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
         filters |= QDir::AllEntries;
     QFileInfoList fileList = dir.entryInfoList(filters);
 
-    for(QFileInfo e : fileList) {
+    QListIterator<QFileInfo> iter(fileList);
+    while (iter.hasNext()) {
+        QFileInfo entry = iter.next();
         if(!paraFileType.isEmpty())
-            if(!e.isDir() && e.suffix() != paraFileType)
-                fileList.removeOne(e);
-        if(        e.fileName() == "lost+found"
-                || e.fileName() == "Nas_Prog"
-                || e.fileName() == "aMule"
-                || e.fileName() == "ShareCenter_Sync")
-            fileList.removeOne(e);
+            if(!entry.isDir() && entry.suffix() != paraFileType) {
+                fileList.removeOne(entry);
+                continue;
+            }
+        if(            entry.fileName() == "lost+found"
+                    || entry.fileName() == "Nas_Prog"
+                    || entry.fileName() == "aMule"
+                    || entry.fileName() == "ShareCenter_Sync") {
+            fileList.removeOne(entry);
+        }
     }
 
     QString content;

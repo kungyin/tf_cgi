@@ -1850,27 +1850,43 @@ void RenderResponseAppMngm::generateBackupNow(QString &str) {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateMtpInfoGet(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
-
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mtp_info",
+                                      true,
+                                      ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QStringList configContentElement(QStringList()
+    QStringList configTagNames(QStringList()
         << "backup_date" << "state" << "dest_dir" << "mtp_status");
 
-    //for
-//    QDomElement jobNameElement = doc.createElement("job_name");
-//    root.appendChild(jobNameElement);
-//    jobNameElement.appendChild(doc.createTextNode(m_pReq->parameter("name")));
+    if(apiOut.value(1) == "0" && apiOut.value(2) == "0") {
+        QDomElement resElement = doc.createElement("res");
+        root.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode("0"));
+    }
+    else {
+        if( configTagNames.size() == apiOut.size() ) {
+            for(int i=0; i < configTagNames.size(); i++) {
+                QDomElement configContentElement = doc.createElement(configTagNames.value(i));
+                root.appendChild(configContentElement);
+                configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateMtpInfoGet(): "
+                   "configTagNames size is not equal to apiOut size.");
+        }
+    }
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_backup_info",
+                                      true,
+                                      ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1879,59 +1895,67 @@ void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
 
-    QStringList configContentElement(QStringList()
+    QStringList configTagNames(QStringList()
         << "front_usb" << "state" << "direction" << "source_dir"
         << "dest_dir" << "type" << "backup_status");
 
-    //for
-//    QDomElement jobNameElement = doc.createElement("job_name");
-//    root.appendChild(jobNameElement);
-//    jobNameElement.appendChild(doc.createTextNode(m_pReq->parameter("name")));
+    if( configTagNames.size() == apiOut.size() ) {
+        for(int i=0; i < configTagNames.size(); i++) {
+            QDomElement configContentElement = doc.createElement(configTagNames.value(i));
+            root.appendChild(configContentElement);
+            configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateUsbBackupInfoGet(): "
+               "configTagNames size is not equal to apiOut size.");
+    }
 }
 
-/* todo */
 void RenderResponseAppMngm::generateMtpInfoSet(QDomDocument &doc) {
 
     QString paraEnable = m_pReq->parameter("f_enable");
-    QString paraDestDir = m_pReq->parameter("f_dest_dir");
-
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                          " service_set_mtp_backups_cfg " + allParametersToString(),
+                                      true,
+                                      ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(paraEnable));
 
     /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
-    QString dest = "/mnt/HD/HD_a2";
-    if(paraDestDir == "Volume_2")
-        dest = "/mnt/HD/HD_b2";
+//    QString dest = "/mnt/HD/HD_a2";
+//    if(paraDestDir == "Volume_2")
+//        dest = "/mnt/HD/HD_b2";
 
     QDomElement destElement = doc.createElement("dest");
     root.appendChild(destElement);
-    destElement.appendChild(doc.createTextNode(dest));
+    destElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUsbBackupInfoSet(QDomDocument &doc) {
 
-    QString paraEnable = m_pReq->parameter("f_enable");
-    QString paraDirection = m_pReq->parameter("f_direction");
-    QString paraSourceDir = m_pReq->parameter("f_source_dir");
-    QString paraDestDir = m_pReq->parameter("f_dest_dir");
-    QString paraType = m_pReq->parameter("f_type");
+//    QString paraEnable = m_pReq->parameter("f_enable");
+//    QString paraDirection = m_pReq->parameter("f_direction");
+//    QString paraSourceDir = m_pReq->parameter("f_source_dir");
+//    QString paraDestDir = m_pReq->parameter("f_dest_dir");
+//    QString paraType = m_pReq->parameter("f_type");
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_usb_backup_cfg " + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
