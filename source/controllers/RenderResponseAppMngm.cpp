@@ -1861,24 +1861,17 @@ void RenderResponseAppMngm::generateMtpInfoGet(QDomDocument &doc) {
     QStringList configTagNames(QStringList()
         << "backup_date" << "state" << "dest_dir" << "mtp_status");
 
-    if(apiOut.value(1) == "0" && apiOut.value(2) == "0") {
-        QDomElement resElement = doc.createElement("res");
-        root.appendChild(resElement);
-        resElement.appendChild(doc.createTextNode("0"));
+    if( configTagNames.size() == apiOut.size() ) {
+        for(int i=0; i < configTagNames.size(); i++) {
+            QDomElement configContentElement = doc.createElement(configTagNames.value(i));
+            root.appendChild(configContentElement);
+            configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
     }
     else {
-        if( configTagNames.size() == apiOut.size() ) {
-            for(int i=0; i < configTagNames.size(); i++) {
-                QDomElement configContentElement = doc.createElement(configTagNames.value(i));
-                root.appendChild(configContentElement);
-                configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
-            }
-        }
-        else {
-            //assert(0);
-            tError("RenderResponseSysStatus::generateMtpInfoGet(): "
-                   "configTagNames size is not equal to apiOut size.");
-        }
+        //assert(0);
+        tError("RenderResponseSysStatus::generateMtpInfoGet(): "
+               "configTagNames size is not equal to apiOut size.");
     }
 }
 
@@ -1893,23 +1886,25 @@ void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
 
     QStringList configTagNames(QStringList()
         << "front_usb" << "state" << "direction" << "source_dir"
         << "dest_dir" << "type" << "backup_status");
 
-    if( configTagNames.size() == apiOut.size() ) {
-        for(int i=0; i < configTagNames.size(); i++) {
-            QDomElement configContentElement = doc.createElement(configTagNames.value(i));
-            root.appendChild(configContentElement);
-            configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
+    if(!apiOut.isEmpty()) {
+        if( configTagNames.size() == apiOut.size() ) {
+            for(int i=0; i < configTagNames.size(); i++) {
+                QDomElement configContentElement = doc.createElement(configTagNames.value(i));
+                root.appendChild(configContentElement);
+                configContentElement.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
         }
-    }
-    else {
-        //assert(0);
-        tError("RenderResponseSysStatus::generateUsbBackupInfoGet(): "
-               "configTagNames size is not equal to apiOut size.");
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateUsbBackupInfoGet(): "
+                   "configTagNames size is not equal to apiOut size.");
+        }
     }
 }
 
