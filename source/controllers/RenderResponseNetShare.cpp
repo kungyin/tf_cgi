@@ -484,7 +484,7 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
     QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n"
                             "%1"
                          "</ul>";
-    QString cssLiClass =        "    <li class=\"directory collapsed %1\">\n"
+    QString cssLiClass =        "    <li class=\"directory collapsed%1\">\n"
                                 "%2%3"
                                 "    </li>\n";
     /* todo */
@@ -543,9 +543,11 @@ void RenderResponseNetShare::generateOpenTree(QString &str) {
     }
 
     /* If it was not rooted path, we can add folder. */
-    if(dir.absolutePath().compare("/mnt/HD") != 0) {
-        QString line2 = hrefLine.arg(dir.absolutePath() + "/new/").arg("New");
-        content += cssLiClass.arg("add").arg("").arg(line2);
+    QString dirAbsolutePath(dir.absolutePath());
+    if(     !(dirAbsolutePath.compare("/mnt/HD") == 0 ||
+             dirAbsolutePath.compare("/mnt/USB") == 0)) {
+        QString line2 = hrefLine.arg(dirAbsolutePath + "/new/").arg("New");
+        content += cssLiClass.arg(" add").arg("").arg(line2);
     }
 
     str = cssUlClass.arg(content);

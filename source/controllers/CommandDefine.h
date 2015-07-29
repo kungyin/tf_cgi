@@ -245,6 +245,8 @@ enum CGI_COMMAND {
     CMD_USB_BACKUP_INFO_GET,                /* cgi_usb_backup_info_get */
     CMD_MTP_INFO_SET,                       /* cgi_mtp_info_set */
     CMD_USB_BACKUP_INFO_SET,                /* cgi_usb_backup_info_set */
+    CMD_GET_USB_MAPPING_INFO,               /* cgi_get_USB_Mapping_Info */
+    CMD_OPEN_USB_TREE,                      /* cgi_open_usb_tree */
     CMD_APP_MNGM_END,
 
     /**** System Management ****/
@@ -418,6 +420,20 @@ enum CGI_COMMAND {
     CMD_GET_SECDOWNLOAD_URL,                 /* cgi_get_secdownload_url */
     CMD_GET_COOLIRIS_RSS,                    /* get_cooliris_rss*/
     CMD_FILE_END,
+
+    CMD_P2P_STATE,                           /* p2p_state */
+    CMD_P2P_GET_LIST_BY_PRIORITY,            /* p2p_get_list_by_priority */
+    CMD_P2P_ADD_TORRENT_URL,                 /* p2p_add_torrent_url */
+    CMD_P2P_GET_URL_STATE,                   /* p2p_get_url_state */
+    CMD_P2P_CURRENT_SES_STATE,               /* p2p_current_ses_state */
+    CMD_P2P_ADD_TORRENT_FILE_NEW,            /* p2p_add_torrent_file_new */
+    CMD_P2P_DEL_ALL_COMPLETED,               /* p2p_del_all_completed */
+    CMD_P2P_GET_TORRENT_SCHEDULING,          /* p2p_get_torrent_scheduling */
+    CMD_P2P_TORRENT_SCHEDULING_SET,          /* p2p_torrent_scheduling_set */
+    CMD_P2P_DETAIL_TORRENT,                  /* p2p_detail_torrent */
+    CMD_P2P_PRIORITY_SET,                    /* p2p_priority_set */
+    CMD_P2P_DEL_TORRENT,                     /* p2p_del_torrent */
+    CMD_P2P_END,
 
     CMD_SIZE
 
@@ -650,6 +666,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_usb_backup_info_get",
     "cgi_mtp_info_set",
     "cgi_usb_backup_info_set",
+    "cgi_get_USB_Mapping_Info",
+	"cgi_open_usb_tree",
     "",
 
     /**** System Management ****/
@@ -819,12 +837,27 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_untar",
     "cgi_get_secdownload_url",
     "get_cooliris_rss",
+    "",
+
+    "p2p_state",
+    "p2p_get_list_by_priority",
+    "p2p_add_torrent_url",
+    "p2p_get_url_state",
+    "p2p_current_ses_state",
+    "p2p_add_torrent_file_new",
+    "p2p_del_all_completed",
+    "p2p_get_torrent_scheduling",
+    "p2p_torrent_scheduling_set",
+    "p2p_detail_torrent",
+    "p2p_priority_set",
+    "p2p_del_torrent",
     ""
 };
 
 const int EQUAL_COMMANDS[][2] {
     { CMD_READ_OPEN_TREE,           CMD_OPEN_TREE           },
     { CMD_GENERIC_OPEN_TREE,        CMD_OPEN_TREE           },
+    { CMD_OPEN_USB_TREE,            CMD_OPEN_TREE           },
     { CMD_DOWNLOADS_SCHEDULE_NOW,   CMD_LOCAL_BACKUP_NOW    },
     { CMD_DOWNLOADS_SCHEDULE_LIST,  CMD_LOCAL_BACKUP_LIST   },
     { CMD_DOWNLOADS_SCHEDULE_ADD,   CMD_LOCAL_BACKUP_ADD    },
@@ -1061,6 +1094,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_USB_BACKUP_INFO_GET,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_backup_info_get */
     { CMD_MTP_INFO_SET,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_mtp_info_set */
     { CMD_USB_BACKUP_INFO_SET,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_backup_info_set */
+    { CMD_GET_USB_MAPPING_INFO,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_USB_Mapping_Info */
+    { CMD_OPEN_USB_TREE,                RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_open_usb_tree */
 
 //    CMD_APP_MNGM_END,
 
@@ -1235,6 +1270,20 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_COOLIRIS_RSS,              RENDER_TYPE_FILE,          COOKIE_REQ_CMDS          },         /* get_cooliris_rss */
 
     //CMD_FILE_END,
+
+    { CMD_P2P_STATE,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_state */
+    { CMD_P2P_GET_LIST_BY_PRIORITY,      RENDER_TYPE_JOSEN,         COOKIE_REQ_CMDS          },         /* p2p_get_list_by_priority */
+    { CMD_P2P_ADD_TORRENT_URL,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_add_torrent_url */
+    { CMD_P2P_GET_URL_STATE,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_url_state */
+    { CMD_P2P_CURRENT_SES_STATE,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_current_ses_state */
+    { CMD_P2P_ADD_TORRENT_FILE_NEW,      RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_add_torrent_file_new */
+    { CMD_P2P_DEL_ALL_COMPLETED,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_del_all_completed */
+    { CMD_P2P_GET_TORRENT_SCHEDULING,    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_torrent_scheduling */
+    { CMD_P2P_TORRENT_SCHEDULING_SET,    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_torrent_scheduling_set */
+    { CMD_P2P_DETAIL_TORRENT,            RENDER_TYPE_JOSEN,         COOKIE_REQ_CMDS          },         /* p2p_detail_torrent */
+    { CMD_P2P_PRIORITY_SET,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_priority_set */
+    { CMD_P2P_DEL_TORRENT,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_del_torrent */
+    //CMD_P2P_END,
 
 //    CMD_SIZE
 

@@ -71,6 +71,7 @@ private:
     void generateUsbBackupInfoGet(QDomDocument &);
     void generateMtpInfoSet(QDomDocument &);
     void generateUsbBackupInfoSet(QDomDocument &);
+    void generateGetUsbMappingInfo(QDomDocument &);
 
 private:
     void renewOrAdd(bool);

@@ -51,6 +51,7 @@ const QString FIRMWARE_PERCENTAGE_FILE = "/tmp/.fw_percentage";
 const QString FIRMWARE_VERIFY_STATUS_FILE = "/tmp/.verify_status";
 const QString FIRMWARE_RESULT_FILE = "/tmp/.fw_result";
 const QString SENDOUT_LOGFILE = "/tmp/log.txt";
+const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
 
@@ -61,10 +62,11 @@ const QString ENV_PATH = API_PATH;
 const QString SYS_CONFIG_FILE = API_PATH + "sys_config";
 const QString USER_IMPORT_FILE = API_PATH + "backupconfig.tar";
 const QString FIRMWARE_FILE = API_PATH + "genius_fw.bin";
-const QString FIRMWARE_PERCENTAGE_FILE = "./faked_api/.fw_percentage";
+const QString FIRMWARE_PERCENTAGE_FILE = API_PATH + ".fw_percentage";
 const QString FIRMWARE_VERIFY_STATUS_FILE = API_PATH + ".verify_status";
 const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
 const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
+const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 
 #endif
 

@@ -186,6 +186,9 @@ void RenderResponseAppMngm::preRender() {
     case CMD_USB_BACKUP_INFO_SET:
         generateUsbBackupInfoSet(doc);
         break;
+    case CMD_GET_USB_MAPPING_INFO:
+        generateGetUsbMappingInfo(doc);
+        break;
     case CMD_NONE:
     default:
         break;
@@ -1951,6 +1954,20 @@ void RenderResponseAppMngm::generateUsbBackupInfoSet(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+}
+
+void RenderResponseAppMngm::generateGetUsbMappingInfo(QDomDocument &doc) {
+
+    QStringList apiOut = getAPIFileOut(USB_SHARE_INFO_FILE, true);
+
+    QDomElement root = doc.createElement("mapping_info");
+    doc.appendChild(root);
+    QDomElement itemElement = doc.createElement("item");
+    root.appendChild(itemElement);
+    QDomElement dataElement = doc.createElement("data");
+    itemElement.appendChild(dataElement);
+    dataElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
 }
 
