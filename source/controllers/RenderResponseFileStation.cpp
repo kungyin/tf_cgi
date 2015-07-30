@@ -248,21 +248,32 @@ void RenderResponseFileStation::generateCompress(QDomDocument &doc) {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
 
-    QString tmpPath = getTempPath(paraPath);
     QString ret = "error";
+
+    QString tmpPath = getTempPath(paraPath);
     QDir dir(tmpPath.left(tmpPath.lastIndexOf(QDir::separator())));
     bool bMkdir = dir.mkdir(".tmp");
     if(bMkdir || QDir(tmpPath).exists()) {
 
         QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0775);
-
-        QString currentPath = QDir::currentPath();
-        QDir::setCurrent(paraPath);
-        QString compressCmd = "zip -r %1/%2 %2";
-        getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName));
-        QDir::setCurrent(currentPath);
-
         QString zipFileName = paraName + ".zip";
+
+        if(paraName.endsWith(".zip")) {
+            zipFileName = paraName;
+            QString dest = tmpPath + QDir::separator() + zipFileName;
+            if(QFile::exists(dest))
+                QFile::remove(dest);
+            QFile::copy(QDir(paraPath).absolutePath() + QDir::separator() + zipFileName,
+                        dest);
+        }
+        else {
+            QString currentPath = QDir::currentPath();
+            QDir::setCurrent(paraPath);
+            QString compressCmd = "zip -r %1/%2 %2";
+            getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName));
+            QDir::setCurrent(currentPath);
+        }
+
         QFileInfo zipFileInfo(tmpPath + QDir::separator() + zipFileName);
         if(zipFileInfo.exists())
             ret = "ok";
@@ -284,7 +295,7 @@ void RenderResponseFileStation::generateDownload(QString &str) {
     QString paraName = m_pReq->parameter("name");
 
     QString tmpPath = getTempPath(paraPath);
-    QString zipFileName = paraName + ".zip";
+    QString zipFileName = paraName.endsWith(".zip") ? paraName : paraName + ".zip";
     QFileInfo file(tmpPath + QDir::separator() + zipFileName);
     if(file.exists() && file.isFile()) {
         str = file.absoluteFilePath();
