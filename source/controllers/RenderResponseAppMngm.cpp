@@ -1642,19 +1642,15 @@ void RenderResponseAppMngm::generateServerTest(QDomDocument &doc) {
             }
         }
 
-        char *path1, *path2 = NULL;
-        GetRsyncSharePath("Volume_1", &path1);
-        GetRsyncSharePath("Volume_2", &path2);
+        char **name = NULL, **path = NULL;
+        int volCount = 0;
+        GetRsyncSharePath(&volCount, &name, &path);
 
         QMap<QString, QString> shareNodeMap;
-        if(!QString(path1).isEmpty())
-            shareNodeMap.insert("Volume_1", QString(path1));
-        if(!QString(path2).isEmpty())
-            shareNodeMap.insert("Volume_2", QString(path2));
-        if(path1)
-            free(path1);
-        if(path2)
-            free(path2);
+        for(int i=0; i< volCount; i++) {
+            shareNodeMap.insert(QString(name[i]), QString(path[i]));
+        }
+        FreeRsyncSharePath(volCount, &name, &path);
 
         char *size = NULL;
         GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
