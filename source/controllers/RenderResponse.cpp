@@ -28,8 +28,11 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
 
     if(bOneLine) {
-        if(!ret.isEmpty())
+        if(!ret.isEmpty()) {
             ret = ret.at(0).split(splitChar);
+            if(ret.size() == 1 && ret.at(0).isEmpty())
+                ret = QStringList();
+        }
         else
             ret = QStringList();
     }
@@ -59,8 +62,11 @@ QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QStri
     tDebug("RenderResponse::getAPIFileOut() -- apiOut: %s", allOut.toLocal8Bit().data());
 
     if(bOneLine) {
-        if(!ret.isEmpty())
+        if(!ret.isEmpty()) {
             ret = ret.at(0).split(splitChar);
+            if(ret.size() == 1 && ret.at(0).isEmpty())
+                ret = QStringList();
+        }
         else
             ret = QStringList();
     }
