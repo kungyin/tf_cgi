@@ -14,12 +14,12 @@ public:
 
 private:
 
-    void servergetconfig(QDomDocument &);
-    void serverexiprenew(QDomDocument &);
-    void p2pgetport(QDomDocument &);
-    void serverblockiplist(QDomDocument &);
-    void serverblockipadd(QDomDocument &);
-    void serverenable(QDomDocument &);
+    void servergetconfig();
+    void serverexiprenew();
+    void p2pgetport();
+    void serverblockiplist();
+    void serverblockipadd();
+    void serverenable();
 };
 
 #endif // RENDERRESPONSEFTP_H

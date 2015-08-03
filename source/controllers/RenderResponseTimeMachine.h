@@ -14,14 +14,14 @@ public:
 
 private:
 
-    void generateTmGetInfo(QDomDocument &);
-    void generateTmGetList(QDomDocument &);
-    void generateTmGetSmbList(QDomDocument &);
-    void generateTmSet(QString &);
-    void generateTmGetShareName(QDomDocument &);
-    void generateTmSetShare(QString &);
-    void generateTmDelShare(QString &);
-    void generateTmDelAllShare(QString &);
+    void generateTmGetInfo();
+    void generateTmGetList();
+    void generateTmGetSmbList();
+    void generateTmSet();
+    void generateTmGetShareName();
+    void generateTmSetShare();
+    void generateTmDelShare();
+    void generateTmDelAllShare();
 
 };
 

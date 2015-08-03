@@ -18,22 +18,22 @@ private:
     bool unArchive(QString &, QString &, QString);
     QString getSecretPath(QString);
 
-    void generateFolderContent(QDomDocument &);
-    void generateGetUserQuota(QDomDocument &);
-    void generateChkFile(QString &);
-    void generateCompress(QDomDocument &);
-    void generateDownload(QString &);
-    void generateCp(QDomDocument &);
-    void generateMove(QDomDocument &);
-    void generateDel(QDomDocument &);
-    void generateRename(QDomDocument &);
-    void generateGetProperties(QDomDocument &);
-    void generateChangePermissions(QDomDocument &);
-    void generateAddZip(QDomDocument &);
-    void generateUnzip(QDomDocument &);
-    void generateUntar(QDomDocument &);
-    void generateGetSecDownloadUrl(QDomDocument &);
-    void generateGetCoolirisRss(QString &);
+    void generateFolderContent();
+    void generateGetUserQuota();
+    void generateChkFile();
+    void generateCompress();
+    void generateDownload();
+    void generateCp();
+    void generateMove();
+    void generateDel();
+    void generateRename();
+    void generateGetProperties();
+    void generateChangePermissions();
+    void generateAddZip();
+    void generateUnzip();
+    void generateUntar();
+    void generateGetSecDownloadUrl();
+    void generateGetCoolirisRss();
 
 };
 

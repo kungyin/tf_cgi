@@ -15,34 +15,31 @@ void RenderResponseFtp::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
 /*    case CMD_GUI_CODEPAGE_GET_LIST:
         codepagegetlist(doc);
         m_renderType = RENDER_TYPE_XML;
         break;*/
     case CMD_FTP_SERVER_GET_CONFIG:
-        servergetconfig(doc);
+        servergetconfig();
         break;
     case CMD_FTP_SERVER_EXIP_RENEW:
-        serverexiprenew(doc);
+        serverexiprenew();
         break;
 /*    case CMD_GUI_CODE_ADD:
         codepageadd(doc);
         break;*/
     case CMD_P2P_GET_PORT:
-        p2pgetport(doc);
+        p2pgetport();
         break;
     case CMD_FTP_SERVER_BLOCKIP_LIST:
-        serverblockiplist(doc);
+        serverblockiplist();
         break;
     case CMD_FTP_SERVER_BLOCKIP_ADD:
-        serverblockipadd(doc);
+        serverblockipadd();
         break;
     case CMD_FTP_SERVER_ENABLE:
-        serverenable(doc);
+        serverenable();
         break;
 
     case CMD_NONE:
@@ -50,10 +47,8 @@ void RenderResponseFtp::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
+
 /*/ todo API
 void RenderResponseFtp::codepagegetlist(QDomDocument &doc) {
 //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " -g codepage", true, ";");
@@ -82,25 +77,31 @@ void RenderResponseFtp::codepagegetlist(QDomDocument &doc) {
         descElement.appendChild(doc.createTextNode(vdesc[i]));
     }
 }*/
-// todo API
-void RenderResponseFtp::servergetconfig(QDomDocument &doc) {
-QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " config", true, ",");
 
-QVector<QString> vparam;
-vparam << "maxclientsnumber" << "maxidletime" << "port" << "flowcontrol"<< "filesystemcharset"<< "clientcharset"<< "passiveportrange"<< "exip"<< "externalip"<< "state"<< "tlsencryption"<< "forcepasvmode"<< "connect_per_ip"<< "fxpaccess";
+// todo API
+void RenderResponseFtp::servergetconfig() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " config", true, ",");
+
+    QVector<QString> vparam;
+        vparam << "maxclientsnumber" << "maxidletime" << "port" << "flowcontrol"<< "filesystemcharset"<< "clientcharset"<< "passiveportrange"<< "exip"<< "externalip"<< "state"<< "tlsencryption"<< "forcepasvmode"<< "connect_per_ip"<< "fxpaccess";
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     for (int i = 0; i < vparam.size(); i++)
     {
-    QDomElement maxclientsnumberElement = doc.createElement(vparam[i]);
-    root.appendChild(maxclientsnumberElement);
-    maxclientsnumberElement.appendChild(doc.createTextNode(apiOut.value(i)));
+        QDomElement maxclientsnumberElement = doc.createElement(vparam[i]);
+        root.appendChild(maxclientsnumberElement);
+        maxclientsnumberElement.appendChild(doc.createTextNode(apiOut.value(i)));
     }
+    m_var = doc.toString();
 
 }
+
 // todo API
-void RenderResponseFtp::serverexiprenew(QDomDocument &doc) {
+void RenderResponseFtp::serverexiprenew() {
+
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -112,7 +113,10 @@ void RenderResponseFtp::serverexiprenew(QDomDocument &doc) {
     root.appendChild(exipElement);
     exipElement.appendChild(doc.createTextNode("0"));
 
+    m_var = doc.toString();
+
 }
+
 /*
 // todo API
 void RenderResponseFtp::codepageadd(QDomDocument &doc) {
@@ -125,8 +129,11 @@ void RenderResponseFtp::codepageadd(QDomDocument &doc) {
     resElement.appendChild(doc.createTextNode("1"));
 }
 */
+
 // todo API
-void RenderResponseFtp::p2pgetport(QDomDocument &doc) {
+void RenderResponseFtp::p2pgetport() {
+
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -134,9 +141,15 @@ void RenderResponseFtp::p2pgetport(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
+
 // todo API
-void RenderResponseFtp::serverblockiplist(QDomDocument &doc) {
+void RenderResponseFtp::serverblockiplist() {
+
+    QDomDocument doc;
 
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
@@ -182,10 +195,14 @@ void RenderResponseFtp::serverblockiplist(QDomDocument &doc) {
     QDomElement totalElement1 = doc.createElement("total");
     root.appendChild(totalElement1);
     totalElement1.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+    m_var = doc.toString();
 
 }
+
 //todo API
-void RenderResponseFtp::serverblockipadd(QDomDocument &doc) {
+void RenderResponseFtp::serverblockipadd() {
+
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -193,9 +210,14 @@ void RenderResponseFtp::serverblockipadd(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
+
 }
+
 //todo API
-void RenderResponseFtp::serverenable(QDomDocument &doc) {
+void RenderResponseFtp::serverenable() {
+
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -203,6 +225,9 @@ void RenderResponseFtp::serverenable(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
 
 

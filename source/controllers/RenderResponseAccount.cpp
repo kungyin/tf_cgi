@@ -14,24 +14,21 @@ void RenderResponseAccount::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_CHANGE_ADMIN_PWD:
-        generateChangeAdminPwd(doc);
+        generateChangeAdminPwd();
         break;
     case CMD_GET_USER_LIST:
-        generateGetUserList(doc);
+        generateGetUserList();
         break;
     case CMD_GET_USER_INFO:
-        generateGetUserInfo(doc);
+        generateGetUserInfo();
         break;
     case CMD_GET_SMB_LIST:
-        generateGetSmbList(doc);
+        generateGetSmbList();
         break;
     case CMD_USER_ADD:
-        generateUserAdd(doc);
+        generateUserAdd();
         break;
     case CMD_RESTART_SERVICE:
         generateRestartService();
@@ -49,58 +46,58 @@ void RenderResponseAccount::preRender() {
         generateFtpService();
         break;
     case CMD_WEBDAV_ACCOUNT_MERGE:
-        generateWebdavAccountMerge(doc);
+        generateWebdavAccountMerge();
         break;
     case CMD_USER_BATCH_CREATE:
         generateUserBatchCreate();
         break;
     case CMD_GET_MODIFY_USER_INFO:
-        generateGetModifyUserInfo(doc);
+        generateGetModifyUserInfo();
         break;
     case CMD_USER_MODIFY:
-        generateUserModify(doc);
+        generateUserModify();
         break;
     case CMD_USER_DEL:
         generateUserDel();
         break;
     case CMD_MYFAVORITE_DEL_USER:
-        generateMyFavDelUser(doc);
+        generateMyFavDelUser();
         break;
     case CMD_DWONLOAD_IMPORT_SAMPLE:
-        generateDownloadImportSample(str);
+        generateDownloadImportSample();
         break;
     case CMD_GET_ALL_SESSION:
-        generateGetAllSession(doc);
+        generateGetAllSession();
         break;
     case CMD_GET_IMPORT_USERS:
-        generateGetImportUsers(doc);
+        generateGetImportUsers();
         break;
     case CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE:
-        generateAddUserGetUserQuotaMaxsize(doc);
+        generateAddUserGetUserQuotaMaxsize();
         break;
     case CMD_CREATE_IMPORT_USERS:
         generateCreateImportUsers();
         break;
     case CMD_GET_CREATE_STATUS:
-        generateCreateStatus(doc);
+        generateCreateStatus();
         break;
     case CMD_GET_GROUP_LIST:
-        generateGetGroupList(doc);
+        generateGetGroupList();
         break;
     case CMD_GET_GROUP_INFO:
-        generateGetGroupInfo(doc);
+        generateGetGroupInfo();
         break;
     case CMD_GROUP_ADD:
         generateGroupAdd();
         break;
     case CMD_ADDGROUP_GET_GROUP_QUOTA_MINSIZE:
-        generateAddGroupGetGroupQuotaMinsize(doc);
+        generateAddGroupGetGroupQuotaMinsize();
         break;
     case CMD_GROUP_SET_QUOTA:
         generateGroupSetQuota();
         break;
     case CMD_GET_MODIFY_GROUP_INFO:
-        generateGetModifyGroupInfo(doc);
+        generateGetModifyGroupInfo();
         break;
     case CMD_GROUP_MODIFY:
         generateGroupModify();
@@ -109,22 +106,22 @@ void RenderResponseAccount::preRender() {
         generateGroupDel();
         break;
     case CMD_GET_QUOTA_INFO:
-        generateGetQuotaInfo(doc);
+        generateGetQuotaInfo();
         break;
     case CMD_GET_HD_MAPPING_INFO:
-        generateGetHDMappingInfo(doc);
+        generateGetHDMappingInfo();
         break;
     case CMD_GET_USER_QUOTA_LIST:
-        generateGetUserQuotaList(doc);
+        generateGetUserQuotaList();
         break;
     case CMD_GET_GROUP_QUOTA_LIST:
-        generateGetGroupQuotaList(doc);
+        generateGetGroupQuotaList();
         break;
     case CMD_GET_USER_QUOTA_MAXSIZE:
-        generateGetUserQuotaMaxSize(doc);
+        generateGetUserQuotaMaxSize();
         break;
     case CMD_GET_GROUP_QUOTA_MINSIZE:
-        generateGetGroupQuotaMinSize(doc);
+        generateGetGroupQuotaMinSize();
         break;
     case CMD_SET_QUOTA_ONOFF:
         generateSetQuotaOnOff();
@@ -134,12 +131,11 @@ void RenderResponseAccount::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseAccount::generateChangeAdminPwd(QDomDocument &doc) {
+void RenderResponseAccount::generateChangeAdminPwd() {
+    QDomDocument doc;
+
     QString paraPwd = m_pReq->allParameters().value("pw").toString();
     QString paraOldPwd = m_pReq->allParameters().value("old_pw").toString();
     //QByteArray pwd = QByteArray::fromBase64(paraPwd.toLocal8Bit());
@@ -152,9 +148,14 @@ void RenderResponseAccount::generateChangeAdminPwd(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : apiOut.at(0)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAccount::generateGetUserList(QDomDocument &doc) {
+void RenderResponseAccount::generateGetUserList() {
+    QDomDocument doc;
+
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -191,9 +192,14 @@ void RenderResponseAccount::generateGetUserList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAccount::generateGetUserInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetUserInfo() {
+    QDomDocument doc;
+
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " userinfo", true, ";");
 
     QDomElement root = doc.createElement("user_info");
@@ -226,9 +232,15 @@ void RenderResponseAccount::generateGetUserInfo(QDomDocument &doc) {
     QDomElement volumeNameElement2 = doc.createElement("v_name");
     root.appendChild(volumeNameElement2);
     volumeNameElement2.appendChild(doc.createTextNode(apiOut.value(6)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
+void RenderResponseAccount::generateGetSmbList() {
+
+    QDomDocument doc;
+
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -268,9 +280,13 @@ void RenderResponseAccount::generateGetSmbList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAccount::generateUserAdd(QDomDocument &doc) {
+void RenderResponseAccount::generateUserAdd() {
+
     QString paraName = m_pReq->allParameters().value("name").toString();
     QString paraPw = m_pReq->allParameters().value("pw").toString();
     QString paraGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group").toByteArray()).remove("#");
@@ -330,7 +346,9 @@ void RenderResponseAccount::generateFtpService() {
 
 /* todo: need API */
 /* For user, group and network share. */
-void RenderResponseAccount::generateWebdavAccountMerge(QDomDocument &doc) {
+void RenderResponseAccount::generateWebdavAccountMerge() {
+    QDomDocument doc;
+
     QString paraShareName = m_pReq->allParameters().value("f_share_name").toString();
     QString paraRw = m_pReq->allParameters().value("f_rw").toString();
     QString paraUser = m_pReq->allParameters().value("f_user").toString();
@@ -343,6 +361,9 @@ void RenderResponseAccount::generateWebdavAccountMerge(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseAccount::generateUserBatchCreate() {
@@ -364,7 +385,9 @@ void RenderResponseAccount::generateUserBatchCreate() {
 
 }
 
-void RenderResponseAccount::generateGetModifyUserInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetModifyUserInfo() {
+    QDomDocument doc;
+
     QString paraName = m_pReq->allParameters().value("name").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " modinfo " + paraName, true, ";");
@@ -445,10 +468,15 @@ void RenderResponseAccount::generateGetModifyUserInfo(QDomDocument &doc) {
             }
         }
     }
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAccount::generateUserModify(QDomDocument &doc) {
+void RenderResponseAccount::generateUserModify() {
+    QDomDocument doc;
+
     QString paraName = m_pReq->allParameters().value("name").toString();
     QString paraPw = m_pReq->allParameters().value("pw").toString();
     QString paraFtp = m_pReq->allParameters().value("ftp").toString();
@@ -487,6 +515,9 @@ void RenderResponseAccount::generateUserModify(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOutUser.value(0)));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseAccount::generateUserDel() {
@@ -495,7 +526,9 @@ void RenderResponseAccount::generateUserDel() {
 }
 
 /* the same API ?? */
-void RenderResponseAccount::generateMyFavDelUser(QDomDocument &doc) {
+void RenderResponseAccount::generateMyFavDelUser() {
+    QDomDocument doc;
+
     QString paraUserList = m_pReq->allParameters().value("f_user_lst").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " del " + paraUserList, true);
@@ -504,18 +537,22 @@ void RenderResponseAccount::generateMyFavDelUser(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAccount::generateDownloadImportSample(QString &str) {
+void RenderResponseAccount::generateDownloadImportSample() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_IMPORTUSER_API + " get");
-    str = "import_file.txt";
+    m_var = "import_file.txt";
     //sendfile()
 }
 
 
-void RenderResponseAccount::generateGetAllSession(QDomDocument &doc) {
+void RenderResponseAccount::generateGetAllSession() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " session");
     QDomElement root = doc.createElement("session");
@@ -535,10 +572,14 @@ void RenderResponseAccount::generateGetAllSession(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
+    m_var = doc.toString();
+
 }
 
 /* todo: need API */
-void RenderResponseAccount::generateGetImportUsers(QDomDocument &doc) {
+void RenderResponseAccount::generateGetImportUsers() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QDomElement root = doc.createElement("info");
@@ -547,10 +588,14 @@ void RenderResponseAccount::generateGetImportUsers(QDomDocument &doc) {
     root.appendChild(itemElement);
     itemElement.appendChild(doc.createTextNode("staff3/staff3//Volume1///100"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo: need API */
-void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize(QDomDocument &doc) {
+void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize() {
+    QDomDocument doc;
+
     QString paraName = m_pReq->allParameters().value("name").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QDomElement root = doc.createElement("quota_info");
@@ -558,6 +603,9 @@ void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize(QDomDocument &doc
     QDomElement maxSizeElement = doc.createElement("max_size");
     root.appendChild(maxSizeElement);
     maxSizeElement.appendChild(doc.createTextNode("0:0:0:0"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo: need API */
@@ -568,17 +616,22 @@ void RenderResponseAccount::generateCreateImportUsers() {
 }
 
 /* todo: need API */
-void RenderResponseAccount::generateCreateStatus(QDomDocument &doc) {
+void RenderResponseAccount::generateCreateStatus() {
+    QDomDocument doc;
+
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
+
 }
 
 /* todo: need API */
-void RenderResponseAccount::generateGetGroupList(QDomDocument &doc) {
+void RenderResponseAccount::generateGetGroupList() {
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -615,12 +668,14 @@ void RenderResponseAccount::generateGetGroupList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode("0"));
+    m_var = doc.toString();
 
 }
 
 
 /* todo: need API */
-void RenderResponseAccount::generateGetGroupInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetGroupInfo() {
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
     QDomElement root = doc.createElement("group_info");
@@ -645,6 +700,8 @@ void RenderResponseAccount::generateGetGroupInfo(QDomDocument &doc) {
     QDomElement hddSizeElement = doc.createElement("hddsize");
     root.appendChild(hddSizeElement);
     hddSizeElement.appendChild(doc.createTextNode("2814059,1875257"));
+    m_var = doc.toString();
+
 }
 
 /* todo: need API */
@@ -656,7 +713,8 @@ void RenderResponseAccount::generateGroupAdd() {
 
 
 /* todo: need API */
-void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize(QDomDocument &doc) {
+void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize() {
+    QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -668,6 +726,9 @@ void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize(QDomDocument &d
     QDomElement minSizeElement = doc.createElement("min_size");
     root.appendChild(minSizeElement);
     minSizeElement.appendChild(doc.createTextNode("102400:0:0:0"));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseAccount::generateGroupSetQuota() {
@@ -687,7 +748,8 @@ void RenderResponseAccount::generateGroupSetQuota() {
 }
 
 /* todo: need API */
-void RenderResponseAccount::generateGetModifyGroupInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetModifyGroupInfo() {
+    QDomDocument doc;
     QString paraGroup = m_pReq->allParameters().value("group").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -714,7 +776,6 @@ void RenderResponseAccount::generateGetModifyGroupInfo(QDomDocument &doc) {
     quotaElement1.appendChild(sizeElement);
     sizeElement.appendChild(doc.createTextNode("0"));
 
-
     QDomElement smbInfoElement = doc.createElement("smb_info");
     root.appendChild(smbInfoElement);
     //for
@@ -737,6 +798,8 @@ void RenderResponseAccount::generateGetModifyGroupInfo(QDomDocument &doc) {
 //    QDomElement itemElement = doc.createElement("item");
 //    webdavInfoElement.appendChild(itemElement);
 //    itemElement.appendChild(doc.createTextNode("Volume_1:RO"));
+
+    m_var = doc.toString();
 
 }
 
@@ -763,7 +826,9 @@ void RenderResponseAccount::generateGroupDel() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 }
 
-void RenderResponseAccount::generateGetQuotaInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetQuotaInfo() {
+    QDomDocument doc;
+
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " quotainfo", true, ";");
 
     QDomElement root = doc.createElement("quota_info");
@@ -787,10 +852,13 @@ void RenderResponseAccount::generateGetQuotaInfo(QDomDocument &doc) {
     QDomElement vnameElement = doc.createElement("v_name");
     root.appendChild(vnameElement);
     vnameElement.appendChild(doc.createTextNode(apiOut.value(5)));
+    m_var = doc.toString();
+
 }
 
 
-void RenderResponseAccount::generateGetHDMappingInfo(QDomDocument &doc) {
+void RenderResponseAccount::generateGetHDMappingInfo() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " remoteinfo", true, ";");
 
     QDomElement root = doc.createElement("mapping_info");
@@ -803,6 +871,8 @@ void RenderResponseAccount::generateGetHDMappingInfo(QDomDocument &doc) {
         itemElement.appendChild(dataElement);
         dataElement.appendChild(doc.createTextNode(e));
     }
+    m_var = doc.toString();
+
 }
 
 bool RenderResponseAccount::isQuotaNumber(QString str) {
@@ -818,7 +888,8 @@ bool RenderResponseAccount::isQuotaNumber(QString str) {
     return true;
 }
 
-void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
+void RenderResponseAccount::generateGetUserQuotaList() {
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -876,10 +947,12 @@ void RenderResponseAccount::generateGetUserQuotaList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
+void RenderResponseAccount::generateGetGroupQuotaList() {
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -937,10 +1010,12 @@ void RenderResponseAccount::generateGetGroupQuotaList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseAccount::generateGetUserQuotaMaxSize(QDomDocument &doc) {
+void RenderResponseAccount::generateGetUserQuotaMaxSize() {
+    QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
     QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
@@ -952,9 +1027,12 @@ void RenderResponseAccount::generateGetUserQuotaMaxSize(QDomDocument &doc) {
     root.appendChild(maxSizeElement);
     maxSizeElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAccount::generateGetGroupQuotaMinSize(QDomDocument &doc) {
+void RenderResponseAccount::generateGetGroupQuotaMinSize() {
+    QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
     QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
@@ -965,6 +1043,8 @@ void RenderResponseAccount::generateGetGroupQuotaMinSize(QDomDocument &doc) {
     QDomElement maxSizeElement = doc.createElement("max_size");
     root.appendChild(maxSizeElement);
     maxSizeElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
 
 }
 

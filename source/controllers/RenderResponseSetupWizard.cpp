@@ -14,29 +14,25 @@ void RenderResponseSetupWizard::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_CHK_ADMIN_PW:
-        generateChkAdminPw(doc);
+        generateChkAdminPw();
         break;
     case CMD_SET_LED:
         generateSetLed();
         break;
     case CMD_GET_WIZARD:
-        generateGetWizard(doc);
+        generateGetWizard();
         break;
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseSetupWizard::generateChkAdminPw(QDomDocument &doc) {
+void RenderResponseSetupWizard::generateChkAdminPw() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API
                                       + " " + m_pReq->parameter("pw"), true);
 
@@ -45,6 +41,7 @@ void RenderResponseSetupWizard::generateChkAdminPw(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
@@ -83,7 +80,9 @@ void RenderResponseSetupWizard::generateSetLed() {
 
 }
 
-void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
+void RenderResponseSetupWizard::generateGetWizard() {
+
+    QDomDocument doc;
 
     QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
@@ -167,6 +166,8 @@ void RenderResponseSetupWizard::generateGetWizard(QDomDocument &doc) {
     QDomElement timezoneElement = doc.createElement("timezone");
     systemElement.appendChild(timezoneElement);
     timezoneElement.appendChild(doc.createTextNode(timeInfo.value("timezone")));
+
+    m_var = doc.toString();
 
 }
 

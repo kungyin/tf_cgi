@@ -13,10 +13,9 @@ public:
     virtual void preRender();
 
 private:
-    void generateChkAdminPw(QDomDocument &);
+    void generateChkAdminPw();
     void generateSetLed();
-    void generateGetWizard(QDomDocument &);
-
+    void generateGetWizard();
 
 };
 

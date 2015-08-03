@@ -82,10 +82,15 @@ void CgiController::index()
         renderErrorResponse(Tf::OK);
         break;
     case RENDER_TYPE_STRING:
-        renderText(pRrep->getStr());
+        renderText(pRrep->getVar().toString());
         break;
     case RENDER_TYPE_XML:
-        renderXml(pRrep->getDoc());
+    {
+        QDomDocument doc;
+        QString str = pRrep->getVar().toString();
+        doc.setContent(str);
+        renderXml(doc);
+    }
         break;
     case RENDER_TYPE_JOSEN:
         renderJson(pRrep->getVar().toJsonDocument());
@@ -95,38 +100,38 @@ void CgiController::index()
         bool bRemoveFile = false;
         if(cmd == CMD_DOWNLOAD)
             bRemoveFile = true;
-        QFileInfo file(pRrep->getStr());
+        QFileInfo file(pRrep->getVar().toString());
         contentType();
         if(file.exists() && file.isFile())
-            sendFile(pRrep->getStr(), "application/octet-stream", file.fileName(), bRemoveFile);
+            sendFile(pRrep->getVar().toString(), "application/octet-stream", file.fileName(), bRemoveFile);
         else
-            tDebug("file %s doesn't exist.", pRrep->getStr().toLocal8Bit().data());
+            tDebug("file %s doesn't exist.", pRrep->getVar().toByteArray().data());
     }
         break;
     case RENDER_TYPE_HTML:
         //render("index");
-        renderText(pRrep->getStr());
+        renderText(pRrep->getVar().toString());
         break;
     case RENDER_TYPE_REDIRECT:
-        redirect(QUrl(pRrep->getStr()));
+        redirect(QUrl(pRrep->getVar().toString()));
         break;
     case RENDER_TYPE_REDIRECT_WITH_COOKIE:
     {
         QList<TCookie> cookies = pRrep->getCookies();
         for(auto e : cookies)
             addCookie(e);
-        redirect(QUrl(pRrep->getStr()));
+        redirect(QUrl(pRrep->getVar().toString()));
     }
         break;
     case RENDER_TYPE_FILE_REMOVE:
     {
         bool isSendOK = false;
         QFile::remove("/tmp/syslogsendok");
-        QFileInfo file(pRrep->getStr());
+        QFileInfo file(pRrep->getVar().toString());
         if(file.exists() && file.isFile())
-            isSendOK = sendFile(pRrep->getStr(), "application/octet-stream", file.fileName(), true);
+            isSendOK = sendFile(pRrep->getVar().toString(), "application/octet-stream", file.fileName(), true);
         else
-            tDebug("file %s doesn't exist.", pRrep->getStr().toLocal8Bit().data());
+            tDebug("file %s doesn't exist.", pRrep->getVar().toByteArray().data());
         if (isSendOK)
         {
             QProcess process;

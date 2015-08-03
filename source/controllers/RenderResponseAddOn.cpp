@@ -14,45 +14,42 @@ void RenderResponseAddOn::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_MODULE_SHOW_INSTALL_STATUS:
-        generateModuleShowInstallStatus(doc);
+        generateModuleShowInstallStatus();
         break;
     case CMD_GET_ALLAPPS:
-        generateGetAllApps(doc);
+        generateGetAllApps();
         break;
     case CMD_GET_APKG_DETAIL:
-        generateGetApkgDetail(doc);
+        generateGetApkgDetail();
         break;
     case CMD_MYFAV_CHECK_IMG:
-        generateMyFavCheckImg(doc);
+        generateMyFavCheckImg();
         break;
     case CMD_CHK_HDD_FREE_SIZE:
-        generateChkHddFreeSize(doc);
+        generateChkHddFreeSize();
         break;
     case CMD_DOWNLOAD_INSTALL_ADDON:
-        generateDownloadInstallAddOn(str);
+        generateDownloadInstallAddOn();
         break;
     case CMD_CLEAR_ADDON_FILES:
-        generateClearAddOnFiles(doc);
+        generateClearAddOnFiles();
         break;
     case CMD_MODULE_RE_INSTALL:
-        generateModuleReInstall(str);
+        generateModuleReInstall();
         break;
     case CMD_INSTALL_3_PARTY_APKG:
-        generateInstall3PartyApkg(str);
+        generateInstall3PartyApkg();
         break;
     case CMD_UNINSTALL_ADDON:
-        generateUninstallAddOn(doc);
+        generateUninstallAddOn();
         break;
     case CMD_MODULE_ENABLE_DISABLE:
-        generateModuleEnableDisable(doc);
+        generateModuleEnableDisable();
         break;
     case CMD_MODULE_UNINSTALL:
-        generateModuleUninstall(doc);
+        generateModuleUninstall();
         break;
 
     case CMD_NONE:
@@ -60,14 +57,12 @@ void RenderResponseAddOn::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
 /* todo */
-void RenderResponseAddOn::generateModuleShowInstallStatus(QDomDocument &doc) {
+void RenderResponseAddOn::generateModuleShowInstallStatus() {
 
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("service");
@@ -89,11 +84,14 @@ void RenderResponseAddOn::generateModuleShowInstallStatus(QDomDocument &doc) {
 //               "configContentElement size is not equal to apiOut size.");
 //    }
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateGetAllApps(QDomDocument &doc) {
+void RenderResponseAddOn::generateGetAllApps() {
 
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("service");
@@ -114,12 +112,14 @@ void RenderResponseAddOn::generateGetAllApps(QDomDocument &doc) {
 //        tError("RenderResponseSysStatus::generateGetAllApps(): "
 //               "allappsContentElement size is not equal to apiOut size.");
 //    }
+    m_var = doc.toString();
 
 }
 
 /* todo */
-void RenderResponseAddOn::generateGetApkgDetail(QDomDocument &doc) {
+void RenderResponseAddOn::generateGetApkgDetail() {
 
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("config");
@@ -147,10 +147,13 @@ void RenderResponseAddOn::generateGetApkgDetail(QDomDocument &doc) {
 //               "itemContentElement size is not equal to apiOut size.");
 //    }
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateMyFavCheckImg(QDomDocument &doc) {
+void RenderResponseAddOn::generateMyFavCheckImg() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -160,11 +163,14 @@ void RenderResponseAddOn::generateMyFavCheckImg(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateChkHddFreeSize(QDomDocument &doc) {
+void RenderResponseAddOn::generateChkHddFreeSize() {
 
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("config");
@@ -175,18 +181,22 @@ void RenderResponseAddOn::generateChkHddFreeSize(QDomDocument &doc) {
     QDomElement installPathElement = doc.createElement("install_path");
     root.appendChild(installPathElement);
     installPathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2"));
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateDownloadInstallAddOn(QString &str) {
+void RenderResponseAddOn::generateDownloadInstallAddOn() {
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
-    str = "N/A";
+    m_var = "N/A";
 }
 
 /* todo */
-void RenderResponseAddOn::generateClearAddOnFiles(QDomDocument &doc) {
+void RenderResponseAddOn::generateClearAddOnFiles() {
+
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -195,26 +205,30 @@ void RenderResponseAddOn::generateClearAddOnFiles(QDomDocument &doc) {
     QDomElement installStatusElement = doc.createElement("install_status");
     root.appendChild(installStatusElement);
     installStatusElement.appendChild(doc.createTextNode("6"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateModuleReInstall(QString &str) {
+void RenderResponseAddOn::generateModuleReInstall() {
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
-    str = "<script>location.href='/web/addon_center/installed.html'</script>";
+    m_var = "<script>location.href='/web/addon_center/installed.html'</script>";
 }
 
 /* todo */
-void RenderResponseAddOn::generateInstall3PartyApkg(QString &str) {
+void RenderResponseAddOn::generateInstall3PartyApkg() {
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
-    str = "<script>location.href='/web/addon_center/installed.html'</script>";
+    m_var = "<script>location.href='/web/addon_center/installed.html'</script>";
 }
 
 /* todo */
-void RenderResponseAddOn::generateUninstallAddOn(QDomDocument &doc) {
+void RenderResponseAddOn::generateUninstallAddOn() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -223,10 +237,14 @@ void RenderResponseAddOn::generateUninstallAddOn(QDomDocument &doc) {
     QDomElement retElement = doc.createElement("ret");
     root.appendChild(retElement);
     retElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateModuleEnableDisable(QDomDocument &doc) {
+void RenderResponseAddOn::generateModuleEnableDisable() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -235,10 +253,14 @@ void RenderResponseAddOn::generateModuleEnableDisable(QDomDocument &doc) {
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
     resultElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAddOn::generateModuleUninstall(QDomDocument &doc) {
+void RenderResponseAddOn::generateModuleUninstall() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -250,5 +272,8 @@ void RenderResponseAddOn::generateModuleUninstall(QDomDocument &doc) {
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
     resultElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
+
 }
 

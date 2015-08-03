@@ -14,61 +14,61 @@ public:
 
 private:
 
-    void generateGetTime(QDomDocument &);
+    void generateGetTime();
     void generateManualTime();
     void generateTimezone();
     void generateNtpTime();
-    void generateGetTimeStatus(QDomDocument &);
-    void generateGetDeviceInfo(QDomDocument &);
+    void generateGetTimeStatus();
+    void generateGetDeviceInfo();
     void generateDevice();
 
-    void generateDetectDangerous(QDomDocument &);
-    void generateGetIdle(QString &);
-    void generateGetTemperature(QDomDocument &);
-    void generateGetRestoreStatus(QString &);
-    void generateRestart(QString &);
-    void generateRestore(QString &);
+    void generateDetectDangerous();
+    void generateGetIdle();
+    void generateGetTemperature();
+    void generateGetRestoreStatus();
+    void generateRestart();
+    void generateRestore();
     void generateShutdown();
     void generateIdle();
     void generateTemperature();
-    void generateBackupConf(QString &);
-    void generateRestoreConf(QString &);
+    void generateBackupConf();
+    void generateRestoreConf();
 
-    void generateGetPowerMgr(QDomDocument &);
-    void generatePowerManagement(QString &);
+    void generateGetPowerMgr();
+    void generatePowerManagement();
     void generatePowerRecovery();
     void generateFan();
     void generatePowerOffSchedule();
 
-    void generateGetEmailXml(QDomDocument &);
-    void generateGetEventXml(QDomDocument &);
-    void generateEmailEvent(QString &);
-    void generateEmail(QString &);
+    void generateGetEmailXml();
+    void generateGetEventXml();
+    void generateEmailEvent();
+    void generateEmail();
     void generateEmailTest();
-    void generateEmailTestResult(QDomDocument &);
-    void generateEmailClear(QString &);
+    void generateEmailTestResult();
+    void generateEmailClear();
 
-    void generateLogSystem(QString &);
-    void generateGetLogInfo(QDomDocument &);
+    void generateLogSystem();
+    void generateGetLogInfo();
     void generateLogServer();
     void generateSendLogTest();
-    void generateLogBackup(QString &);
+    void generateLogBackup();
     void generateLogClear();
 
-    void generateUpsInfo(QDomDocument &);
-    void generateUpsSlaveSetting(QDomDocument &);
-    void generateUpsPs(QDomDocument &);
-    void generateUsbStorageUmount(QDomDocument &);
-    void generateUsbPrinterClear(QDomDocument &);
+    void generateUpsInfo();
+    void generateUpsSlaveSetting();
+    void generateUpsPs();
+    void generateUsbStorageUmount();
+    void generateUsbPrinterClear();
 
-    void generateFirmVXml(QDomDocument &);
-    void generateCheckPowerSch(QString &);
-    void generateFirmwareInitUpload(QString &);
-    void generateFirmwareUpload(QString &);
-    void generateGetPercentage(QString &);
-    void generateGetFirmwareVerify(QString &);
-    void generateGetUpFw(QString &);
-    void generateReboot(QString &);
+    void generateFirmVXml();
+    void generateCheckPowerSch();
+    void generateFirmwareInitUpload();
+    void generateFirmwareUpload();
+    void generateGetPercentage();
+    void generateGetFirmwareVerify();
+    void generateGetUpFw();
+    void generateReboot();
 
 };
 

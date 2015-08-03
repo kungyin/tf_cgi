@@ -993,7 +993,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_USER_LIST,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_user_list */
     { CMD_GET_USER_INFO,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_user_info */
     { CMD_GET_SMB_LIST,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_smb_list */
-    { CMD_USER_ADD,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_user_add */
+    { CMD_USER_ADD,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_user_add */
     { CMD_RESTART_SERVICE,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_restart_service */
     { CMD_USER_SET_QUOTA,               RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_user_set_quota */
     { CMD_ADDUSER_TO_SESSION,           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_adduser_to_session */

@@ -14,15 +14,15 @@ public:
 
 private:
 
-    void generateIsBuildInLanguage(QDomDocument &);
-    void generateSetUserLanguage(QDomDocument &);
-    void generateGetUserLanguage(QDomDocument &);
-    void generateGetSslInfo(QDomDocument &);
-    void generateUICheckWto(QString &);
-    void generateFWStatus(QString &);
-    void generateLogin(QString &);
-    void generateLogout(QString &);
-    void generateGetLogItem(QDomDocument &);
+    void generateIsBuildInLanguage();
+    void generateSetUserLanguage();
+    void generateGetUserLanguage();
+    void generateGetSslInfo();
+    void generateUICheckWto();
+    void generateFWStatus();
+    void generateLogin();
+    void generateLogout();
+    void generateGetLogItem();
 
 };
 

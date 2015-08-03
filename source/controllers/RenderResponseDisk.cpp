@@ -17,66 +17,63 @@ void RenderResponseDisk::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_VOLUME_STATUS:
-        generateVolumeStatus(doc);
+        generateVolumeStatus();
         break;
     case CMD_FMT_GET_SYNC_SATTE:
-        generateFMTGetSyncState(doc);
+        generateFMTGetSyncState();
         break;
     case CMD_FMT_GET_AUTO_REBUILD_INFO:
-        generateFMTGetAutoRebuildInfo(doc);
+        generateFMTGetAutoRebuildInfo();
         break;
     case CMD_AJAXPLORER_STOP:
-        generateAJAXPlorerStop(doc);
+        generateAJAXPlorerStop();
         break;
     case CMD_FMT_CREATE_DISKMGR:
-        generateFMTCreateDiskMGR(doc);
+        generateFMTCreateDiskMGR();
         break;
     case CMD_SMART_HD_LIST:
-        generateSmartHDList(doc);
+        generateSmartHDList();
         break;
     case CMD_SMART_XML_CREATE_TEST_LIST:
-        generateCreateTestList(doc);
+        generateCreateTestList();
         break;
     case CMD_SMART_SCHEDULE_LIST:
-        generateSmartScheduleList(doc);
+        generateSmartScheduleList();
         break;
     case CMD_SMART_GET_TEST_STATUS:
-        generateGetTestStatus(doc);
+        generateGetTestStatus();
         break;
     case CMD_SMART_SET_SCHEDULE:
-        generateSmartSetSchedule(doc);
+        generateSmartSetSchedule();
         break;
     case CMD_SCANDISK_INFO:
-        generateScanDiskInfo(doc);
+        generateScanDiskInfo();
         break;
     case CMD_SMART_TEST_START:
-        generateSmartTestStart(doc);
+        generateSmartTestStart();
         break;
     case CMD_CHECK_DISK_REMOUNT_STATUS:
-        generateCheckDiskRemountState(doc);
+        generateCheckDiskRemountState();
         break;
     case CMD_SCANDISK_RUN_E2FSCK:
-        generateScanDiskRunE2fsck(doc);
+        generateScanDiskRunE2fsck();
         break;
     case CMD_SCANDISK_FINISH:
-        generateScanDiskFinish(doc);
+        generateScanDiskFinish();
         break;
     case CMD_VE_LIST:
-        generateVeList(doc);
+        generateVeList();
         break;
     case CMD_VE_PWD_CHECK:
-        generateVePwdCheck(doc);
+        generateVePwdCheck();
         break;
     case CMD_VE_VERIFY_KEYFILE:
-        generateVeVerifyKeyfile(doc);
+        generateVeVerifyKeyfile();
         break;
     case CMD_VE_MODIFY:
-        generateVeModify(doc);
+        generateVeModify();
         break;
     case CMD_VE_SAVE_FILE:
         generateVeSaveFile();
@@ -86,12 +83,10 @@ void RenderResponseDisk::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
+void RenderResponseDisk::generateVolumeStatus() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_disk_volume_status", true);
 
@@ -105,9 +100,12 @@ void RenderResponseDisk::generateVolumeStatus(QDomDocument &doc) {
     root.appendChild(tag2);
     QDomText t2 = doc.createTextNode(apiOut.value(0));
     tag2.appendChild(t2);
+
+    m_var = doc.toString();
 }
 
-void RenderResponseDisk::generateFMTGetSyncState(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTGetSyncState() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g sync_state", true);
 
@@ -121,9 +119,12 @@ void RenderResponseDisk::generateFMTGetSyncState(QDomDocument &doc) {
     root.appendChild(tag2);
     QDomText t2 = doc.createTextNode(apiOut.value(1));
     tag2.appendChild(t2);
+
+    m_var = doc.toString();
 }
 
-void RenderResponseDisk::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTGetAutoRebuildInfo() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_API + " -g auto_sync", true);
 
@@ -133,10 +134,13 @@ void RenderResponseDisk::generateFMTGetAutoRebuildInfo(QDomDocument &doc) {
     root.appendChild(tag1);
     QDomText t1 = doc.createTextNode(apiOut.value(0));
     tag1.appendChild(t1);
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
+void RenderResponseDisk::generateAJAXPlorerStop() {
+    QDomDocument doc;
 
 //#ifndef SIMULATOR_MODE
 //    QString apiOut = getAPIStdOut(API_PATH + DISK_API_SCRIPT + " -s ajaxplorer stop");
@@ -150,6 +154,9 @@ void RenderResponseDisk::generateAJAXPlorerStop(QDomDocument &doc) {
     root.appendChild(tag1);
     QDomText t1 = doc.createTextNode("1");
     tag1.appendChild(t1);
+
+    m_var = doc.toString();
+
 }
 
 FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
@@ -191,7 +198,8 @@ FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
     return args;
 }
 
-void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
+void RenderResponseDisk::generateFMTCreateDiskMGR() {
+    QDomDocument doc;
     QString paraCreateType;
     QString paraCreateVolumeInfo;
     QString paraAutoSync;
@@ -248,9 +256,12 @@ void RenderResponseDisk::generateFMTCreateDiskMGR(QDomDocument &doc) {
     root.appendChild(tag1);
     QDomText t1 = doc.createTextNode("1" /*apiOut.value(0)*/);
     tag1.appendChild(t1);
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartHDList() {
+    QDomDocument doc;
 
     QString paraPage;
     QString paraRp;
@@ -318,10 +329,12 @@ void RenderResponseDisk::generateSmartHDList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseDisk::generateCreateTestList(QDomDocument &doc) {
+void RenderResponseDisk::generateCreateTestList() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_list", true, ";");
     QDomElement root = doc.createElement("config");
@@ -332,11 +345,12 @@ void RenderResponseDisk::generateCreateTestList(QDomDocument &doc) {
     QDomElement smartElement = doc.createElement("smart_mail");
     root.appendChild(smartElement);
     smartElement.appendChild(doc.createTextNode(apiOut.value(1)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
-
+void RenderResponseDisk::generateSmartScheduleList() {
+    QDomDocument doc;
     QString paraPage;
     QString paraRp;
     QString paraQuery;
@@ -409,9 +423,12 @@ void RenderResponseDisk::generateSmartScheduleList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
+void RenderResponseDisk::generateGetTestStatus() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_status", true);
 
     QDomElement root = doc.createElement("Button");
@@ -419,9 +436,12 @@ void RenderResponseDisk::generateGetTestStatus(QDomDocument &doc) {
     QDomElement stateElement = doc.createElement("State");
     root.appendChild(stateElement);
     stateElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartSetSchedule() {
+    QDomDocument doc;
 
     QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
     QString paraDevice = m_pReq->allParameters().value("f_device").toString();
@@ -451,9 +471,12 @@ void RenderResponseDisk::generateSmartSetSchedule(QDomDocument &doc) {
     QDomElement cmdElement = doc.createElement("cmd");
     root.appendChild(cmdElement);
     cmdElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
+void RenderResponseDisk::generateSmartTestStart() {
+    QDomDocument doc;
 
     QString paraDevice;
     QString paraType;
@@ -478,9 +501,12 @@ void RenderResponseDisk::generateSmartTestStart(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateScanDiskInfo(QDomDocument &doc) {
+void RenderResponseDisk::generateScanDiskInfo() {
+    QDomDocument doc;
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -i", true);
 
     QDomElement root = doc.createElement("config");
@@ -512,35 +538,47 @@ void RenderResponseDisk::generateScanDiskInfo(QDomDocument &doc) {
             guiElement1.appendChild(doc.createTextNode(e));
         }
     }
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateCheckDiskRemountState(QDomDocument &doc) {
+void RenderResponseDisk::generateCheckDiskRemountState() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateScanDiskRunE2fsck(QDomDocument &doc) {
+void RenderResponseDisk::generateScanDiskRunE2fsck() {
+    QDomDocument doc;
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -r", true);
     QDomElement root = doc.createElement("script");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode("location.href='/web/dsk_mgr/hd_scandisk_state.html'"));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseDisk::generateScanDiskFinish(QDomDocument &doc) {
+void RenderResponseDisk::generateScanDiskFinish() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseDisk::generateVeList(QDomDocument &doc) {
+void RenderResponseDisk::generateVeList() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
 
     QDomElement root = doc.createElement("rows");
@@ -570,36 +608,47 @@ void RenderResponseDisk::generateVeList(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseDisk::generateVePwdCheck(QDomDocument &doc) {
+void RenderResponseDisk::generateVePwdCheck() {
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseDisk::generateVeVerifyKeyfile(QDomDocument &doc) {
+void RenderResponseDisk::generateVeVerifyKeyfile() {
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseDisk::generateVeModify(QDomDocument &doc) {
+void RenderResponseDisk::generateVeModify() {
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("5"));
+    m_var = doc.toString();
+
 }
 
 /* todo */

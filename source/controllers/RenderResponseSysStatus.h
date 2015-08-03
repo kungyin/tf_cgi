@@ -13,18 +13,18 @@ public:
     virtual void preRender();
 
 private:
-    void generateGetStatus(QDomDocument &);
-    void generateStatusVolumeInfo(QDomDocument &);
-    void generateUsbStorageInfo(QDomDocument &);
-    void generateMtpInfo(QDomDocument &);
-    void generateUsbPrinterInfo(QDomDocument &);
-    void generateUpsInfo2(QDomDocument &);
+    void generateGetStatus();
+    void generateStatusVolumeInfo();
+    void generateUsbStorageInfo();
+    void generateMtpInfo();
+    void generateUsbPrinterInfo();
+    void generateUpsInfo2();
 
-    void generateSmartXmlCreateDeviceList(QDomDocument &);
-    void generateSmartXmlCreateSmartInfo(QDomDocument &);
-    void generateResource(QDomDocument &);
-    void generateGetService(QDomDocument &);
-    void generateModuleList(QDomDocument &);
+    void generateSmartXmlCreateDeviceList();
+    void generateSmartXmlCreateSmartInfo();
+    void generateResource();
+    void generateGetService();
+    void generateModuleList();
 
 };
 

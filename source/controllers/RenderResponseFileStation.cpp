@@ -60,69 +60,64 @@ void RenderResponseFileStation::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_FOLDER_CONTENT:
-        generateFolderContent(doc);
+        generateFolderContent();
         break;
     case CMD_GET_USER_QUOTA:
-        generateGetUserQuota(doc);
+        generateGetUserQuota();
         break;
     case CMD_CHK_FILE:
-        generateChkFile(str);
+        generateChkFile();
         break;
     case CMD_COMPRESS:
-        generateCompress(doc);
+        generateCompress();
         break;
     case CMD_DOWNLOAD:
-        generateDownload(str);
+        generateDownload();
         break;
     case CMD_CP:
-        generateCp(doc);
+        generateCp();
         break;
     case CMD_MOVE:
-        generateMove(doc);
+        generateMove();
         break;
     case CMD_DEL:
-        generateDel(doc);
+        generateDel();
         break;
     case CMD_RENAME:
-        generateRename(doc);
+        generateRename();
         break;
     case CMD_GET_PROPERTIES:
-        generateGetProperties(doc);
+        generateGetProperties();
         break;
     case CMD_CHANGE_PERMISSIONS:
-        generateChangePermissions(doc);
+        generateChangePermissions();
         break;
     case CMD_ADD_ZIP:
-        generateAddZip(doc);
+        generateAddZip();
         break;
     case CMD_UNZIP:
-        generateUnzip(doc);
+        generateUnzip();
         break;
     case CMD_UNTAR:
-        generateUntar(doc);
+        generateUntar();
         break;
     case CMD_GET_SECDOWNLOAD_URL:
-        generateGetSecDownloadUrl(doc);
+        generateGetSecDownloadUrl();
         break;
     case CMD_GET_COOLIRIS_RSS:
-        generateGetCoolirisRss(str);
+        generateGetCoolirisRss();
         break;
     case CMD_NONE:
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
+void RenderResponseFileStation::generateFolderContent() {
+    QDomDocument doc;
 
     QString paraPage = m_pReq->parameter("page");
     QString paraRp = m_pReq->parameter("rp");
@@ -204,11 +199,13 @@ void RenderResponseFileStation::generateFolderContent(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(fileList.size())));
+    m_var = doc.toString();
 
 }
 
 /* todo */
-void RenderResponseFileStation::generateGetUserQuota(QDomDocument &doc) {
+void RenderResponseFileStation::generateGetUserQuota() {
+    QDomDocument doc;
     QStringList configContentElement(QStringList()
         << "used_size" << "g_used_size" << "limit_size" << "g_limit_size" << "hdd_free_size" << "enable");
 
@@ -223,15 +220,16 @@ void RenderResponseFileStation::generateGetUserQuota(QDomDocument &doc) {
         root.appendChild(element);
         element.appendChild(doc.createTextNode(valusElement.value(i)));
     }
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateChkFile(QString &str) {
+void RenderResponseFileStation::generateChkFile() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
 
     QDir dir(paraPath);
-    str = dir.exists(paraName) ? "0" : "1";
+    m_var = dir.exists(paraName) ? "0" : "1";
 }
 
 QString RenderResponseFileStation::getTempPath(const QString &path) {
@@ -243,7 +241,9 @@ QString RenderResponseFileStation::getTempPath(const QString &path) {
     return tmpPath;
 }
 
-void RenderResponseFileStation::generateCompress(QDomDocument &doc) {
+void RenderResponseFileStation::generateCompress() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
@@ -285,11 +285,12 @@ void RenderResponseFileStation::generateCompress(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
 
-void RenderResponseFileStation::generateDownload(QString &str) {
+void RenderResponseFileStation::generateDownload() {
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path1").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
@@ -298,7 +299,7 @@ void RenderResponseFileStation::generateDownload(QString &str) {
     QString zipFileName = paraName.endsWith(".zip") ? paraName : paraName + ".zip";
     QFileInfo file(tmpPath + QDir::separator() + zipFileName);
     if(file.exists() && file.isFile()) {
-        str = file.absoluteFilePath();
+        m_var = file.absoluteFilePath();
     }
 
 }
@@ -322,7 +323,9 @@ bool RenderResponseFileStation::copy(QString &source, QString &dest) {
     return false;
 }
 
-void RenderResponseFileStation::generateCp(QDomDocument &doc) {
+void RenderResponseFileStation::generateCp() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
@@ -339,10 +342,13 @@ void RenderResponseFileStation::generateCp(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateMove(QDomDocument &doc) {
+void RenderResponseFileStation::generateMove() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
@@ -368,11 +374,13 @@ void RenderResponseFileStation::generateMove(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateDel(QDomDocument &doc) {
+void RenderResponseFileStation::generateDel() {
 
+    QDomDocument doc;
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
 
     QFileInfo fileInfo(paraPath);
@@ -389,10 +397,13 @@ void RenderResponseFileStation::generateDel(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateRename(QDomDocument &doc) {
+void RenderResponseFileStation::generateRename() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
@@ -404,10 +415,13 @@ void RenderResponseFileStation::generateRename(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateGetProperties(QDomDocument &doc) {
+void RenderResponseFileStation::generateGetProperties() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
 
@@ -440,10 +454,13 @@ void RenderResponseFileStation::generateGetProperties(QDomDocument &doc) {
         root.appendChild(element);
         element.appendChild(doc.createTextNode(contentElement.value(i)));
     }
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateChangePermissions(QDomDocument &doc) {
+void RenderResponseFileStation::generateChangePermissions() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraPermission = m_pReq->parameter("permission");
@@ -459,9 +476,13 @@ void RenderResponseFileStation::generateChangePermissions(QDomDocument &doc) {
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseFileStation::generateAddZip(QDomDocument &doc) {
+void RenderResponseFileStation::generateAddZip() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSelectName = m_pReq->parameter("select_name");
@@ -495,6 +516,7 @@ void RenderResponseFileStation::generateAddZip(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
@@ -512,7 +534,9 @@ bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString 
     return false;
 }
 
-void RenderResponseFileStation::generateUnzip(QDomDocument &doc) {
+void RenderResponseFileStation::generateUnzip() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
@@ -524,10 +548,13 @@ void RenderResponseFileStation::generateUnzip(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateUntar(QDomDocument &doc) {
+void RenderResponseFileStation::generateUntar() {
+
+    QDomDocument doc;
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
@@ -548,6 +575,7 @@ void RenderResponseFileStation::generateUntar(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 
 }
 
@@ -578,10 +606,10 @@ QString RenderResponseFileStation::getSecretPath(QString filePath) {
 }
 
 
-void RenderResponseFileStation::generateGetSecDownloadUrl(QDomDocument &doc) {
+void RenderResponseFileStation::generateGetSecDownloadUrl() {
 
+    QDomDocument doc;
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("f_path").toLocal8Bit());
-
     QString secDownloadPath = getSecretPath(paraPath);
 
     QDomElement root = doc.createElement("config");
@@ -592,15 +620,16 @@ void RenderResponseFileStation::generateGetSecDownloadUrl(QDomDocument &doc) {
     QDomElement myUrlElement = doc.createElement("my_url");
     root.appendChild(myUrlElement);
     myUrlElement.appendChild(doc.createTextNode(secDownloadPath));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseFileStation::generateGetCoolirisRss(QString &str) {
+void RenderResponseFileStation::generateGetCoolirisRss() {
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
 
-    str = getSecretPath(paraPath + QDir::separator() + paraName);
+    m_var = getSecretPath(paraPath + QDir::separator() + paraName);
 
 }
 

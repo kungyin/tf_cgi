@@ -47,26 +47,26 @@ private:
 
     FMT_ARGS getFMTArgs(QStringList &);
 
-    void generateVolumeStatus(QDomDocument &);
-    void generateFMTGetSyncState(QDomDocument &);
-    void generateFMTGetAutoRebuildInfo(QDomDocument &);
-    void generateAJAXPlorerStop(QDomDocument &);
-    void generateFMTCreateDiskMGR(QDomDocument &);
-    void generateSmartHDList(QDomDocument &);
-    void generateCreateTestList(QDomDocument &);
-    void generateSmartScheduleList(QDomDocument &);
-    void generateGetTestStatus(QDomDocument &);
-    void generateSmartSetSchedule(QDomDocument &);
-    void generateSmartDelSchedule(QDomDocument &);
-    void generateSmartTestStart(QDomDocument &);
-    void generateScanDiskInfo(QDomDocument &);
-    void generateCheckDiskRemountState(QDomDocument &);
-    void generateScanDiskRunE2fsck(QDomDocument &);
-    void generateScanDiskFinish(QDomDocument &);
-    void generateVeList(QDomDocument &);
-    void generateVePwdCheck(QDomDocument &);
-    void generateVeVerifyKeyfile(QDomDocument &);
-    void generateVeModify(QDomDocument &);
+    void generateVolumeStatus();
+    void generateFMTGetSyncState();
+    void generateFMTGetAutoRebuildInfo();
+    void generateAJAXPlorerStop();
+    void generateFMTCreateDiskMGR();
+    void generateSmartHDList();
+    void generateCreateTestList();
+    void generateSmartScheduleList();
+    void generateGetTestStatus();
+    void generateSmartSetSchedule();
+    void generateSmartDelSchedule();
+    void generateSmartTestStart();
+    void generateScanDiskInfo();
+    void generateCheckDiskRemountState();
+    void generateScanDiskRunE2fsck();
+    void generateScanDiskFinish();
+    void generateVeList();
+    void generateVePwdCheck();
+    void generateVeVerifyKeyfile();
+    void generateVeModify();
     void generateVeSaveFile();
 
 };

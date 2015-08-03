@@ -14,45 +14,41 @@ void RenderResponseTimeMachine::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_TM_GET_INFO:
-        generateTmGetInfo(doc);
+        generateTmGetInfo();
         break;
     case CMD_TM_GET_LIST:
-        generateTmGetList(doc);
+        generateTmGetList();
         break;
     case CMD_TM_GET_SMB_LIST:
-        generateTmGetSmbList(doc);
+        generateTmGetSmbList();
         break;
     case CMD_TM_SET:
-        generateTmSet(str);
+        generateTmSet();
         break;
     case CMD_TM_GET_SHARENAME:
-        generateTmGetShareName(doc);
+        generateTmGetShareName();
         break;
     case CMD_TM_SET_SHARE:
-        generateTmSetShare(str);
+        generateTmSetShare();
         break;
     case CMD_TM_DEL_SHARE:
-        generateTmDelShare(str);
+        generateTmDelShare();
         break;
     case CMD_TM_DEL_ALL_SHARE:
-        generateTmDelAllShare(str);
+        generateTmDelAllShare();
         break;
     case CMD_NONE:
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseTimeMachine::generateTmGetInfo(QDomDocument &doc) {
+void RenderResponseTimeMachine::generateTmGetInfo() {
+
+    QDomDocument doc;
 
     QMap<QString, QString> tmInfo = getNasCfg("time_machine");
     QMap<QString, QString> sambaInfo = getNasCfg("samba");
@@ -68,10 +64,13 @@ void RenderResponseTimeMachine::generateTmGetInfo(QDomDocument &doc) {
     root.appendChild(ads_enableElement);
     ads_enableElement.appendChild(doc.createTextNode(sambaInfo.value("ads_enable")));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseTimeMachine::generateTmGetList(QDomDocument &doc) {
+void RenderResponseTimeMachine::generateTmGetList() {
 
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -107,9 +106,13 @@ void RenderResponseTimeMachine::generateTmGetList(QDomDocument &doc) {
     root.appendChild(totalElement1);
     totalElement1.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseTimeMachine::generateTmGetSmbList(QDomDocument &doc) {
+void RenderResponseTimeMachine::generateTmGetSmbList() {
+
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -151,9 +154,11 @@ void RenderResponseTimeMachine::generateTmGetSmbList(QDomDocument &doc) {
     root.appendChild(totalElement1);
     totalElement1.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseTimeMachine::generateTmSet(QString &str) {
+void RenderResponseTimeMachine::generateTmSet() {
 
     QString paraEnable = m_pReq->parameter("enable");
 
@@ -162,12 +167,13 @@ void RenderResponseTimeMachine::generateTmSet(QString &str) {
     else
         tDebug("RenderResponseTimeMachine::generateTmSet(): setNasCfg time_machine failed");
 
-    str = "N/A";
+    m_var = "N/A";
 
 }
 
-void RenderResponseTimeMachine::generateTmGetShareName(QDomDocument &doc) {
+void RenderResponseTimeMachine::generateTmGetShareName() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_share_name", true, ";");
 
     QDomElement root = doc.createElement("tm_share");
@@ -181,25 +187,27 @@ void RenderResponseTimeMachine::generateTmGetShareName(QDomDocument &doc) {
         nameElement.appendChild(doc.createTextNode(e));
     }
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseTimeMachine::generateTmSetShare(QString &str) {
+void RenderResponseTimeMachine::generateTmSetShare() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
             " service_set_add_tm_share " + allParametersToString(), true);
 
-    str = "N/A";
+    m_var = "N/A";
 }
 
-void RenderResponseTimeMachine::generateTmDelShare(QString &str) {
+void RenderResponseTimeMachine::generateTmDelShare() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
             " service_set_del_tm_share " + allParametersToString(), true);
-    str = "N/A";
+    m_var = "N/A";
 }
 
-void RenderResponseTimeMachine::generateTmDelAllShare(QString &str) {
+void RenderResponseTimeMachine::generateTmDelAllShare() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
             " service_set_del_all_share", true);
-    str = "N/A";
+    m_var = "N/A";
 }
 
 

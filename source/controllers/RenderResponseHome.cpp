@@ -14,48 +14,44 @@ void RenderResponseHome::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_CGI_IS_BUILD_IN_LANGUAGE:
-        generateIsBuildInLanguage(doc);
+        generateIsBuildInLanguage();
         break;
     case CMD_SET_USER_LANGUAGE:
-        generateSetUserLanguage(doc);
+        generateSetUserLanguage();
         break;
     case CMD_GET_USER_LANGUAGE:
-        generateGetUserLanguage(doc);
+        generateGetUserLanguage();
         break;
     case CMD_CGI_GET_SSL_INFO:
-        generateGetSslInfo(doc);
+        generateGetSslInfo();
         break;
     case CMD_UI_CHECK_WTO:
-        generateUICheckWto(str);
+        generateUICheckWto();
         break;
     case CMD_FW_STATUS:
-        generateFWStatus(str);
+        generateFWStatus();
         break;
     case CMD_LOGIN:
-        generateLogin(str);
+        generateLogin();
         break;
     case CMD_LOGOUT:
-        generateLogout(str);
+        generateLogout();
         break;
     case CMD_GET_LOG_ITEM:
-        generateGetLogItem(doc);
+        generateGetLogItem();
         break;
     case CMD_NONE:
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseHome::generateIsBuildInLanguage(QDomDocument &doc) {
+void RenderResponseHome::generateIsBuildInLanguage() {
+
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("flag");
     doc.appendChild(root);
@@ -63,18 +59,27 @@ void RenderResponseHome::generateIsBuildInLanguage(QDomDocument &doc) {
     QStringList val = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g build_in_language", true);
 
     root.appendChild(doc.createTextNode(val.isEmpty() ? "" : val.at(0)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseHome::generateSetUserLanguage(QDomDocument &doc) {
+void RenderResponseHome::generateSetUserLanguage() {
+
+    QDomDocument doc;
+
     QString paraLang = m_pReq->allParameters().value("language").toString();
     QString ret = setNasCfg("web", "language", paraLang) ? "1" : "0";
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseHome::generateGetUserLanguage(QDomDocument &doc) {
+void RenderResponseHome::generateGetUserLanguage() {
+
+    QDomDocument doc;
 
     QMap<QString, QString> webInfo = getNasCfg("web");
     QString ret = webInfo.value("language").isEmpty() ? "" : QString("%1,%1.xml").arg(webInfo.value("language"));
@@ -82,9 +87,12 @@ void RenderResponseHome::generateGetUserLanguage(QDomDocument &doc) {
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseHome::generateGetSslInfo(QDomDocument &doc) {
+void RenderResponseHome::generateGetSslInfo() {
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
     if(apiOut.size() < 2)
         return;
@@ -97,19 +105,21 @@ void RenderResponseHome::generateGetSslInfo(QDomDocument &doc) {
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
     portElement.appendChild(doc.createTextNode(apiOut.at(1)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseHome::generateUICheckWto(QString &str) {
+void RenderResponseHome::generateUICheckWto() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto", true);
-    str = apiOut.isEmpty() ? "fail" : apiOut.at(0);
+    m_var = apiOut.isEmpty() ? "fail" : apiOut.at(0);
 }
 
-void RenderResponseHome::generateFWStatus(QString &str) {
+void RenderResponseHome::generateFWStatus() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_fw_status", true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseHome::generateLogin(QString &str) {
+void RenderResponseHome::generateLogin() {
     QString paraUsername;
     QString paraPwd;
     QString paraPort;
@@ -174,15 +184,15 @@ void RenderResponseHome::generateLogin(QString &str) {
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
         m_cookies.append(cookie);
-        str = "../web/home.html?v=8401878";
+        m_var = "../web/home.html?v=8401878";
     }
     else if(apiOut.value(0).compare("0") == 0){
-        str = "../web/relogin.html";
+        m_var = "../web/relogin.html";
     }
 
 }
 
-void RenderResponseHome::generateLogout(QString &str) {
+void RenderResponseHome::generateLogout() {
 
     QString paraUsername;
     QString paraOS;
@@ -193,12 +203,15 @@ void RenderResponseHome::generateLogout(QString &str) {
         paraOS = m_pReq->allParameters().value("os").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -s logout " + paraUsername, true);
-    str = "..";
+    m_var = "..";
 
 }
 
 /* todo */
-void RenderResponseHome::generateGetLogItem(QDomDocument &doc) {
+void RenderResponseHome::generateGetLogItem() {
+
+    QDomDocument doc;
+
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
 
     QDomElement root = doc.createElement("log");
@@ -210,10 +223,12 @@ void RenderResponseHome::generateGetLogItem(QDomDocument &doc) {
     QStringList itemContent(QStringList() << "date" << "info");
     //if( itemContent.size() != apiOut.value(i).split(";").size() ) {
 
-        //for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
-            QDomElement element = doc.createElement(itemContent.value(0));
-            itemElement.appendChild(element);
-            element.appendChild(doc.createTextNode(""));
-        //}
+    //for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+    QDomElement element = doc.createElement(itemContent.value(0));
+    itemElement.appendChild(element);
+    element.appendChild(doc.createTextNode(""));
+    //}
+    m_var = doc.toString();
+
 }
 

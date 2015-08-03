@@ -18,12 +18,9 @@ void RenderResponseSysMngm::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_GET_TIME:
-        generateGetTime(doc);
+        generateGetTime();
         break;
     case CMD_MANUAL_TIME:
         generateManualTime();
@@ -35,31 +32,31 @@ void RenderResponseSysMngm::preRender() {
         generateNtpTime();
         break;
     case CMD_GET_TIME_STATUS:
-        generateGetTimeStatus(doc);
+        generateGetTimeStatus();
         break;
     case CMD_GET_DEVICE_INFO:
-        generateGetDeviceInfo(doc);
+        generateGetDeviceInfo();
         break;
     case CMD_DEVICE:
         generateDevice();
         break;
     case CMD_DETECT_DANGEROUS:
-        generateDetectDangerous(doc);
+        generateDetectDangerous();
         break;
     case CMD_GET_IDEL:
-        generateGetIdle(str);
+        generateGetIdle();
         break;
     case CMD_GET_TEMPERATURE:
-        generateGetTemperature(doc);
+        generateGetTemperature();
         break;
     case CMD_GET_RESTORE_STATUS:
-        generateGetRestoreStatus(str);
+        generateGetRestoreStatus();
         break;
     case CMD_RESTART:
-        generateRestart(str);
+        generateRestart();
         break;
     case CMD_RESTORE:
-        generateRestore(str);
+        generateRestore();
         break;
     case CMD_SHUTDOWN:
         generateShutdown();
@@ -71,17 +68,17 @@ void RenderResponseSysMngm::preRender() {
         generateTemperature();
         break;
     case CMD_BACKUP_CONF:
-        generateBackupConf(str);
+        generateBackupConf();
         break;
     case CMD_RESTORE_CONF:
-        generateRestoreConf(str);
+        generateRestoreConf();
         break;
 
     case CMD_GET_POWER_MGR:
-        generateGetPowerMgr(doc);
+        generateGetPowerMgr();
         break;
     case CMD_POWER_MANAGEMENT:
-        generatePowerManagement(str);
+        generatePowerManagement();
         break;
     case CMD_POWER_RECV:
         generatePowerRecovery();
@@ -94,32 +91,32 @@ void RenderResponseSysMngm::preRender() {
         break;
 
     case CMD_GET_EMAIL_XML:
-        generateGetEmailXml(doc);
+        generateGetEmailXml();
         break;
     case CMD_GET_EVENT_XML:
-        generateGetEventXml(doc);
+        generateGetEventXml();
         break;
     case CMD_EMAIL_EVENT:
-        generateEmailEvent(str);
+        generateEmailEvent();
         break;
     case CMD_EMAIL:
-        generateEmail(str);
+        generateEmail();
         break;
     case CMD_EMAIL_TEST:
         generateEmailTest();
         break;
     case CMD_EMAIL_TEST_RESULT:
-        generateEmailTestResult(doc);
+        generateEmailTestResult();
         break;
     case CMD_EMAIL_CLEAR:
-        generateEmailClear(str);
+        generateEmailClear();
         break;
 
     case CMD_LOG_SYSTEM:
-        generateLogSystem(str);
+        generateLogSystem();
         break;
     case CMD_GET_LOG_INFO:
-        generateGetLogInfo(doc);
+        generateGetLogInfo();
         break;
     case CMD_LOG_SERVER:
         generateLogServer();
@@ -128,63 +125,62 @@ void RenderResponseSysMngm::preRender() {
         generateSendLogTest();
         break;
     case CMD_LOG_BACKUP:
-        generateLogBackup(str);
+        generateLogBackup();
         break;
     case CMD_LOG_CLEAR:
         generateLogClear();
         break;
 
     case CMD_GUI_UPS_INFO:
-        generateUpsInfo(doc);
+        generateUpsInfo();
         break;
     case CMD_GUI_UPS_SLAVE_SETTING:
-        generateUpsSlaveSetting(doc);
+        generateUpsSlaveSetting();
         break;
     case CMD_GUI_UPS_PS:
-        generateUpsPs(doc);
+        generateUpsPs();
         break;
     case CMD_USB_STORAGE_UMOUNT:
-        generateUsbStorageUmount(doc);
+        generateUsbStorageUmount();
         break;
     case CMD_USB_PRINTER_CLEAR:
-        generateUsbPrinterClear(doc);
+        generateUsbPrinterClear();
         break;
 
     case CMD_FIRM_V_XML:
-        generateFirmVXml(doc);
+        generateFirmVXml();
         break;
     case CMD_CHECK_POWER_SCH:
-        generateCheckPowerSch(str);
+        generateCheckPowerSch();
         break;
     case CMD_FIRMWARE_INIT_UPLOAD:
-        generateFirmwareInitUpload(str);
+        generateFirmwareInitUpload();
         break;
     case CMD_FIRMWARE_UPLOAD:
-        generateFirmwareUpload(str);
+        generateFirmwareUpload();
         break;
     case CMD_GET_PERCENTAGE:
-        generateGetPercentage(str);
+        generateGetPercentage();
         break;
     case CMD_GET_FIRMWARE_VERIFY:
-        generateGetFirmwareVerify(str);
+        generateGetFirmwareVerify();
         break;
     case CMD_GET_UP_FW:
-        generateGetUpFw(str);
+        generateGetUpFw();
         break;
     case CMD_REBOOT:
-        generateReboot(str);
+        generateReboot();
         break;
     case CMD_NONE:
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetTime() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " get", true, ";");
     //QDateTime currentTime = QDateTime::currentDateTime();
 
@@ -218,6 +214,9 @@ void RenderResponseSysMngm::generateGetTime(QDomDocument &doc) {
     QDomElement secElement = doc.createElement("sec");
     root.appendChild(secElement);
     secElement.appendChild(doc.createTextNode(apiOut.value(8)));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseSysMngm::generateManualTime() {
@@ -249,7 +248,9 @@ void RenderResponseSysMngm::generateNtpTime() {
                                       " set " + paraNtpEnable + " " + paraNtpServer, true);
 }
 
-void RenderResponseSysMngm::generateGetTimeStatus(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetTimeStatus() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API + " status", true, ";");
 
     QDomElement root = doc.createElement("time");
@@ -260,9 +261,14 @@ void RenderResponseSysMngm::generateGetTimeStatus(QDomDocument &doc) {
     QDomElement updateTimeElement = doc.createElement("update_time");
     root.appendChild(updateTimeElement);
     updateTimeElement.appendChild(doc.createTextNode(apiOut.value(1)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateGetDeviceInfo(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetDeviceInfo() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
 
     QDomElement root = doc.createElement("device_info");
@@ -276,6 +282,9 @@ void RenderResponseSysMngm::generateGetDeviceInfo(QDomDocument &doc) {
     QDomElement descriptionElement = doc.createElement("description");
     root.appendChild(descriptionElement);
     descriptionElement.appendChild(doc.createTextNode(apiOut.value(2)));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseSysMngm::generateDevice() {
@@ -286,7 +295,9 @@ void RenderResponseSysMngm::generateDevice() {
                                       paraHostname + " " + paraWorkgroup + " " + paraDescription, true);
 }
 
-void RenderResponseSysMngm::generateDetectDangerous(QDomDocument &doc) {
+void RenderResponseSysMngm::generateDetectDangerous() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " status", true);
 
     QDomElement root = doc.createElement("config");
@@ -294,15 +305,18 @@ void RenderResponseSysMngm::generateDetectDangerous(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generateGetIdle(QString &str) {
+void RenderResponseSysMngm::generateGetIdle() {
     QMap<QString, QString> idleInfo = getNasCfg("idle");
-    str = idleInfo.value("time");
+    m_var = idleInfo.value("time");
 }
 
-void RenderResponseSysMngm::generateGetTemperature(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetTemperature() {
+
+    QDomDocument doc;
 
     if(m_pReq->header().path().contains("status_mgr.cgi")) {
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
@@ -326,21 +340,23 @@ void RenderResponseSysMngm::generateGetTemperature(QDomDocument &doc) {
         temperatureElement.appendChild(doc.createTextNode(mailEventInfo.value("hdd_temperature_temperature")));
     }
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateGetRestoreStatus(QString &str) {
+void RenderResponseSysMngm::generateGetRestoreStatus() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_RESTORE_API + " status", true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateRestart(QString &str) {
+void RenderResponseSysMngm::generateRestart() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
-    str = "/web/dsk_mgr/wait.html";
+    m_var = "/web/dsk_mgr/wait.html";
 }
 
-void RenderResponseSysMngm::generateRestore(QString &str) {
+void RenderResponseSysMngm::generateRestore() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_RESTORE_API + " resetdef", true);
-    str = "/web/dsk_mgr/wait.html";
+    m_var = "/web/dsk_mgr/wait.html";
 }
 
 void RenderResponseSysMngm::generateShutdown() {
@@ -363,22 +379,22 @@ void RenderResponseSysMngm::generateTemperature() {
         tDebug("setNasCfg mail_event failed");
 }
 
-void RenderResponseSysMngm::generateBackupConf(QString &str) {
+void RenderResponseSysMngm::generateBackupConf() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " save", true);
     QString filePath = apiOut.value(0);
     tDebug("file: %s", filePath.toLocal8Bit().data());
     QFileInfo file(filePath);
     if(file.exists() && file.isFile())
-        str = filePath;
+        m_var = filePath;
 }
 
-void RenderResponseSysMngm::generateRestoreConf(QString &str) {
+void RenderResponseSysMngm::generateRestoreConf() {
 
     if(!m_pReq->multipartFormData().isEmpty()) {
         if(m_pReq->multipartFormData().renameUploadedFile("file", USER_IMPORT_FILE, true)) {
             QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
             if(apiOut.value(0).compare("0") == 0) {
-                str = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
+                m_var = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
                 getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
             }
         }
@@ -386,7 +402,9 @@ void RenderResponseSysMngm::generateRestoreConf(QString &str) {
 
 }
 
-void RenderResponseSysMngm::generateGetPowerMgr(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetPowerMgr() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_powermgr_info");
 
     QDomElement root = doc.createElement("power");
@@ -454,10 +472,11 @@ void RenderResponseSysMngm::generateGetPowerMgr(QDomDocument &doc) {
             ledTimeElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(10)));
         }
     }
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generatePowerManagement(QString &str) {
+void RenderResponseSysMngm::generatePowerManagement() {
     QString paraHibEnable = m_pReq->parameter("f_hdd_hibernation_enable");
     QString paraTurnOffTime = m_pReq->parameter("f_turn_off_time");
 
@@ -470,7 +489,7 @@ void RenderResponseSysMngm::generatePowerManagement(QString &str) {
     else
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_hdd_hibernation_setting", true);
 
-    str = "Location: /web/system_mgr/power_mgr.html";
+    m_var = "Location: /web/system_mgr/power_mgr.html";
 }
 
 void RenderResponseSysMngm::generatePowerRecovery() {
@@ -515,7 +534,9 @@ void RenderResponseSysMngm::generatePowerOffSchedule() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_onoff_schedule", true);
 }
 
-void RenderResponseSysMngm::generateGetEmailXml(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetEmailXml() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_email_info", true, ";");
 
     QDomElement root = doc.createElement("mail");
@@ -552,9 +573,13 @@ void RenderResponseSysMngm::generateGetEmailXml(QDomDocument &doc) {
     root.appendChild(smtpAuthElement);
     smtpAuthElement.appendChild(doc.createTextNode(apiOut.value(7)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateGetEventXml(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetEventXml() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_event_info", true, ";");
 
     QDomElement root = doc.createElement("event");
@@ -644,15 +669,19 @@ void RenderResponseSysMngm::generateGetEventXml(QDomDocument &doc) {
     root.appendChild(upsElement);
     upsElement.appendChild(doc.createTextNode(apiOut.value(19)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateEmailEvent(QString &str) {
+void RenderResponseSysMngm::generateEmailEvent() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_event_setting "
                                       + allParametersToString());
-    str = "Content-type: text/html";
+    m_var = "Content-type: text/html";
 }
 
-void RenderResponseSysMngm::generateEmail(QString &str) {
+void RenderResponseSysMngm::generateEmail() {
+
+    QDomDocument doc;
 
     QMap<QString, QString> map;
     map.insert("auth", m_pReq->parameter("login_method"));
@@ -667,7 +696,7 @@ void RenderResponseSysMngm::generateEmail(QString &str) {
     if(!setNasCfg("mail", map))
         tDebug("RenderResponseSysMngm::generateEmail(): setNasCfg <mail> failed");
 
-    str = "Content-type: text/html";
+    m_var = "Content-type: text/html";
 }
 
 void RenderResponseSysMngm::generateEmailTest() {
@@ -675,7 +704,9 @@ void RenderResponseSysMngm::generateEmailTest() {
                                       + allParametersToString());
 }
 
-void RenderResponseSysMngm::generateEmailTestResult(QDomDocument &doc) {
+void RenderResponseSysMngm::generateEmailTestResult() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_send_email_test_result");
 
     QDomElement root = doc.createElement("test");
@@ -683,17 +714,18 @@ void RenderResponseSysMngm::generateEmailTestResult(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generateEmailClear(QString &str) {
+void RenderResponseSysMngm::generateEmailClear() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_email_save_config");
-    str = "Content-type: text/html";
+    m_var = "Content-type: text/html";
 }
 
 
 /* todo */
-void RenderResponseSysMngm::generateLogSystem(QString &str) {
+void RenderResponseSysMngm::generateLogSystem() {
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraSortname = m_pReq->allParameters().value("sortname").toString();
@@ -725,16 +757,18 @@ void RenderResponseSysMngm::generateLogSystem(QString &str) {
     }
 
     if(apiOut.isEmpty())
-        str = rowsEmpty;
+        m_var = rowsEmpty;
     else {
         int total = 1;
         if(paraRp.toInt() != 0)
             total = apiOut.size() / paraRp.toInt() + (apiOut.size() % paraRp.toInt() != 0);
-        str = rows.arg(logOut).arg(QString::number(total)).arg(paraPage.toInt());
+        m_var = rows.arg(logOut).arg(QString::number(total)).arg(paraPage.toInt());
     }
 }
 
-void RenderResponseSysMngm::generateGetLogInfo(QDomDocument &doc) {
+void RenderResponseSysMngm::generateGetLogInfo() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " get_cfg", true, ";");
 
     QDomElement root = doc.createElement("log");
@@ -748,6 +782,9 @@ void RenderResponseSysMngm::generateGetLogInfo(QDomDocument &doc) {
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
     portElement.appendChild(doc.createTextNode(apiOut.value(2)));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseSysMngm::generateLogServer() {
@@ -767,17 +804,19 @@ void RenderResponseSysMngm::generateSendLogTest() {
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " get_cfg", true, ";");
 }
 
-void RenderResponseSysMngm::generateLogBackup(QString &str) {
+void RenderResponseSysMngm::generateLogBackup() {
     QFileInfo file(SENDOUT_LOGFILE);
     if(file.exists() && file.isFile())
-        str = SENDOUT_LOGFILE;
+        m_var = SENDOUT_LOGFILE;
 }
 
 void RenderResponseSysMngm::generateLogClear() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " clear");
 }
 
-void RenderResponseSysMngm::generateUpsInfo(QDomDocument &doc) {
+void RenderResponseSysMngm::generateUpsInfo() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_info", true, ";");
 
     QDomElement root = doc.createElement("config");
@@ -794,10 +833,14 @@ void RenderResponseSysMngm::generateUpsInfo(QDomDocument &doc) {
     QDomElement upsNetworkElement = doc.createElement("ups_network");
     root.appendChild(upsNetworkElement);
     upsNetworkElement.appendChild(doc.createTextNode(apiOut.value(3)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateUpsSlaveSetting(QDomDocument &doc) {
+void RenderResponseSysMngm::generateUpsSlaveSetting() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_slave "
                                       + allParametersToString(), true);
 
@@ -806,11 +849,13 @@ void RenderResponseSysMngm::generateUpsSlaveSetting(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generateUpsPs(QDomDocument &doc) {
+void RenderResponseSysMngm::generateUpsPs() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_check_ups_ps ", true);
 
     QDomElement root = doc.createElement("config");
@@ -818,11 +863,13 @@ void RenderResponseSysMngm::generateUpsPs(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generateUsbStorageUmount(QDomDocument &doc) {
+void RenderResponseSysMngm::generateUsbStorageUmount() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " service_set_usb_storage_umount "
                                       + allParametersToString(), true);
 
@@ -831,11 +878,13 @@ void RenderResponseSysMngm::generateUsbStorageUmount(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 
 }
 
-void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
+void RenderResponseSysMngm::generateUsbPrinterClear() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_print_queue", true);
 
     QDomElement root = doc.createElement("config");
@@ -844,9 +893,13 @@ void RenderResponseSysMngm::generateUsbPrinterClear(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateFirmVXml(QDomDocument &doc) {
+void RenderResponseSysMngm::generateFirmVXml() {
+
+    QDomDocument doc;
     QMap<QString, QString> systemInfo = getNasCfg("system");
 
     QDomElement root = doc.createElement("version");
@@ -857,43 +910,45 @@ void RenderResponseSysMngm::generateFirmVXml(QDomDocument &doc) {
     QDomElement oledElement = doc.createElement("oled");
     root.appendChild(oledElement);
     oledElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver").section('.', 0, 2)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysMngm::generateCheckPowerSch(QString &str) {
+void RenderResponseSysMngm::generateCheckPowerSch() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " check_power_sch", true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateFirmwareInitUpload(QString &str) {
+void RenderResponseSysMngm::generateFirmwareInitUpload() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " fw_init_upload_status", true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateFirmwareUpload(QString &str) {
+void RenderResponseSysMngm::generateFirmwareUpload() {
     if(!m_pReq->multipartFormData().isEmpty()) {
         if(m_pReq->multipartFormData().renameUploadedFile("file", FIRMWARE_FILE, true)) {
-            str = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
+            m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
         }
     }
 }
 
-void RenderResponseSysMngm::generateGetPercentage(QString &str) {
+void RenderResponseSysMngm::generateGetPercentage() {
     getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " firmware_verify", true);
     QStringList apiOut = this->getAPIFileOut(FIRMWARE_PERCENTAGE_FILE, true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateGetFirmwareVerify(QString &str) {
+void RenderResponseSysMngm::generateGetFirmwareVerify() {
     QStringList apiOut = getAPIFileOut(FIRMWARE_VERIFY_STATUS_FILE, true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateGetUpFw(QString &str) {
+void RenderResponseSysMngm::generateGetUpFw() {
     QStringList apiOut = getAPIFileOut(FIRMWARE_RESULT_FILE, true);
-    str = apiOut.value(0);
+    m_var = apiOut.value(0);
 }
 
-void RenderResponseSysMngm::generateReboot(QString &str) {
+void RenderResponseSysMngm::generateReboot() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " system_reboot", true);
-    str = "N/A";
+    m_var = "N/A";
 }

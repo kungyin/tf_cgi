@@ -13,18 +13,18 @@ public:
     virtual void preRender();
 
 private:
-    void generateModuleShowInstallStatus(QDomDocument &);
-    void generateGetAllApps(QDomDocument &);
-    void generateGetApkgDetail(QDomDocument &);
-    void generateMyFavCheckImg(QDomDocument &);
-    void generateChkHddFreeSize(QDomDocument &);
-    void generateDownloadInstallAddOn(QString &);
-    void generateClearAddOnFiles(QDomDocument &);
-    void generateModuleReInstall(QString &);
-    void generateInstall3PartyApkg(QString &);
-    void generateUninstallAddOn(QDomDocument &);
-    void generateModuleEnableDisable(QDomDocument &);
-    void generateModuleUninstall(QDomDocument &);
+    void generateModuleShowInstallStatus();
+    void generateGetAllApps();
+    void generateGetApkgDetail();
+    void generateMyFavCheckImg();
+    void generateChkHddFreeSize();
+    void generateDownloadInstallAddOn();
+    void generateClearAddOnFiles();
+    void generateModuleReInstall();
+    void generateInstall3PartyApkg();
+    void generateUninstallAddOn();
+    void generateModuleEnableDisable();
+    void generateModuleUninstall();
 
 };
 

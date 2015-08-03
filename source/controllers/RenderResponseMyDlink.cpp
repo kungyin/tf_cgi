@@ -33,7 +33,7 @@ void RenderResponseMyDlink::generateInfo() {
             "Macaddr=CC:B2:55:8B:21:F7\n"
             "Wireless=NO\n"
             "Ptz=";
-    m_str = ret;
+    m_var = ret;
 
 }
 

@@ -14,9 +14,6 @@ void RenderResponseAppDownloads::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
 //    case CMD_DOWNLOADS_SCHEDULE_NOW:
 //        generateDownloadsScheduleNow(doc);
@@ -44,8 +41,6 @@ void RenderResponseAppDownloads::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
 
 }
 

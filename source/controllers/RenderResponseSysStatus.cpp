@@ -16,45 +16,42 @@ void RenderResponseSysStatus::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_GET_STATUS:
-        generateGetStatus(doc);
+        generateGetStatus();
         break;
     case CMD_STATUS_VOLUME_INFO:
-        generateStatusVolumeInfo(doc);
+        generateStatusVolumeInfo();
         break;
     case CMD_USB_STORAGE_INFO:
-        generateUsbStorageInfo(doc);
+        generateUsbStorageInfo();
         break;
     case CMD_MTP_INFO:
-        generateMtpInfo(doc);
+        generateMtpInfo();
         break;
     case CMD_USB_PRINTER_INFO:
-        generateUsbPrinterInfo(doc);
+        generateUsbPrinterInfo();
         break;
     case CMD_UPS_INFO2:
-        generateUpsInfo2(doc);
+        generateUpsInfo2();
         break;
 
     case CMD_SMART_XML_CREATE_DEVICE_LIST:
-        generateSmartXmlCreateDeviceList(doc);
+        generateSmartXmlCreateDeviceList();
         break;
     case CMD_SMART_XML_CREATE_SMART_INFO:
-        generateSmartXmlCreateSmartInfo(doc);
+        generateSmartXmlCreateSmartInfo();
         break;
 
     case CMD_RESOURCE:
-        generateResource(doc);
+        generateResource();
         break;
 
     case CMD_GET_SERVICE:
-        generateGetService(doc);
+        generateGetService();
         break;
     case CMD_MODULE_LIST:
-        generateModuleList(doc);
+        generateModuleList();
         break;
 
     case CMD_NONE:
@@ -62,12 +59,11 @@ void RenderResponseSysStatus::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseSysStatus::generateGetStatus(QDomDocument &doc) {
+void RenderResponseSysStatus::generateGetStatus() {
+
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
 
     QDomElement root = doc.createElement("status");
@@ -178,10 +174,14 @@ void RenderResponseSysStatus::generateGetStatus(QDomDocument &doc) {
     QDomElement uptimeElement = doc.createElement("uptime");
     root.appendChild(uptimeElement);
     uptimeElement.appendChild(doc.createTextNode(apiOut.value(27)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateStatusVolumeInfo(QDomDocument &doc) {
+void RenderResponseSysStatus::generateStatusVolumeInfo() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_hdd_volume_info");
 
     QDomElement root = doc.createElement("config");
@@ -215,10 +215,14 @@ void RenderResponseSysStatus::generateStatusVolumeInfo(QDomDocument &doc) {
         itmeElement.appendChild(usedRateElement);
         usedRateElement.appendChild(doc.createTextNode(entry.split(";").value(6)));
     }
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
+void RenderResponseSysStatus::generateUsbStorageInfo() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_storage_info", false);
 
     QDomElement root = doc.createElement("config");
@@ -278,10 +282,13 @@ void RenderResponseSysStatus::generateUsbStorageInfo(QDomDocument &doc) {
         }
     }
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateMtpInfo(QDomDocument &doc) {
+void RenderResponseSysStatus::generateMtpInfo() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_mtp_info");
 
     QDomElement root = doc.createElement("config");
@@ -311,10 +318,14 @@ void RenderResponseSysStatus::generateMtpInfo(QDomDocument &doc) {
                    "mtpContentElement size is not equal to apiOut size.");
         }
     }
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateUsbPrinterInfo(QDomDocument &doc) {
+void RenderResponseSysStatus::generateUsbPrinterInfo() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_usb_printer_info");
 
     QDomElement root = doc.createElement("config");
@@ -346,11 +357,14 @@ void RenderResponseSysStatus::generateUsbPrinterInfo(QDomDocument &doc) {
         }
     }
 
+    m_var = doc.toString();
+
 }
 
 
-void RenderResponseSysStatus::generateUpsInfo2(QDomDocument &doc) {
+void RenderResponseSysStatus::generateUpsInfo2() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_ups_info2");
 
     QDomElement root = doc.createElement("config");
@@ -381,10 +395,13 @@ void RenderResponseSysStatus::generateUpsInfo2(QDomDocument &doc) {
         }
     }
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc) {
+void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
 
+    QDomDocument doc;
     QString paraPage = m_pReq->parameter("page");
     QString paraRp = m_pReq->parameter("rp");
 
@@ -428,10 +445,13 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList(QDomDocument &doc
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc) {
+void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo() {
 
+    QDomDocument doc;
     QString paraPage = m_pReq->parameter("page");
     QString paraRp = m_pReq->parameter("rp");
     QString paraField = m_pReq->parameter("f_field");
@@ -472,11 +492,14 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo(QDomDocument &doc)
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
+    m_var = doc.toString();
+
 }
 
 
-void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
+void RenderResponseSysStatus::generateResource() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info");
 
     QDomElement root = doc.createElement("xml");
@@ -524,10 +547,14 @@ void RenderResponseSysStatus::generateResource(QDomDocument &doc) {
                    "processContentElement size is not equal to apiOut size.");
         }
     }
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateGetService(QDomDocument &doc) {
+void RenderResponseSysStatus::generateGetService() {
 
+    QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QDomElement root = doc.createElement("service");
@@ -551,10 +578,13 @@ void RenderResponseSysStatus::generateGetService(QDomDocument &doc) {
                "serviceContentElement size is not equal to apiOut size.");
     }
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
+void RenderResponseSysStatus::generateModuleList() {
 
+    QDomDocument doc;
     QString paraPage = m_pReq->parameter("page");
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_package_list");
 
@@ -612,5 +642,6 @@ void RenderResponseSysStatus::generateModuleList(QDomDocument &doc) {
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
-}
+    m_var = doc.toString();
 
+}

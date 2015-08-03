@@ -13,7 +13,7 @@ public:
     virtual void preRender();
 
 private:
-    void generateGetDeviceDetailInfo(QDomDocument &);
+    void generateGetDeviceDetailInfo();
 
 };
 

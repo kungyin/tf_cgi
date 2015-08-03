@@ -20,182 +20,176 @@ void RenderResponseAppMngm::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_SET_AFP:
         generateSetAfp();
         break;
     case CMD_NFS_ENABLE:
-        generateNfsEnable(doc);
+        generateNfsEnable();
         break;
     case CMD_CHK_DB:
         generateCheckDb();
         break;
     case CMD_UPNP_AV_SERVER_PATH_LIST:
-        generateUpnpAvServerPathList(doc);
+        generateUpnpAvServerPathList();
         break;
     case CMD_UPNP_AV_SERVER_GET_CONFIG:
-        generateUpnpAvServerGetConfig(doc);
+        generateUpnpAvServerGetConfig();
         break;
     case CMD_UPNP_AV_SERVER:
-        generateUpnpAvServer(doc);
+        generateUpnpAvServer();
         break;
     case CMD_UPNP_AV_SERVER_GET_SQLDB_STATE:
-        generateUpnpAvServerGetSqldbState(doc);
+        generateUpnpAvServerGetSqldbState();
         break;
     case CMD_GUI_CODEPAGE_GET_LIST:
-        generateGuiCodepageGetList(doc);
+        generateGuiCodepageGetList();
         break;
     case CMD_ITUNES_SERVER_GET_XML:
-        generateItunesServerGetXml(doc);
+        generateItunesServerGetXml();
         break;
     case CMD_ITUNES_SERVER_READY:
-        generateItunesServerReady(doc);
+        generateItunesServerReady();
         break;
     case CMD_AV_SERVER_CHECK_PATH:
-        generateUpnpAvServerCheckPath(doc);
+        generateUpnpAvServerCheckPath();
         break;
     case CMD_AV_SERVER_PATH_SETTING:
-        generateUpnpAvServerPathSetting(doc);
+        generateUpnpAvServerPathSetting();
         break;
     case CMD_SQLDB_STOP_FINISH:
-        generateSqldbStopFinish(doc);
+        generateSqldbStopFinish();
         break;
     case CMD_UPNP_AV_SERVER_PRESCAN:
-        generateUpnpAvServerPrescan(doc);
+        generateUpnpAvServerPrescan();
         break;
     case CMD_UPNP_AV_SERVER_PATH_DEL:
-        generateUpnpAvServerPathDel(doc);
+        generateUpnpAvServerPathDel();
         break;
     case CMD_UPNP_AV_SERVER_SETTING:
         generateUpnpAvServerSetting();
         break;
     case CMD_GUI_CODEPAGE_ADD:
-        generateGuiCodepageAdd(doc);
+        generateGuiCodepageAdd();
         break;
     case CMD_ITUNES_SERVER_SETTING:
-        generateItunesServerSetting(doc);
+        generateItunesServerSetting();
         break;
     case CMD_ITUNES_SERVER_CHECK_PS:
-        generateItunesServerCheckPs(doc);
+        generateItunesServerCheckPs();
         break;
     case CMD_ITUNES_SERVER_REFRESH:
-        generateItunesServerRefresh(doc);
+        generateItunesServerRefresh();
         break;
     case CMD_ITUNES_SERVER_REFRESH_STATE:
-        generateItunesServerRefreshState(doc);
+        generateItunesServerRefreshState();
         break;
     case CMD_SYSLOG_SEARCH:
-        generateSyslogSearch(doc);
+        generateSyslogSearch();
         break;
     case CMD_GET_VOLUME_INFO:
-        generateGetVolumeInfo(doc);
+        generateGetVolumeInfo();
         break;
     case CMD_SYSLOG_GET_LOG_FILE_OPTION:
-        generateSyslogGetLogFileOption(doc);
+        generateSyslogGetLogFileOption();
         break;
     case CMD_SYSLOG_GET_CONFIG:
-        generateSyslogGetConfig(doc);
+        generateSyslogGetConfig();
         break;
     case CMD_SYSLOG_GET_SELECT_OPTION:
-        generateSyslogGetSelectOption(doc);
+        generateSyslogGetSelectOption();
         break;
     case CMD_SYSLOG_SET_CONFIG:
-        generateSyslogSetConfig(str);
+        generateSyslogSetConfig();
         break;
     case CMD_SYSLOG_EXPORT:
-        generateSyslogExport(str);
+        generateSyslogExport();
         break;
     case CMD_SYSLOG_GET_EXPORT_STATUS:
-        generateSyslogGetExportStatus(doc);
+        generateSyslogGetExportStatus();
         break;
     case CMD_SYSLOG_CLEAR:
         generateSyslogClear();
         break;
 
     case CMD_LOCAL_BACKUP_NOW:
-        generateLocalBackupNow(doc);
+        generateLocalBackupNow();
         break;
     case CMD_LOCAL_BACKUP_LIST:
-        generateLocalBackupList(doc);
+        generateLocalBackupList();
         break;
     case CMD_LOCAL_BACKUP_SAMBA_FORMAT:
-        generateLocalBackupSambaFormat(doc);
+        generateLocalBackupSambaFormat();
         break;
     case CMD_LOCAL_BACKUP_ADD:
-        generateLocalBackupAdd(str);
+        generateLocalBackupAdd();
         break;
     case CMD_LOCAL_BACKUP_INFO:
-        generateLocalBackupInfo(doc);
+        generateLocalBackupInfo();
         break;
     case CMD_LOCAL_BACKUP_RENEW:
-        generateLocalBackupRenew(str);
+        generateLocalBackupRenew();
         break;
     case CMD_LOCAL_BACKUP_DEL:
-        generateLocalBackupDel(doc);
+        generateLocalBackupDel();
         break;
     case CMD_LOCAL_BACKUP_TEST:
-        generateLocalBackupTest(doc);
+        generateLocalBackupTest();
         break;
 
     case CMD_GET_RSYNC_INFO:
-        generateGetRsyncInfo(doc);
+        generateGetRsyncInfo();
         break;
     case CMD_SET_RSYNC_SERVER:
-        generateSetRsyncServer(str);
+        generateSetRsyncServer();
         break;
 
     case CMD_GET_BACKUP_LIST:
-        generateGetBackupList(doc);
+        generateGetBackupList();
         break;
     case CMD_GET_ALL_TASK_NAME:
-        generateGetAllTaskName(doc);
+        generateGetAllTaskName();
         break;
     case CMD_SERVER_TEST:
-        generateServerTest(doc);
+        generateServerTest();
         break;
     case CMD_CHECK_RSYNC_RW:
-        generateCheckRsyncRw(doc);
+        generateCheckRsyncRw();
         break;
     case CMD_SET_SCHEDULE:
-        generateSetSchedule(str);
+        generateSetSchedule();
         break;
     case CMD_GET_MODIFY_INFO:
-        generateGetModifyInfo(doc);
+        generateGetModifyInfo();
         break;
     case CMD_DEL_SCHEDULE:
-        generateDelSchedule(str);
+        generateDelSchedule();
         break;
     case CMD_ENABLE_DISABLE_SCHEDULE:
-        generateEnableDisableSchedule(str);
+        generateEnableDisableSchedule();
         break;
     case CMD_BACKUP_NOW:
-        generateBackupNow(str);
+        generateBackupNow();
         break;
     case CMD_MTP_INFO_GET:
-        generateMtpInfoGet(doc);
+        generateMtpInfoGet();
         break;
     case CMD_USB_BACKUP_INFO_GET:
-        generateUsbBackupInfoGet(doc);
+        generateUsbBackupInfoGet();
         break;
     case CMD_MTP_INFO_SET:
-        generateMtpInfoSet(doc);
+        generateMtpInfoSet();
         break;
     case CMD_USB_BACKUP_INFO_SET:
-        generateUsbBackupInfoSet(doc);
+        generateUsbBackupInfoSet();
         break;
     case CMD_GET_USB_MAPPING_INFO:
-        generateGetUsbMappingInfo(doc);
+        generateGetUsbMappingInfo();
         break;
     case CMD_NONE:
     default:
         break;
     }
-
-    m_doc = doc;
-    m_str = str;
 
 }
 
@@ -205,7 +199,8 @@ void RenderResponseAppMngm::generateSetAfp() {
         QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_AFP_API, true);
 }
 
-void RenderResponseAppMngm::generateNfsEnable(QDomDocument &doc) {
+void RenderResponseAppMngm::generateNfsEnable() {
+    QDomDocument doc;
     QString paraNfsStatus = m_pReq->allParameters().value("nfs_status").toString();
     QStringList apiOut;
     if(setNasCfg("nfs", "enable", paraNfsStatus))
@@ -216,6 +211,7 @@ void RenderResponseAppMngm::generateNfsEnable(QDomDocument &doc) {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : apiOut.value(0)));
+    m_var = doc.toString();
 }
 
 /* todo */
@@ -225,7 +221,8 @@ void RenderResponseAppMngm::generateCheckDb() {
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerPathList(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerPathList() {
+    QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
     QString paraQuery = m_pReq->allParameters().value("query").toString();
@@ -281,10 +278,13 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList(QDomDocument &doc) {
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode("3"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerGetConfig(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerGetConfig() {
+    QDomDocument doc;
 
 //    QStringList apiOut;
 //    if(setNasCfg("nfs", "enable", paraNfsStatus))
@@ -296,10 +296,13 @@ void RenderResponseAppMngm::generateUpnpAvServerGetConfig(QDomDocument &doc) {
     root.appendChild(enableElement);
     enableElement.appendChild(doc.createTextNode("0"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServer(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServer() {
+    QDomDocument doc;
 
 //    QStringList apiOut;
 //    if(setNasCfg("nfs", "enable", paraNfsStatus))
@@ -310,10 +313,14 @@ void RenderResponseAppMngm::generateUpnpAvServer(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
+    QDomDocument doc;
 
 //    QStringList apiOut;
 //    if(setNasCfg("nfs", "enable", paraNfsStatus))
@@ -327,10 +334,13 @@ void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState(QDomDocument &doc)
     QDomElement dbFileElement = doc.createElement("db_file");
     root.appendChild(dbFileElement);
     dbFileElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/web/jquery/css/redmond/images/SM_ui-icons_454545_256x240.png.jpg"));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateGuiCodepageGetList(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGuiCodepageGetList() {
 
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
     char *name = NULL, *desc = NULL;
     int codepage_cnt = GetCodepageList(1, &name, &desc);
@@ -359,10 +369,13 @@ void RenderResponseAppMngm::generateGuiCodepageGetList(QDomDocument &doc) {
         free(desc);
     }
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerGetXml(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerGetXml() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -389,10 +402,14 @@ void RenderResponseAppMngm::generateItunesServerGetXml(QDomDocument &doc) {
     QDomElement rescanIntervalElement = doc.createElement("rescan_interval");
     root.appendChild(rescanIntervalElement);
     rescanIntervalElement.appendChild(doc.createTextNode("0"));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerReady(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerReady() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -411,10 +428,13 @@ void RenderResponseAppMngm::generateItunesServerReady(QDomDocument &doc) {
     root.appendChild(stateElement);
     stateElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerCheckPath(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
+    QDomDocument doc;
 
     QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
@@ -431,10 +451,13 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath(QDomDocument &doc) {
     itemElement.appendChild(pathElement);
     pathElement.appendChild(doc.createTextNode("Volume_1/dddd"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerPathSetting(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
+    QDomDocument doc;
 
     QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     QString paraRefresh = m_pReq->allParameters().value("f_refresh").toString();
@@ -447,10 +470,13 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSqldbStopFinish(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSqldbStopFinish() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -461,10 +487,13 @@ void RenderResponseAppMngm::generateSqldbStopFinish(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("0"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerPrescan(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerPrescan() {
+    QDomDocument doc;
 
     QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
@@ -476,10 +505,13 @@ void RenderResponseAppMngm::generateUpnpAvServerPrescan(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateUpnpAvServerPathDel(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
+    QDomDocument doc;
 
     QString paraDir = m_pReq->allParameters().value("f_dir").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
@@ -496,6 +528,8 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel(QDomDocument &doc) {
     itemElement.appendChild(pathElement);
     pathElement.appendChild(doc.createTextNode("Volume_1/dddd"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
@@ -507,7 +541,8 @@ void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 }
 
 /* todo */
-void RenderResponseAppMngm::generateGuiCodepageAdd(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGuiCodepageAdd() {
+    QDomDocument doc;
 
     QString paraLang = m_pReq->allParameters().value("f_lang").toString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
@@ -518,11 +553,13 @@ void RenderResponseAppMngm::generateGuiCodepageAdd(QDomDocument &doc) {
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
 
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerSetting(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerSetting() {
+    QDomDocument doc;
 
     QString paraItunesServer = m_pReq->allParameters().value("f_iTunesServer").toString();
     QString paraRoot = m_pReq->allParameters().value("f_root").toString();
@@ -543,10 +580,13 @@ void RenderResponseAppMngm::generateItunesServerSetting(QDomDocument &doc) {
     root.appendChild(stateElement);
     stateElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerCheckPs(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerCheckPs() {
+    QDomDocument doc;
 
     QString paraType = m_pReq->allParameters().value("f_type").toString();
 
@@ -562,10 +602,13 @@ void RenderResponseAppMngm::generateItunesServerCheckPs(QDomDocument &doc) {
     root.appendChild(typeElement);
     typeElement.appendChild(doc.createTextNode("3"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerRefresh(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerRefresh() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -576,10 +619,13 @@ void RenderResponseAppMngm::generateItunesServerRefresh(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateItunesServerRefreshState(QDomDocument &doc) {
+void RenderResponseAppMngm::generateItunesServerRefreshState() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -601,10 +647,13 @@ void RenderResponseAppMngm::generateItunesServerRefreshState(QDomDocument &doc) 
     root.appendChild(mp3FinishElement);
     mp3FinishElement.appendChild(doc.createTextNode("1"));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogSearch(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSyslogSearch() {
+    QDomDocument doc;
 
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
@@ -705,10 +754,14 @@ void RenderResponseAppMngm::generateSyslogSearch(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(size)));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateGetVolumeInfo(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetVolumeInfo() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_volume_info");
     QStringList apiArgs;
@@ -737,10 +790,13 @@ void RenderResponseAppMngm::generateGetVolumeInfo(QDomDocument &doc) {
 
     //}
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogGetLogFileOption(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -773,10 +829,14 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption(QDomDocument &doc) {
             }
         }
     }
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogGetConfig(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSyslogGetConfig() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_log_cfg");
     QStringList apiArgs;
@@ -837,10 +897,14 @@ void RenderResponseAppMngm::generateSyslogGetConfig(QDomDocument &doc) {
     QDomElement archiveStatusElement = doc.createElement("archive_status");
     root.appendChild(archiveStatusElement);
     archiveStatusElement.appendChild(doc.createTextNode(apiArgs.at(14)));
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogGetSelectOption(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSyslogGetSelectOption() {
+    QDomDocument doc;
 
     QString paraDatabase = m_pReq->allParameters().value("f_database").toString();
 
@@ -954,10 +1018,12 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption(QDomDocument &doc) {
             }
         }
     }
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
+void RenderResponseAppMngm::generateSyslogSetConfig() {
 
     QString paraSyslogEnable = m_pReq->allParameters().value("f_syslog_enable").toString();
     QString paraSyslogFolder = m_pReq->allParameters().value("f_syslog_folder").toString();
@@ -992,12 +1058,12 @@ void RenderResponseAppMngm::generateSyslogSetConfig(QString &str) {
             .arg(paraNewLogFolder);
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_log_cfg" + args);
 
-    str = "<script>location.href='/web/app_mgr/log_server.html?id=8401878'</script>";
+    m_var = "<script>location.href='/web/app_mgr/log_server.html?id=8401878'</script>";
 
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogExport(QString &str) {
+void RenderResponseAppMngm::generateSyslogExport() {
 
     QString paraLogFile = m_pReq->allParameters().value("log_file").toString();
     QString paraDateFrom = m_pReq->allParameters().value("f_date_from").toString();
@@ -1010,14 +1076,15 @@ void RenderResponseAppMngm::generateSyslogExport(QString &str) {
     QString paraRp = m_pReq->allParameters().value("rp").toString();
 
     SyslogDbDataProvider sys;
-    str = sys.DumpDataFromPara(paraLogFile, paraDateFrom, paraDateTo, paraViewSeverity, paraLogHost, paraLogFacility, paraLogApplication, paraKeyword, paraRp);
+    m_var = sys.DumpDataFromPara(paraLogFile, paraDateFrom, paraDateTo, paraViewSeverity, paraLogHost, paraLogFacility, paraLogApplication, paraKeyword, paraRp);
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
 }
 
 /* todo */
-void RenderResponseAppMngm::generateSyslogGetExportStatus(QDomDocument &doc) {
+void RenderResponseAppMngm::generateSyslogGetExportStatus() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -1032,6 +1099,9 @@ void RenderResponseAppMngm::generateSyslogGetExportStatus(QDomDocument &doc) {
     else
         statusElement.appendChild(doc.createTextNode("-1"));
     QFile::remove("/tmp/syslogsendok");
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
@@ -1042,7 +1112,8 @@ void RenderResponseAppMngm::generateSyslogClear() {
 }
 
 /* todo */
-void RenderResponseAppMngm::generateLocalBackupNow(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupNow() {
+    QDomDocument doc;
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1059,6 +1130,8 @@ void RenderResponseAppMngm::generateLocalBackupNow(QDomDocument &doc) {
     QDomElement minsElement = doc.createElement("mins");
     root.appendChild(minsElement);
     minsElement.appendChild(doc.createTextNode(curDatetime.toString("mm")));
+
+    m_var = doc.toString();
 
 }
 
@@ -1083,7 +1156,8 @@ QString RenderResponseAppMngm::getIcon(QString status) {
 }
 
 
-void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupList() {
+    QDomDocument doc;
 
     QString strProgressBar = "<span class='progressBar' id='progressbar_row%1'>%2</span>";
     QString strImage = "<IMG src='%1'>";
@@ -1192,10 +1266,13 @@ void RenderResponseAppMngm::generateLocalBackupList(QDomDocument &doc) {
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(total)));
 
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseAppMngm::generateLocalBackupSambaFormat(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupSambaFormat() {
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
 
@@ -1209,6 +1286,8 @@ void RenderResponseAppMngm::generateLocalBackupSambaFormat(QDomDocument &doc) {
     QDomElement volElement = doc.createElement("vol");
     itemElement.appendChild(volElement);
     volElement.appendChild(doc.createTextNode("Volume_1"));
+
+    m_var = doc.toString();
 
 }
 
@@ -1274,18 +1353,19 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
 }
 
 
-void RenderResponseAppMngm::generateLocalBackupAdd(QString &str) {
+void RenderResponseAppMngm::generateLocalBackupAdd() {
 
     renewOrAdd(true);
 
     if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Add"))
-        str = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
+        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
     else if(m_pReq->parameter("cmd") == QString("Local_Backup_Add"))
-        str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+        m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 
 }
 
-void RenderResponseAppMngm::generateLocalBackupInfo(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupInfo() {
+    QDomDocument doc;
 
     QString idx = m_pReq->parameter("f_idx");
 
@@ -1367,19 +1447,21 @@ void RenderResponseAppMngm::generateLocalBackupInfo(QDomDocument &doc) {
     incElement.appendChild(doc.createTextNode(elementValue));
 
     FreeTask(&task);
+    m_var = doc.toString();
 
 }
 
-void RenderResponseAppMngm::generateLocalBackupRenew(QString &str) {
+void RenderResponseAppMngm::generateLocalBackupRenew() {
     renewOrAdd(false);
 
     if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Renew"))
-        str = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
+        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
     else if(m_pReq->parameter("cmd") == QString("Local_Backup_Renew"))
-        str = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+        m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 }
 
-void RenderResponseAppMngm::generateLocalBackupDel(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupDel() {
+    QDomDocument doc;
 
     RESULT_STATUS result = DeleteTaskXml(m_pReq->parameter("f_idx").toLocal8Bit().data());
     QDomElement root = doc.createElement("config");
@@ -1396,9 +1478,13 @@ void RenderResponseAppMngm::generateLocalBackupDel(QDomDocument &doc) {
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
     resultElement.appendChild(doc.createTextNode("0"));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateLocalBackupTest(QDomDocument &doc) {
+void RenderResponseAppMngm::generateLocalBackupTest() {
+
+    QDomDocument doc;
 
     DOWNLOAD_TEST_RESULT *testResult = NULL;
     QString user = m_pReq->parameter("f_user");
@@ -1453,9 +1539,13 @@ void RenderResponseAppMngm::generateLocalBackupTest(QDomDocument &doc) {
     QDomElement sizeElement = doc.createElement("size");
     root.appendChild(sizeElement);
     sizeElement.appendChild(doc.createTextNode(QString::number(size)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateGetRsyncInfo(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetRsyncInfo() {
+    QDomDocument doc;
 
     RSYNC_INFO rsyncInfo;
     memset(&rsyncInfo, 0, sizeof(RSYNC_INFO));
@@ -1481,18 +1571,21 @@ void RenderResponseAppMngm::generateGetRsyncInfo(QDomDocument &doc) {
         tDebug("RenderResponseAppMngm::generateGetRsyncInfo() status: %d", status);
     FreeRsyncInfo(&rsyncInfo);
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateSetRsyncServer(QString &str) {
+void RenderResponseAppMngm::generateSetRsyncServer() {
 
     RESULT_STATUS status = SetRsyncInfo(m_pReq->parameter("f_onoff").toInt(),
                                         m_pReq->parameter("f_password").toLocal8Bit().data());
     tDebug("RenderResponseAppMngm::generateSetRsyncServer() status: %d", status);
-    str = "<script>location.href='/web/backup_mgr/remote_server.html'</script>";
+    m_var = "<script>location.href='/web/backup_mgr/remote_server.html'</script>";
 
 }
 
-void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetBackupList() {
+    QDomDocument doc;
 
     QString paraPage = m_pReq->parameter("page");
     QString paraRp = m_pReq->parameter("rp");
@@ -1553,9 +1646,13 @@ void RenderResponseAppMngm::generateGetBackupList(QDomDocument &doc) {
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(total)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateGetAllTaskName(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetAllTaskName() {
+
+    QDomDocument doc;
 
     char **nameList;
     int taskNum = GetAllRemoteTaskName(&nameList);
@@ -1575,11 +1672,14 @@ void RenderResponseAppMngm::generateGetAllTaskName(QDomDocument &doc) {
     }
 
     FreeRemoteTaskName(taskNum, &nameList);
+    m_var = doc.toString();
+
 }
 
 /* s_type= 1 | 2 (int)
  * // 1=nas to nas backup, 2=nas to linux backup */
-void RenderResponseAppMngm::generateServerTest(QDomDocument &doc) {
+void RenderResponseAppMngm::generateServerTest() {
+    QDomDocument doc;
 
     QString paraIp = m_pReq->parameter("ip");
     QString paraType = m_pReq->parameter("s_type");
@@ -1674,9 +1774,12 @@ void RenderResponseAppMngm::generateServerTest(QDomDocument &doc) {
             }
         }
     }
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateCheckRsyncRw(QDomDocument &doc) {
+void RenderResponseAppMngm::generateCheckRsyncRw() {
+    QDomDocument doc;
 
     QString paraIp = m_pReq->parameter("ip");
     QString paraType = m_pReq->parameter("s_type");
@@ -1705,9 +1808,11 @@ void RenderResponseAppMngm::generateCheckRsyncRw(QDomDocument &doc) {
     QDomElement rsyncRetElement = doc.createElement("rsync_ret");
     root.appendChild(rsyncRetElement);
     rsyncRetElement.appendChild(doc.createTextNode(QString::number(rsyncRet)));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateSetSchedule(QString &str) {
+void RenderResponseAppMngm::generateSetSchedule() {
 
     REMOTE_BACKUP_INFO r_info;
     memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
@@ -1747,11 +1852,12 @@ void RenderResponseAppMngm::generateSetSchedule(QString &str) {
     r_info.recur_date = m_pReq->parameter("day").toInt();
     SaveRemoteXml(r_info, 1);
 
-    str = "N/A";
+    m_var = "N/A";
 
 }
 
-void RenderResponseAppMngm::generateGetModifyInfo(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetModifyInfo() {
+    QDomDocument doc;
 
     REMOTE_BACKUP_INFO r_info_ret;
     memset(&r_info_ret, 0, sizeof(REMOTE_BACKUP_INFO));
@@ -1825,31 +1931,34 @@ void RenderResponseAppMngm::generateGetModifyInfo(QDomDocument &doc) {
     remotePathElement.appendChild(doc.createTextNode(QString(r_info_ret.remote_path)));
 
     FreeRemoteTask(&r_info_ret);
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateDelSchedule(QString &str) {
+void RenderResponseAppMngm::generateDelSchedule() {
 
     DeleteRemoteTaskXml(m_pReq->parameter("name").toLocal8Bit().data());
-    str = "N/A";
+    m_var = "N/A";
 
 }
 
-void RenderResponseAppMngm::generateEnableDisableSchedule(QString &str) {
+void RenderResponseAppMngm::generateEnableDisableSchedule() {
 
     StartStopRemoteTask(m_pReq->parameter("name").toLocal8Bit().data(),
                         m_pReq->parameter("enable").toLocal8Bit().data());
-    str = "N/A";
+    m_var = "N/A";
 
 }
 
-void RenderResponseAppMngm::generateBackupNow(QString &str) {
+void RenderResponseAppMngm::generateBackupNow() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
-    str = "N/A";
+    m_var = "N/A";
 
 }
 
-void RenderResponseAppMngm::generateMtpInfoGet(QDomDocument &doc) {
+void RenderResponseAppMngm::generateMtpInfoGet() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mtp_info",
                                       true,
@@ -1872,9 +1981,12 @@ void RenderResponseAppMngm::generateMtpInfoGet(QDomDocument &doc) {
         tError("RenderResponseSysStatus::generateMtpInfoGet(): "
                "configTagNames size is not equal to apiOut size.");
     }
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUsbBackupInfoGet() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_backup_info",
                                       true,
@@ -1905,9 +2017,12 @@ void RenderResponseAppMngm::generateUsbBackupInfoGet(QDomDocument &doc) {
                    "configTagNames size is not equal to apiOut size.");
         }
     }
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateMtpInfoSet(QDomDocument &doc) {
+void RenderResponseAppMngm::generateMtpInfoSet() {
+    QDomDocument doc;
 
     QString paraEnable = m_pReq->parameter("f_enable");
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
@@ -1931,9 +2046,12 @@ void RenderResponseAppMngm::generateMtpInfoSet(QDomDocument &doc) {
     root.appendChild(destElement);
     destElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateUsbBackupInfoSet(QDomDocument &doc) {
+void RenderResponseAppMngm::generateUsbBackupInfoSet() {
+    QDomDocument doc;
 
 //    QString paraEnable = m_pReq->parameter("f_enable");
 //    QString paraDirection = m_pReq->parameter("f_direction");
@@ -1951,9 +2069,12 @@ void RenderResponseAppMngm::generateUsbBackupInfoSet(QDomDocument &doc) {
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
+    m_var = doc.toString();
+
 }
 
-void RenderResponseAppMngm::generateGetUsbMappingInfo(QDomDocument &doc) {
+void RenderResponseAppMngm::generateGetUsbMappingInfo() {
+    QDomDocument doc;
 
     QStringList apiOut = getAPIFileOut(USB_SHARE_INFO_FILE, true);
 
@@ -1964,6 +2085,8 @@ void RenderResponseAppMngm::generateGetUsbMappingInfo(QDomDocument &doc) {
     QDomElement dataElement = doc.createElement("data");
     itemElement.appendChild(dataElement);
     dataElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
 
 }
 

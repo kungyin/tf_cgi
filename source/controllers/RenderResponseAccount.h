@@ -15,44 +15,44 @@ public:
 private:
     bool isQuotaNumber(QString);
 
-    void generateChangeAdminPwd(QDomDocument &);
-    void generateGetUserList(QDomDocument &);
-    void generateGetUserInfo(QDomDocument &);
-    void generateGetSmbList(QDomDocument &);
-    void generateUserAdd(QDomDocument &);
+    void generateChangeAdminPwd();
+    void generateGetUserList();
+    void generateGetUserInfo();
+    void generateGetSmbList();
+    void generateUserAdd();
     void generateRestartService();
     void generateUserSetQuota();
     void generateAddUserToSession();
     void generateCreateFtpLink();
     void generateFtpService();
-    void generateWebdavAccountMerge(QDomDocument &);
+    void generateWebdavAccountMerge();
     void generateUserBatchCreate();
-    void generateGetModifyUserInfo(QDomDocument &);
-    void generateUserModify(QDomDocument &);
+    void generateGetModifyUserInfo();
+    void generateUserModify();
     void generateUserDel();
-    void generateMyFavDelUser(QDomDocument &);
-    void generateDownloadImportSample(QString &);
-    void generateGetAllSession(QDomDocument &);
-    void generateGetImportUsers(QDomDocument &);
-    void generateAddUserGetUserQuotaMaxsize(QDomDocument &);
+    void generateMyFavDelUser();
+    void generateDownloadImportSample();
+    void generateGetAllSession();
+    void generateGetImportUsers();
+    void generateAddUserGetUserQuotaMaxsize();
     void generateCreateImportUsers();
-    void generateCreateStatus(QDomDocument &);
+    void generateCreateStatus();
 
-    void generateGetGroupList(QDomDocument &);
-    void generateGetGroupInfo(QDomDocument &);
+    void generateGetGroupList();
+    void generateGetGroupInfo();
     void generateGroupAdd();
-    void generateAddGroupGetGroupQuotaMinsize(QDomDocument &);
+    void generateAddGroupGetGroupQuotaMinsize();
     void generateGroupSetQuota();
-    void generateGetModifyGroupInfo(QDomDocument &);
+    void generateGetModifyGroupInfo();
     void generateGroupModify();
     void generateGroupDel();
 
-    void generateGetQuotaInfo(QDomDocument &);
-    void generateGetHDMappingInfo(QDomDocument &);
-    void generateGetUserQuotaList(QDomDocument &);
-    void generateGetGroupQuotaList(QDomDocument &);
-    void generateGetUserQuotaMaxSize(QDomDocument &);
-    void generateGetGroupQuotaMinSize(QDomDocument &);
+    void generateGetQuotaInfo();
+    void generateGetHDMappingInfo();
+    void generateGetUserQuotaList();
+    void generateGetGroupQuotaList();
+    void generateGetUserQuotaMaxSize();
+    void generateGetGroupQuotaMinSize();
     void generateSetQuotaOnOff();
 
 };

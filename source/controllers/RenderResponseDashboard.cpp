@@ -14,12 +14,9 @@ void RenderResponseDashboard::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_GET_DEVICE_DETAIL_INFO:
-        generateGetDeviceDetailInfo(doc);
+        generateGetDeviceDetailInfo();
         break;
 
     case CMD_NONE:
@@ -27,13 +24,11 @@ void RenderResponseDashboard::preRender() {
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
 /* todo */
-void RenderResponseDashboard::generateGetDeviceDetailInfo(QDomDocument &doc) {
+void RenderResponseDashboard::generateGetDeviceDetailInfo() {
+    QDomDocument doc;
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
 
     QDomElement root = doc.createElement("device_info");
@@ -60,5 +55,6 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo(QDomDocument &doc) {
 //               "deviceInfoContentElement size is not equal to apiOut size.");
 //    }
 
+    m_var = doc.toString();
 }
 

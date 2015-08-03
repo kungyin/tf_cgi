@@ -16,24 +16,21 @@ void RenderResponseNetwork::preRender() {
     if(!m_pReq)
         return;
 
-    QDomDocument doc = QDomDocument();
-    QString str = QString();
-
     switch(m_cmd) {
     case CMD_GET_LLTD:
-        generateGetLLTD(doc);
+        generateGetLLTD();
         break;
     case CMD_LAN_XML:
-        generateLanXml(doc);
+        generateLanXml();
         break;
     case CMD_IPV6:
-        generateIPV6(doc);
+        generateIPV6();
         break;
     case CMD_LAN_STATUS:
-        generateLanStatus(doc);
+        generateLanStatus();
         break;
     case CMD_LAN_XML2:
-        generateLanXml2(doc);
+        generateLanXml2();
         break;
     case CMD_SETIP_LOCK:
         generateSetIPLock();
@@ -57,64 +54,63 @@ void RenderResponseNetwork::preRender() {
         generateSpeed();
         break;
     case CMD_LLTD:
-        generateLLTD(doc);
+        generateLLTD();
         break;
     case CMD_GET_DDNS:
-        generateGetDdns(doc);
+        generateGetDdns();
         break;
     case CMD_GET_DDNS_STATUS:
-        generateGetDdnsStatus(doc);
+        generateGetDdnsStatus();
         break;
     case CMD_DDNS:
-        generateDdns(doc);
+        generateDdns();
         break;
     case CMD_PORTFORWARDING_GET:
-        generatePortForwardingGet(doc);
+        generatePortForwardingGet();
         break;
     case CMD_UPNP_TEST:
         generateUpnpTest();
         break;
     case CMD_UPNP_TEST_RESULT:
-        generateUpnpTestResult(str);
+        generateUpnpTestResult();
         break;
     case CMD_PORTFORWARDING_TOTAL:
-        generatePortForwardingTotal(str);
+        generatePortForwardingTotal();
         break;
     case CMD_GET_PORT_TABLE:
-        generateGetPortTable(doc);
+        generateGetPortTable();
         break;
     case CMD_PORTFORWARDING_ADD_SCAN:
-        generatePortFrowardingAddScan(str);
+        generatePortFrowardingAddScan();
         break;
     case CMD_PORTFORWARDING_ADD:
-        generatePortFrowardingAdd(str);
+        generatePortFrowardingAdd();
         break;
     case CMD_PORTFORWARDING_MODIFY:
-        generatePortFrowardingModify(str);
+        generatePortFrowardingModify();
         break;
     case CMD_PORTFORWARDING_DEL:
-        generatePortFrowardingDel(str);
+        generatePortFrowardingDel();
         break;
     case CMD_PORTFORWARDING_GET_PORT:
-        generatePortFrowardingGetPort(doc);
+        generatePortFrowardingGetPort();
         break;
     case CMD_GET_SSH_PORT:
-        generateGetSshPort(doc);
+        generateGetSshPort();
         break;
     case CMD_SET_SSH_PORT:
-        generateSetSshPort(doc);
+        generateSetSshPort();
         break;
     case CMD_NONE:
     default:
         break;
     }
 
-    m_doc = doc;
-    m_str = str;
-
 }
 
-void RenderResponseNetwork::generateGetLLTD(QDomDocument &doc) {
+void RenderResponseNetwork::generateGetLLTD() {
+
+    QDomDocument doc;
     QMap<QString, QString> lltdIndo = getNasCfg("lltd");
 
     QDomElement root = doc.createElement("lltd");
@@ -123,9 +119,14 @@ void RenderResponseNetwork::generateGetLLTD(QDomDocument &doc) {
     root.appendChild(enableElement);
     QDomText text = doc.createTextNode(lltdIndo.value("enable"));
     enableElement.appendChild(text);
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateLanXml(QDomDocument &doc) {
+void RenderResponseNetwork::generateLanXml() {
+
+    QDomDocument doc;
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
 
@@ -226,10 +227,15 @@ void RenderResponseNetwork::generateLanXml(QDomDocument &doc) {
         QDomText vlanIDValue = doc.createTextNode(e.value("vlan_id"));
         vlanIDElement.appendChild(vlanIDValue);
     }
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
-void RenderResponseNetwork::generateIPV6(QDomDocument &doc) {
+void RenderResponseNetwork::generateIPV6() {
+
+    QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
@@ -246,9 +252,14 @@ void RenderResponseNetwork::generateIPV6(QDomDocument &doc) {
     QStringList interfaceContentElement(QStringList()
         << "mode" << "item" << "gw" << "dns1" << "dns2");
     //interfaceElement.appendChild(doc.createTextNode(apiOutList.value(0)));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
+void RenderResponseNetwork::generateLanStatus() {
+
+    QDomDocument doc;
     QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
 
@@ -262,9 +273,14 @@ void RenderResponseNetwork::generateLanStatus(QDomDocument &doc) {
     root.appendChild(speed2);
     QDomText value2 = doc.createTextNode(lan1Info.value("speed"));
     speed2.appendChild(value2);
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateLanXml2(QDomDocument &doc) {
+void RenderResponseNetwork::generateLanXml2() {
+
+    QDomDocument doc;
     //QMap<QString, QString> lan0Info = getNasCfg("lan0");
     QMap<QString, QString> lan1Info = getNasCfg("lan1");
 
@@ -287,6 +303,9 @@ void RenderResponseNetwork::generateLanXml2(QDomDocument &doc) {
     if(!QProcess::startDetached(NETWORK_SCRIPT, QStringList() << "restart"))
         tError("process cannot be started: %s", NETWORK_SCRIPT.toLocal8Bit().data());
 #endif
+
+    m_var = doc.toString();
+
 }
 
 /* todo */
@@ -393,12 +412,10 @@ void RenderResponseNetwork::generateSpeed() {
     setNasCfg("lan0", "speed", paraSpeed);
 }
 
-void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
+void RenderResponseNetwork::generateLLTD() {
 
-    QString paraEnable;
-
-    if(m_pReq->allParameters().contains("f_enable"))
-        paraEnable = m_pReq->allParameters().value("f_enable").toString();
+    QDomDocument doc;
+    QString paraEnable =  m_pReq->parameter("f_enable");
 
     bool bSet = false;
     if(setNasCfg("lltd", "enable", paraEnable)) {
@@ -411,9 +428,14 @@ void RenderResponseNetwork::generateLLTD(QDomDocument &doc) {
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
     enableElement.appendChild(doc.createTextNode(bSet ? paraEnable : "0"));
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateGetDdns(QDomDocument &doc) {
+void RenderResponseNetwork::generateGetDdns() {
+
+    QDomDocument doc;
     QMap<QString, QString> ddnsInfo = getNasCfg("ddns");
 
     QDomElement root = doc.createElement("ddns");
@@ -452,9 +474,14 @@ void RenderResponseNetwork::generateGetDdns(QDomDocument &doc) {
     if(ok)
         timeoutValue = doc.createTextNode(QString::number(iTimeout/60/60));
     timeoutElement.appendChild(timeoutValue);
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateGetDdnsStatus(QDomDocument &doc) {
+void RenderResponseNetwork::generateGetDdnsStatus() {
+
+    QDomDocument doc;
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -S");
     if(apiOutList.size() < 4)
@@ -490,9 +517,12 @@ void RenderResponseNetwork::generateGetDdnsStatus(QDomDocument &doc) {
         nextTimeValue = doc.createTextNode(next.toString("yyyy/M/d h:m:s"));
     }
     nexttimeElement.appendChild(nextTimeValue);
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
+void RenderResponseNetwork::generateDdns() {
 
     QString paraEnable, paraDdnsServer, paraDdnsDomain,
             paraDdnsUsername, paraPassword, paraRePassword;
@@ -524,10 +554,13 @@ void RenderResponseNetwork::generateDdns(QDomDocument &doc) {
         getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -T");
     }
 
-    generateGetDdns(doc);
+    generateGetDdns();
+
 }
 
-void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
+void RenderResponseNetwork::generatePortForwardingGet() {
+
+    QDomDocument doc;
     QString paraPage, paraRp, paraSortname,
             paraSortOrder, paraQuery, paraQType,
             paraField, paraUser;
@@ -612,6 +645,9 @@ void RenderResponseNetwork::generatePortForwardingGet(QDomDocument &doc) {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(apiOutList.size())));
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseNetwork::generateUpnpTest() {
@@ -619,18 +655,19 @@ void RenderResponseNetwork::generateUpnpTest() {
 }
 
 
-void RenderResponseNetwork::generateUpnpTestResult(QString &str) {
+void RenderResponseNetwork::generateUpnpTestResult() {
     QMap<QString, QString> upnpInfo = getNasCfg("upnp");
-    str = upnpInfo.value("upnp_test_result");
+    m_var = upnpInfo.value("upnp_test_result");
 }
 
-void RenderResponseNetwork::generatePortForwardingTotal(QString &str) {
+void RenderResponseNetwork::generatePortForwardingTotal() {
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -C", true);
-    str = apiOutList.isEmpty() ? "" : apiOutList.at(0);
+    m_var = apiOutList.isEmpty() ? "" : apiOutList.at(0);
 }
 
-void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
+void RenderResponseNetwork::generateGetPortTable() {
 
+    QDomDocument doc;
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -D");
 
     QDomElement root = doc.createElement("root");
@@ -657,9 +694,12 @@ void RenderResponseNetwork::generateGetPortTable(QDomDocument &doc) {
         QDomText portValue = doc.createTextNode(line.at(2));
         localPortElement.appendChild(portValue);
     }
+
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
+void RenderResponseNetwork::generatePortFrowardingAddScan() {
     QString paraService = m_pReq->allParameters().value("service").toString();
     QString paraEnable = m_pReq->allParameters().value("enable").toString();
     QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
@@ -669,7 +709,7 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
             || paraProtocol.isEmpty() || paraPPort.isEmpty()
             || paraEPort.isEmpty()) {
         tDebug("service: %s", paraService.toLocal8Bit().data());
-        str = "error";
+        m_var = "error";
         return;
     }
 
@@ -685,14 +725,14 @@ void RenderResponseNetwork::generatePortFrowardingAddScan(QString &str) {
                                                                         " -b " + paraEnable
                                                                         , true);
 
-    str = apiOutList.value(0);
+    m_var = apiOutList.value(0);
 }
 
-void RenderResponseNetwork::generatePortFrowardingAdd(QString &str) {
-    generatePortFrowardingAddScan(str);
+void RenderResponseNetwork::generatePortFrowardingAdd() {
+    generatePortFrowardingAddScan();
 }
 
-void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
+void RenderResponseNetwork::generatePortFrowardingModify() {
 
     QString paraEnable = m_pReq->allParameters().value("enable").toString();
     QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
@@ -709,10 +749,10 @@ void RenderResponseNetwork::generatePortFrowardingModify(QString &str) {
                                                                         " -b " + paraEnable +
                                                                         " -o " + paraOldEPort
                                                                         , true);
-    str = apiOutList.value(0);
+    m_var = apiOutList.value(0);
 }
 
-void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
+void RenderResponseNetwork::generatePortFrowardingDel() {
 
     QString paraProtocol = m_pReq->allParameters().value("protocol").toString();
     QString paraPPort = m_pReq->allParameters().value("p_port").toString();
@@ -725,11 +765,12 @@ void RenderResponseNetwork::generatePortFrowardingDel(QString &str) {
                                                                         " -i " + paraPPort +
                                                                         " -s " + paraService
                                                                         , true);
-    str = apiOutList.value(0);
+    m_var = apiOutList.value(0);
 }
 
-void RenderResponseNetwork::generatePortFrowardingGetPort(QDomDocument &doc) {
+void RenderResponseNetwork::generatePortFrowardingGetPort() {
 
+    QDomDocument doc;
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_UPNP_CTL + " -P");
 
     QDomElement root = doc.createElement("rows");
@@ -751,9 +792,13 @@ void RenderResponseNetwork::generatePortFrowardingGetPort(QDomDocument &doc) {
         rowElement.appendChild(localPortElement);
         localPortElement.appendChild(doc.createTextNode(e.split(",").value(3)));
     }
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateGetSshPort(QDomDocument &doc) {
+void RenderResponseNetwork::generateGetSshPort() {
+
+    QDomDocument doc;
     QMap<QString, QString> sshdInfo = getNasCfg("sshd");
 
     QDomElement root = doc.createElement("ssh_info");
@@ -764,9 +809,13 @@ void RenderResponseNetwork::generateGetSshPort(QDomDocument &doc) {
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
     portElement.appendChild(doc.createTextNode(sshdInfo.value("port")));
+    m_var = doc.toString();
+
 }
 
-void RenderResponseNetwork::generateSetSshPort(QDomDocument &doc) {
+void RenderResponseNetwork::generateSetSshPort() {
+
+    QDomDocument doc;
     QString paraEnable = m_pReq->parameter("ssh_enable");
     QString paraPort = m_pReq->parameter("ssh_port");
     QString ret = "1";
@@ -783,4 +832,6 @@ void RenderResponseNetwork::generateSetSshPort(QDomDocument &doc) {
     QDomElement root = doc.createElement("ret");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
+
 }

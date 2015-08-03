@@ -14,11 +14,11 @@ public:
 
 private:
 
-    void generateGetLLTD(QDomDocument &);
-    void generateLanXml(QDomDocument &);
-    void generateIPV6(QDomDocument &);
-    void generateLanStatus(QDomDocument &);
-    void generateLanXml2(QDomDocument &);
+    void generateGetLLTD();
+    void generateLanXml();
+    void generateIPV6();
+    void generateLanStatus();
+    void generateLanXml2();
     void generateSetIPLock();
     void generateIP();
     void generateDefaultGw();
@@ -26,23 +26,23 @@ private:
     void generateChkIPv6Addr();
     void generateChkGwAddr();
     void generateSpeed();
-    void generateLLTD(QDomDocument &);
-    void generateGetDdns(QDomDocument &);
-    void generateGetDdnsStatus(QDomDocument &);
-    void generateDdns(QDomDocument &);
-    void generatePortForwardingGet(QDomDocument &);
+    void generateLLTD();
+    void generateGetDdns();
+    void generateGetDdnsStatus();
+    void generateDdns();
+    void generatePortForwardingGet();
     void generateUpnpTest();
-    void generateUpnpTestResult(QString &);
-    void generatePortForwardingTotal(QString &);
-    void generateGetPortTable(QDomDocument &);
-    void generatePortFrowardingAddScan(QString &);
-    void generatePortFrowardingAdd(QString &);
-    void generatePortFrowardingModify(QString &);
-    void generatePortFrowardingDel(QString &);
-    void generatePortFrowardingGetPort(QDomDocument &);
+    void generateUpnpTestResult();
+    void generatePortForwardingTotal();
+    void generateGetPortTable();
+    void generatePortFrowardingAddScan();
+    void generatePortFrowardingAdd();
+    void generatePortFrowardingModify();
+    void generatePortFrowardingDel();
+    void generatePortFrowardingGetPort();
 
-    void generateGetSshPort(QDomDocument &);
-    void generateSetSshPort(QDomDocument &);
+    void generateGetSshPort();
+    void generateSetSshPort();
 };
 
 #endif // RENDERRESPONSENETWORK_H
