@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseFileStation : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseFileStation(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseFileStation();

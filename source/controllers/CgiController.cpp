@@ -21,6 +21,8 @@
 #include "RenderResponseAddOn.h"
 #include "RenderResponseDashboard.h"
 #include "RenderResponseFileStation.h"
+#include "RenderResponseP2pDownloads.h"
+#include "RenderResponseMyDlink.h"
 
 
 //#include <TAppSettings>
@@ -52,10 +54,6 @@ void CgiController::index()
 
     ParseCmd parseCmd(paraCmd);
     CGI_COMMAND cmd = static_cast<CGI_COMMAND>(parseCmd.getCGICmd());
-    if(cmd == CMD_NONE) {
-        tError("CgiController::index() -- command: %s is an invalided command", paraCmd.toLocal8Bit().data());
-        return;
-    }
 
 /* Verify client which ia valid */
 
@@ -69,19 +67,6 @@ void CgiController::index()
 #endif
 
 //    QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
-
-//    tDebug("key -- %s", key.toLocal8Bit().data());
-
-//    QByteArray csrfId = session().value(key).toByteArray();
-//    tDebug("csrf id -- %s", csrfId.data());
-
-//    QByteArray id = session().id();
-//    tDebug("id -- %s", id.data());
-
-//    tDebug("CgiController::index() -- %s", authenticityToken().data());
-
-//    tDebug("size -- %d", httpRequest().multipartFormData().size("file"));
-//    tDebug("size -- %d", httpRequest().multipartFormData().entity("name").fileSize());
 
     RenderResponse *pRrep = NULL;
     pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
@@ -103,7 +88,7 @@ void CgiController::index()
         renderXml(pRrep->getDoc());
         break;
     case RENDER_TYPE_JOSEN:
-        // todo: renderJson();
+        renderJson(pRrep->getVar().toJsonDocument());
         break;
     case RENDER_TYPE_FILE:
     {
@@ -161,11 +146,18 @@ void CgiController::index()
 
 RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)
 {
-    if(cmd <= CMD_NONE)
+    if(cmd < CMD_NONE)
         return NULL;
 
     RenderResponse *pRrep = NULL;
-    if(cmd < CMD_DISK_END)
+    if(cmd == CMD_NONE) {
+        if( req.header().path().contains("info.cgi") ||
+            req.header().path().contains("mydlink.cgi"))
+            pRrep = new RenderResponseMyDlink(req, cmd);
+        else
+            tError("CgiController::index() -- command: (null) is an invalided command");
+    }
+    else if(cmd < CMD_DISK_END)
         pRrep = new RenderResponseDisk(req, cmd);
     else if(cmd < CMD_LONGIN_END)
         pRrep = new RenderResponseHome(req, cmd);
@@ -195,6 +187,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseDashboard(req, cmd);
     else if(cmd < CMD_FILE_END)
         pRrep = new RenderResponseFileStation(req, cmd);
+    else if(cmd < CMD_P2P_END)
+        pRrep = new RenderResponseP2pDownloads(req, cmd);
 
     return pRrep;
 

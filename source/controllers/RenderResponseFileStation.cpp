@@ -269,7 +269,7 @@ void RenderResponseFileStation::generateCompress(QDomDocument &doc) {
         else {
             QString currentPath = QDir::currentPath();
             QDir::setCurrent(paraPath);
-            QString compressCmd = "zip -r %1/%2 %2";
+            QString compressCmd = "zip -FSr %1/%2 %2";
             getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName));
             QDir::setCurrent(currentPath);
         }

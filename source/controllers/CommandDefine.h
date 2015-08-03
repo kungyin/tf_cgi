@@ -435,6 +435,30 @@ enum CGI_COMMAND {
     CMD_P2P_DEL_TORRENT,                     /* p2p_del_torrent */
     CMD_P2P_END,
 
+    CMD_1,                                   /* 1 */
+    CMD_2,                                   /* 2 */
+    CMD_3,                                   /* 3 */
+    CMD_4,                                   /* 4 */
+    CMD_5,                                   /* 5 */
+    CMD_6,                                   /* 6 */
+    CMD_7,                                   /* 7 */
+    CMD_8,                                   /* 8 */
+    CMD_9,                                   /* 9 */
+    CMD_10,                                   /* 10 */
+    CMD_11,                                   /* 11 */
+    CMD_12,                                   /* 12 */
+    CMD_13,                                   /* 13 */
+    CMD_14,                                   /* 14 */
+    CMD_15,                                   /* 15 */
+    CMD_16,                                   /* 16 */
+    CMD_17,                                   /* 17 */
+    CMD_18,                                   /* 18 */
+    CMD_19,                                   /* 19 */
+    CMD_20,                                   /* 20 */
+    CMD_21,                                   /* 21 */
+    CMD_22,                                   /* 22 */
+    CMD_MYDLINK_END,
+
     CMD_SIZE
 
 };
@@ -851,7 +875,32 @@ const char CGI_PARA_COMMANDS[][255] = {
     "p2p_detail_torrent",
     "p2p_priority_set",
     "p2p_del_torrent",
+    "",
+
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
     ""
+
 };
 
 const int EQUAL_COMMANDS[][2] {
@@ -868,7 +917,7 @@ const int EQUAL_COMMANDS[][2] {
 };
 
 const int CGI_COMMAND_TYPE_FILTER[][3] {
-    //{ CMD_NONE,                         RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
+    { CMD_NONE,                         RENDER_TYPE_STRING,         OPENED_CMDS          },
 
     /**** Disk ****/
     { CMD_VOLUME_STATUS,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Volume_Status" */
@@ -1284,6 +1333,31 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_P2P_PRIORITY_SET,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_priority_set */
     { CMD_P2P_DEL_TORRENT,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_del_torrent */
     //CMD_P2P_END,
+
+    { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
+    { CMD_2,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */
+    { CMD_3,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 3 */
+    { CMD_4,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 4 */
+    { CMD_5,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 5 */
+    { CMD_6,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 6 */
+    { CMD_7,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 7 */
+    { CMD_8,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 8 */
+    { CMD_9,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 9 */
+    { CMD_10,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 10 */
+    { CMD_11,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 11 */
+    { CMD_12,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 12 */
+    { CMD_13,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 13 */
+    { CMD_14,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 14 */
+    { CMD_15,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 15 */
+    { CMD_16,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 16 */
+    { CMD_17,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 17 */
+    { CMD_18,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 18 */
+    { CMD_19,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 19 */
+    { CMD_20,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 20 */
+    { CMD_21,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 21 */
+    { CMD_22,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 22 */
+
+    //CMD_MYDLINK_END,
 
 //    CMD_SIZE
 

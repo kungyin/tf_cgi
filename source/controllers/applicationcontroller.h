@@ -8,6 +8,7 @@
 class T_CONTROLLER_EXPORT ApplicationController : public TActionController
 {
     Q_OBJECT
+
 public:
     ApplicationController();
     ApplicationController(const ApplicationController &other);

@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseDashboard : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseDashboard(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseDashboard();

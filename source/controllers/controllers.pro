@@ -55,7 +55,8 @@ HEADERS += applicationcontroller.h \
     Databaseobject.h \
     RenderResponseDashboard.h \
     RenderResponseFileStation.h \
-    RenderResponseP2pDownloads.h
+    RenderResponseP2pDownloads.h \
+    RenderResponseMyDlink.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -76,4 +77,5 @@ SOURCES += applicationcontroller.cpp \
     Databaseobject.cpp \
     RenderResponseDashboard.cpp \
     RenderResponseFileStation.cpp \
-    RenderResponseP2pDownloads.cpp
+    RenderResponseP2pDownloads.cpp \
+    RenderResponseMyDlink.cpp

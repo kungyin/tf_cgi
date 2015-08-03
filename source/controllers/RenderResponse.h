@@ -7,11 +7,13 @@
 
 class T_CONTROLLER_EXPORT RenderResponse : public QObject {
     Q_OBJECT
+
 public:
 
     virtual void preRender() = 0;
     virtual ~RenderResponse() {}
 
+    QVariant &getVar() { return m_var; }
     QDomDocument &getDoc() { return m_doc; }
     QString &getStr() { return m_str; }
     QString &getFile() { return m_file; }
@@ -30,6 +32,7 @@ protected:
     inline int getTotalPages(int, int);
 
     CGI_COMMAND m_cmd;
+    QVariant m_var;
     QDomDocument m_doc;
     QString m_str;
     QString m_file;

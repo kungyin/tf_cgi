@@ -20,6 +20,7 @@ ParseCmd::ParseCmd(QString cmd)
 
 void ParseCmd::parse(QString cmd) {
 
+    /* 1. content of cmd to CGI_COMMAND */
     int iCmdNumber = -1;
     if( !cmd.isEmpty() ) {
         int cgiCommandNum = sizeof(CGI_PARA_COMMANDS)/sizeof(CGI_PARA_COMMANDS[0]);
@@ -38,28 +39,29 @@ void ParseCmd::parse(QString cmd) {
         }
     }
     else
-        tError("ParseCmd::ParseCmd(): No CGI cammand is found.");
+        tDebug("ParseCmd::ParseCmd(): No CGI cammand is found.");
 
+
+    /* 2. decide all values */
     if(iCmdNumber == -1)
         m_iCommand = CMD_NONE;
-    else {
+    else
         m_iCommand = findIfEqual(iCmdNumber + 1);
 
-        bool bFound = false;
-        int size = sizeof(CGI_COMMAND_TYPE_FILTER)/sizeof(CGI_COMMAND_TYPE_FILTER[0]);
-        for(int i = 0; i < size; i++) {
-            if(CGI_COMMAND_TYPE_FILTER[i][0] == m_iCommand) {
-                m_iRenderType = CGI_COMMAND_TYPE_FILTER[i][1];
-                m_iFilterType = CGI_COMMAND_TYPE_FILTER[i][2];
-                bFound = true;
-                break;
-            }
+    bool bFound = false;
+    int size = sizeof(CGI_COMMAND_TYPE_FILTER)/sizeof(CGI_COMMAND_TYPE_FILTER[0]);
+    for(int i = 0; i < size; i++) {
+        if(CGI_COMMAND_TYPE_FILTER[i][0] == m_iCommand) {
+            m_iRenderType = CGI_COMMAND_TYPE_FILTER[i][1];
+            m_iFilterType = CGI_COMMAND_TYPE_FILTER[i][2];
+            bFound = true;
+            break;
         }
+    }
 
-        if(!bFound) {
-            tError("ParseCmd::getCGICmd(): No render type is found.");
-            assert(0);
-        }
+    if(!bFound) {
+        tError("ParseCmd::getCGICmd(): No render type is found.");
+        assert(0);
     }
 
 }

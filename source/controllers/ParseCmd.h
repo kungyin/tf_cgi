@@ -6,6 +6,7 @@
 
 class T_CONTROLLER_EXPORT ParseCmd : public QObject {
     Q_OBJECT
+
 public:
     ParseCmd(QString);
     virtual ~ParseCmd() {}

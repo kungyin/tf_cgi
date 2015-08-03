@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseSysStatus : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseSysStatus(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseSysStatus();

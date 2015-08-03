@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseAccount : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseAccount(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAccount();

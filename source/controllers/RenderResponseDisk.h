@@ -36,6 +36,7 @@ typedef struct {
 
 class T_CONTROLLER_EXPORT RenderResponseDisk : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseDisk(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseDisk();

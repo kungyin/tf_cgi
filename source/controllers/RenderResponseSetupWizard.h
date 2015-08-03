@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseSetupWizard : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseSetupWizard(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseSetupWizard();

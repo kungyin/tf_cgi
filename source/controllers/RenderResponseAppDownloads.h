@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseAppDownloads : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseAppDownloads(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAppDownloads();

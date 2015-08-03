@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseAddOn : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseAddOn(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseAddOn();

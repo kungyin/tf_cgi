@@ -5,6 +5,7 @@
 
 class T_CONTROLLER_EXPORT RenderResponseFtp : public RenderResponse {
     Q_OBJECT
+
 public:
     RenderResponseFtp(THttpRequest &, CGI_COMMAND);
     virtual ~RenderResponseFtp();
