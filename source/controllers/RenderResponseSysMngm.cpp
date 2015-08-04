@@ -513,21 +513,20 @@ void RenderResponseSysMngm::generateFan() {
 
 void RenderResponseSysMngm::generatePowerOffSchedule() {
     QString paraPowerOffEnable = m_pReq->parameter("f_power_off_enable");
-    QString paraSchedule = m_pReq->parameter("schedule").replace(",", ";").replace(" ", ",");
-    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", ";").replace(" ", ",");
+    QString paraSchedule = m_pReq->parameter("schedule").replace(",", "^").replace(" ", ",");
+    QString paraOffSchedule = m_pReq->parameter("off_schedule").replace(",", "^").replace(" ", ",");
 
-    if(!setNasCfg("power_management", "power_off_scheduling_enable", paraPowerOffEnable)) {
-        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_management failed");
-        return;
-    }
+    QMap<QString, QMap<QString, QString>> titleMap;
+    QMap<QString, QString> map[3];
+    map[0].insert("power_off_scheduling_enable", paraPowerOffEnable);
+    map[1].insert("schedule", paraSchedule);
+    map[2].insert("off_schedule", paraOffSchedule);
+    titleMap.insert("power_management", map[0]);
+    titleMap.insert("power_on_sch", map[1]);
+    titleMap.insert("power_off_sch", map[2]);
 
-    if(!setNasCfg("power_on_sch", "schedule", paraSchedule)) {
-        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_on_sch failed");
-        return;
-    }
-
-    if(!setNasCfg("power_off_sch", "off_schedule", paraOffSchedule)) {
-        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg power_off_sch failed");
+    if(!setNasCfg(titleMap)) {
+        tDebug("RenderResponseSysMngm::generatePowerOffSchedule(): setNasCfg failed");
         return;
     }
 

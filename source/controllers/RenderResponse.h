@@ -22,6 +22,7 @@ protected:
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
     bool setNasCfg(QString, QString, QString);
     bool setNasCfg(QString, QMap<QString, QString> &);
+    bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
     QString allParametersToString();
     QString sizeHuman(qint64);

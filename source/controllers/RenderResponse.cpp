@@ -81,7 +81,6 @@ QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QStri
 }
 
 bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
-    QString sectionTitle =  QString("[%1]").arg(title);
 
     QByteArray data;
     QFile file(SYS_CONFIG_FILE);
@@ -89,6 +88,8 @@ bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
     data = file.readAll();
     QString fileData(data);
     fileData.remove(QChar('\r'));
+
+    QString sectionTitle =  QString("[%1]").arg(title);
     int idxTitle = fileData.indexOf(sectionTitle);
     if(idxTitle == -1) {
         file.close();
@@ -114,7 +115,6 @@ bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
 }
 
 bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
-    QString sectionTitle =  QString("[%1]").arg(title);
 
     QByteArray data;
     QFile file(SYS_CONFIG_FILE);
@@ -122,6 +122,8 @@ bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
     data = file.readAll();
     QString fileData(data);
     fileData.remove(QChar('\r'));
+
+    QString sectionTitle =  QString("[%1]").arg(title);
     int idxTitle = fileData.indexOf(sectionTitle);
     if(idxTitle == -1) {
         file.close();
@@ -137,6 +139,42 @@ bool RenderResponse::setNasCfg(QString title, QMap<QString, QString> &map) {
 
         int idxToSetValue = fileData.indexOf("=", idxKey + 1) + 1;
         fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, " " + map.value(entry));
+    }
+
+    file.reset();
+    file.write(fileData.toUtf8());
+    file.resize(file.pos());
+    file.close();
+    return true;
+}
+
+bool RenderResponse::setNasCfg(QMap<QString, QMap<QString, QString>> &map) {
+
+    QByteArray data;
+    QFile file(SYS_CONFIG_FILE);
+    file.open(QIODevice::ReadWrite);
+    data = file.readAll();
+    QString fileData(data);
+    fileData.remove(QChar('\r'));
+
+    for( auto titleEntry : map.keys() ) {
+        QString sectionTitle =  QString("[%1]").arg(titleEntry);
+        int idxTitle = fileData.indexOf(sectionTitle);
+        if(idxTitle == -1) {
+            continue;
+        }
+
+        int idxBrackets = fileData.indexOf("[", idxTitle + 1);
+
+        for ( auto entry : map.value(titleEntry).keys() ) {
+            int idxKey = fileData.indexOf(entry, idxTitle + 1);
+            if(idxKey == -1 || (idxBrackets != -1 && idxKey > idxBrackets)) {
+                continue;
+            }
+
+            int idxToSetValue = fileData.indexOf("=", idxKey + 1) + 1;
+            fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, " " + map.value(titleEntry).value(entry));
+        }
     }
 
     file.reset();
