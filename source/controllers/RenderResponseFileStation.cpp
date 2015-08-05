@@ -1,7 +1,8 @@
-#include "RenderResponseFileStation.h"
-
 #include <QDir>
 #include <QCryptographicHash>
+
+#include "RenderResponseFileStation.h"
+#include "FileSuffixDescription.h"
 
 bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = true)
 {
@@ -116,6 +117,22 @@ void RenderResponseFileStation::preRender() {
 
 }
 
+QString RenderResponseFileStation::getFileDescription(QString &suffix) {
+
+    QString ret;
+    int iSize = sizeof(SUFFIX_DESCRIPTION_TABLE)/sizeof(SUFFIX_DESCRIPTION_TABLE[0]);
+    for(int i = 0; i < iSize; i++) {
+        if(QString(SUFFIX_DESCRIPTION_TABLE[i][0]) == suffix) {
+            ret = SUFFIX_DESCRIPTION_TABLE[i][1];
+            break;
+        }
+    }
+
+    return ret;
+
+}
+
+
 void RenderResponseFileStation::generateFolderContent() {
     QDomDocument doc;
 
@@ -162,8 +179,19 @@ void RenderResponseFileStation::generateFolderContent() {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
 
-        // todo
-        QString fileDescription = fileList.value(i).isDir() ? "Folder" : "File";
+        QString fileDescription;
+        if(fileList.value(i).isDir())
+            fileDescription = "Folder";
+        else {
+            QString suffix = fileList.value(i).suffix();
+            fileDescription = getFileDescription(suffix);
+            if(fileDescription.isEmpty()) {
+                if(suffix.size() >= 7)
+                    fileDescription = "File";
+                else
+                    fileDescription = suffix.toUpper() + " File";
+            }
+        }
 
         QString fileSize;
         if(!fileList.value(i).isDir())
@@ -251,7 +279,7 @@ void RenderResponseFileStation::generateCompress() {
     QString ret = "error";
 
     QString tmpPath = getTempPath(paraPath);
-    QDir dir(tmpPath.left(tmpPath.lastIndexOf(QDir::separator())));
+    QDir dir(QFileInfo(tmpPath).absoluteDir());
     bool bMkdir = dir.mkdir(".tmp");
     if(bMkdir || QDir(tmpPath).exists()) {
 
@@ -632,4 +660,3 @@ void RenderResponseFileStation::generateGetCoolirisRss() {
     m_var = getSecretPath(paraPath + QDir::separator() + paraName);
 
 }
-

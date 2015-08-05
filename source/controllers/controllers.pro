@@ -56,7 +56,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseDashboard.h \
     RenderResponseFileStation.h \
     RenderResponseP2pDownloads.h \
-    RenderResponseMyDlink.h
+    RenderResponseMyDlink.h \
+    FileSuffixDescription.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \

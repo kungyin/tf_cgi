@@ -284,7 +284,8 @@ void RenderResponseDisk::generateSmartHDList() {
         paraUser = m_pReq->allParameters().value("user").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_disk_list");
-    apiOut.removeLast();
+    if(!apiOut.isEmpty())
+        apiOut.removeLast();
     QString checkbox = "<input type=\"checkbox\" value=\"%1,%2,%3\" "
             "id=\"smart_hdd_num_0\" name=\"smart_hdd_num\" >";
 

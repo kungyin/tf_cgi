@@ -13,6 +13,7 @@ public:
     virtual void preRender();
 
 private:
+    QString getFileDescription(QString &);
     inline QString getTempPath(const QString &);
     bool copy(QString &, QString &);
     bool unArchive(QString &, QString &, QString);
