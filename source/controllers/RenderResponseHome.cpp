@@ -94,17 +94,15 @@ void RenderResponseHome::generateGetUserLanguage() {
 void RenderResponseHome::generateGetSslInfo() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
-    if(apiOut.size() < 2)
-        return;
 
     QDomElement root = doc.createElement("ssl_info");
     doc.appendChild(root);
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode(apiOut.at(0)));
+    enableElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement portElement = doc.createElement("port");
     root.appendChild(portElement);
-    portElement.appendChild(doc.createTextNode(apiOut.at(1)));
+    portElement.appendChild(doc.createTextNode(apiOut.value(1)));
     m_var = doc.toString();
 
 }

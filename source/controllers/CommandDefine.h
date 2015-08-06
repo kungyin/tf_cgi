@@ -958,7 +958,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     /**** Network ****/
     { CMD_GET_LLTD,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lltd */
-    { CMD_LAN_XML,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_lan_xml */
+    { CMD_LAN_XML,                      RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_xml */
     { CMD_IPV6,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ipv6 */
     { CMD_LAN_STATUS,                   RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_status */
     { CMD_LAN_XML2,                     RENDER_TYPE_XML,            OPENED_CMDS          },          /* cgi_get_lan_xml2 */
@@ -1053,7 +1053,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_ADD_SESSION,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_add_session */
     { CMD_SET_NFS_SHARE,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_nfs_share */
     //CMD_RESTART_SERVICE,                    /* cgi_restart_service */
-    { CMD_GET_MODIFY_SESSION,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_modify_session */
+    { CMD_GET_MODIFY_SESSION,           RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_modify_session */
     { CMD_MODIFY_SESSION,               RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_modify_session */
     { CMD_MODIFY_NFS_SHARE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_modify_nfs_share */
     { CMD_WEBDAV_ACCOUNT_ADD,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Webdav_Account_add */
@@ -1184,7 +1184,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_EMAIL_TEST_RESULT,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_email_test_result */
     { CMD_EMAIL_CLEAR,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_email_clear */
 
-    { CMD_LOG_SYSTEM,                   RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_log_system */
+    { CMD_LOG_SYSTEM,                   RENDER_TYPE_JOSEN,          COOKIE_REQ_CMDS      },         /* cgi_log_system */
     { CMD_GET_LOG_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_log_info */
     { CMD_LOG_SERVER,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_server */
     { CMD_SEND_LOG_TEST,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_send_log_test */
@@ -1249,7 +1249,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 
     /**** Setup Wizard ****/
     { CMD_CHK_ADMIN_PW,                 RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_chk_admin_pw */
-    { CMD_SET_LED,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_led */
+    { CMD_SET_LED,                      RENDER_TYPE_NULL,           OPENED_CMDS          },         /* cgi_set_led */
     { CMD_GET_WIZARD,                   RENDER_TYPE_XML,            OPENED_CMDS          },         /* cgi_get_wizard */
     //CMD_SETUP_WIZARD_END,
 

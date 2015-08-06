@@ -722,28 +722,23 @@ void RenderResponseSysMngm::generateEmailClear() {
     m_var = "Content-type: text/html";
 }
 
-
-/* todo */
 void RenderResponseSysMngm::generateLogSystem() {
-    QString paraPage = m_pReq->allParameters().value("page").toString();
-    QString paraRp = m_pReq->allParameters().value("rp").toString();
-    QString paraSortname = m_pReq->allParameters().value("sortname").toString();
-    QString paraSortorder = m_pReq->allParameters().value("sortorder").toString();
-    QString paraQuery = m_pReq->allParameters().value("query").toString();
-    QString paraQType = m_pReq->allParameters().value("qtype").toString();
-    QString paraField = m_pReq->allParameters().value("f_field").toString();
-    QString paraUser = m_pReq->allParameters().value("user").toString();
+    QString paraPage = m_pReq->parameter("page");
+    QString paraRp = m_pReq ->parameter("rp") ;
+//    QString paraSortname = m_pReq ->parameter("sortname") ;
+//    QString paraSortorder = m_pReq ->parameter("sortorder") ;
+//    QString paraQuery = m_pReq ->parameter("query") ;
+//    QString paraQType = m_pReq ->parameter("qtype") ;
+//    QString paraField = m_pReq ->parameter("f_field") ;
+//    QString paraUser = m_pReq ->parameter("user") ;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_GET + " all");
 
-    QString rows = "{\"rows\":[\
-                    %1],\n\
-                    \"total\":\"%2\",\n\
-                    \"page\":\"%3\"\n";
-    QString rowsEmpty = "{\"rows\":[],\"total\":\"0\",\"page\":\"1\"}";
-    QString logContents = "\n{\"id\":\"%1\",\"cell\":[\"%2\",\"%3\",\"%4\"]},";
-    QString logOut;
+    QVariantMap listMap;
+    listMap.insert("total", QString::number(apiOut.size()));
+    listMap.insert("page", paraPage);
 
+    QVariantList itemMapList;
     int logStart = (paraPage.toInt()-1) * paraRp.toInt();
     int logEnd = logStart + paraRp.toInt();
     if(logEnd > apiOut.size())
@@ -752,17 +747,19 @@ void RenderResponseSysMngm::generateLogSystem() {
         QString logDate = apiOut.value(i).section(" ", 0, 2);
         QString logTime = apiOut.value(i).section(" ", 3, 3);
         QString logContent = apiOut.value(i).section(" ", 4);
-        logOut += logContents.arg(QString::number(i+1)).arg(logDate).arg(logTime).arg(logContent);
+
+        QVariantMap itemMap;
+        itemMap.insert("id", QString::number(i+1));
+        QVariantList log;
+        log << logDate << logTime << logContent;
+        itemMap.insert("cell", log);
+        itemMapList.append(itemMap);
     }
 
-    if(apiOut.isEmpty())
-        m_var = rowsEmpty;
-    else {
-        int total = 1;
-        if(paraRp.toInt() != 0)
-            total = apiOut.size() / paraRp.toInt() + (apiOut.size() % paraRp.toInt() != 0);
-        m_var = rows.arg(logOut).arg(QString::number(total)).arg(paraPage.toInt());
-    }
+    listMap.insert("rows", itemMapList);
+
+    m_var = QJsonDocument::fromVariant(listMap);
+
 }
 
 void RenderResponseSysMngm::generateGetLogInfo() {
