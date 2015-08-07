@@ -397,7 +397,7 @@ void RenderResponseDisk::generateSmartScheduleList() {
 
     }
     else {
-        for(int i; i < apiOut.size(); i++) {
+        for(int i = 0; i < apiOut.size(); i++) {
             QDomElement rowElement1 = doc.createElement("row");
             root.appendChild(rowElement1);
             rowElement1.setAttribute("id", QString::number(i+1));

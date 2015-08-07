@@ -29,7 +29,7 @@ void RenderResponseDashboard::preRender() {
 /* todo */
 void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
 
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);
@@ -40,20 +40,18 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
             << "lan_r_speed" << "lan_t_speed" << "lan2_r_speed" << "lan2_t_speed"
             << "mem_total" << "mem_free" << "buffers" << "cached" << "cpu");
 
-//    if( deviceInfoContentElement.size() == apiOut.value(i).split(";").size() ) {
-
-//        for(int i = 0; i < apiOut.value(i).split(";").size(); i++) {
-
-//            QDomElement element = doc.createElement(deviceInfoContentElement.value(j));
-//            printerElement.appendChild(element);
-//            element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
-//        }
-//    }
-//    else {
-//        //assert(0);
-//        tError("RenderResponseSysStatus::generateGetDeviceDetailInfo() :"
-//               "deviceInfoContentElement size is not equal to apiOut size.");
-//    }
+    if( deviceInfoContentElement.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(deviceInfoContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateGetDeviceDetailInfo() :"
+               "deviceInfoContentElement size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 }

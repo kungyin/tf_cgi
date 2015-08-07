@@ -35,8 +35,8 @@ const char VALID_CLIENT_ID[][255] = {
     "CURIOSITY_MBA"
 };
 
-CgiController::CgiController(const CgiController &other)
-    : ApplicationController()
+CgiController::CgiController(/*const CgiController &other*/)
+    //: ApplicationController()
 {
 #ifdef SIMULATOR_MODE
     tDebug("SIMULATOR_MODE is enabled.");

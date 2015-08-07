@@ -10,8 +10,8 @@ class T_CONTROLLER_EXPORT CgiController : public ApplicationController
     Q_OBJECT
 
 public:
-    CgiController(){}
-    CgiController(const CgiController &other);
+    CgiController();
+    //CgiController(const CgiController &other);
 
 public slots:
     void index();
