@@ -126,7 +126,7 @@ void RenderResponseAccount::preRender() {
     case CMD_SET_QUOTA_ONOFF:
         generateSetQuotaOnOff();
         break;
-    case CMD_NONE:
+
     default:
         break;
     }

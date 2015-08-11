@@ -186,7 +186,7 @@ void RenderResponseAppMngm::preRender() {
     case CMD_GET_USB_MAPPING_INFO:
         generateGetUsbMappingInfo();
         break;
-    case CMD_NONE:
+
     default:
         break;
     }

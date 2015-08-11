@@ -42,7 +42,7 @@ void RenderResponseHome::preRender() {
     case CMD_GET_LOG_ITEM:
         generateGetLogItem();
         break;
-    case CMD_NONE:
+    
     default:
         break;
     }

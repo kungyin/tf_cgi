@@ -78,7 +78,7 @@ void RenderResponseDisk::preRender() {
     case CMD_VE_SAVE_FILE:
         generateVeSaveFile();
         break;
-    case CMD_NONE:
+
     default:
         break;
     }

@@ -51,7 +51,16 @@ void RenderResponseP2pDownloads::preRender() {
     case CMD_P2P_DEL_TORRENT:
         generateP2pDelTorrent();
         break;
-    case CMD_NONE:
+    case CMD_P2P_GET_SETTING_INFO:
+        generateP2pGetSettingInfo();
+        break;
+    case CMD_P2P_GET_HD:
+        generateP2pGetHd();
+        break;
+    case CMD_P2P_SET_CONFIG:
+        generateP2pSetConfig();
+        break;
+
     default:
         break;
     }
@@ -295,3 +304,57 @@ void RenderResponseP2pDownloads::generateP2pDelTorrent() {
     m_var = doc.toString();
 
 }
+
+/* todo */
+void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
+    QDomDocument doc;
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+
+    QDomElement root = doc.createElement("device_info");
+    doc.appendChild(root);
+
+    QStringList configTagNames(QStringList()
+            << "result" << "p2p" << "port" << "port_number"
+            << "bandwidth" << "bandwidth_upload_rate" << "bandwidth_downlaod_rate"
+            << "seeding" << "seeding_percent" << "seeding_mins" << "encryption"
+            << "autodownload" << "current_ses_state" << "flow_control_download_rate"
+            << "flow_control_upload_rate" << "flow_control");
+
+//    if( configTagNames.size() == apiOut.size() ) {
+//        for(int i = 0; i < apiOut.size(); i++) {
+//            QDomElement element = doc.createElement(configTagNames.value(i));
+//            root.appendChild(element);
+//            element.appendChild(doc.createTextNode(apiOut.value(i)));
+//        }
+//    }
+//    else {
+//        //assert(0);
+//        tError("RenderResponseP2pDownloads::generateP2pGetSettingInfo() :"
+//               "configTagNames size is not equal to apiOut size.");
+//    }
+
+    m_var = doc.toString();
+}
+
+/* todo: need API */
+void RenderResponseP2pDownloads::generateP2pGetHd() {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+
+    QString selectClass = "<select size=\"1\" name=\"f_hdd_list\" disabled>\n"
+                          "%1"
+                          "</select>";
+    QString qptionClass =  "    <option value=\"%1\"%2>%3</option>";
+
+    m_var = selectClass.arg(qptionClass.arg("HD_a2", " selected", "Volume_1"));
+
+}
+
+/* todo: need API */
+void RenderResponseP2pDownloads::generateP2pSetConfig() {
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+    m_var = "<script>location.href='/web/download_mgr/p2p_set.html?id=8401878'</script>";
+
+}
+

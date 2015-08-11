@@ -101,7 +101,7 @@ void RenderResponseNetwork::preRender() {
     case CMD_SET_SSH_PORT:
         generateSetSshPort();
         break;
-    case CMD_NONE:
+
     default:
         break;
     }

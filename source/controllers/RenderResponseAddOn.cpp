@@ -52,7 +52,6 @@ void RenderResponseAddOn::preRender() {
         generateModuleUninstall();
         break;
 
-    case CMD_NONE:
     default:
         break;
     }

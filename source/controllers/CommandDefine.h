@@ -433,6 +433,9 @@ enum CGI_COMMAND {
     CMD_P2P_DETAIL_TORRENT,                  /* p2p_detail_torrent */
     CMD_P2P_PRIORITY_SET,                    /* p2p_priority_set */
     CMD_P2P_DEL_TORRENT,                     /* p2p_del_torrent */
+    CMD_P2P_GET_SETTING_INFO,                /* p2p_get_setting_info */
+    CMD_P2P_GET_HD,                          /* p2p_get_hd */
+    CMD_P2P_SET_CONFIG,                      /* p2p_set_config */
     CMD_P2P_END,
 
     CMD_1,                                   /* 1 */
@@ -875,6 +878,9 @@ const char CGI_PARA_COMMANDS[][255] = {
     "p2p_detail_torrent",
     "p2p_priority_set",
     "p2p_del_torrent",
+    "p2p_get_setting_info",
+    "p2p_get_hd",
+    "p2p_set_config",
     "",
 
     "1",
@@ -1332,6 +1338,10 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_P2P_DETAIL_TORRENT,            RENDER_TYPE_JOSEN,         COOKIE_REQ_CMDS          },         /* p2p_detail_torrent */
     { CMD_P2P_PRIORITY_SET,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_priority_set */
     { CMD_P2P_DEL_TORRENT,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_del_torrent */
+    { CMD_P2P_GET_SETTING_INFO,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_setting_info */
+    { CMD_P2P_GET_HD,                    RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* p2p_get_hd */
+    { CMD_P2P_SET_CONFIG,                RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* p2p_set_config */
+
     //CMD_P2P_END,
 
     { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */

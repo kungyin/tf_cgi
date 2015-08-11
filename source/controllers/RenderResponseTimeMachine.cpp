@@ -39,7 +39,7 @@ void RenderResponseTimeMachine::preRender() {
     case CMD_TM_DEL_ALL_SHARE:
         generateTmDelAllShare();
         break;
-    case CMD_NONE:
+    
     default:
         break;
     }

@@ -110,7 +110,7 @@ void RenderResponseFileStation::preRender() {
     case CMD_GET_COOLIRIS_RSS:
         generateGetCoolirisRss();
         break;
-    case CMD_NONE:
+    
     default:
         break;
     }

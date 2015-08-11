@@ -19,7 +19,6 @@ void RenderResponseDashboard::preRender() {
         generateGetDeviceDetailInfo();
         break;
 
-    case CMD_NONE:
     default:
         break;
     }

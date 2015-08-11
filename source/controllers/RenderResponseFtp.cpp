@@ -41,8 +41,7 @@ void RenderResponseFtp::preRender() {
     case CMD_FTP_SERVER_ENABLE:
         serverenable();
         break;
-
-    case CMD_NONE:
+    
     default:
         break;
     }

@@ -26,6 +26,10 @@ private:
     void generateP2pPrioritySet();
     void generateP2pDelTorrent();
 
+    void generateP2pGetSettingInfo();
+    void generateP2pGetHd();
+    void generateP2pSetConfig();
+
 };
 
 #endif // RENDERRESPONSEP2PDOWNLOADS_H

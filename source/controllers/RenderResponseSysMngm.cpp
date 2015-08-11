@@ -171,7 +171,6 @@ void RenderResponseSysMngm::preRender() {
     case CMD_REBOOT:
         generateReboot();
         break;
-    case CMD_NONE:
     default:
         break;
     }

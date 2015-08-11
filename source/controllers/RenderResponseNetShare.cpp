@@ -127,7 +127,6 @@ void RenderResponseNetShare::preRender() {
         generateIsoCreateImage();
         break;
 
-    case CMD_NONE:
     default:
         break;
     }

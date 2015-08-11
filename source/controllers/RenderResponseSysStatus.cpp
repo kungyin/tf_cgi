@@ -54,7 +54,6 @@ void RenderResponseSysStatus::preRender() {
         generateModuleList();
         break;
 
-    case CMD_NONE:
     default:
         break;
     }

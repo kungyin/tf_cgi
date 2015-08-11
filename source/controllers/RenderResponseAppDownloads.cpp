@@ -36,7 +36,7 @@ void RenderResponseAppDownloads::preRender() {
 //    case CMD_DOWNLOADS_SCHEDULE_TEST:
 //        generateDownloadsScheduleTest(doc);
 //        break;
-    case CMD_NONE:
+    
     default:
         break;
     }
