@@ -484,7 +484,7 @@ void RenderResponseNetwork::generateGetDdnsStatus() {
     QDomDocument doc;
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -S");
-    if(apiOutList.size() < 4)
+    if(apiOutList.size() < 3)
         return;
 
     QDomElement root = doc.createElement("ddns");

@@ -25,7 +25,6 @@ void RenderResponseDashboard::preRender() {
 
 }
 
-/* todo */
 void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
