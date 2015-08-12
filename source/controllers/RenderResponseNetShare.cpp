@@ -353,21 +353,20 @@ void RenderResponseNetShare::generateGetAfpInfo() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetNfsInfo() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_nfs_info", true);
 
     QDomElement root = doc.createElement("nfs_info");
     doc.appendChild(root);
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("0"));
+    totalElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
+    enableElement.appendChild(doc.createTextNode(apiOut.value(1)));
     m_var = doc.toString();
 
 }
@@ -632,14 +631,10 @@ void RenderResponseNetShare::generateAddSession() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateSetNfsShare() {
-    QString paraHost = m_pReq->allParameters().value("host").toString();
-    QString paraPath = m_pReq->allParameters().value("path").toString();
-    QString paraRw = m_pReq->allParameters().value("rw").toString();
-    QString paraRootsquash = m_pReq->allParameters().value("rootsquash").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_nfs_share "
+                                      + allParametersToString(), true);
 
 }
 
@@ -758,17 +753,10 @@ void RenderResponseNetShare::generateModifySession() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateModifyNfsShare() {
-    QString paraOldHost = m_pReq->allParameters().value("old_host").toString();
-    QString paraHost = m_pReq->allParameters().value("host").toString();
-    QString paraPath = m_pReq->allParameters().value("path").toString();
-    QString paraRw = m_pReq->allParameters().value("rw").toString();
-    QString paraRootSquash = m_pReq->allParameters().value("rootsquash").toString();
-    QString paraNfsFlag = m_pReq->allParameters().value("nfs_flag").toString();
-    QString paraNfs = m_pReq->allParameters().value("nfs").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_modify_nfs_share "
+                                      + allParametersToString(), true);
 
 }
 
@@ -838,7 +826,7 @@ void RenderResponseNetShare::generateResetSession() {
 void RenderResponseNetShare::generateGetShareInfo() {
 
     QDomDocument doc;
-    QString paraName = m_pReq->allParameters().value("name").toString();
+    QString paraName = m_pReq->parameter("name");
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
 
@@ -879,24 +867,29 @@ void RenderResponseNetShare::generateGetShareInfo() {
     root.appendChild(ftpElement);
     ftpElement.appendChild(doc.createTextNode("1"));
 
+    QStringList nfsApiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER +
+                                      " service_get_nfs_share_info " + paraName, true, ";");
+
     QDomElement nfsElement = doc.createElement("nfs");
     root.appendChild(nfsElement);
     QDomElement statusElement = doc.createElement("status");
     nfsElement.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
+    statusElement.appendChild(doc.createTextNode(nfsApiOut.value(0)));
     QDomElement realPathElement = doc.createElement("real_path");
     nfsElement.appendChild(realPathElement);
-    realPathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2"));
-    QDomElement rootSquashElement = doc.createElement("root_squash");
-    nfsElement.appendChild(rootSquashElement);
-    rootSquashElement.appendChild(doc.createTextNode("Yes"));
-    QDomElement writeElement = doc.createElement("write");
-    nfsElement.appendChild(writeElement);
-    writeElement.appendChild(doc.createTextNode("Yes"));
-    QDomElement hostElement = doc.createElement("host");
-    nfsElement.appendChild(hostElement);
-    hostElement.appendChild(doc.createTextNode("gg"));
+    realPathElement.appendChild(doc.createTextNode(nfsApiOut.value(1)));
 
+    if(nfsApiOut.size() == 5) {
+        QDomElement rootSquashElement = doc.createElement("root_squash");
+        nfsElement.appendChild(rootSquashElement);
+        rootSquashElement.appendChild(doc.createTextNode(nfsApiOut.value(2)));
+        QDomElement writeElement = doc.createElement("write");
+        nfsElement.appendChild(writeElement);
+        writeElement.appendChild(doc.createTextNode(nfsApiOut.value(3)));
+        QDomElement hostElement = doc.createElement("host");
+        nfsElement.appendChild(hostElement);
+        hostElement.appendChild(doc.createTextNode(nfsApiOut.value(4)));
+    }
     m_var = doc.toString();
 
 }

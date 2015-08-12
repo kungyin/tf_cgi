@@ -204,7 +204,7 @@ void RenderResponseAppMngm::generateNfsEnable() {
     QString paraNfsStatus = m_pReq->allParameters().value("nfs_status").toString();
     QStringList apiOut;
     if(setNasCfg("nfs", "enable", paraNfsStatus))
-        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API + " restart", true);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);

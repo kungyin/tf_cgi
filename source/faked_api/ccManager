@@ -54,4 +54,7 @@
 [ $1 == 'service_get_mtp_info' ] && echo -e "2015-07-14 14-55-00;0;Volume_1/MyPhone;1"
 [ $1 == 'service_set_mtp_backups_cfg' ] && echo -e "/mnt/HD/HD_a2"
 [ $1 == 'system_get_device_detail_info' ] && echo -e "dlink-8B21F7;DNS-340L;0;60;51;admin;0;9782665;34870825;0;0;509748;310580;16620;115712;100%"
-
+[ $1 == 'service_get_nfs_info' ] && echo -e "0,1"
+[ $1 == 'service_get_nfs_share_info' ] && echo -e "1;/mnt/HD/HD_a2;Yes;Yes;gg"
+[ $1 == 'service_add_nfs_share' ] && echo -e "1"
+[ $1 == 'service_modify_nfs_share' ] && echo -e "1"
