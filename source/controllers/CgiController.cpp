@@ -38,9 +38,16 @@ const char VALID_CLIENT_ID[][255] = {
 CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
 {
+    tDebug("\n  --------------------------- start -----------------------------------");
 #ifdef SIMULATOR_MODE
-    tDebug("SIMULATOR_MODE is enabled.");
+    tDebug("** SIMULATOR_MODE is enabled. **");
 #endif
+}
+
+
+CgiController::~CgiController()
+{
+    tDebug("\n  ---------------------------- end -------------------------------------\n");
 }
 
 void CgiController::index()
@@ -49,7 +56,6 @@ void CgiController::index()
 /* Parse command */
     QVariantMap parasMap = httpRequest().allParameters();
     QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
-    tDebug("\n  ------------------------------------------------------------------");
     tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
 
     ParseCmd parseCmd(paraCmd);

@@ -12,6 +12,7 @@ class T_CONTROLLER_EXPORT CgiController : public ApplicationController
 public:
     CgiController();
     //CgiController(const CgiController &other);
+    virtual ~CgiController();
 
 public slots:
     void index();
