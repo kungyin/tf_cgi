@@ -359,7 +359,7 @@ void RenderResponseSysMngm::generateRestore() {
 }
 
 void RenderResponseSysMngm::generateShutdown() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " shutdown");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " web_off");
 }
 
 void RenderResponseSysMngm::generateIdle() {
