@@ -597,8 +597,8 @@ void RenderResponseDisk::generateScanDiskInfo() {
 void RenderResponseDisk::generateCheckDiskRemountState() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting remount_status", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting remount_status", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");

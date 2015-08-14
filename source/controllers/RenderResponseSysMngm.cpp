@@ -369,7 +369,7 @@ void RenderResponseSysMngm::generateIdle() {
 
 void RenderResponseSysMngm::generateTemperature() {
     QString paraTemperature = m_pReq->allParameters().value("f_temperature").toString();
-    QString paraKoc = m_pReq->allParameters().value("f_koc").toString();
+    QString paraKoc = m_pReq->allParameters().value("f_kot").toString();
 
     QMap<QString, QString> map;
     map.insert("hdd_temperature_temperature", paraTemperature);
@@ -678,8 +678,6 @@ void RenderResponseSysMngm::generateEmailEvent() {
 }
 
 void RenderResponseSysMngm::generateEmail() {
-
-    QDomDocument doc;
 
     QMap<QString, QString> map;
     map.insert("auth", m_pReq->parameter("login_method"));

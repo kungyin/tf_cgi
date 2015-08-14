@@ -108,3 +108,8 @@ port= 1
 
 [time_machine]
 enable= 0
+
+[mail_event]
+hdd_temperature_temperature= 72
+hdd_temperature_kot= C
+
