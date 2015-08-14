@@ -11,3 +11,6 @@ LIBS += -L../lib -lhelper
 
 include(../appbase.pri)
 
+#HEADERS += sqlobjects/userobject.h
+#HEADERS += user.h
+#SOURCES += user.cpp

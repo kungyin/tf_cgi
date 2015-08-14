@@ -5,6 +5,7 @@
 #include "AppDefine.h"
 #include "CgiController.h"
 #include "ParseCmd.h"
+//#include "user.h"
 
 #include "RenderResponseDisk.h"
 #include "RenderResponseHome.h"
@@ -121,11 +122,15 @@ void CgiController::index()
     case RENDER_TYPE_REDIRECT:
         redirect(QUrl(pRrep->getVar().toString()));
         break;
-    case RENDER_TYPE_REDIRECT_WITH_COOKIE:
+    case RENDER_TYPE_USER_LOGIN:
     {
-        QList<TCookie> cookies = pRrep->getCookies();
+        RenderResponseHome *pRrepHome = qobject_cast<RenderResponseHome *>(pRrep);
+        QList<TCookie> cookies = pRrepHome->getCookies();
         for(auto e : cookies)
             addCookie(e);
+        //User user = pRrepHome->getUser();
+        //bool islogin = userLogin(&user);
+        //tDebug("sss %d", islogin);
         redirect(QUrl(pRrep->getVar().toString()));
     }
         break;

@@ -14,7 +14,6 @@ public:
     virtual ~RenderResponse() {}
 
     QVariant &getVar() { return m_var; }
-    QList<TCookie> &getCookies() { return m_cookies; }
 
 protected:
 
@@ -31,7 +30,6 @@ protected:
 
     CGI_COMMAND m_cmd;
     QVariant m_var;
-    QList<TCookie> m_cookies;
 
     THttpRequest *m_pReq;
 

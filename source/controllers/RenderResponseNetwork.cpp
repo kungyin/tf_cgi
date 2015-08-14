@@ -237,8 +237,6 @@ void RenderResponseNetwork::generateIPV6() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
-
     QDomElement root = doc.createElement("ipv6");
     doc.appendChild(root);
 
@@ -414,7 +412,6 @@ void RenderResponseNetwork::generateSpeed() {
 
 void RenderResponseNetwork::generateLLTD() {
 
-    QDomDocument doc;
     QString paraEnable =  m_pReq->parameter("f_enable");
 
     bool bSet = false;
@@ -422,14 +419,6 @@ void RenderResponseNetwork::generateLLTD() {
         getAPIStdOut(API_PATH + SCRIPT_LLTD_CTL + " start");
         bSet = true;
     }
-
-    QDomElement root = doc.createElement("lltd");
-    doc.appendChild(root);
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode(bSet ? paraEnable : "0"));
-
-    m_var = doc.toString();
 
 }
 

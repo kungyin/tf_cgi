@@ -2,6 +2,7 @@
 #define RENDERRESPONSEHOME_H
 
 #include "RenderResponse.h"
+//#include "user.h"
 
 class T_CONTROLLER_EXPORT RenderResponseHome : public RenderResponse {
     Q_OBJECT
@@ -11,6 +12,9 @@ public:
     virtual ~RenderResponseHome();
 
     virtual void preRender();
+
+    QList<TCookie> &getCookies() { return m_cookies; }
+    //User &getUser() { return m_loginUser; }
 
 private:
 
@@ -23,6 +27,9 @@ private:
     void generateLogin();
     void generateLogout();
     void generateGetLogItem();
+
+    QList<TCookie> m_cookies;
+    //User m_loginUser;
 
 };
 

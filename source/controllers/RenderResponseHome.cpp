@@ -179,6 +179,7 @@ void RenderResponseHome::generateLogin() {
     m_cookies.append(cookiePwd);
 
     if(apiOut.value(0).compare("1") == 0) {
+        //m_loginUser = User::create(paraUsername, paraPwd);
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
         m_cookies.append(cookie);
