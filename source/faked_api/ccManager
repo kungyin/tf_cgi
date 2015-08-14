@@ -58,3 +58,6 @@
 [ $1 == 'service_get_nfs_share_info' ] && echo -e "1;/mnt/HD/HD_a2;Yes;Yes;gg"
 [ $1 == 'service_add_nfs_share' ] && echo -e "1"
 [ $1 == 'service_modify_nfs_share' ] && echo -e "1"
+[ $2 == 'set_remount' ] && echo -e "1"
+[ $2 == 'fmt_log' ] && echo -e "1"
+[ $2 == 'remount_status' ] && echo -e "1"

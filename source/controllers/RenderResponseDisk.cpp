@@ -33,6 +33,13 @@ void RenderResponseDisk::preRender() {
     case CMD_FMT_CREATE_DISKMGR:
         generateFMTCreateDiskMGR();
         break;
+    case CMD_DISK_REMOUNT:
+        generateDiskRemount();
+        break;
+    case CMD_FMT_GUI_LOG:
+        generateFMTGuiLog();
+        break;
+
     case CMD_SMART_HD_LIST:
         generateSmartHDList();
         break;
@@ -258,6 +265,34 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
     tag1.appendChild(t1);
     m_var = doc.toString();
 
+}
+
+void RenderResponseDisk::generateDiskRemount() {
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " system_set_disk_setting set_remount", true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseDisk::generateFMTGuiLog() {
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting fmt_log " +
+                                      allParametersToString(), true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
 }
 
 void RenderResponseDisk::generateSmartHDList() {
@@ -545,12 +580,15 @@ void RenderResponseDisk::generateScanDiskInfo() {
 
 void RenderResponseDisk::generateCheckDiskRemountState() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
+
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -c", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting remount_status", true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
     m_var = doc.toString();
 
 }

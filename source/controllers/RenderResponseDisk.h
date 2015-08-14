@@ -52,6 +52,9 @@ private:
     void generateFMTGetAutoRebuildInfo();
     void generateAJAXPlorerStop();
     void generateFMTCreateDiskMGR();
+    void generateDiskRemount();
+    void generateFMTGuiLog();
+
     void generateSmartHDList();
     void generateCreateTestList();
     void generateSmartScheduleList();

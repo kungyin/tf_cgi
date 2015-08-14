@@ -29,6 +29,8 @@ enum CGI_COMMAND {
     CMD_FMT_GET_AUTO_REBUILD_INFO,  /* cgi_FMT_Get_Auto_Rebuild_Info */
     CMD_AJAXPLORER_STOP,            /* cgi_AJAXPlorer_Stop */
     CMD_FMT_CREATE_DISKMGR,         /* cgi_FMT_Create_DiskMGR */
+    CMD_DISK_REMOUNT,               /* cgi_Disk_Remount */
+    CMD_FMT_GUI_LOG,                /* cgi_FMT_GUI_Log */
     CMD_SMART_HD_LIST,              /* cgi_SMART_HD_List */
     CMD_SMART_XML_CREATE_TEST_LIST, /* SMART_XML_Create_Test_List */
     CMD_SMART_SCHEDULE_LIST,        /* SMART_Schedule_List */
@@ -474,6 +476,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_FMT_Get_Auto_Rebuild_Info",
     "cgi_AJAXPlorer_Stop",
     "cgi_FMT_Create_DiskMGR",
+    "cgi_Disk_Remount",
+    "cgi_FMT_GUI_Log",
     "cgi_SMART_HD_List",
     "SMART_XML_Create_Test_List",
     "SMART_Schedule_List",
@@ -931,6 +935,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_FMT_GET_AUTO_REBUILD_INFO,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Get_Auto_Rebuild_Info */
     { CMD_AJAXPLORER_STOP,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_AJAXPlorer_Stop */
     { CMD_FMT_CREATE_DISKMGR,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Create_DiskMGR */
+    { CMD_DISK_REMOUNT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Disk_Remount */
+    { CMD_FMT_GUI_LOG,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_GUI_Log */
     { CMD_SMART_HD_LIST,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_SMART_HD_List */
     { CMD_SMART_XML_CREATE_TEST_LIST,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_XML_Create_Test_List */
     { CMD_SMART_SCHEDULE_LIST,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Schedule_List */
