@@ -39,7 +39,9 @@ void RenderResponseDisk::preRender() {
     case CMD_FMT_GUI_LOG:
         generateFMTGuiLog();
         break;
-
+    case CMD_FMT_DISK_FINISH:
+        generateFMTDiskFinish();
+        break;
     case CMD_SMART_HD_LIST:
         generateSmartHDList();
         break;
@@ -286,6 +288,20 @@ void RenderResponseDisk::generateFMTGuiLog() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting fmt_log " +
                                       allParametersToString(), true);
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+
+void RenderResponseDisk::generateFMTDiskFinish() {
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting cgi_FMT_Disk_Finish", true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
