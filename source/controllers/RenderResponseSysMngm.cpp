@@ -865,7 +865,7 @@ void RenderResponseSysMngm::generateUpsPs() {
 void RenderResponseSysMngm::generateUsbStorageUmount() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " service_set_usb_storage_umount "
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_usb_storage_umount "
                                       + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
