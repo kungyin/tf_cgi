@@ -86,6 +86,38 @@ dns2= 192.168.100.8
 vlan_enable= 1
 vlan_id= 22
 
+[bonding]
+enable=0                                 
+mode=1                                   
+
+[lan0_ipv6]                                 
+local_ipv6address= 2001:db8:abcd:123::1
+mode= static
+local_prefix_length= 1
+ipv6address= addr1                            
+prefix_length= prefix1                          
+gateway= 3ffe:ffff:0:f101::1
+dns1= 
+dns2= 
+count=0
+dhcp_ipv6address=                       
+dhcp_prefix_length=
+dns_manual=0
+
+[lan1_ipv6] 
+local_ipv6address= v6addr2                      
+mode=off                                 
+local_prefix_length=
+ipv6address= addr2                            
+prefix_length= prefix2                          
+gateway= gw2                                
+dns1= dns12                                   
+dns2= dns22                                   
+count=0
+dhcp_ipv6address=                       
+dhcp_prefix_length=
+dns_manual=0
+
 [ddns]                                   
 enable=0
 username=s77310788899

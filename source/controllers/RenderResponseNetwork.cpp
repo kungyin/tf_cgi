@@ -232,7 +232,6 @@ void RenderResponseNetwork::generateLanXml() {
 
 }
 
-/* todo */
 void RenderResponseNetwork::generateIPV6() {
 
     QDomDocument doc;
@@ -240,16 +239,55 @@ void RenderResponseNetwork::generateIPV6() {
     QDomElement root = doc.createElement("ipv6");
     doc.appendChild(root);
 
+    QMap<QString, QString> bondingInfo = getNasCfg("bonding");
+    QMap<QString, QString> ipv6Lan0Info = getNasCfg("lan0_ipv6");
+    QMap<QString, QString> ipv6Lan1Info = getNasCfg("lan1_ipv6");
+
     QStringList ipv6ContentElement(QStringList()
         << "bonding_enable" << "bonding_mode" << "local_addr");
 
-    //for
-    QDomElement interfaceElement = doc.createElement("interface");
-    root.appendChild(interfaceElement);
+    QDomElement bondingEnableElement = doc.createElement(ipv6ContentElement.value(0));
+    root.appendChild(bondingEnableElement);
+    bondingEnableElement.appendChild(doc.createTextNode(bondingInfo.value("enable")));
+    QDomElement bondingModeElement = doc.createElement(ipv6ContentElement.value(1));
+    root.appendChild(bondingModeElement);
+    bondingModeElement.appendChild(doc.createTextNode(bondingInfo.value("mode")));
+    QDomElement localAddrElement = doc.createElement(ipv6ContentElement.value(2));
+    root.appendChild(localAddrElement);
+    localAddrElement.appendChild(doc.createTextNode(ipv6Lan0Info.value("local_ipv6address")));
 
-    QStringList interfaceContentElement(QStringList()
-        << "mode" << "item" << "gw" << "dns1" << "dns2");
-    //interfaceElement.appendChild(doc.createTextNode(apiOutList.value(0)));
+    QVector<QMap<QString, QString>> ipv6LanInfo;
+    if(ipv6Lan0Info.isEmpty() || ipv6Lan1Info.isEmpty())
+        return;
+    ipv6LanInfo << ipv6Lan0Info << ipv6Lan1Info;
+
+    for(auto e : ipv6LanInfo) {
+        QDomElement interfaceElement = doc.createElement("interface");
+        root.appendChild(interfaceElement);
+
+        QDomElement modeElement = doc.createElement("mode");
+        interfaceElement.appendChild(modeElement);
+        modeElement.appendChild(doc.createTextNode(e.value("mode")));
+
+        QDomElement itemElement = doc.createElement("item");
+        interfaceElement.appendChild(itemElement);
+        QDomElement addrElement = doc.createElement("addr");
+        itemElement.appendChild(addrElement);
+        addrElement.appendChild(doc.createTextNode(e.value("ipv6address")));
+        QDomElement prefixElement = doc.createElement("prefix");
+        itemElement.appendChild(prefixElement);
+        prefixElement.appendChild(doc.createTextNode(e.value("prefix_length")));
+
+        QDomElement gwElement = doc.createElement("gw");
+        interfaceElement.appendChild(gwElement);
+        gwElement.appendChild(doc.createTextNode(e.value("gateway")));
+        QDomElement dns1Element = doc.createElement("dns1");
+        interfaceElement.appendChild(dns1Element);
+        dns1Element.appendChild(doc.createTextNode(e.value("dns1")));
+        QDomElement dns2Element = doc.createElement("dns2");
+        interfaceElement.appendChild(dns2Element);
+        dns2Element.appendChild(doc.createTextNode(e.value("dns2")));
+    }
 
     m_var = doc.toString();
 
@@ -343,6 +381,7 @@ void RenderResponseNetwork::generateIP() {
     if(m_pReq->allParameters().contains("lan"))
         paraLan = m_pReq->allParameters().value("lan").toString();
 
+    /* only set Lan0 now */
     if(paraLan.compare("0") == 0) {
         QMap<QString, QString> map;
         map.insert("dhcp_enable", paraDhcpEnable);
@@ -370,9 +409,7 @@ void RenderResponseNetwork::generateDefaultGw() {
     QString paraDefaultGw = m_pReq->parameter("default_gw");
 }
 
-/* todo */
 void RenderResponseNetwork::generateSetIPv6() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
 
     QString paraLan = m_pReq->parameter("f_lan");
     QString paraIPv6Mode = m_pReq->parameter("f_ipv6_mode");
@@ -382,22 +419,57 @@ void RenderResponseNetwork::generateSetIPv6() {
     QString paraIPv6Dns1 = m_pReq->parameter("f_ipv6_dns1");
     QString paraIPv6Dns2 = m_pReq->parameter("f_ipv6_dns2");
 
+    /* only set Lan0 now */
+    if(paraLan.compare("0") == 0) {
+        QMap<QString, QString> map;
+        map.insert("mode", paraIPv6Mode);
+        map.insert("ipv6address", paraIPv6Addr);
+        map.insert("gateway", paraIPv6Gw);
+        map.insert("prefix_length", paraIPv6Prefix);
+        map.insert("dns1", paraIPv6Dns1);
+        map.insert("dns2", paraIPv6Dns2);
+
+        if(!setNasCfg("lan0_ipv6", map))
+            tDebug("setNasCfg lan0_ipv6 failed");
+    }
+
+    /* wrong API */
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_set_ipv6");
+
 }
 
-/* todo */
 void RenderResponseNetwork::generateChkIPv6Addr() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QDomDocument doc;
 
-    QString paraAddr = m_pReq->parameter("addr");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_chk_ipv6_addr "
+                                      + m_pReq->parameter("addr"), true);
+
+    QDomElement root = doc.createElement("ipv6");
+    doc.appendChild(root);
+    QDomElement formatElement = doc.createElement("addr_format");
+    root.appendChild(formatElement);
+    formatElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement addrElement = doc.createElement("addr");
+    root.appendChild(addrElement);
+    addrElement.appendChild(doc.createTextNode(apiOut.value(0).toInt() == -1
+                                               ? QString::null : m_pReq->parameter("addr")));
+
+    m_var = doc.toString();
 }
 
-/* todo */
 void RenderResponseNetwork::generateChkGwAddr() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QDomDocument doc;
 
-    QString paraIPv6Addr = m_pReq->parameter("ipv6Addr");
-    QString paraGateway = m_pReq->parameter("gateway");
-    QString paraPrefixLength = m_pReq->parameter("prefix_length");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_chk_ipv6_gateway_addr "
+                                      + allParametersToString(), true);
+
+    QDomElement root = doc.createElement("ipv6");
+    doc.appendChild(root);
+    QDomElement formatElement = doc.createElement("addr_format");
+    root.appendChild(formatElement);
+    formatElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
 
 }
 

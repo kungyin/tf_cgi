@@ -61,3 +61,6 @@
 [ $2 == 'set_remount' ] && echo -e "1"
 [ $2 == 'fmt_log' ] && echo -e "1"
 [ $2 == 'remount_status' ] && echo -e "1"
+[ $1 == 'network_chk_ipv6_addr' ] && echo -e "-1"
+[ $1 == 'network_chk_ipv6_gateway_addr' ] && echo -e "-1"
+[ $1 == 'service_sms_send' ] && echo -e "1"

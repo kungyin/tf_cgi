@@ -48,6 +48,12 @@ private:
     void generateEmailTestResult();
     void generateEmailClear();
 
+    void generateSmsAdd();
+    void generateSmsModify();
+    void generateSmsTest();
+    void generateSmsTestResult();
+    void generateSmsDel();
+
     void generateLogSystem();
     void generateGetLogInfo();
     void generateLogServer();

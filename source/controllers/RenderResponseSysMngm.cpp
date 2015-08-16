@@ -112,6 +112,22 @@ void RenderResponseSysMngm::preRender() {
         generateEmailClear();
         break;
 
+    case CMD_SMS_ADD:
+        generateSmsAdd();
+        break;
+    case CMD_SMS_MODIFY:
+        generateSmsModify();
+        break;
+    case CMD_SMS_TEST:
+        generateSmsTest();
+        break;
+    case CMD_SMS_TEST_RESULT:
+        generateSmsTestResult();
+        break;
+    case CMD_SMS_DEL:
+        generateSmsDel();
+        break;
+
     case CMD_LOG_SYSTEM:
         generateLogSystem();
         break;
@@ -717,6 +733,27 @@ void RenderResponseSysMngm::generateEmailTestResult() {
 void RenderResponseSysMngm::generateEmailClear() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_email_save_config");
     m_var = "Content-type: text/html";
+}
+
+void RenderResponseSysMngm::generateSmsAdd() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_sms_config " + allParametersToString());
+}
+
+void RenderResponseSysMngm::generateSmsModify() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_save_sms_config " + allParametersToString());
+}
+
+void RenderResponseSysMngm::generateSmsTest() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_send test", true);
+}
+
+void RenderResponseSysMngm::generateSmsTestResult() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_send test", true);
+    m_var = apiOut.value(0);
+}
+
+void RenderResponseSysMngm::generateSmsDel() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_del_sms_config " + allParametersToString());
 }
 
 void RenderResponseSysMngm::generateLogSystem() {

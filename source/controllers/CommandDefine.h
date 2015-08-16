@@ -288,6 +288,12 @@ enum CGI_COMMAND {
     CMD_EMAIL_TEST_RESULT,                  /* cgi_email_test_result */
     CMD_EMAIL_CLEAR,                        /* cgi_email_clear */
 
+    CMD_SMS_ADD,                            /* cgi_sms_add */
+    CMD_SMS_MODIFY,                         /* cgi_sms_modify */
+    CMD_SMS_TEST,                           /* cgi_sms_test */
+    CMD_SMS_TEST_RESULT,                    /* cgi_sms_test_result */
+    CMD_SMS_DEL,                            /* cgi_sms_del */
+
     CMD_LOG_SYSTEM,                         /* cgi_log_system */
     CMD_GET_LOG_INFO,                       /* cgi_get_log_info */
     CMD_LOG_SERVER,                         /* cgi_log_server */
@@ -739,6 +745,12 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_email_test_result",
     "cgi_email_clear",
 
+    "cgi_sms_add",
+    "cgi_sms_modify",
+    "cgi_sms_test",
+    "cgi_sms_test_result",
+    "cgi_sms_del",
+
     "cgi_log_system",
     "cgi_get_log_info",
     "cgi_log_server",
@@ -981,8 +993,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_IP,                           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_ip */
     { CMD_DEFAULT_GW,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_default_gw */
     { CMD_SET_IPV6,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_set_ipv6 */
-    { CMD_CHK_IPV6_ADDR,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_chk_ipv6_addr */
-    { CMD_CHK_GW_ADDR,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_chk_gw_addr */
+    { CMD_CHK_IPV6_ADDR,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_chk_ipv6_addr */
+    { CMD_CHK_GW_ADDR,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_chk_gw_addr */
     { CMD_SPEED,                        RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_speed */
     { CMD_LLTD,                         RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_lltd */
     { CMD_GET_DDNS,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns */
@@ -1198,6 +1210,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_EMAIL_TEST,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_email_test */
     { CMD_EMAIL_TEST_RESULT,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_email_test_result */
     { CMD_EMAIL_CLEAR,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_email_clear */
+
+    { CMD_SMS_ADD,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_sms_add */
+    { CMD_SMS_MODIFY,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_sms_modify */
+    { CMD_SMS_TEST,                     RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_sms_test */
+    { CMD_SMS_TEST_RESULT,              RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_sms_test_result */
+    { CMD_SMS_DEL,                      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_sms_del */
 
     { CMD_LOG_SYSTEM,                   RENDER_TYPE_JOSEN,          COOKIE_REQ_CMDS      },         /* cgi_log_system */
     { CMD_GET_LOG_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_log_info */
