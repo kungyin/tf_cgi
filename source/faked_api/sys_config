@@ -145,3 +145,5 @@ enable= 0
 hdd_temperature_temperature= 72
 hdd_temperature_kot= C
 
+[tuxera]
+enable = 0

@@ -214,13 +214,11 @@ void RenderResponseAppMngm::generateNfsEnable() {
     m_var = doc.toString();
 }
 
-/* todo */
 void RenderResponseAppMngm::generateCheckDb() {
-//    if(setNasCfg("nfs", "enable", paraNfsStatus))
-//        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_check_db", true);
+    m_var = apiOut.value(0);
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathList() {
     QDomDocument doc;
     QString paraPage = m_pReq->allParameters().value("page").toString();
@@ -230,110 +228,97 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-//    QStringList apiOut;
-//    if(setNasCfg("nfs", "enable", paraNfsStatus))
-//        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
 
-    QString cellcontent3 = "<a href=javascript:upnp_path_refresh_one('%1');><IMG border='0' "
+    QString cellContent1 = "<a href=javascript:upnp_path_refresh_one('%1');><IMG border='0' "
                             "src='/web/images/refresh_over.png'></a>";
-    QString cellcontent4 = "<IMG border='0' src='/web/images/on.png'>";
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    QString cellContent2 = "<IMG border='0' src='/web/images/on.png'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
-    QDomElement rowElement = doc.createElement("row");
-    root.appendChild(rowElement);
+    for(int i=0; i < apiOut.size(); i++) {
 
-    QDomElement cellElement1 = doc.createElement("cell");
-    rowElement.appendChild(cellElement1);
-    cellElement1.appendChild(doc.createTextNode("1"));
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
 
-    QDomElement cellElement2 = doc.createElement("cell");
-    rowElement.appendChild(cellElement2);
-    cellElement2.appendChild(doc.createTextNode("Volume_1"));
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
 
-    QDomElement cellElement3 = doc.createElement("cell");
-    rowElement.appendChild(cellElement3);
-    cellElement3.appendChild(doc.createCDATASection(cellcontent3.arg("1")));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(0)));
 
-    QDomElement cellElement4 = doc.createElement("cell");
-    rowElement.appendChild(cellElement4);
-    cellElement4.appendChild(doc.createCDATASection(cellcontent4));
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createCDATASection(cellContent1.arg(apiOut.value(i).split(";").value(1))));
 
-    QDomElement cellElement5 = doc.createElement("cell");
-    rowElement.appendChild(cellElement5);
-    cellElement5.appendChild(doc.createTextNode("/mnt/HD/HD_a2/dddd"));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createCDATASection(cellContent2));
 
-    rowElement.setAttribute("id", "1");
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
+
+        rowElement.setAttribute("id", i+1);
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("3"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerGetConfig() {
     QDomDocument doc;
 
-//    QStringList apiOut;
-//    if(setNasCfg("nfs", "enable", paraNfsStatus))
-//        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+    QMap<QString, QString> tuxeraInfo = getNasCfg("tuxera");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement enableElement = doc.createElement("enable");
     root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("0"));
+    enableElement.appendChild(doc.createTextNode(tuxeraInfo.value("enable")));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServer() {
     QDomDocument doc;
 
-//    QStringList apiOut;
-//    if(setNasCfg("nfs", "enable", paraNfsStatus))
-//        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_av_server");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
     QDomDocument doc;
 
-//    QStringList apiOut;
-//    if(setNasCfg("nfs", "enable", paraNfsStatus))
-//        apiOut = getAPIStdOut(API_PATH + SCRIPT_NFS_API, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_sqldb_state");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement dbStateElement = doc.createElement("db_state");
     root.appendChild(dbStateElement);
-    dbStateElement.appendChild(doc.createTextNode("26"));
+    dbStateElement.appendChild(doc.createTextNode(apiOut.value(0).split("=").value(1).trimmed()));
     QDomElement dbFileElement = doc.createElement("db_file");
     root.appendChild(dbFileElement);
-    dbFileElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/web/jquery/css/redmond/images/SM_ui-icons_454545_256x240.png.jpg"));
+    dbFileElement.appendChild(doc.createTextNode(apiOut.value(1).split("=").value(1).trimmed()));
     m_var = doc.toString();
 
 }
@@ -373,71 +358,82 @@ void RenderResponseAppMngm::generateGuiCodepageGetList() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerGetXml() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("0"));
-    QDomElement ipElement = doc.createElement("ip");
-    root.appendChild(ipElement);
-    ipElement.appendChild(doc.createTextNode("192.168.100.85"));
-    QDomElement rootElement = doc.createElement("root");
-    root.appendChild(rootElement);
-    rootElement.appendChild(doc.createTextNode("1"));
-    QDomElement folderElement = doc.createElement("folder");
-    root.appendChild(folderElement);
-    folderElement.appendChild(doc.createTextNode("DNS-340L_SHARE"));
-    QDomElement passwdElement = doc.createElement("passwd");
-    root.appendChild(passwdElement);
-    passwdElement.appendChild(doc.createTextNode(""));
-    QDomElement langElement = doc.createElement("lang");
-    root.appendChild(langElement);
-    langElement.appendChild(doc.createTextNode("ISO-8859-1"));
-    QDomElement rescanIntervalElement = doc.createElement("rescan_interval");
-    root.appendChild(rescanIntervalElement);
-    rescanIntervalElement.appendChild(doc.createTextNode("0"));
+
+    QList<QString> configTagsElement(QList<QString>()
+        << "enable" << "ip" << "root" << "folder" << "passwd"
+        << "lang" << "rescan_interval");
+
+    if( configTagsElement.size() == apiOut.size() ) {
+
+        for(int i=0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(configTagsElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseAppMngm::generateItunesServerGetXml() :"
+            "configTagsElement size is not equal to apiOut size.");
+
+        tDebug(" %d", apiOut.size());
+        tDebug(" %d", configTagsElement.size());
+
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerReady() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_status", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
-    QDomElement mp3FinishElement = doc.createElement("mp3_finish");
-    root.appendChild(mp3FinishElement);
-    mp3FinishElement.appendChild(doc.createTextNode("1"));
-    QDomElement itunesReadyElement = doc.createElement("itunes_ready");
-    root.appendChild(itunesReadyElement);
-    itunesReadyElement.appendChild(doc.createTextNode("1"));
-    QDomElement stateElement = doc.createElement("state");
-    root.appendChild(stateElement);
-    stateElement.appendChild(doc.createTextNode("1"));
+
+    QList<QString> configTagsElement(QList<QString>()
+        << "enable" << "mp3_finish" << "itunes_ready" << "state");
+
+    if( configTagsElement.size() == apiOut.size() ) {
+
+        for(int i=0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(configTagsElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseAppMngm::generateItunesServerGetXml() :"
+            "configTagsElement size is not equal to apiOut size.");
+
+        tDebug(" %d", apiOut.size());
+        tDebug(" %d", configTagsElement.size());
+
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo */
+
+////////////////////
 void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
     QDomDocument doc;
 
-    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_check_path "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -446,75 +442,70 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
 
     QDomElement resElement = doc.createElement("res");
     itemElement.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
     QDomElement pathElement = doc.createElement("path");
     itemElement.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("Volume_1/dddd"));
+    pathElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
     QDomDocument doc;
 
-    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
-    QString paraRefresh = m_pReq->allParameters().value("f_refresh").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSqldbStopFinish() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_sqldb_stop ", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPrescan() {
     QDomDocument doc;
 
-    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_prescan "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
     QDomDocument doc;
 
-    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_delete "
+                                      + allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -523,129 +514,132 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
 
     QDomElement resElement = doc.createElement("res");
     itemElement.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
-    QDomElement pathElement = doc.createElement("path");
-    itemElement.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("Volume_1/dddd"));
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+
+    for(QString e : apiOut) {
+        QDomElement pathElement = doc.createElement("path");
+        itemElement.appendChild(pathElement);
+        pathElement.appendChild(doc.createTextNode(e));
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 
-    QString paraUpnpAvServer = m_pReq->allParameters().value("f_UPNPAVServer").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QString paraUpnpAvServer = m_pReq->parameter("f_UPNPAVServer");
+    if(setNasCfg("tuxera", "enable", paraUpnpAvServer))
+        getAPIStdOut(API_PATH + SCRIPT_TUXERA_API + " restart");
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateGuiCodepageAdd() {
     QDomDocument doc;
 
-    QString paraLang = m_pReq->allParameters().value("f_lang").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_delete "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerSetting() {
     QDomDocument doc;
 
-    QString paraItunesServer = m_pReq->allParameters().value("f_iTunesServer").toString();
-    QString paraRoot = m_pReq->allParameters().value("f_root").toString();
-    QString paraDir = m_pReq->allParameters().value("f_dir").toString();
-    QString paraPasswd = m_pReq->allParameters().value("f_passwd").toString();
-    QString paraLang = m_pReq->allParameters().value("f_lang").toString();
-    QString paraRescanInterval = m_pReq->allParameters().value("f_rescan_interval").toString();
-
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_itunes_config "
+                                      + allParametersToString(), true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("3"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement stateElement = doc.createElement("state");
     root.appendChild(stateElement);
-    stateElement.appendChild(doc.createTextNode("1"));
+    stateElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerCheckPs() {
     QDomDocument doc;
 
-    QString paraType = m_pReq->allParameters().value("f_type").toString();
-
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_prcess_status "
+                                      + allParametersToString(), true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement typeElement = doc.createElement("type");
     root.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode("3"));
+    typeElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerRefresh() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_itunes_refresh "
+                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateItunesServerRefreshState() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_refresh_state", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement stateElement = doc.createElement("state");
-    root.appendChild(stateElement);
-    stateElement.appendChild(doc.createTextNode("1"));
-    QDomElement barElement = doc.createElement("bar");
-    root.appendChild(barElement);
-    barElement.appendChild(doc.createTextNode("100"));
-    QDomElement mp3CounterElement = doc.createElement("mp3_counter");
-    root.appendChild(mp3CounterElement);
-    mp3CounterElement.appendChild(doc.createTextNode("0"));
-    QDomElement totalMp3Element = doc.createElement("total_mp3");
-    root.appendChild(totalMp3Element);
-    totalMp3Element.appendChild(doc.createTextNode("0"));
-    QDomElement mp3FinishElement = doc.createElement("mp3_finish");
-    root.appendChild(mp3FinishElement);
-    mp3FinishElement.appendChild(doc.createTextNode("1"));
+
+    QList<QString> configTagsElement(QList<QString>()
+        << "state" <<"temp" << "bar" << "mp3_counter" << "total_mp3" << "mp3_finish");
+
+    if( configTagsElement.size() == apiOut.size() ) {
+
+        for(int i=0; i < apiOut.size(); i++) {
+            /* for "temp" tag */
+            if(i == 1 && apiOut.value(i).isEmpty())
+                continue;
+
+            QDomElement element = doc.createElement(configTagsElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseAppMngm::generateItunesServerRefreshState() :"
+            "configTagsElement size is not equal to apiOut size.");
+
+        tDebug(" %d", apiOut.size());
+        tDebug(" %d", configTagsElement.size());
+
+    }
 
     m_var = doc.toString();
 
