@@ -31,6 +31,7 @@ enum CGI_COMMAND {
     CMD_FMT_CREATE_DISKMGR,         /* cgi_FMT_Create_DiskMGR */
     CMD_DISK_REMOUNT,               /* cgi_Disk_Remount */
     CMD_FMT_GUI_LOG,                /* cgi_FMT_GUI_Log */
+    CMD_FMT_REMOUNT_STATE,          /* cgi_Check_Disk_Format_Remount_State */
     CMD_FMT_DISK_FINISH,            /* cgi_FMT_Disk_Finish */
     CMD_SMART_HD_LIST,              /* cgi_SMART_HD_List */
     CMD_SMART_XML_CREATE_TEST_LIST, /* SMART_XML_Create_Test_List */
@@ -485,6 +486,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_FMT_Create_DiskMGR",
     "cgi_Disk_Remount",
     "cgi_FMT_GUI_Log",
+    "cgi_Check_Disk_Format_Remount_State",
     "cgi_FMT_Disk_Finish",
     "cgi_SMART_HD_List",
     "SMART_XML_Create_Test_List",
@@ -951,6 +953,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_FMT_CREATE_DISKMGR,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Create_DiskMGR */
     { CMD_DISK_REMOUNT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Disk_Remount */
     { CMD_FMT_GUI_LOG,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_GUI_Log */
+    { CMD_FMT_REMOUNT_STATE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Format_Remount_State */
     { CMD_FMT_DISK_FINISH,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Disk_Finish */
     { CMD_SMART_HD_LIST,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_SMART_HD_List */
     { CMD_SMART_XML_CREATE_TEST_LIST,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_XML_Create_Test_List */
@@ -1111,7 +1114,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_NFS_ENABLE,                   RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_nfs_enable */
 
     /**** Multimedia Services ****/
-    { CMD_CHK_DB,                       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_chk_db */
+    { CMD_CHK_DB,                       RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_db */
     { CMD_UPNP_AV_SERVER_PATH_LIST,     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Path_List */
     { CMD_UPNP_AV_SERVER_GET_CONFIG,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Get_Config */
     { CMD_UPNP_AV_SERVER,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server */

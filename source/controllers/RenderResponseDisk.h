@@ -54,6 +54,7 @@ private:
     void generateFMTCreateDiskMGR();
     void generateDiskRemount();
     void generateFMTGuiLog();
+    void generateFMTRemountState();
     void generateFMTDiskFinish();
 
     void generateSmartHDList();
