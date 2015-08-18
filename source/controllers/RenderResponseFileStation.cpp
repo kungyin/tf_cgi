@@ -65,6 +65,9 @@ void RenderResponseFileStation::preRender() {
     case CMD_FOLDER_CONTENT:
         generateFolderContent();
         break;
+    case CMD_EMPTY_FOLDER:
+        generateEmptyFolder();
+        break;
     case CMD_GET_USER_QUOTA:
         generateGetUserQuota();
         break;
@@ -227,6 +230,46 @@ void RenderResponseFileStation::generateFolderContent() {
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
     totalElement.appendChild(doc.createTextNode(QString::number(fileList.size())));
+    m_var = doc.toString();
+
+}
+
+/* status= -1 | -2 | -3 | 0 (int)
+ * //0=ok (empty folder),
+ * -1=To sync with Google Drive, please select an empty folder on your NAS or clean the data in the folder you selected. ,
+ * -2=Folder not exist. ,
+ * -3=Selected folder is invalid, please select a sub-folder or create a new folder. */
+
+void RenderResponseFileStation::generateEmptyFolder() {
+    QDomDocument doc;
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("dir").toLocal8Bit());
+
+    QString ret = "-3";
+    if(paraDir.startsWith("Volume_")) {
+        QString dirPath = paraDir;
+        dirPath.replace("Volume_1", "/mnt/HD/HD_a2");
+        dirPath.replace("Volume_2", "/mnt/HD/HD_b2");
+
+        QFileInfo dirInfo(dirPath);
+        if(dirInfo.isDir() && dirInfo.exists()) {
+            QDir dir(dirPath);
+            QDir::Filters filters = QDir::NoDotAndDotDot | QDir::AllEntries;
+            if(dir.entryInfoList(filters).isEmpty())
+                ret = "0";
+            else
+                ret = "-1";
+        }
+        else ret = "-2";
+    }
+    else ret = "-3";
+
+    QDomElement root = doc.createElement("result");
+    doc.appendChild(root);
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
     m_var = doc.toString();
 
 }

@@ -4,7 +4,6 @@
 
 #include "AppDefine.h"
 #include "CgiController.h"
-#include "ParseCmd.h"
 //#include "user.h"
 
 #include "RenderResponseDisk.h"
@@ -23,6 +22,8 @@
 #include "RenderResponseDashboard.h"
 #include "RenderResponseFileStation.h"
 #include "RenderResponseP2pDownloads.h"
+#include "RenderResponseS3.h"
+#include "RenderResponseGoogleDrive.h"
 #include "RenderResponseMyDlink.h"
 
 
@@ -38,6 +39,7 @@ const char VALID_CLIENT_ID[][255] = {
 
 CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
+    : m_pParseCmd(NULL)
 {
     tDebug("\n  --------------------------- start -----------------------------------");
 #ifdef SIMULATOR_MODE
@@ -48,24 +50,35 @@ CgiController::CgiController(/*const CgiController &other*/)
 
 CgiController::~CgiController()
 {
+    if(m_pParseCmd)
+        delete m_pParseCmd;
+
     tDebug("\n  ---------------------------- end -------------------------------------\n");
 }
 
-void CgiController::index()
+void CgiController::process()
 {
+    cgiInit();
+    cgiResponse();
+}
 
-/* Parse command */
+void CgiController::processGoogleDrive() {
+    cgiInit(CMD_GRP_GOOGLE_DRIVE);
+    cgiResponse();
+}
+
+void CgiController::cgiInit(int group) {
+    /* Parse command */
     QVariantMap parasMap = httpRequest().allParameters();
     QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
     tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
 
-    ParseCmd parseCmd(paraCmd);
-    CGI_COMMAND cmd = static_cast<CGI_COMMAND>(parseCmd.getCGICmd());
+    m_pParseCmd = new ParseCmd(paraCmd, group);
 
-/* Verify client which ia valid */
+    /* Verify client which ia valid */
 
 #ifndef SIMULATOR_MODE
-    if(parseCmd.getFilterType() == COOKIE_REQ_CMDS) {
+    if(m_pParseCmd.getFilterType() == COOKIE_REQ_CMDS) {
         if(!isValidClient()) {
             renderErrorResponse(Tf::NotFound);
             return;
@@ -73,10 +86,16 @@ void CgiController::index()
     }
 #endif
 
-//    QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
+}
 
+void CgiController::cgiResponse() {
+
+    if(!m_pParseCmd)
+        return;
+
+    //    QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
     RenderResponse *pRrep = NULL;
-    pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
+    pRrep = getRenderResponseBaseInstance(httpRequest(), static_cast<CGI_COMMAND>(m_pParseCmd->getCGICmd()));
     if(!pRrep) {
         tError("CgiController::index() -- could not create render instance.");
         return;
@@ -84,7 +103,7 @@ void CgiController::index()
     pRrep->preRender();
 
     /* render */
-    switch(parseCmd.getRenderType()) {
+    switch(m_pParseCmd->getRenderType()) {
     case RENDER_TYPE_NULL:
         renderErrorResponse(Tf::OK);
         break;
@@ -105,7 +124,7 @@ void CgiController::index()
     case RENDER_TYPE_FILE:
     {
         bool bRemoveFile = false;
-        if(cmd == CMD_DOWNLOAD)
+        if(m_pParseCmd->getCGICmd() == CMD_DOWNLOAD)
             bRemoveFile = true;
         QFileInfo file(pRrep->getVar().toString());
         contentType();
@@ -205,6 +224,10 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseFileStation(req, cmd);
     else if(cmd < CMD_P2P_END)
         pRrep = new RenderResponseP2pDownloads(req, cmd);
+    else if(cmd < CMD_S3_END)
+        pRrep = new RenderResponseS3(req, cmd);
+    else if(cmd < CMD_GD_END)
+        pRrep = new RenderResponseGoogleDrive(req, cmd);
 
     return pRrep;
 

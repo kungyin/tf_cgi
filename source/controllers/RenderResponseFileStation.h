@@ -20,6 +20,7 @@ private:
     QString getSecretPath(QString);
 
     void generateFolderContent();
+    void generateEmptyFolder();
     void generateGetUserQuota();
     void generateChkFile();
     void generateCompress();

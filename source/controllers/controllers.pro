@@ -57,7 +57,9 @@ HEADERS += applicationcontroller.h \
     RenderResponseFileStation.h \
     RenderResponseP2pDownloads.h \
     RenderResponseMyDlink.h \
-    FileSuffixDescription.h
+    FileSuffixDescription.h \
+    RenderResponseS3.h \
+    RenderResponseGoogleDrive.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -79,4 +81,6 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseDashboard.cpp \
     RenderResponseFileStation.cpp \
     RenderResponseP2pDownloads.cpp \
-    RenderResponseMyDlink.cpp
+    RenderResponseMyDlink.cpp \
+    RenderResponseS3.cpp \
+    RenderResponseGoogleDrive.cpp

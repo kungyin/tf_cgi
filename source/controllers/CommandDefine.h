@@ -414,6 +414,7 @@ enum CGI_COMMAND {
 
     /**** File ****/
     CMD_FOLDER_CONTENT,                      /* cgi_folder_content */
+    CMD_EMPTY_FOLDER,                        /* cgi_empty_folder */
     CMD_GET_USER_QUOTA,                      /* cgi_get_user_quota */
     CMD_CHK_FILE,                            /* chk_file */
     CMD_COMPRESS,                            /* cgi_compress */
@@ -448,6 +449,24 @@ enum CGI_COMMAND {
     CMD_P2P_SET_CONFIG,                      /* p2p_set_config */
     CMD_P2P_END,
 
+    CMD_GET_S3,                              /* cgi_get_s3 */
+    CMD_S3,                                  /* cgi_s3 */
+    CMD_S3_MODIFY,                           /* cgi_s3_modify */
+    CMD_S3_DEL,                              /* cgi_s3_del */
+    CMD_S3_START,                            /* cgi_s3_start */
+    CMD_S3_STOP,                             /* cgi_s3_stop */
+    CMD_S3_BACKUP,                           /* cgi_s3_backup */
+    CMD_GET_RECOVERY,                        /* get_recovery */
+    CMD_GET_PERCENT,                         /* get_precent */
+    CMD_CLEAR_PERCENT,                       /* clear_percent */
+    CMD_S3_END,
+
+    CMD_GD_1,                                /* 1 */
+    CMD_GD_2,                                /* 2 */
+    CMD_GD_3,                                /* 3 */
+    CMD_GD_4,                                /* 4 */
+    CMD_GD_END,
+
     CMD_1,                                   /* 1 */
     CMD_2,                                   /* 2 */
     CMD_3,                                   /* 3 */
@@ -474,6 +493,17 @@ enum CGI_COMMAND {
 
     CMD_SIZE
 
+};
+
+enum SPECIAL_CMD_GROUP {
+    CMD_GRP_NONE,
+    CMD_GRP_GOOGLE_DRIVE,
+};
+
+const int CMD_GROUP_SPACE[][3] {
+    /* group_name,                  start,                  end */
+    { CMD_GRP_NONE,                 0,                      CMD_SIZE - 1   },
+    { CMD_GRP_GOOGLE_DRIVE,         CMD_GD_1,               CMD_GD_END     },
 };
 
 const char CGI_PARA_COMMANDS[][255] = {
@@ -869,6 +899,7 @@ const char CGI_PARA_COMMANDS[][255] = {
 
     /**** File ****/
     "cgi_folder_content",
+    "cgi_empty_folder",
     "cgi_get_user_quota",
     "chk_file",
     "cgi_compress",
@@ -886,6 +917,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "get_cooliris_rss",
     "",
 
+    /**** P2P download ****/
     "p2p_state",
     "p2p_get_list_by_priority",
     "p2p_add_torrent_url",
@@ -903,6 +935,27 @@ const char CGI_PARA_COMMANDS[][255] = {
     "p2p_set_config",
     "",
 
+    /**** Amazon S3 ****/
+    "cgi_get_s3",
+    "cgi_s3",
+    "cgi_s3_modify",
+    "cgi_s3_del",
+    "cgi_s3_start",
+    "cgi_s3_stop",
+    "cgi_s3_backup",
+    "get_recovery",
+    "get_precent",
+    "clear_percent",
+    "",
+
+    /**** Google Drive ****/
+    "1",
+    "2",
+    "3",
+    "4",
+    "",
+
+    /**** Mydlink Account ****/
     "1",
     "2",
     "3",
@@ -1338,6 +1391,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     //CMD_PHOTO_END,
 
     { CMD_FOLDER_CONTENT,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_folder_content */
+    { CMD_EMPTY_FOLDER,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_empty_folder */
     { CMD_GET_USER_QUOTA,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_user_quota */
     { CMD_CHK_FILE,                      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* chk_file */
     { CMD_COMPRESS,                      RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_compress */
@@ -1373,6 +1427,24 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_P2P_SET_CONFIG,                RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* p2p_set_config */
 
     //CMD_P2P_END,
+
+    { CMD_GET_S3,                        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_s3 */
+    { CMD_S3,                            RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3 */
+    { CMD_S3_MODIFY,                     RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_modify */
+    { CMD_S3_DEL,                        RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_s3_del */
+    { CMD_S3_START,                      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_start */
+    { CMD_S3_STOP,                       RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_s3_stop */
+    { CMD_S3_BACKUP,                     RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_backup */
+    { CMD_GET_RECOVERY,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* get_recovery */
+    { CMD_GET_PERCENT,                   RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* get_precent */
+    { CMD_CLEAR_PERCENT,                 RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* clear_percent */
+    //CMD_S3_END,
+
+    { CMD_GD_1,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
+    { CMD_GD_2,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */
+    { CMD_GD_3,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 3 */
+    { CMD_GD_4,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 4 */
+    // CMD_GD_END,
 
     { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
     { CMD_2,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */

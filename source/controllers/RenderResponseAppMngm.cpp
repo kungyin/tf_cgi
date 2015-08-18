@@ -326,7 +326,6 @@ void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
 void RenderResponseAppMngm::generateGuiCodepageGetList() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
     char *name = NULL, *desc = NULL;
     int codepage_cnt = GetCodepageList(1, &name, &desc);
     free(name);
@@ -427,8 +426,6 @@ void RenderResponseAppMngm::generateItunesServerReady() {
 
 }
 
-
-////////////////////
 void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
     QDomDocument doc;
 

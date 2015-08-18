@@ -4,6 +4,7 @@
 #include "applicationcontroller.h"
 #include "RenderResponse.h"
 #include "CommandDefine.h"
+#include "ParseCmd.h"
 
 class T_CONTROLLER_EXPORT CgiController : public ApplicationController
 {
@@ -15,11 +16,16 @@ public:
     virtual ~CgiController();
 
 public slots:
-    void index();
+    void process();
+    void processGoogleDrive();
 
 private:
+    void cgiInit(int group = CMD_GRP_NONE);
+    void cgiResponse();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
     bool isValidClient();
+
+    ParseCmd *m_pParseCmd;
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);

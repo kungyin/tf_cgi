@@ -8,7 +8,7 @@ class T_CONTROLLER_EXPORT ParseCmd : public QObject {
     Q_OBJECT
 
 public:
-    ParseCmd(QString);
+    ParseCmd(QString, int);
     virtual ~ParseCmd() {}
 
     inline int getCGICmd() { return m_iCommand; }
@@ -17,7 +17,7 @@ public:
 
 private:
 
-    void parse(QString);
+    void parse(QString, int);
     int findIfEqual(int);
 
     int m_iCommand;

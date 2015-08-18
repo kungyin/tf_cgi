@@ -10,22 +10,36 @@
 #include "CommandDefine.h"
 
 
-ParseCmd::ParseCmd(QString cmd)
+ParseCmd::ParseCmd(QString cmd, int group)
     : m_iCommand(CMD_NONE)
     , m_iRenderType(RENDER_TYPE_UNKNOWN)
     , m_iFilterType(COOKIE_REQ_CMDS)
 {
-    parse(cmd);
+    parse(cmd, group);
 }
 
-void ParseCmd::parse(QString cmd) {
+void ParseCmd::parse(QString cmd, int group) {
+
+    int cgiCommandNum = sizeof(CGI_PARA_COMMANDS)/sizeof(CGI_PARA_COMMANDS[0]);
+    int iSearchStart = 0;
+    int iSearchEnd = cgiCommandNum;
+
+    if(group != CMD_GRP_NONE) {
+        int cgiGroupNum = sizeof(CMD_GROUP_SPACE)/sizeof(CMD_GROUP_SPACE[0]);
+        for(int i = 0; i < cgiGroupNum; i++) {
+            if(group == i) {
+                iSearchStart = CMD_GROUP_SPACE[i][0];
+                iSearchEnd = CMD_GROUP_SPACE[i][1];
+            }
+        }
+    }
 
     /* 1. content of cmd to CGI_COMMAND */
     int iCmdNumber = -1;
     if( !cmd.isEmpty() ) {
-        int cgiCommandNum = sizeof(CGI_PARA_COMMANDS)/sizeof(CGI_PARA_COMMANDS[0]);
+        //int cgiCommandNum = sizeof(CGI_PARA_COMMANDS)/sizeof(CGI_PARA_COMMANDS[0]);
         if(cgiCommandNum == CMD_SIZE-1) {
-            for(int i = 0; i < cgiCommandNum; i++) {
+            for(int i = iSearchStart; i < iSearchEnd; i++) {
                 QString s(CGI_PARA_COMMANDS[i]);
                 if(s.compare(cmd) == 0) {
                     iCmdNumber = i;
