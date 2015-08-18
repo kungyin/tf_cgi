@@ -78,7 +78,7 @@ void CgiController::cgiInit(int group) {
     /* Verify client which ia valid */
 
 #ifndef SIMULATOR_MODE
-    if(m_pParseCmd.getFilterType() == COOKIE_REQ_CMDS) {
+    if(m_pParseCmd->getFilterType() == COOKIE_REQ_CMDS) {
         if(!isValidClient()) {
             renderErrorResponse(Tf::NotFound);
             return;
