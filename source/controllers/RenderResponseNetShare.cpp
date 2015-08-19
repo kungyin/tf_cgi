@@ -133,106 +133,72 @@ void RenderResponseNetShare::preRender() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateModuleGetInfo() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_pkg_list_info", true, ";");
+    QStringList apkgList = apiOut.value(0).split("#");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement apkgElement = doc.createElement("apkg");
-    root.appendChild(apkgElement);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    QStringList itemTagNames(QStringList()
+        << "Name" << "ShowName" << "Enable" << "URL" << "User" << "Center"
+        << "user_control" << "version" << "date" << "path");
 
-        QDomElement itemElement = doc.createElement("Item");
-        apkgElement.appendChild(itemElement);
-        QDomElement nameElement = doc.createElement("Name");
-        itemElement.appendChild(nameElement);
-        nameElement.appendChild(doc.createTextNode("Transmission"));
-        QDomElement showNameElement = doc.createElement("ShowName");
-        itemElement.appendChild(showNameElement);
-        showNameElement.appendChild(doc.createTextNode("Transmission"));
+    for(QString e : apkgList) {
+        if( itemTagNames.size() == e.split(",").size() ) {
+            QDomElement apkgElement = doc.createElement("apkg");
+            root.appendChild(apkgElement);
+            for(int i = 0; i < e.split(",").size(); i++) {
+                QDomElement element = doc.createElement(itemTagNames.value(i));
+                apkgElement.appendChild(element);
+                element.appendChild(doc.createTextNode(e.split(",").value(i)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseNetShare::generateModuleGetInfo() :"
+                   "itemTagNames size is not equal to apiOut size.");
+        }
+    }
 
-        QDomElement enableElement = doc.createElement("Enable");
-        itemElement.appendChild(enableElement);
-        enableElement.appendChild(doc.createTextNode("1"));
-        QDomElement urlElement = doc.createElement("URL");
-        itemElement.appendChild(urlElement);
-        urlElement.appendChild(doc.createTextNode("index.html"));
-        QDomElement userElement = doc.createElement("User");
-        itemElement.appendChild(userElement);
-        userElement.appendChild(doc.createTextNode("0"));
-
-        QDomElement centerElement = doc.createElement("Center");
-        itemElement.appendChild(centerElement);
-        centerElement.appendChild(doc.createTextNode("0"));
-        QDomElement userControlElement = doc.createElement("user_control");
-        itemElement.appendChild(userControlElement);
-        userControlElement.appendChild(doc.createTextNode("0"));
-
-        QDomElement versionElement = doc.createElement("version");
-        itemElement.appendChild(versionElement);
-        versionElement.appendChild(doc.createTextNode("1.00"));
-
-        QDomElement dateElement = doc.createElement("date");
-        itemElement.appendChild(dateElement);
-        dateElement.appendChild(doc.createTextNode("20150515"));
-
-        QDomElement pathElement = doc.createElement("path");
-        itemElement.appendChild(pathElement);
-        pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/Nas_Prog/Transmission"));
-    //}
-
-        QDomElement p2pEnableElement = doc.createElement("p2p_enable");
-        root.appendChild(p2pEnableElement);
-        p2pEnableElement.appendChild(doc.createTextNode("0"));
+    QDomElement p2pEnableElement = doc.createElement("p2p_enable");
+    root.appendChild(p2pEnableElement);
+    p2pEnableElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetAdsInfo() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ads_info", true, ";");
 
     QDomElement root = doc.createElement("ads");
     doc.appendChild(root);
 
-    QDomElement enableElement = doc.createElement("enable");
-    root.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("0"));
-    QDomElement workgroupElement = doc.createElement("workgroup");
-    root.appendChild(workgroupElement);
-    //workgroupElement.appendChild(doc.createTextNode(""));
-    QDomElement nameElement = doc.createElement("u_name");
-    root.appendChild(nameElement);
-    QDomElement upwdElement = doc.createElement("u_pwd");
-    root.appendChild(upwdElement);
-    QDomElement realmElement = doc.createElement("realm");
-    root.appendChild(realmElement);
-    QDomElement spwdElement = doc.createElement("s_pwd");
-    root.appendChild(spwdElement);
+    QStringList adsTagNames(QStringList()
+        << "enable" << "workgroup" << "u_name" << "u_pwd" << "realm" << "s_pwd" << "dns1" << "dns2");
 
-    QDomElement dns1Element = doc.createElement("dns1");
-    root.appendChild(dns1Element);
-    dns1Element.appendChild(doc.createTextNode("192.168.100.5"));
-    QDomElement dns2Element = doc.createElement("dns2");
-    root.appendChild(dns2Element);
-    dns2Element.appendChild(doc.createTextNode("8.8.8.8"));
+    if( adsTagNames.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(adsTagNames.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseNetShare::generateGetAdsInfo() :"
+               "adsTagNames size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetSession() {
 
     QDomDocument doc;
@@ -243,74 +209,78 @@ void RenderResponseNetShare::generateGetSession() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_session_list");
 
     QString cellContentCifs =
             "<img src='../images/detail.png' onclick='show_cifs_detail(\"%1\");'>";
     QString cellContentFtp =
             "<img src='../images/detail.png' onclick='show_ftp_detail(\"%1\",\"#flex1\");'>";
-    // prefix "-"
-    QString cellContentNfsPart1 =
-            "<img src='../images/detail.png' onclick='show_nfs_detail(\"%1\",\"#flex1\")'>";
-    QString cellContentNfsPart2 =
-            "<input type='hidden' name=\"%1\" id=\"%1\" value=\"%2:%3\">";
+    // todo: 2 sessions.
+    QString cellContentNfs =
+            "<img src='../images/detail.png' onclick='show_nfs_detail(\"%1\",\"#flex1\")'>"
+            "<input type='hidden' name=\"nfs_%2\" id=\"nfs_%2\" value=\"%3\">";
     QString cellContentWebdav =
             "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#flex1\")'>"
-            "<input type=\"hidden\" name=\"%2\" id=\"%2\" value=\"%3:%4\">";
+            "<input type=\"hidden\" name=\"webdav_%2\" id=\"webdav_%2\" value=\"%3\">";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    //for(int i=0; i < apiOut.size(); i++) {
-//        if(apiOut.at(i).isEmpty())
-//            continue;
-//        if(apiOut.at(i).split(",").size() < 2)
-//            continue;
+    int i = 0;
+    for(QString e : apiOut) {
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode("Volume_1"));
+        cellElement1.appendChild(doc.createTextNode(e.split(";").value(0).isEmpty() ? "-" : e.split(";").value(0)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode("Volume_1"));
+        cellElement2.appendChild(doc.createTextNode(e.split(";").value(1).isEmpty() ? "-" : e.split(";").value(1)));
 
+        QString cell3 = e.split(";").value(2).isEmpty() ? "-" : cellContentCifs.arg(e.split(";").value(2));
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createCDATASection(cellContentCifs.arg("0")));
+        cellElement3.appendChild(doc.createCDATASection(cell3));
+
+        QString cell4 = e.split(";").value(3) == "1" ? cellContentFtp.arg(e.split(";").value(3)) : "-";
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createCDATASection(cellContentFtp.arg("0")));
+        cellElement4.appendChild(doc.createCDATASection(cell4));
+
+        QString nfsInfo = e.split(";").value(4);
+        QString cell5 = nfsInfo.isEmpty() ? "-" : cellContentNfs.arg(
+                 QString::number(i), QString::number(i), nfsInfo);
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createCDATASection(cellContentNfsPart1.arg("0") +
-                                                    cellContentNfsPart2.arg("nfs_0").arg("*").arg("/mnt/USB/USB2_b1")));
+        cellElement5.appendChild(doc.createCDATASection(cell5));
 
+        QString webdavInfo = e.split(";").value(5);
+        QString cell6 = webdavInfo.isEmpty() ? "-" : cellContentWebdav.arg(
+                 QString::number(i), QString::number(i), webdavInfo);
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createCDATASection(cellContentWebdav.arg("0")
-                                                    .arg("webdav_0").arg("/mnt/HD/HD_a2").arg("Volume_1")));
+        cellElement6.appendChild(doc.createCDATASection(cell6));
+
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement.appendChild(cellElement7);
         cellElement7.appendChild(doc.createTextNode("-"));
 
-        rowElement.setAttribute("id", "1");
-    //}
+        rowElement.setAttribute("id", i+1);
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("3"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetIsoShare() {
 
     QDomDocument doc;
@@ -321,17 +291,67 @@ void RenderResponseNetShare::generateGetIsoShare() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_share", true);
+
+    QString cellContentCifs =
+            "<img src='../images/detail.png' onclick='show_iso_detail(\"%1\");'>";
+    QString cellContentFtp =
+            "<img src='../images/detail.png' onclick='show_ftp_detail(\"%1\",\"#iso_tb\");'>";
+    // todo: 2 sessions.
+    QString cellContentNfs =
+            "<img src='../images/detail.png' onclick='show_iso_nfs_detail(\"%1\",\"#iso_tb\")'>"
+            "<input type=\"hidden\" name=\"nfs_%2\" id=\"nfs_%2\" value=\"%3\">";
+    QString cellContentWebdav =
+            "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#iso_tb\")'>"
+            "<input type=\"hidden\" name=\"webdav_%2\" id=\"webdav_%2\" value=\"%3\">";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
+    int i = 0;
+    for(QString e : apiOut) {
+
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(e.split(";").value(0).isEmpty() ? "-" : e.split(";").value(0)));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode(e.split(";").value(1).isEmpty() ? "-" : e.split(";").value(1)));
+
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createCDATASection(cellContentCifs.arg("1")));
+
+        QString cell4 = e.split(";").value(2) == "1" ? cellContentFtp.arg("1") : "-";
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createCDATASection(cell4));
+
+        QString nfsInfo = e.split(";").value(3);
+        QString cell5 = (nfsInfo == "-") ? nfsInfo : cellContentNfs.arg(
+                 "1", QString::number(i), nfsInfo);
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createCDATASection(cell5));
+
+        QString webdavInfo = e.split(";").value(4);
+        QString cell6 = (webdavInfo == "-") ? "-" : cellContentWebdav.arg(
+                 "1", QString::number(i), webdavInfo);
+        QDomElement cellElement6 = doc.createElement("cell");
+        rowElement.appendChild(cellElement6);
+        cellElement6.appendChild(doc.createCDATASection(cell6));
+
+        rowElement.setAttribute("id", i+1);
+    }
+
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("0"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 
@@ -371,22 +391,17 @@ void RenderResponseNetShare::generateGetNfsInfo() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateIsoPrecentage() {
-    QString paraFileName = m_pReq->allParameters().value("fileName").toString();
-    QString paraUpIsoRootPath = m_pReq->allParameters().value("upIsoRootPath").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    m_var = "-1";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_get_iso_percentage " + allParametersToString(), true);
+    m_var = apiOut.value(0);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateClearIsoCreate() {
-    QString paraFileName = m_pReq->allParameters().value("fileName").toString();
-    QString paraUpIsoRootPath = m_pReq->allParameters().value("upIsoRootPath").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_clear_iso_create " + allParametersToString(), true);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateUserList() {
 
     QDomDocument doc;
@@ -397,46 +412,43 @@ void RenderResponseNetShare::generateUserList() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_user_list");
     QString cellContent("<input type='checkbox' name='C_%1' value='%2&' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
-//    if(!apiOut.isEmpty()) {
-//        for(int i=0; i < apiOut.size(); i++) {
-//            if(apiOut.at(i).isEmpty())
-//                continue;
-            QDomElement rowElement = doc.createElement("row");
-            root.appendChild(rowElement);
-            rowElement.setAttribute("id", QString::number(1));
 
-            QDomElement cellElement1 = doc.createElement("cell");
-            rowElement.appendChild(cellElement1);
-            //cellElement1.appendChild(doc.createTextNode(apiOut.at(i)));
-            QDomElement cellElement2 = doc.createElement("cell");
-            rowElement.appendChild(cellElement2);
-            //cellElement2.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("r").arg(apiOut.at(i))));
-            QDomElement cellElement3 = doc.createElement("cell");
-            rowElement.appendChild(cellElement3);
-            //cellElement3.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("w").arg(apiOut.at(i))));
-            QDomElement cellElement4 = doc.createElement("cell");
-            rowElement.appendChild(cellElement4);
-            //cellElement4.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("d").arg(apiOut.at(i))));
-//        }
-//    }
+    int i = 0;
+    for(QString e : apiOut) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        rowElement.setAttribute("id", i+1);
 
-            QDomElement pageElement = doc.createElement("page");
-            root.appendChild(pageElement);
-            pageElement.appendChild(doc.createTextNode("1"));
-            QDomElement totalElement = doc.createElement("total");
-            root.appendChild(totalElement);
-            totalElement.appendChild(doc.createTextNode("2"));
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(e));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("r").arg(e)));
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("w").arg(e)));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("d").arg(e)));
+        i++;
+    }
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode(paraPage));
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGroupList() {
 
     QDomDocument doc;
@@ -447,57 +459,63 @@ void RenderResponseNetShare::generateGroupList() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_group_list");
     QString cellContent("<input type='checkbox' name='C_%1' value='%2' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
-//    if(!apiOut.isEmpty()) {
-//        for(int i=0; i < apiOut.size(); i++) {
-//            if(apiOut.at(i).isEmpty())
-//                continue;
-            QDomElement rowElement = doc.createElement("row");
-            root.appendChild(rowElement);
-            rowElement.setAttribute("id", QString::number(1));
+    int i = 0;
+    for(QString e : apiOut) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        rowElement.setAttribute("id", i+1);
 
-            QDomElement cellElement1 = doc.createElement("cell");
-            rowElement.appendChild(cellElement1);
-            //cellElement1.appendChild(doc.createTextNode(apiOut.at(i)));
-            QDomElement cellElement2 = doc.createElement("cell");
-            rowElement.appendChild(cellElement2);
-            //cellElement2.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("r").arg(apiOut.at(i))));
-            QDomElement cellElement3 = doc.createElement("cell");
-            rowElement.appendChild(cellElement3);
-            //cellElement3.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("w").arg(apiOut.at(i))));
-            QDomElement cellElement4 = doc.createElement("cell");
-            rowElement.appendChild(cellElement4);
-            //cellElement4.appendChild(doc.createTextNode(cellContent.arg(QString::number(i)).arg("d").arg(apiOut.at(i))));
-//        }
-//    }
-
-            QDomElement pageElement = doc.createElement("page");
-            root.appendChild(pageElement);
-            pageElement.appendChild(doc.createTextNode("1"));
-            QDomElement totalElement = doc.createElement("total");
-            root.appendChild(totalElement);
-            totalElement.appendChild(doc.createTextNode("2"));
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(e));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("r").arg(e)));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("d").arg(e)));
+        i++;
+    }
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode(paraPage));
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetAllIsoShare() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_all_iso_share");
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
 
+    for(QString e : apiOut) {
+        QDomElement shareElement = doc.createElement("share");
+        root.appendChild(shareElement);
+
+        QDomElement nameElement = doc.createElement("name");
+        shareElement.appendChild(nameElement);
+        nameElement.appendChild(doc.createTextNode(e.split(";").value(0)));
+        QDomElement pathElement = doc.createElement("path");
+        shareElement.appendChild(pathElement);
+        pathElement.appendChild(doc.createTextNode(e.split(";").value(1)));
+    }
+
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("0"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
     m_var = doc.toString();
 
 }
@@ -613,21 +631,21 @@ void RenderResponseNetShare::generateOpenNewFolder() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateAddSession() {
-    QString paraPath = m_pReq->allParameters().value("path").toString();
-    QString paraName = m_pReq->allParameters().value("name").toString();
-    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
-    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
-    QString paraComment = m_pReq->allParameters().value("comment").toString();
-    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
-    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
-    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
-    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
-    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
-    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
+//    QString paraPath = m_pReq->allParameters().value("path").toString();
+//    QString paraName = m_pReq->allParameters().value("name").toString();
+//    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
+//    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
+//    QString paraComment = m_pReq->allParameters().value("comment").toString();
+//    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+//    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+//    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+//    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+//    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
+//    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_add_session " +
+                                      allParametersToString(), true);
 
 }
 
@@ -638,118 +656,67 @@ void RenderResponseNetShare::generateSetNfsShare() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetModifySession() {
 
     QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_modify_session " + paraName, true, ";");
 
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
 
-    QDomElement nameElement = doc.createElement("name");
-    root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("111222555"));
+    QStringList sessionTagNames(QStringList()
+        << "Name" << "path" << "oplocks" << "map_archive" << "comment" << "read_list"
+        << "write_list" << "invalid_users" << "recycle" << "recycle_tree" << "ftp"
+        << "ftp_anonymous" << "nfs" << "webdav" << "webdav_rw" << "webdav_user" << "mycloud");
 
-    QDomElement pathElement = doc.createElement("path");
-    root.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/111222555"));
-
-    QDomElement oplocksElement = doc.createElement("oplocks");
-    root.appendChild(oplocksElement);
-    oplocksElement.appendChild(doc.createTextNode("no"));
-
-    QDomElement mapArchiveElement = doc.createElement("map_archive");
-    root.appendChild(mapArchiveElement);
-    mapArchiveElement.appendChild(doc.createTextNode("yes"));
-
-    QDomElement commentElement = doc.createElement("comment");
-    root.appendChild(commentElement);
-    commentElement.appendChild(doc.createTextNode("ffff"));
-
-    QDomElement readListElement = doc.createElement("read_list");
-    root.appendChild(readListElement);
-    readListElement.appendChild(doc.createTextNode("ffff"));
-
-    QDomElement writeListElement = doc.createElement("write_list");
-    root.appendChild(writeListElement);
-    writeListElement.appendChild(doc.createTextNode("#jerry#,#test#"));
-
-    QDomElement invalidUsersElement = doc.createElement("invalid_users");
-    root.appendChild(invalidUsersElement);
-    invalidUsersElement.appendChild(doc.createTextNode("#nobody#"));
-
-
-
-    QDomElement recycleElement = doc.createElement("recycle");
-    root.appendChild(recycleElement);
-    recycleElement.appendChild(doc.createTextNode("0"));
-
-    QDomElement recycleTreeElement = doc.createElement("recycle_tree");
-    root.appendChild(recycleTreeElement);
-    recycleTreeElement.appendChild(doc.createTextNode("1"));
-
-    QDomElement ftpElement = doc.createElement("ftp");
-    root.appendChild(ftpElement);
-    ftpElement.appendChild(doc.createTextNode("1"));
-
-    QDomElement ftpAnonymousElement = doc.createElement("ftp_anonymous");
-    root.appendChild(ftpAnonymousElement);
-    ftpAnonymousElement.appendChild(doc.createTextNode("n"));
-
-    QDomElement nfsElement = doc.createElement("nfs");
-    root.appendChild(nfsElement);
-    QDomElement statusElement = doc.createElement("status");
-    nfsElement.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
-    QDomElement realPathElement = doc.createElement("real_path");
-    nfsElement.appendChild(realPathElement);
-    realPathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/111222555"));
-    QDomElement rootSquashElement = doc.createElement("root_squash");
-    nfsElement.appendChild(rootSquashElement);
-    rootSquashElement.appendChild(doc.createTextNode("No"));
-    QDomElement writeElement = doc.createElement("write");
-    nfsElement.appendChild(writeElement);
-    writeElement.appendChild(doc.createTextNode("No"));
-    QDomElement hostElement = doc.createElement("host");
-    nfsElement.appendChild(hostElement);
-    hostElement.appendChild(doc.createTextNode("gggg"));
-
-    QDomElement webdavElement = doc.createElement("webdav");
-    root.appendChild(webdavElement);
-    webdavElement.appendChild(doc.createTextNode("1"));
-    QDomElement webdavRwElement = doc.createElement("webdav_rw");
-    root.appendChild(webdavRwElement);
-    webdavRwElement.appendChild(doc.createTextNode("1"));
-    QDomElement webdavUserElement = doc.createElement("webdav_user");
-    root.appendChild(webdavUserElement);
-    webdavUserElement.appendChild(doc.createTextNode("#jerry#,#test#"));
-    QDomElement mycloudElement = doc.createElement("mycloud");
-    root.appendChild(mycloudElement);
-    mycloudElement.appendChild(doc.createTextNode("0"));
+    for(int i = 0; i < apiOut.size(); i++) {
+        if( sessionTagNames.size() == apiOut.size() ) {
+            if(i == 12) {
+                QStringList nfsInfoList = apiOut.value(i).split(",");
+                QStringList nfsTagNames(QStringList()
+                    << "status" << "real_path" << "root_squash" << "write" << "host");
+                QDomElement nfsElement = doc.createElement("nfs");
+                root.appendChild(nfsElement);
+                for(int j = 0; j < nfsInfoList.size(); j++) {
+                    QDomElement element = doc.createElement(nfsTagNames.value(j));
+                    nfsElement.appendChild(element);
+                    element.appendChild(doc.createTextNode(nfsInfoList.value(j)));
+                }
+            }
+            else {
+                QDomElement element = doc.createElement(sessionTagNames.value(i));
+                root.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseNetShare::generateGetModifySession() :"
+                   "sessionTagNames size is not equal to apiOut size.");
+        }
+    }
 
     m_var = doc.toString();
 
 }
 
-
-/* todo: need API */
 void RenderResponseNetShare::generateModifySession() {
-    QString paraPath = m_pReq->allParameters().value("path").toString();
-    QString paraName = m_pReq->allParameters().value("name").toString();
-    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
-    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
-    QString paraComment = m_pReq->allParameters().value("comment").toString();
-    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
-    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
-    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
-    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
-    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
-    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
+//    QString paraPath = m_pReq->allParameters().value("path").toString();
+//    QString paraName = m_pReq->allParameters().value("name").toString();
+//    QString paraOplocks = m_pReq->allParameters().value("oplocks").toString();
+//    QString paraMapArchive = m_pReq->allParameters().value("map_archive").toString();
+//    QString paraComment = m_pReq->allParameters().value("comment").toString();
+//    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
+//    QString paraReadList = m_pReq->allParameters().value("read_list").toString();
+//    QString paraWriteList = m_pReq->allParameters().value("write_list").toString();
+//    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
+//    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
+//    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_modify_session " +
+                                      allParametersToString(), true);
 
 }
 
@@ -760,136 +727,109 @@ void RenderResponseNetShare::generateModifyNfsShare() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountAdd() {
 
     QDomDocument doc;
 
-    QString paraShareName = m_pReq->allParameters().value("f_share_name").toString();
-    QString paraPath = m_pReq->allParameters().value("f_path").toString();
-    QString paraRw = m_pReq->allParameters().value("f_rw").toString();
-    QString paraUser = m_pReq->allParameters().value("f_user").toString();
-    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
+//    QString paraShareName = m_pReq->allParameters().value("f_share_name").toString();
+//    QString paraPath = m_pReq->allParameters().value("f_path").toString();
+//    QString paraRw = m_pReq->allParameters().value("f_rw").toString();
+//    QString paraUser = m_pReq->allParameters().value("f_user").toString();
+//    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_webdav_account_add " +
+                                      allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateDeleteSession() {
-    QString paraName = m_pReq->allParameters().value("name").toString();
-    QString paraPath = m_pReq->allParameters().value("path").toString();
-    QString paraHost = m_pReq->allParameters().value("host").toString();
-    QString paraSmbPath = m_pReq->allParameters().value("smb_path").toString();
+//    QString paraName = m_pReq->allParameters().value("name").toString();
+//    QString paraPath = m_pReq->allParameters().value("path").toString();
+//    QString paraHost = m_pReq->allParameters().value("host").toString();
+//    QString paraSmbPath = m_pReq->allParameters().value("smb_path").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_del_session ", true);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountDel() {
 
     QDomDocument doc;
 
-    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
-    QString paraPath = m_pReq->allParameters().value("f_path").toString();
+//    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
+//    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_share_webdav_account_del " +
+                                      allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateResetSession() {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    m_var = "ok";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_reset_session", true);
+    m_var = apiOut.value(0);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetShareInfo() {
 
     QDomDocument doc;
     QString paraName = m_pReq->parameter("name");
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    /* todo */
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_modify_session " + paraName, true, ";");
 
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
 
-    QDomElement nameElement = doc.createElement("name");
-    root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("Volume_1"));
-    QDomElement pathElement = doc.createElement("path");
-    root.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("Volume_1"));
-    QDomElement oplocksElement = doc.createElement("oplocks");
-    root.appendChild(oplocksElement);
-    oplocksElement.appendChild(doc.createTextNode("no"));
-    QDomElement mapArchiveElement = doc.createElement("map_archive");
-    root.appendChild(mapArchiveElement);
-    mapArchiveElement.appendChild(doc.createTextNode("yes"));
-    QDomElement commentElement = doc.createElement("comment");
-    root.appendChild(commentElement);
-    commentElement.appendChild(doc.createTextNode("test"));
-    QDomElement readListElement = doc.createElement("read_list");
-    root.appendChild(readListElement);
-    readListElement.appendChild(doc.createTextNode("test"));
-    QDomElement writeListElement = doc.createElement("write_list");
-    root.appendChild(writeListElement);
-    writeListElement.appendChild(doc.createTextNode("<b>aaaa</b><br>jerry"));
-    QDomElement invalidUsersElement = doc.createElement("invalid_users");
-    root.appendChild(invalidUsersElement);
-    invalidUsersElement.appendChild(doc.createTextNode(" - "));
-    QDomElement recycleElement = doc.createElement("recycle");
-    root.appendChild(recycleElement);
-    recycleElement.appendChild(doc.createTextNode("1"));
-    QDomElement recycleTreeElement = doc.createElement("recycle_tree");
-    root.appendChild(recycleTreeElement);
-    recycleTreeElement.appendChild(doc.createTextNode("1"));
-    QDomElement ftpElement = doc.createElement("ftp");
-    root.appendChild(ftpElement);
-    ftpElement.appendChild(doc.createTextNode("1"));
+    QStringList sessionTagNames(QStringList()
+        << "Name" << "path" << "oplocks" << "map_archive" << "comment" << "read_list"
+        << "write_list" << "invalid_users" << "recycle" << "recycle_tree" << "ftp"
+        << "ftp_anonymous" << "nfs");
 
-    QStringList nfsApiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER +
-                                      " service_get_nfs_share_info " + paraName, true, ";");
-
-    QDomElement nfsElement = doc.createElement("nfs");
-    root.appendChild(nfsElement);
-    QDomElement statusElement = doc.createElement("status");
-    nfsElement.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode(nfsApiOut.value(0)));
-    QDomElement realPathElement = doc.createElement("real_path");
-    nfsElement.appendChild(realPathElement);
-    realPathElement.appendChild(doc.createTextNode(nfsApiOut.value(1)));
-
-    if(nfsApiOut.size() == 5) {
-        QDomElement rootSquashElement = doc.createElement("root_squash");
-        nfsElement.appendChild(rootSquashElement);
-        rootSquashElement.appendChild(doc.createTextNode(nfsApiOut.value(2)));
-        QDomElement writeElement = doc.createElement("write");
-        nfsElement.appendChild(writeElement);
-        writeElement.appendChild(doc.createTextNode(nfsApiOut.value(3)));
-        QDomElement hostElement = doc.createElement("host");
-        nfsElement.appendChild(hostElement);
-        hostElement.appendChild(doc.createTextNode(nfsApiOut.value(4)));
+    for(int i = 0; i < apiOut.size(); i++) {
+        if( sessionTagNames.size() == 13/*apiOut.size()*/ ) {
+            if(i == 12) {
+                QStringList nfsInfoList = apiOut.value(i).split(",");
+                QStringList nfsTagNames(QStringList()
+                    << "status" << "real_path" << "root_squash" << "write" << "host");
+                QDomElement nfsElement = doc.createElement("nfs");
+                root.appendChild(nfsElement);
+                for(int j = 0; j < nfsInfoList.size(); j++) {
+                    QDomElement element = doc.createElement(nfsTagNames.value(j));
+                    nfsElement.appendChild(element);
+                    element.appendChild(doc.createTextNode(nfsInfoList.value(j)));
+                }
+            }
+            else {
+                QDomElement element = doc.createElement(sessionTagNames.value(i));
+                root.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseNetShare::generateGetShareInfo() :"
+                   "sessionTagNames size is not equal to apiOut size.");
+        }
     }
+
     m_var = doc.toString();
 
 }
@@ -965,46 +905,64 @@ void RenderResponseNetShare::generateWebdavAccountInfo() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateSetIsoShare() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_set_iso_share " + allParametersToString(), true);
 
     QDomElement root = doc.createElement("iso_info");
     doc.appendChild(root);
 
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode("1"));
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetIsoShareDetail() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_detail_info " + paraName, true);
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
 
-    QDomElement nameElement = doc.createElement("name");
-    root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("uu"));
-    QDomElement commentElement = doc.createElement("comment");
-    root.appendChild(commentElement);
-    commentElement.appendChild(doc.createTextNode(""));
-    QDomElement pathElement = doc.createElement("path");
-    root.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("Volume_1/dddd.iso"));
-    QDomElement readListElement = doc.createElement("read_list");
-    root.appendChild(readListElement);
-    readListElement.appendChild(doc.createTextNode("ALL"));
-    QDomElement invalidUsersElement = doc.createElement("invalid_users");
-    root.appendChild(invalidUsersElement);
-    invalidUsersElement.appendChild(doc.createTextNode(" - "));
+//    QStringList deviceInfoContentElement(QStringList()
+//            << "name" << "comment" << "path" << "read_list" << "invalid_users");
+
+//    if( deviceInfoContentElement.size() == apiOut.size() ) {
+//        for(int i = 0; i < apiOut.size(); i++) {
+//            QDomElement element = doc.createElement(deviceInfoContentElement.value(i));
+//            root.appendChild(element);
+//            element.appendChild(doc.createTextNode(apiOut.value(i)));
+//        }
+//    }
+//    else {
+//        //assert(0);
+//        tError("RenderResponseNetShare::generateGetIsoShareDetail() :"
+//               "deviceInfoContentElement size is not equal to apiOut size.");
+//    }
+
+
+//    QDomElement nameElement = doc.createElement("name");
+//    root.appendChild(nameElement);
+//    nameElement.appendChild(doc.createTextNode("uu"));
+//    QDomElement commentElement = doc.createElement("comment");
+//    root.appendChild(commentElement);
+//    commentElement.appendChild(doc.createTextNode(""));
+//    QDomElement pathElement = doc.createElement("path");
+//    root.appendChild(pathElement);
+//    pathElement.appendChild(doc.createTextNode("Volume_1/dddd.iso"));
+//    QDomElement readListElement = doc.createElement("read_list");
+//    root.appendChild(readListElement);
+//    readListElement.appendChild(doc.createTextNode("ALL"));
+//    QDomElement invalidUsersElement = doc.createElement("invalid_users");
+//    root.appendChild(invalidUsersElement);
+//    invalidUsersElement.appendChild(doc.createTextNode(" - "));
     m_var = doc.toString();
 
 }
@@ -1042,15 +1000,16 @@ void RenderResponseNetShare::generateGetNfsShareInfo() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetModifyIsoInfo() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " oooo ", true);
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
+
+
 
     QDomElement commentElement = doc.createElement("comment");
     root.appendChild(commentElement);

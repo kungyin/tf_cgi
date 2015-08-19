@@ -78,7 +78,7 @@ void RenderResponseTimeMachine::generateTmGetList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_info");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_list");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -96,7 +96,7 @@ void RenderResponseTimeMachine::generateTmGetList() {
         rowElement1.appendChild(cellElement2);
         cellElement2.appendChild(doc.createTextNode(data.value(1)));
 
-        rowElement1.setAttribute("id", QString::number(i+1));
+        rowElement1.setAttribute("id", i+1);
     }
     
     QDomElement pageElement1 = doc.createElement("page");

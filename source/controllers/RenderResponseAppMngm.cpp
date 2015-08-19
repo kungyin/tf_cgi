@@ -534,7 +534,7 @@ void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 void RenderResponseAppMngm::generateGuiCodepageAdd() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_delete "
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_system_codepage "
                                       + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");

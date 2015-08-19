@@ -214,14 +214,17 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
     return ret;
 }
 
-QString RenderResponse::allParametersToString() {
+QString RenderResponse::allParametersToString(QString before, QString after) {
 
     QString ret;
     if(m_pReq) {
         for ( QString entryKey : m_pReq->allParameters().keys() ) {
             if(!ret.isEmpty())
                 ret += "#";
-            ret += entryKey + "=" + QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
+            QString value = QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
+            if(!before.isEmpty())
+                value.replace(before, after);
+            ret += entryKey + "=" + value;
         }
     }
 
