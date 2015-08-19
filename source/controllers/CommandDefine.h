@@ -232,6 +232,8 @@ enum CGI_COMMAND {
     CMD_LOCAL_BACKUP_RENEW,                 /* Local_Backup_Renew */
     CMD_LOCAL_BACKUP_DEL,                   /* Local_Backup_Del */
     CMD_LOCAL_BACKUP_TEST,                  /* Localbackup_Test */
+    CMD_LOCAL_BACKUP_START,                 /* Localbackup_Start */
+    CMD_LOCAL_BACKUP_STOP,                  /* Localbackup_Stop */
 
     CMD_GET_RSYNC_INFO,                     /* cgi_get_rsync_info */
     CMD_SET_RSYNC_SERVER,                   /* cgi_set_rsync_server */
@@ -373,6 +375,8 @@ enum CGI_COMMAND {
     CMD_DOWNLOADS_SCHEDULE_RENEW,            /* Downloads_Schedule_Renew */
     CMD_DOWNLOADS_SCHEDULE_DEL,              /* Downloads_Schedule_Del */
     CMD_DOWNLOADS_SCHEDULE_TEST,             /* Downloads_Schedule_Test */
+    CMD_DOWNLOADS_SCHEDULE_START,            /* Downloads_Schedule_Start */
+    CMD_DOWNLOADS_SCHEDULE_STOP,             /* Downloads_Schedule_Stop */
     CMD_APP_DOWNLOAD_END,
 
     /**** Add-on ****/
@@ -718,6 +722,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "Local_Backup_Renew",
     "Local_Backup_Del",
     "Localbackup_Test",
+    "Localbackup_Start",
+    "Localbackup_Stop",
 
     "cgi_get_rsync_info",
     "cgi_set_rsync_server",
@@ -858,6 +864,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "Downloads_Schedule_Renew",
     "Downloads_Schedule_Del",
     "Downloads_Schedule_Test",
+    "Downloads_Schedule_Start",
+    "Downloads_Schedule_Stop",
     "",
 
     /**** Add-on ****/
@@ -993,6 +1001,8 @@ const int EQUAL_COMMANDS[][2] {
     { CMD_DOWNLOADS_SCHEDULE_RENEW, CMD_LOCAL_BACKUP_RENEW  },
     { CMD_DOWNLOADS_SCHEDULE_DEL,   CMD_LOCAL_BACKUP_DEL    },
     { CMD_DOWNLOADS_SCHEDULE_TEST,  CMD_LOCAL_BACKUP_TEST   },
+    { CMD_DOWNLOADS_SCHEDULE_START, CMD_LOCAL_BACKUP_START },
+    { CMD_DOWNLOADS_SCHEDULE_STOP,  CMD_LOCAL_BACKUP_STOP   },
 };
 
 const int CGI_COMMAND_TYPE_FILTER[][3] {
@@ -1209,6 +1219,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LOCAL_BACKUP_RENEW,           RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* Local_Backup_Renew */
     { CMD_LOCAL_BACKUP_DEL,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Local_Backup_Del */
     { CMD_LOCAL_BACKUP_TEST,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Localbackup_Test */
+    { CMD_LOCAL_BACKUP_START,           RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Localbackup_Start */
+    { CMD_LOCAL_BACKUP_STOP,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Localbackup_Stop */
 
     { CMD_GET_RSYNC_INFO,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_rsync_info */
     { CMD_SET_RSYNC_SERVER,             RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_set_rsync_server */
@@ -1350,6 +1362,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_DOWNLOADS_SCHEDULE_RENEW,      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Renew */
     { CMD_DOWNLOADS_SCHEDULE_DEL,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Del */
     { CMD_DOWNLOADS_SCHEDULE_TEST,       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Test */
+    { CMD_DOWNLOADS_SCHEDULE_START,      RENDER_TYPE_NULL,           COOKIE_REQ_CMDS          },        /* Downloads_Schedule_Start */
+    { CMD_DOWNLOADS_SCHEDULE_STOP,       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS          },         /* Downloads_Schedule_Stop */
 
     //CMD_APP_DOWNLOAD_END,
 

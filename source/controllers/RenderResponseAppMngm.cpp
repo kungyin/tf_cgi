@@ -136,6 +136,12 @@ void RenderResponseAppMngm::preRender() {
     case CMD_LOCAL_BACKUP_TEST:
         generateLocalBackupTest();
         break;
+    case CMD_LOCAL_BACKUP_START:
+        generateLocalBackupStart();
+        break;
+    case CMD_LOCAL_BACKUP_STOP:
+        generateLocalBackupStop();
+        break;
 
     case CMD_GET_RSYNC_INFO:
         generateGetRsyncInfo();
@@ -1167,7 +1173,8 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
     for (int i = 0; i < pageCount; i++)
     {
-        UpdateTaskPercent(taskList[i].task_id);
+        if (QString(taskList[i].status) != "0")
+            UpdateTaskPercent(taskList[i].task_id);
         //tDebug("DOWNLOAD_LIST[%s %s %s %s %s %s %s]",
          //       taskList[i].task_id, taskList[i].src, taskList[i].dest, taskList[i].percent, taskList[i].status, taskList[i].speed, taskList[i].execat, taskList[i].comment);
 
@@ -1198,8 +1205,8 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createCDATASection(strProgressBar.arg(QString::number(i+1))
-                                                    .arg(QString(taskList[i].percent))));
+        cellElement3.appendChild((QString(taskList[i].status) == "2")?doc.createCDATASection(strProgressBar.arg(QString::number(i+1))
+                                                    .arg(QString(taskList[i].percent))):doc.createTextNode("--"));
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
@@ -1221,13 +1228,14 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
             arg1 = "localbackup";
 
-        /* todo: "--" */
-        QString arg2 = "start";
-        if(QString(taskList[i].percent) == "100")
+        QString arg2 = "--";
+        if (QString(taskList[i].status) == "0")
+            arg2 = "start";
+        else if(QString(taskList[i].status) == "2")
             arg2 = "stop";
         QDomElement cellElement7 = doc.createElement("cell");
         rowElement1.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createCDATASection(strBackupStart
+        cellElement7.appendChild((arg2 == "--")?doc.createTextNode(arg2):doc.createCDATASection(strBackupStart
                                 .arg(arg1).arg(arg2).arg(QString(taskList[i].task_id))));
 
         QString comment = "-";
@@ -1235,9 +1243,13 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             QString commentStr = "%1 %2";
             QString arg1;
             if(QString(taskList[i].comment).at(0) == '1')
+            {
                 arg1 = "Fail";
+            }
             else if(QString(taskList[i].comment).at(0) == '0')
+            {
                 arg1 = "Success";
+            }
             QString subComment = QString(taskList[i].comment).mid(1);
             QDateTime datetime = QDateTime::fromString(subComment, "yyyyMMddhhmm");
             comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy mm:ss"));
@@ -1252,7 +1264,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
         QDomElement cellElement10 = doc.createElement("cell");
         rowElement1.appendChild(cellElement10);
-        cellElement10.appendChild(doc.createTextNode("0"));
+        cellElement10.appendChild(doc.createTextNode(QString(taskList[i].speed)));
 
         FreeList(&taskList[i]);
 
@@ -1432,7 +1444,7 @@ void RenderResponseAppMngm::generateLocalBackupInfo() {
     root.appendChild(srcElement);
     srcElement.appendChild(doc.createTextNode(QString(task.src)));
 
-    QString dest = QString(task.src);
+    QString dest = QString(task.dest);
     QFile file("/etc/share_info");
     if (file.open(QIODevice::ReadOnly))
     {
@@ -1593,6 +1605,14 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     m_var = doc.toString();
 
+}
+
+void RenderResponseAppMngm::generateLocalBackupStart() {
+    StartTask(m_pReq->parameter("f_idx").toLocal8Bit().data());
+}
+
+void RenderResponseAppMngm::generateLocalBackupStop() {
+    StopTask(m_pReq->parameter("f_idx").toLocal8Bit().data());
 }
 
 void RenderResponseAppMngm::generateGetRsyncInfo() {
