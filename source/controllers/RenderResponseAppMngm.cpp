@@ -1168,8 +1168,8 @@ void RenderResponseAppMngm::generateLocalBackupList() {
     for (int i = 0; i < pageCount; i++)
     {
         UpdateTaskPercent(taskList[i].task_id);
-        //printf("DOWNLOAD_LIST[%s %s %s %s %s %s %s]\n",
-        //        task_list[i].task_id, task_list[i].src, task_list[i].dest, task_list[i].percent, task_list[i].status, task_list[i].speed, task_list[i].execat, task_list[i].comment);
+        //tDebug("DOWNLOAD_LIST[%s %s %s %s %s %s %s]",
+         //       taskList[i].task_id, taskList[i].src, taskList[i].dest, taskList[i].percent, taskList[i].status, taskList[i].speed, taskList[i].execat, taskList[i].comment);
 
         QDomElement rowElement1 = doc.createElement("row");
         root.appendChild(rowElement1);
@@ -1178,10 +1178,19 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         rowElement1.appendChild(cellElement1);
         cellElement1.appendChild(doc.createTextNode(QString(taskList[i].src)));
 
-        /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
         QString dest = QString(taskList[i].dest);
-        dest.replace("/mnt/HD/HD_a2", "Volume_1");
-        dest.replace("/mnt/HD/HD_b2", "Volume_2");
+        QFile file("/etc/share_info");
+        if (file.open(QIODevice::ReadOnly))
+        {
+            QTextStream in(&file);
+            while (!in.atEnd())
+            {
+                QStringList list = in.readLine().split(":");
+                if (!list.isEmpty() && list.length() == 2)
+                    dest.replace(list.value(1), list.value(0));
+            }
+            file.close();
+        }
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
@@ -1300,17 +1309,32 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
     taskInfo.is_file = m_pReq->parameter("f_type").toInt() ? 0 : 1;
-    taskInfo.execat = m_pReq->parameter("f_at").toLocal8Bit().data();
-    taskInfo.login_id = m_pReq->parameter("f_login_user").toLocal8Bit().data();
-    taskInfo.src = m_pReq->parameter("f_URL").toLocal8Bit().data();
-    taskInfo.src_user = m_pReq->parameter("f_user").toLocal8Bit().data();
-    taskInfo.src_pwd = m_pReq->parameter("f_pwd").toLocal8Bit().data();
+    QByteArray execat = QUrl::fromPercentEncoding(m_pReq->parameter("f_at").toLocal8Bit()).toUtf8();
+    taskInfo.execat = execat.data();
+    QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
+    taskInfo.login_id = login_id.data();
+    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_URL").toLocal8Bit()).toUtf8();
+    taskInfo.src = src.data();
+    QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
+    taskInfo.src_user = src_user.data();
+    QByteArray src_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("f_pwd").toLocal8Bit()).toUtf8();
+    taskInfo.src_pwd = src_pwd.data();
 
-    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
-    QString dest = m_pReq->parameter("f_dir");
-    dest.replace("Volume_1", "/mnt/HD/HD_a2");
-    dest.replace("Volume_2", "/mnt/HD/HD_b2");
-    taskInfo.dest = dest.toLocal8Bit().data();
+    QString dest = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    QFile file("/etc/share_info");
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                dest.replace(list.value(0), list.value(1));
+        }
+        file.close();
+    }
+    QByteArray dest_b = dest.toUtf8();
+    taskInfo.dest = dest_b.data();
 
     taskInfo.dst_user = NULL;
     taskInfo.dst_pwd = NULL;
@@ -1330,12 +1354,29 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         taskInfo.recur_date = m_pReq->parameter("f_period_month").toInt();
 
     taskInfo.is_inc = 1;
-    taskInfo.rename = m_pReq->parameter("f_rename").toLocal8Bit().data();
-    taskInfo.charset = m_pReq->parameter("f_lang").toLocal8Bit().data();
+    QByteArray rename = QUrl::fromPercentEncoding(m_pReq->parameter("f_rename").toLocal8Bit()).toUtf8();
+    taskInfo.rename = rename.data();
+    QByteArray charset = m_pReq->parameter("f_lang").toUtf8();
+    taskInfo.charset = charset.data();
 
     char *taskId = NULL;
+    QByteArray taskId_b;
     if(!bAdd)
-        taskId = m_pReq->parameter("f_idx").toLocal8Bit().data();
+    {
+        taskId_b = m_pReq->parameter("f_idx").toUtf8();
+        taskId = taskId_b.data();
+    }
+    else
+    {
+        QDateTime curDatetime = QDateTime::currentDateTime();
+        taskInfo.task_id_date.year = curDatetime.date().year();
+        taskInfo.task_id_date.month = curDatetime.date().month();
+        taskInfo.task_id_date.day = curDatetime.date().day();
+        taskInfo.task_id_date.hour = curDatetime.time().hour();
+        taskInfo.task_id_date.min = curDatetime.time().minute();
+        taskInfo.task_id_date.sec = curDatetime.time().second();
+    }
+    taskInfo.comment = NULL;
     if(SaveTaskXml(taskInfo, &taskId) != RET_SUCCESS)
         tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
 
@@ -1391,10 +1432,19 @@ void RenderResponseAppMngm::generateLocalBackupInfo() {
     root.appendChild(srcElement);
     srcElement.appendChild(doc.createTextNode(QString(task.src)));
 
-    /* todo */
     QString dest = QString(task.src);
-    dest.replace("/mnt/HD/HD_a2", "Volume_1");
-    dest.replace("/mnt/HD/HD_b2", "Volume_2");
+    QFile file("/etc/share_info");
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                dest.replace(list.value(1), list.value(0));
+        }
+        file.close();
+    }
     QDomElement destElement = doc.createElement("dest");
     root.appendChild(destElement);
     destElement.appendChild(doc.createTextNode(dest));
@@ -1477,7 +1527,7 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     QDomDocument doc;
 
-    DOWNLOAD_TEST_RESULT *testResult = NULL;
+    DOWNLOAD_TEST_RESULT testResult;
     QString user = m_pReq->parameter("f_user");
     QString pwd = m_pReq->parameter("f_pwd");
 
@@ -1487,13 +1537,20 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     }
 
     /* Null user is anonymount. */
-    /* type ? */
-    RESULT_STATUS resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
-                                            user.isEmpty() ? NULL : user.toLocal8Bit().data(),
-                                            pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
-                                            m_pReq->parameter("f_lang").toLocal8Bit().data(),
-                                            m_pReq->parameter("f_src").toLocal8Bit().data(),
-                                            testResult);
+    RESULT_STATUS resultSatus;
+    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+        resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
+                                                user.isEmpty() ? NULL : user.toLocal8Bit().data(),
+                                                pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
+                                                m_pReq->parameter("f_lang").toLocal8Bit().data(),
+                                                m_pReq->parameter("f_src").toLocal8Bit().data(),
+                                                &testResult);
+    else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+        resultSatus = TestBackupTask(m_pReq->parameter("f_type").toInt(),
+                                                user.isEmpty() ? NULL : user.toLocal8Bit().data(),
+                                                pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
+                                                m_pReq->parameter("f_src").toLocal8Bit().data(),
+                                                &testResult);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1506,10 +1563,13 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     root.appendChild(spasswdElement);
     spasswdElement.appendChild(doc.createTextNode(pwd));
 
-    if(!m_pReq->parameter("f_lang").isEmpty()) {
-        QDomElement langElement = doc.createElement("f_lang");
-        root.appendChild(langElement);
-        langElement.appendChild(doc.createTextNode(m_pReq->parameter("f_lang")));
+    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+    {
+        if(!m_pReq->parameter("f_lang").isEmpty()) {
+            QDomElement langElement = doc.createElement("f_lang");
+            root.appendChild(langElement);
+            langElement.appendChild(doc.createTextNode(m_pReq->parameter("f_lang")));
+        }
     }
 
     QDomElement srcElement = doc.createElement("src");
@@ -1518,9 +1578,9 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     int result = -1;
     int size = -1;
-    if(testResult) {
-        result = testResult->result;
-        size = testResult->size;
+    if(testResult.result != -1) {
+        result = testResult.result;
+        size = testResult.size;
     }
 
     QDomElement resultElement = doc.createElement("result");
@@ -1807,7 +1867,8 @@ void RenderResponseAppMngm::generateSetSchedule() {
 
     REMOTE_BACKUP_INFO r_info;
     memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
-    r_info.task_name = m_pReq->parameter("task").toLocal8Bit().data();
+    QByteArray task_name = QUrl::fromPercentEncoding(m_pReq->parameter("task").toLocal8Bit()).toUtf8();
+    r_info.task_name = task_name.data();
     r_info.is_enable = 1;
     r_info.state = 1;
     r_info.server_type = m_pReq->parameter("s_type").toInt();
@@ -1817,31 +1878,83 @@ void RenderResponseAppMngm::generateSetSchedule() {
     r_info.is_keep_exist_file = m_pReq->parameter("keep_exist_file").toInt();
     r_info.is_inc_enable = m_pReq->parameter("incremental").toInt();
     r_info.inc_number = m_pReq->parameter("inc_num").toInt();
-    r_info.rsync_user = m_pReq->parameter("rsync_user").toLocal8Bit().data();
-    r_info.rsync_pwd = m_pReq->parameter("rsync_pw").toLocal8Bit().data();
-    r_info.ssh_user = m_pReq->parameter("ssh_user").toLocal8Bit().data();
-    r_info.ssh_pwd = m_pReq->parameter("ssh_pw").toLocal8Bit().data();
-    r_info.remote_ip = m_pReq->parameter("ip").toLocal8Bit().data();
-    r_info.remote_path = m_pReq->parameter("remote_path").toLocal8Bit().data();
+    QByteArray rsync_user = QUrl::fromPercentEncoding(m_pReq->parameter("rsync_user").toLocal8Bit()).toUtf8();
+    r_info.rsync_user = rsync_user.data();
+    QByteArray rsync_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("rsync_pw").toLocal8Bit()).toUtf8();
+    r_info.rsync_pwd = rsync_pwd.data();
+    QByteArray ssh_user = QUrl::fromPercentEncoding(m_pReq->parameter("ssh_user").toLocal8Bit()).toUtf8();
+    r_info.ssh_user = ssh_user.data();
+    QByteArray ssh_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("ssh_pw").toLocal8Bit()).toUtf8();
+    r_info.ssh_pwd = ssh_pwd.data();
+    QByteArray remote_ip = QUrl::fromPercentEncoding(m_pReq->parameter("ip").toLocal8Bit()).toUtf8();
+    r_info.remote_ip = remote_ip.data();
+    QByteArray remote_path = QUrl::fromPercentEncoding(m_pReq->parameter("remote_path").toLocal8Bit()).toUtf8();
+    r_info.remote_path = remote_path.data();
 
-    QString localPath = m_pReq->parameter("local_path");
-    localPath.replace("Volume_1", "/mnt/HD/HD_a2");
-    localPath.replace("Volume_2", "/mnt/HD/HD_b2");
-    r_info.local_path = localPath.toLocal8Bit().data();
+    QString localPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
+    QFile file("/etc/share_info");
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                localPath.replace(list.value(0), list.value(1));
+        }
+        file.close();
+    }
+    QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
+    r_info.local_path = local_path.data();
 
     //QDateTime execat = QDateTime::fromString(QString(taskList[i].execat), "yyyyMMddhhmm");
-    //    crond_type= 1 | 2 | 3 (int) //1->Monthly, 2-> Weekly 3-> (defualt)
+    //    crond_type= 1 | 2 | 3 (int) //1->Monthly, 2-> Weekly 3-> daily
     //    recur_type= 0~4(int) //0=none, 1=day, 2=week, 3=month if schedule_mode=3
     //    recur_date= 0~6 | 1~31 (int) //recur_type=2 -> 0~6=Sun, Mon, Tue, Wed, Thu, Fri, Sat . recur_type=3 -> 1~31
-
-    /* todo */
-    r_info.execat = "1230";
-    if(m_pReq->parameter("crond_type") == "1")
-        r_info.recur_type = 3;
+    QByteArray execat;
+    if (m_pReq->parameter("schedule_type") == "1")
+    {
+        r_info.recur_type = 0;
+        r_info.recur_date = 0;
+        execat = QString("").toUtf8();
+        r_info.execat = execat.data();
+        if (m_pReq->parameter("backup_now") == "1")
+        {
+            QDateTime curDatetime = QDateTime::currentDateTime();
+            curDatetime.time().addSecs(60 - curDatetime.time().second());
+        }
+    }
+    else if (m_pReq->parameter("schedule_type") == "2")
+    {
+        r_info.recur_type = 0;
+        r_info.recur_date = 0;
+        QDateTime curDatetime = QDateTime::currentDateTime();
+        curDatetime.date().setDate(curDatetime.date().year(), m_pReq->parameter("month").toInt(), m_pReq->parameter("day").toInt());
+        curDatetime.time().setHMS(m_pReq->parameter("hour").toInt(), m_pReq->parameter("minute").toInt(), 0);
+        execat = curDatetime.toString("yyyyMMddhhmm").toUtf8();
+        r_info.execat = execat.data();
+    }
     else
-        r_info.recur_type = 2;
-    r_info.recur_date = m_pReq->parameter("day").toInt();
-    SaveRemoteXml(r_info, 1);
+    {
+        if(m_pReq->parameter("crond_type") == "1")
+        {
+            r_info.recur_type = 3;
+            r_info.recur_date = m_pReq->parameter("day").toInt();
+        }
+        else if(m_pReq->parameter("crond_type") == "2")
+        {
+            r_info.recur_type = 2;
+            r_info.recur_date = m_pReq->parameter("weekly").toInt();
+        }
+        else
+        {
+            r_info.recur_type = 1;
+            r_info.recur_date = m_pReq->parameter("day").toInt();
+        }
+        execat = QString("%1%2").arg(m_pReq->parameter("hour")).arg(m_pReq->parameter("minute")).toUtf8();
+        r_info.execat = execat.data();
+    }
+    SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
 
     m_var = "N/A";
 

@@ -73,6 +73,7 @@ typedef struct
     int day;
     int hour;
     int min;
+    int sec;
 } DATE_S;
 
 typedef struct
@@ -224,6 +225,7 @@ RESULT_STATUS DeleteRemoteTaskXml(char *task_name);
 RESULT_STATUS UpdateRemoteXmlStatus(char *task_name, char *state, char *comment, char *enable);
 
 void GetRsyncSharePath(int *count, char ***name, char ***path); // return values(*name and *path) need free one by one
+void FreeRsyncSharePath(int count, char ***name, char ***path);
 //void GetRsyncSharePath(char *name, char **path); // return values(*path) need free
 void GetRemoteRsyncSharePath(char *ip, int *count, char ***path); // return values(*path) need free
 void GetLocalDeviceSizeString(char *path, char *exclude_file_path, char **size_string); // return values need free
@@ -237,7 +239,6 @@ void FreeRemoteList(REMOTE_LIST *list);
 
 int GetAllRemoteTaskName(char ***name_list);
 void FreeRemoteTaskName(int count, char ***name_list);
-void FreeRsyncSharePath(int count, char ***name, char ***path);
 
 void StartUSBTask();
 
