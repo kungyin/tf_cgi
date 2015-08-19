@@ -54,6 +54,8 @@ private:
     void generateLocalBackupRenew();
     void generateLocalBackupDel();
     void generateLocalBackupTest();
+    void generateLocalBackupStart();
+    void generateLocalBackupStop();
 
     void generateGetRsyncInfo();
     void generateSetRsyncServer();
