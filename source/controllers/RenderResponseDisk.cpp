@@ -626,7 +626,14 @@ void RenderResponseDisk::generateCheckDiskRemountState() {
 
 void RenderResponseDisk::generateScanDiskRunE2fsck() {
     QDomDocument doc;
-    QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -r", true);
+    QString paraDevice = m_pReq->allParameters().value("f_dev").toString();
+
+    if(!setNasCfg("scandisk", "scanned_volume", paraDevice))
+        tDebug("setNasCfg scandisk failed");
+    else
+        if(!QProcess::startDetached(API_PATH + SCRIPT_SCANDISK_API, QStringList() << "-r"))
+            ;
+
     QDomElement root = doc.createElement("script");
     doc.appendChild(root);
     root.appendChild(doc.createTextNode("location.href='/web/dsk_mgr/hd_scandisk_state.html'"));
