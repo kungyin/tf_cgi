@@ -1166,23 +1166,20 @@ void RenderResponseAppMngm::generateLocalBackupList() {
     int total = 0, pageCount = 0;
     int page = m_pReq->parameter("page").toInt();
     int rp = m_pReq->parameter("rp").toInt();
+    bool is_download = true;
+    if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+        is_download = false;
     memset(&taskList, 0, sizeof(DOWNLOAD_LIST*));
-    GetListXmlValue(0, page, rp, &total, &pageCount, &taskList);
+    GetListXmlValue((is_download)?1:0, page, rp, &total, &pageCount, &taskList);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
     for (int i = 0; i < pageCount; i++)
     {
-        QString arg1;
-        if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
-            arg1 = "downloads";
-        else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
-            arg1 = "localbackup";
-
-        if (arg1 == "downloads" && taskList[i].task_id[0] != '1')
+        if (is_download && taskList[i].task_id[0] != '1')
             continue;
-        if (arg1 == "localbackup" && taskList[i].task_id[0] != '0')
+        if (!is_download && taskList[i].task_id[0] != '0')
             continue;
         if (QString(taskList[i].status) == "2")
             UpdateTaskPercent(taskList[i].task_id);
@@ -1231,6 +1228,12 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);
         cellElement6.appendChild(doc.createTextNode(execat.toString("MM/dd/yy hh:mm")));
+
+        QString arg1;
+        if(is_download)
+            arg1 = "downloads";
+        else
+            arg1 = "localbackup";
 
         QString arg2 = "--";
         if (QString(taskList[i].status) == "0")
