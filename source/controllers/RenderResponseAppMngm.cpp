@@ -3,6 +3,7 @@
 #include "Databaseobject.h"
 
 #include <QDateTime>
+#include <QDir>
 #include <QFileInfo>
 
 
@@ -1326,7 +1327,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.execat = execat.data();
     QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
     taskInfo.login_id = login_id.data();
-    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_URL").toLocal8Bit()).toUtf8();
+    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit()).toUtf8();
     taskInfo.src = src.data();
     QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
     taskInfo.src_user = src_user.data();
@@ -1552,7 +1553,15 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     /* Null user is anonymount. */
     QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit()).toUtf8();
     QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
-    RESULT_STATUS resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
+    RESULT_STATUS resultSatus;
+    if (m_pReq->parameter("cmd").contains("Localbackup_"))
+        resultSatus = TestBackupTask(m_pReq->parameter("f_type").toInt(),
+                                                user.isEmpty() ? NULL : user.toLocal8Bit().data(),
+                                                pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
+                                                src.data(),
+                                                &testResult);
+    else
+        resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
                                                 user.isEmpty() ? NULL : user.toLocal8Bit().data(),
                                                 pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
                                                 lang.data(),
@@ -1639,6 +1648,32 @@ void RenderResponseAppMngm::generateGetRsyncInfo() {
 }
 
 void RenderResponseAppMngm::generateSetRsyncServer() {
+    if (m_pReq->parameter("f_onoff").toInt() == 1)
+    {
+        QFile::remove(RSYNC_SHARE_NODE);
+        QStringList dirSystempt = getAPIFileOut(SYSTEM_PT_FILE, false, "");
+        QDir dir(dirSystempt.value(0) + "/.systemfile/foldermount");
+        dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+        QFileInfoList fileList = dir.entryInfoList();
+        Q_FOREACH(QFileInfo fileInfo, fileList)
+        {
+            QStringList fileOut = getAPIFileOut(fileInfo.absoluteFilePath(), false, "");
+            Q_FOREACH(QString oneLine, fileOut)
+            {
+                QStringList lineList = oneLine.split("path=");
+                if (!lineList.isEmpty() && lineList.length() == 2)
+                {
+                    QFile file(RSYNC_SHARE_NODE);
+                    if (file.open(QIODevice::Append))
+                    {
+                        QTextStream out(&file);
+                        out << fileInfo.completeBaseName() << ":" << lineList.value(1)  <<  "\n";
+                        file.close();
+                    }
+                }
+            }
+    }
+    }
 
     RESULT_STATUS status = SetRsyncInfo(m_pReq->parameter("f_onoff").toInt(),
                                         m_pReq->parameter("f_password").toLocal8Bit().data());
@@ -1659,9 +1694,9 @@ void RenderResponseAppMngm::generateGetBackupList() {
     GetRemoteListXmlValue(paraPage.toInt(), paraRp.toInt(), &total, &pageCount, &taskList);
 
     QString cellcontent3 = "<img border='0' src='/web/images/%1.png' width='27'"
-            " height='17' onclick='onoff_job(\"task\",0)'>";
+            " height='17' onclick='onoff_job(\"%2\",%3)'>";
     QString cellcontent4 = "<img border='0' src='/web/images/backup.png' width='16'"
-            " height='16' onclick='backup_now(\"task\")'>";
+            " height='16' onclick='backup_now(\"%1\")'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -1673,7 +1708,8 @@ void RenderResponseAppMngm::generateGetBackupList() {
 
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(QString(taskList->task_name)));
+        QString task_name = QString(taskList->task_name);
+        cellElement1.appendChild(doc.createTextNode(task_name));
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
@@ -1686,11 +1722,12 @@ void RenderResponseAppMngm::generateGetBackupList() {
         /* what value is taskList->enable? */
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg(QString(taskList->enable))));
+        QString enable = QString(taskList->enable);
+        cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg((enable == "0")?"start":"stop", task_name, enable)));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createCDATASection(cellcontent4));
+        cellElement5.appendChild(doc.createCDATASection(cellcontent4.arg(task_name)));
 
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
