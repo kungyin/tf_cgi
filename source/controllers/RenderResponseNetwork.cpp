@@ -492,6 +492,8 @@ void RenderResponseNetwork::generateLLTD() {
         bSet = true;
     }
 
+    m_var = "../web/network_mgr/ip.html";
+
 }
 
 void RenderResponseNetwork::generateGetDdns() {

@@ -14,6 +14,9 @@ public:
     virtual void preRender();
 
     QList<TCookie> &getCookies() { return m_cookies; }
+    QStringList &getSession() { return m_session; }
+    QString &getUserLogout() { return m_userLogout; }
+
     //User &getUser() { return m_loginUser; }
 
 private:
@@ -29,6 +32,8 @@ private:
     void generateGetLogItem();
 
     QList<TCookie> m_cookies;
+    QStringList m_session;
+    QString m_userLogout;
     //User m_loginUser;
 
 };

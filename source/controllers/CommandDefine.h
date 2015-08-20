@@ -11,6 +11,7 @@ enum RENDER_TYPE {
     RENDER_TYPE_HTML,
     RENDER_TYPE_REDIRECT,
     RENDER_TYPE_USER_LOGIN,
+    RENDER_TYPE_USER_LOGOUT,
     RENDER_TYPE_FILE_REMOVE,
 };
 
@@ -1045,7 +1046,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_UI_CHECK_WTO,                 RENDER_TYPE_STRING,         LOGIN_CMDS          },          /* ui_check_wto */
     { CMD_FW_STATUS,                    RENDER_TYPE_STRING,         LOGIN_CMDS          },          /* cgi_get_fw_status */
     { CMD_LOGIN,                        RENDER_TYPE_USER_LOGIN,     LOGIN_CMDS          },          /* login */
-    { CMD_LOGOUT,                       RENDER_TYPE_REDIRECT,       LOGIN_CMDS          },          /* logout */
+    { CMD_LOGOUT,                       RENDER_TYPE_USER_LOGOUT,    LOGIN_CMDS          },          /* logout */
     { CMD_SET_USER_LANGUAGE,            RENDER_TYPE_XML,            LOGIN_CMDS          },          /* cgi_set_user_language */
     { CMD_GET_LOG_ITEM,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS     },          /* cgi_get_log_item */
 
@@ -1064,7 +1065,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_CHK_IPV6_ADDR,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_chk_ipv6_addr */
     { CMD_CHK_GW_ADDR,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_chk_gw_addr */
     { CMD_SPEED,                        RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_speed */
-    { CMD_LLTD,                         RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_lltd */
+    { CMD_LLTD,                         RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },          /* cgi_lltd */
     { CMD_GET_DDNS,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns */
     { CMD_GET_DDNS_STATUS,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_ddns_status */
     { CMD_DDNS,                         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_ddns */

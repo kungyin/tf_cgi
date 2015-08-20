@@ -185,6 +185,9 @@ void RenderResponseHome::generateLogin() {
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
         m_cookies.append(cookie);
+
+        m_session << paraUsername << "1";
+
         m_var = "../web/home.html?v=8401878";
     }
     else if(apiOut.value(0).compare("0") == 0){
@@ -206,7 +209,7 @@ void RenderResponseHome::generateLogout() {
     if(m_pReq->allParameters().contains("os"))
         paraOS = m_pReq->allParameters().value("os").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -s logout " + paraUsername, true);
+    m_userLogout = paraUsername;
     m_var = "..";
 
 }
