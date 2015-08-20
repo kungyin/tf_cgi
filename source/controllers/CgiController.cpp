@@ -147,12 +147,22 @@ void CgiController::cgiResponse() {
         QList<TCookie> cookies = pRrepHome->getCookies();
         for(auto e : cookies)
             addCookie(e);
+        QStringList s = pRrepHome->getSession();
+        if(!s.isEmpty())
+            session().insert(s.value(0), s.value(1));
         //User user = pRrepHome->getUser();
         //bool islogin = userLogin(&user);
         //tDebug("sss %d", islogin);
         redirect(QUrl(pRrep->getVar().toString()));
     }
         break;
+    case RENDER_TYPE_USER_LOGOUT:
+    {
+        RenderResponseHome *pRrepHome = qobject_cast<RenderResponseHome *>(pRrep);
+        session().remove(pRrepHome->getUserLogout());
+        redirect(QUrl(pRrep->getVar().toString()));
+        break;
+    }
     case RENDER_TYPE_FILE_REMOVE:
     {
         bool isSendOK = false;
@@ -272,8 +282,12 @@ bool CgiController::isValidClient() {
             }
         }
     }
-    else
-        bValidClient = true;
+    else {
+        for(TCookie c : httpRequest().cookies())
+            if(c.name() == "username")
+                if(session().value(c.value()).toString() == "1")
+                    bValidClient = true;
+    }
 
     return bValidClient;
 }
