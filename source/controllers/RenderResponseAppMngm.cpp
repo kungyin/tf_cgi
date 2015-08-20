@@ -1173,6 +1173,16 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
     for (int i = 0; i < pageCount; i++)
     {
+        QString arg1;
+        if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+            arg1 = "downloads";
+        else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+            arg1 = "localbackup";
+
+        if (arg1 == "downloads" && taskList[i].task_id[0] != '1')
+            continue;
+        if (arg1 == "localbackup" && taskList[i].task_id[0] != '0')
+            continue;
         if (QString(taskList[i].status) == "2")
             UpdateTaskPercent(taskList[i].task_id);
         //tDebug("DOWNLOAD_LIST[%s %s %s %s %s %s %s]",
@@ -1220,13 +1230,6 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);
         cellElement6.appendChild(doc.createTextNode(execat.toString("MM/dd/yy hh:mm")));
-
-
-        QString arg1;
-        if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
-            arg1 = "downloads";
-        else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
-            arg1 = "localbackup";
 
         QString arg2 = "--";
         if (QString(taskList[i].status) == "0")
@@ -1312,9 +1315,9 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     QString paraLoginMethod = m_pReq->parameter("f_login_method");
     DOWNLOAD_TASK_INFO taskInfo;
 
-    taskInfo.is_download = 0;
-    if(m_pReq->parameter("f_downloadtype") == "0")
-        taskInfo.is_download = 1;
+    taskInfo.is_download = 1;
+    if(m_pReq->parameter("cmd").contains("Local_Backup_"))
+        taskInfo.is_download = 0;
 
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
