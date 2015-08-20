@@ -48,6 +48,7 @@ private:
     void generateDelIsoShare();
     void generateChkImgName();
     void generateChkHDSize();
+    void generateIsoConfig();
     void generateIsoCreatePath();
     void generateIsoSize();
     void generateIsoCreateImage();

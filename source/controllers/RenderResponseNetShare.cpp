@@ -117,6 +117,9 @@ void RenderResponseNetShare::preRender() {
     case CMD_CHK_HD_SIZE:
         generateChkHDSize();
         break;
+    case CMD_ISO_CONFIG:
+        generateIsoConfig();
+        break;
     case CMD_ISO_CREATE_PATH:
         generateIsoCreatePath();
         break;
@@ -926,43 +929,35 @@ void RenderResponseNetShare::generateGetIsoShareDetail() {
     QDomDocument doc;
 
     QString paraName = m_pReq->allParameters().value("name").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_detail_info " + paraName, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_detail_info " + paraName, true, ";");
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
 
-//    QStringList deviceInfoContentElement(QStringList()
-//            << "name" << "comment" << "path" << "read_list" << "invalid_users");
+    QString contentReadList = "<b>%1</b><br>%2";
+    QString contentInvalidUsers = "<b>%1</b><br>%2";
 
-//    if( deviceInfoContentElement.size() == apiOut.size() ) {
-//        for(int i = 0; i < apiOut.size(); i++) {
-//            QDomElement element = doc.createElement(deviceInfoContentElement.value(i));
-//            root.appendChild(element);
-//            element.appendChild(doc.createTextNode(apiOut.value(i)));
-//        }
-//    }
-//    else {
-//        //assert(0);
-//        tError("RenderResponseNetShare::generateGetIsoShareDetail() :"
-//               "deviceInfoContentElement size is not equal to apiOut size.");
-//    }
+    QStringList isoMountTags(QStringList()
+            << "name" << "comment" << "path" << "read_list" << "invalid_users");
 
+    if( isoMountTags.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QString value = apiOut.value(i);
+            if(i == 3 && value != "ALL")
+                value = contentReadList.arg(value.split(";").value(0), value.split(";").value(1));
+            if(i == 4 && value != "-")
+                value = contentInvalidUsers.arg(value.split(";").value(0), value.split(";").value(1));
+            QDomElement element = doc.createElement(isoMountTags.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createCDATASection(value));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseNetShare::generateGetIsoShareDetail() :"
+               "isoMountTags size is not equal to apiOut size.");
+    }
 
-//    QDomElement nameElement = doc.createElement("name");
-//    root.appendChild(nameElement);
-//    nameElement.appendChild(doc.createTextNode("uu"));
-//    QDomElement commentElement = doc.createElement("comment");
-//    root.appendChild(commentElement);
-//    commentElement.appendChild(doc.createTextNode(""));
-//    QDomElement pathElement = doc.createElement("path");
-//    root.appendChild(pathElement);
-//    pathElement.appendChild(doc.createTextNode("Volume_1/dddd.iso"));
-//    QDomElement readListElement = doc.createElement("read_list");
-//    root.appendChild(readListElement);
-//    readListElement.appendChild(doc.createTextNode("ALL"));
-//    QDomElement invalidUsersElement = doc.createElement("invalid_users");
-//    root.appendChild(invalidUsersElement);
-//    invalidUsersElement.appendChild(doc.createTextNode(" - "));
     m_var = doc.toString();
 
 }
@@ -1004,92 +999,112 @@ void RenderResponseNetShare::generateGetModifyIsoInfo() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " oooo ", true);
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_modify_iso_info " + paraName, true, ";");
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
 
+    QStringList isoMountTags(QStringList()
+            << "comment" << "path" << "read_list" << "invalid_users" << "ftp" << "nfs"
+            << "nfs_host" << "webdav");
 
+    /* <nfs_host> */
+    if(apiOut.size() == 7)
+        apiOut.insert(6, "");
 
-    QDomElement commentElement = doc.createElement("comment");
-    root.appendChild(commentElement);
-    commentElement.appendChild(doc.createTextNode("ddd"));
-
-    QDomElement pathElement = doc.createElement("path");
-    root.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/dddd.iso"));
-
-    QDomElement readListElement = doc.createElement("read_list");
-    root.appendChild(readListElement);
-    readListElement.appendChild(doc.createTextNode("#jerry#"));
-
-    QDomElement invalidUsersElement = doc.createElement("invalid_users");
-    root.appendChild(invalidUsersElement);
-    invalidUsersElement.appendChild(doc.createTextNode("#@staff#"));
-
-    QDomElement ftpElement = doc.createElement("ftp");
-    root.appendChild(ftpElement);
-    ftpElement.appendChild(doc.createTextNode("1"));
-
-    QDomElement nfsElement = doc.createElement("nfs");
-    root.appendChild(nfsElement);
-    nfsElement.appendChild(doc.createTextNode("1"));
-
-    QDomElement nfsHostElement = doc.createElement("nfs_host");
-    root.appendChild(nfsHostElement);
-    nfsHostElement.appendChild(doc.createTextNode("acc"));
-
-    QDomElement webdavElement = doc.createElement("webdav");
-    root.appendChild(webdavElement);
-    webdavElement.appendChild(doc.createTextNode("1"));
+    if( isoMountTags.size() == apiOut.size()) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QString value = apiOut.value(i);
+            /* for nfs_host */
+            if(i == 6 && value.isEmpty())
+                continue;
+            QDomElement element = doc.createElement(isoMountTags.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(value));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseNetShare::generateGetModifyIsoInfo() :"
+               "isoMountTags size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateModifyIsoShare() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_modify_iso_share " + allParametersToString(), true);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateDelIsoShare() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_del_iso_share " + allParametersToString(), true);
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode("0"));
+    root.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateChkImgName() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    m_var = "0";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_chk_iso_name " + allParametersToString(), true);
+    m_var = apiOut.value(0);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateChkHDSize() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    m_var = "ok";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_chk_hdd_size " + allParametersToString(), true);
+    m_var = apiOut.value(0);
 }
 
-/* todo: need API */
+void RenderResponseNetShare::generateIsoConfig() {
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_set_iso_config " + allParametersToString(), true, ";");
+
+    QStringList isoMountTags(QStringList() << "status" << "name" << "path");
+
+    QDomElement root = doc.createElement("iso");
+    doc.appendChild(root);
+
+    if( isoMountTags.size() == apiOut.size()) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(isoMountTags.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseNetShare::generateIsoConfig() :"
+               "isoMountTags size is not equal to apiOut size.");
+    }
+
+    m_var = doc.toString();
+}
+
 void RenderResponseNetShare::generateIsoCreatePath() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_create_iso_path " + allParametersToString(), true);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateIsoSize() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
-    m_var = "874.0k";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_get_iso_use_size " + allParametersToString(), true);
+    m_var = apiOut.value(0);
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateIsoCreateImage() {
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_iso_create_image " + allParametersToString(), true);
 }

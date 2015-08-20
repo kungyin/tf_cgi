@@ -12,3 +12,5 @@
 [ $1 == 'userset' ] && echo -e "1"
 [ $1 == 'groupset' ] && echo -e "1"
 [ $1 == 'enable' ] && echo -e "1"
+[ $1 == 'get_group_quota_minsize' ] && echo -e "102400:0:0:0"
+[ $1 == 'get_user_quota_maxsize' ] && echo -e "2047056"

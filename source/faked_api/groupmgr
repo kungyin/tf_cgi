@@ -1,0 +1,8 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+[ $1 == 'get_group_list' ] && echo -e "abc;aaa,qqq,eee" && echo -e "ass;sss" && echo -e "ass;dfr"
+[ $1 == 'get_group_info' ] && echo -e "Volume_1,Volume_2;2;a5#a2#user1#user2#user3;newgroup#group1;2;1875272,1875272"
+[ $1 == 'modify_group_info' ] && echo -e "user1#user2#user3;2;2814059,1875257;Volume_1,0#Volume_2,0;Volume_1,w#Volume_2,r;1;Volume_1:RO#Volume_1:RW"

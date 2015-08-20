@@ -12,3 +12,4 @@
 [ $1 == 'modify' ] && echo -e "1"
 [ $1 == 'del' ] && echo -e "1"
 [ $1 == 'session' ] && echo -e "Volume_1;/mnt/HD/HD_a2" && echo -e "Volume_2;/mnt/HD/HD_b2"
+[ $1 == 'get_import_user' ] && echo -e "user2/000000/group1:group3/Volume_1///0:0:0:0" && echo -e "user4/123456/test1/Volume_1///0:0:0:0"

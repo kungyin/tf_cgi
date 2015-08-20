@@ -564,12 +564,15 @@ void RenderResponseAccount::generateGetAllSession() {
 void RenderResponseAccount::generateGetImportUsers() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " get_import_user", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " get_import_user");
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
-    itemElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    for(QString e : apiOut) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        itemElement.appendChild(doc.createTextNode(e));
+    }
 
     m_var = doc.toString();
 
@@ -700,13 +703,11 @@ void RenderResponseAccount::generateGroupAdd() {
 void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize() {
     QDomDocument doc;
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " get_group_quota_minsize " + paraName, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " get_group_quota_minsize " + paraName, true);
 
-    QDomElement root = doc.createElement("group_info");
+    QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
 
-    QDomElement memberElement = doc.createElement("member");
-    root.appendChild(memberElement);
     QDomElement minSizeElement = doc.createElement("min_size");
     root.appendChild(minSizeElement);
     minSizeElement.appendChild(doc.createTextNode(apiOut.value(0)));
@@ -728,7 +729,7 @@ void RenderResponseAccount::generateGroupSetQuota() {
 void RenderResponseAccount::generateGetModifyGroupInfo() {
     QDomDocument doc;
     QString paraGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group").toByteArray());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " modify_group_info " + paraGroup, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " modify_group_info " + paraGroup, true, ";");
 
     QDomElement root = doc.createElement("group_info");
     doc.appendChild(root);
@@ -739,36 +740,38 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
     if( infoTagNames.size() == apiOut.size() ) {
         for(int i = 0; i < apiOut.size(); i++) {
             if(i == 3) { //quota
-                QDomElement element = doc.createElement(infoTagNames.value(i));
-                root.appendChild(element);
-                QStringList quotaTagNames(QStringList()
-                    << "v_name" << "size");
-
-                for(int j = 0; j < apiOut.value(i).split(",").size(); j++) {
-                    QDomElement quotaElement = doc.createElement(quotaTagNames.value(j));
-                    element.appendChild(quotaElement);
-                    quotaElement.appendChild(doc.createTextNode(apiOut.value(i).split(",").value(j)));
+                for(int j = 0; j < apiOut.value(i).split("#").size(); j++) {
+                    QDomElement element = doc.createElement(infoTagNames.value(i));
+                    root.appendChild(element);
+                    QStringList quotaTagNames(QStringList()
+                        << "v_name" << "size");
+                    QString value = apiOut.value(i).split("#").value(j);
+                    for(int k = 0; k < value.split(",").size(); k++) {
+                        QDomElement quotaElement = doc.createElement(quotaTagNames.value(k));
+                        element.appendChild(quotaElement);
+                        quotaElement.appendChild(doc.createTextNode(value.split(",").value(k)));
+                    }
                 }
             }
             else if(i == 4) { //smb_info
-                QDomElement element = doc.createElement(infoTagNames.value(i));
-                root.appendChild(element);
-                QStringList smbTagNames(QStringList()
-                    << "share_name" << "privileges");
-
-                for(int j = 0; j < apiOut.value(i).split(",").size(); j++) {
-                    QDomElement itemElement = doc.createElement("item");
-                    element.appendChild(itemElement);
-                    QDomElement smbElement = doc.createElement(smbTagNames.value(j));
-                    itemElement.appendChild(smbElement);
-                    smbElement.appendChild(doc.createTextNode(apiOut.value(i).split(",").value(j)));
+                for(int j = 0; j < apiOut.value(i).split("#").size(); j++) {
+                    QDomElement element = doc.createElement(infoTagNames.value(i));
+                    root.appendChild(element);
+                    QStringList smbTagNames(QStringList()
+                        << "share_name" << "privileges");
+                    QString value = apiOut.value(i).split("#").value(j);
+                    for(int k = 0; k < value.split(",").size(); k++) {
+                        QDomElement smbElement = doc.createElement(smbTagNames.value(k));
+                        element.appendChild(smbElement);
+                        smbElement.appendChild(doc.createTextNode(value.split(",").value(k)));
+                    }
                 }
             }
-            if(i == 6) { //webdav_info
+            else if(i == 6) { //webdav_info
                 QDomElement element = doc.createElement(infoTagNames.value(i));
                 root.appendChild(element);
 
-                for(QString e : apiOut.value(i).split(",")) {
+                for(QString e : apiOut.value(i).split("#")) {
                     QDomElement webdavElement = doc.createElement("item");
                     element.appendChild(webdavElement);
                     webdavElement.appendChild(doc.createTextNode(e));

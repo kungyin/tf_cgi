@@ -1,0 +1,2 @@
+#user name/user password/user groups/ shared folder(rw)/ shared folder(ro)/ shared folder(deny)/user quota
+#user/pw/g1:g2/folder1:folder2/folder3:folder4/folder5:folder6/0:0:0:0

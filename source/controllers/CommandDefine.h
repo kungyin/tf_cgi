@@ -179,6 +179,7 @@ enum CGI_COMMAND {
     CMD_DEL_ISO_SHARE,                      /* cgi_del_iso_share */
     CMD_CHK_IMG_NAME,                       /* cgi_chk_img_name */
     CMD_CHK_HD_SIZE,                        /* cgi_chk_hd_size */
+    CMD_ISO_CONFIG,                         /* cgi_iso_config */
     CMD_ISO_CREATE_PATH,                    /* cgi_iso_create_path */
     CMD_ISO_SIZE,                           /* cgi_iso_size */
     //CMD_DEL,                                /* cgi_del */
@@ -668,6 +669,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_del_iso_share",
     "cgi_chk_img_name",
     "cgi_chk_hd_size",
+    "cgi_iso_config",
     "cgi_iso_create_path",
     "cgi_iso_size",
     //"cgi_del",
@@ -1103,7 +1105,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_IMPORT_USERS,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_import_uesrs */
     { CMD_ADDUSER_GET_USER_QUOTA_MAXSIZE, RENDER_TYPE_XML,          COOKIE_REQ_CMDS      },          /* cgi_adduser_get_user_quota_maxsize */
     { CMD_CREATE_IMPORT_USERS,          RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_create_import_users */
-    { CMD_GET_CREATE_STATUS,            RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },          /* cgi_get_create_status */
+    { CMD_GET_CREATE_STATUS,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_create_status */
 
     /**** Group ****/
     { CMD_GET_GROUP_LIST,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_get_group_list */
@@ -1166,6 +1168,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_DEL_ISO_SHARE,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del_iso_share */
     { CMD_CHK_IMG_NAME,                 RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_img_name */
     { CMD_CHK_HD_SIZE,                  RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_chk_hd_size */
+    { CMD_ISO_CONFIG,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_iso_config */
     { CMD_ISO_CREATE_PATH,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_iso_create_path */
     { CMD_ISO_SIZE,                     RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_iso_size */
     //{ CMD_DEL,                          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_del */
