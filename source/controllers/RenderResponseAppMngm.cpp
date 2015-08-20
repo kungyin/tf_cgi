@@ -1194,7 +1194,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         cellElement1.appendChild(doc.createTextNode(QString(taskList[i].src)));
 
         QString dest = QString(taskList[i].dest);
-        QFile file("/etc/share_info");
+        QFile file(SHARE_INFO_FILE);
         if (file.open(QIODevice::ReadOnly))
         {
             QTextStream in(&file);
@@ -1338,7 +1338,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.src_pwd = src_pwd.data();
 
     QString dest = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
-    QFile file("/etc/share_info");
+    QFile file(SHARE_INFO_FILE);
     if (file.open(QIODevice::ReadOnly))
     {
         QTextStream in(&file);
@@ -1450,7 +1450,7 @@ void RenderResponseAppMngm::generateLocalBackupInfo() {
     srcElement.appendChild(doc.createTextNode(QString(task.src)));
 
     QString dest = QString(task.dest);
-    QFile file("/etc/share_info");
+    QFile file(SHARE_INFO_FILE);
     if (file.open(QIODevice::ReadOnly))
     {
         QTextStream in(&file);
@@ -1944,7 +1944,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     r_info.remote_path = remote_path.data();
 
     QString localPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
-    QFile file("/etc/share_info");
+    QFile file(SHARE_INFO_FILE);
     if (file.open(QIODevice::ReadOnly))
     {
         QTextStream in(&file);
