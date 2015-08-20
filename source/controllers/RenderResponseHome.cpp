@@ -56,9 +56,9 @@ void RenderResponseHome::generateIsBuildInLanguage() {
     QDomElement root = doc.createElement("flag");
     doc.appendChild(root);
 
-    QStringList val = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g build_in_language", true);
+    QStringList val = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api build_in_language");
 
-    root.appendChild(doc.createTextNode(val.isEmpty() ? "" : val.at(0)));
+    root.appendChild(doc.createTextNode(val.value(0)));
     m_var = doc.toString();
 
 }
@@ -81,19 +81,18 @@ void RenderResponseHome::generateGetUserLanguage() {
 
     QDomDocument doc;
 
-    QMap<QString, QString> webInfo = getNasCfg("web");
-    QString ret = webInfo.value("language").isEmpty() ? "" : QString("%1,%1.xml").arg(webInfo.value("language"));
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_user_language", true, ";");
 
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode(ret));
+    root.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
 void RenderResponseHome::generateGetSslInfo() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api ssl_info", true);
 
     QDomElement root = doc.createElement("ssl_info");
     doc.appendChild(root);
@@ -113,7 +112,7 @@ void RenderResponseHome::generateUICheckWto() {
 }
 
 void RenderResponseHome::generateFWStatus() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_fw_status", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
     m_var = apiOut.value(0);
 }
 
@@ -147,7 +146,8 @@ void RenderResponseHome::generateLogin() {
     if(m_pReq->allParameters().contains("ssl_port"))
         paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g login " + paraUsername + " " + paraPwd, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api login#" +
+                                      allParametersToString(), true);
 
     QMap<QString, QString> map;
     map.insert("ssl_enable", paraSsl);
@@ -187,6 +187,9 @@ void RenderResponseHome::generateLogin() {
     }
     else if(apiOut.value(0).compare("0") == 0){
         m_var = "../web/relogin.html";
+    }
+    else if(apiOut.value(0).compare("2") == 0){
+        m_var = "../web/set_passwd.html";
     }
 
 }
