@@ -15,7 +15,7 @@ const QString SCRIPT_GET_IP         =   "GetIP";
 const QString SCRIPT_QUOTA_MGR      =   "quotamgr";
 const QString SCRIPT_AFP_API        =   "sysapi_afp";
 const QString SCRIPT_NFS_API        =   "nfsctl";
-const QString SCRIPT_FTP_API        =   "appapi_ftp";
+const QString SCRIPT_FTP_API        =   "ftpctl";
 const QString SCRIPT_FTP_API2       =   "sysapi_ftp";
 const QString SCRIPT_SERVICE_API    =   "sysapi_service";
 const QString SCRIPT_SMB_API        =   "sysapi_smb";
@@ -39,6 +39,7 @@ const QString SCRIPT_FW_UPGRADE_MGR =   "ccFwupgrade";
 const QString SCRIPT_AFP_CTL        =   "afpctl";
 const QString SCRIPT_SSH_CTL        =   "sshctl";
 const QString SCRIPT_TUXERA_API     =   "tuxera";
+const QString SCRIPT_GROUP_MANAGER  =   "groupmgr";
 const QString SCRIPT_START_REMOTE_BACKUP = "StartRemoteBackup";
 
 #ifndef SIMULATOR_MODE
@@ -51,8 +52,10 @@ const QString FIRMWARE_FILE = "/mnt/HD_a4/genius_fw.bin";
 const QString FIRMWARE_PERCENTAGE_FILE = "/tmp/.fw_percentage";
 const QString FIRMWARE_VERIFY_STATUS_FILE = "/tmp/.verify_status";
 const QString FIRMWARE_RESULT_FILE = "/tmp/.fw_result";
+const QString DWONLOAD_USER_IMPORT_FILE = "/var/www/web/account_mgr/import_file.txt";
 const QString SENDOUT_LOGFILE = "/tmp/log.txt";
 const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
+const QString SHARE_INFO_FILE = "/etc/share_info";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
 
@@ -66,8 +69,10 @@ const QString FIRMWARE_FILE = API_PATH + "genius_fw.bin";
 const QString FIRMWARE_PERCENTAGE_FILE = API_PATH + ".fw_percentage";
 const QString FIRMWARE_VERIFY_STATUS_FILE = API_PATH + ".verify_status";
 const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
+const QString DWONLOAD_USER_IMPORT_FILE = API_PATH + "import_file.txt";
 const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
 const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
+const QString SHARE_INFO_FILE = API_PATH + "usbshare_info";
 
 #endif
 

@@ -23,7 +23,7 @@ protected:
     bool setNasCfg(QString, QMap<QString, QString> &);
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
-    QString allParametersToString();
+    QString allParametersToString(QString before = QString::null, QString after = QString::null);
     QString sizeHuman(qint64);
 
     inline int getTotalPages(int, int);
