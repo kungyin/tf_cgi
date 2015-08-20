@@ -106,9 +106,11 @@ void RenderResponseHome::generateGetSslInfo() {
 
 }
 
+/* to do - jerry for ian */
 void RenderResponseHome::generateUICheckWto() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto", true);
-    m_var = apiOut.isEmpty() ? "fail" : apiOut.at(0);
+    m_var = "success";
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto", true);
+    //m_var = apiOut.isEmpty() ? "fail" : apiOut.at(0);
 }
 
 void RenderResponseHome::generateFWStatus() {
