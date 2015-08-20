@@ -1147,7 +1147,7 @@ QString RenderResponseAppMngm::getIcon(QString status) {
     else if(status == "4")
         ret = img.arg("status_fail");
     else if(status == "5")
-        ret = img.arg("icon_stop");
+        ret = img.arg("Icon_stop");
 
     return ret;
 }
@@ -1173,7 +1173,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
     for (int i = 0; i < pageCount; i++)
     {
-        if (QString(taskList[i].status) != "0")
+        if (QString(taskList[i].status) == "2")
             UpdateTaskPercent(taskList[i].task_id);
         //tDebug("DOWNLOAD_LIST[%s %s %s %s %s %s %s]",
          //       taskList[i].task_id, taskList[i].src, taskList[i].dest, taskList[i].percent, taskList[i].status, taskList[i].speed, taskList[i].execat, taskList[i].comment);
@@ -1312,11 +1312,9 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     QString paraLoginMethod = m_pReq->parameter("f_login_method");
     DOWNLOAD_TASK_INFO taskInfo;
 
-    taskInfo.is_download = 1;
-    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
+    taskInfo.is_download = 0;
+    if(m_pReq->parameter("f_downloadtype") == "0")
         taskInfo.is_download = 1;
-    else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
-        taskInfo.is_download = 0;
 
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
@@ -1549,19 +1547,13 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     }
 
     /* Null user is anonymount. */
-    RESULT_STATUS resultSatus;
-    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
-        resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
+    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit()).toUtf8();
+    QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
+    RESULT_STATUS resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
                                                 user.isEmpty() ? NULL : user.toLocal8Bit().data(),
                                                 pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
-                                                m_pReq->parameter("f_lang").toLocal8Bit().data(),
-                                                m_pReq->parameter("f_src").toLocal8Bit().data(),
-                                                &testResult);
-    else if(m_pReq->parameter("cmd").contains("Local_Backup_"))
-        resultSatus = TestBackupTask(m_pReq->parameter("f_type").toInt(),
-                                                user.isEmpty() ? NULL : user.toLocal8Bit().data(),
-                                                pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
-                                                m_pReq->parameter("f_src").toLocal8Bit().data(),
+                                                lang.data(),
+                                                src.data(),
                                                 &testResult);
 
     QDomElement root = doc.createElement("config");
@@ -1575,13 +1567,10 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     root.appendChild(spasswdElement);
     spasswdElement.appendChild(doc.createTextNode(pwd));
 
-    if(m_pReq->parameter("cmd").contains("Downloads_Schedule_"))
-    {
-        if(!m_pReq->parameter("f_lang").isEmpty()) {
-            QDomElement langElement = doc.createElement("f_lang");
-            root.appendChild(langElement);
-            langElement.appendChild(doc.createTextNode(m_pReq->parameter("f_lang")));
-        }
+    if(!m_pReq->parameter("f_lang").isEmpty()) {
+        QDomElement langElement = doc.createElement("f_lang");
+        root.appendChild(langElement);
+        langElement.appendChild(doc.createTextNode(m_pReq->parameter("f_lang")));
     }
 
     QDomElement srcElement = doc.createElement("src");
@@ -1852,26 +1841,26 @@ void RenderResponseAppMngm::generateServerTest() {
 void RenderResponseAppMngm::generateCheckRsyncRw() {
     QDomDocument doc;
 
-    QString paraIp = m_pReq->parameter("ip");
+    QByteArray paraIp = m_pReq->parameter("ip").toLocal8Bit();
     QString paraType = m_pReq->parameter("s_type");
     QString paraDirection = m_pReq->parameter("direction");
-    QString paraTask = m_pReq->parameter("task");
+    QByteArray paraTask = m_pReq->parameter("task").toLocal8Bit();
     QString paraKeepExistFile = m_pReq->parameter("keep_exist_file");
-    QString paraLocalPath = m_pReq->parameter("local_path");
-    QString paraIncremental = m_pReq->parameter("incremental");
+    QByteArray paraLocalPath = m_pReq->parameter("local_path").toLocal8Bit();
+    QByteArray paraIncremental = m_pReq->parameter("incremental").toLocal8Bit();
     QString paraEncryption = m_pReq->parameter("encryption");
-    QString paraRsyncUser = m_pReq->parameter("rsync_user");
-    QString paraRsyncPw = m_pReq->parameter("rsync_pw");
-    QString paraSshUser = m_pReq->parameter("ssh_user");
-    QString paraSshPw = m_pReq->parameter("ssh_pw");
-    QString paraIncNum = m_pReq->parameter("inc_num");
-    QString paraRemotePath = m_pReq->parameter("remote_path");
+    QByteArray paraRsyncUser = m_pReq->parameter("rsync_user").toLocal8Bit();
+    QByteArray paraRsyncPw = m_pReq->parameter("rsync_pw").toLocal8Bit();
+    QByteArray paraSshUser = m_pReq->parameter("ssh_user").toLocal8Bit();
+    QByteArray paraSshPw = m_pReq->parameter("ssh_pw").toLocal8Bit();
+    QByteArray paraIncNum = m_pReq->parameter("inc_num").toLocal8Bit();
+    QByteArray paraRemotePath = m_pReq->parameter("remote_path").toLocal8Bit();
 
-    int rsyncRet = TestRsyncConnect(paraIp.toLocal8Bit().data(), paraType.toInt(), paraDirection.toInt(),
-                                    paraTask.toLocal8Bit().data(), paraLocalPath.toLocal8Bit().data(),
+    int rsyncRet = TestRsyncConnect(paraIp.data(), paraType.toInt(), paraDirection.toInt(),
+                                    paraTask.data(), paraLocalPath.data(),
                                     paraEncryption.toInt(), paraKeepExistFile.toInt(),
-                                    paraRsyncUser.toLocal8Bit().data(), paraRsyncPw.toLocal8Bit().data(),
-                                    paraSshUser.toLocal8Bit().data(), paraSshPw.toLocal8Bit().data());
+                                    paraRsyncUser.data(), paraRsyncPw.data(),
+                                    paraSshUser.data(), paraSshPw.data());
 
     QDomElement root = doc.createElement("rsync_info");
     doc.appendChild(root);
