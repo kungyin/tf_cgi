@@ -102,6 +102,7 @@
 [ $1 == 'service_iso_modify_iso_info' ] && echo -e "ddd;/mnt/HD/HD_a2/dddd.iso;#jerry#,#test#;#@staff#;1;1;aaa;1"
 [ $1 == 'service_iso_set_iso_config' ] && echo -e "ok;MyISO;/mnt/HD/HD_a2/.systemfile/isodata/48ee0c2343d4_20150709041749"
 [ $1 == 'system_user_set_user_add_session' ] && echo -e "1"
+[ $1 == 'service_get_s3_info' ] && echo -e "sssss;Manual;Ready;1;1;1;1" && echo -e "ffff;5/6 06:08;Ready;0;1;0;1" && echo -e "aaa; 00:04 Daily;Error;0;1;0;1"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"

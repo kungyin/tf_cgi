@@ -52,7 +52,6 @@ void RenderResponseS3::preRender() {
 
 }
 
-/* todo */
 void RenderResponseS3::generateGetS3() {
     QDomDocument doc;
     QString paraPage = m_pReq->parameter("page");
@@ -62,42 +61,71 @@ void RenderResponseS3::generateGetS3() {
     QString paraField = m_pReq->parameter("f_field");
     QString paraUser = m_pReq->parameter("user");
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_info");
 
     QString cellContent0 = "<span style='display:none'>%1</span><span>%2</span>";
-    QString cellContent3 = "<img border='0' src='/web/images/stop.png' width='27' height='17' onclick='parent.action_stop(\"%1\")'>";
-    QString cellContent4 = "<img border='0' src='/web/images/backup.png' width='16' height='16' onclick='parent.backup_now(\"%1\")'>";
-
+    QString cellContent3 = "<img border='0' src='/web/images/%1.png' width='27' height='17' onclick='parent.action_stop(\"%2\")'>";
+    QString cellContent4 = "<img border='0' src='/web/images/%1.png' width='16' height='16' onclick='parent.backup_now(\"%2\")'>";
+    QString cellContent5 = "<img border='0' src='/web/images/%1.png' width='16' height='16' onclick='parent.s3_reload(\"%2\")'>";
+    QString cellContent6 = "<img border='0' src='/web/images/%1.png' width='16' height='16' onclick='parent.s3_open(\"%2\")'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
-//    for(int i=0; i < apiOut.size(); i++) {
 
-//        QDomElement rowElement = doc.createElement("row");
-//        root.appendChild(rowElement);
+    QStringList userInfoList(apiOut);
+    int rp = paraRp.toInt();
+    if(userInfoList.size() > rp)
+        userInfoList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
 
-//        QDomElement cellElement1 = doc.createElement("cell");
-//        rowElement.appendChild(cellElement1);
-//        cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
-
-//        QDomElement cellElement2 = doc.createElement("cell");
-//        rowElement.appendChild(cellElement2);
-//        cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(0)));
-
-//        QDomElement cellElement3 = doc.createElement("cell");
-//        rowElement.appendChild(cellElement3);
-//        cellElement3.appendChild(doc.createCDATASection(cellContent1.arg(apiOut.value(i).split(";").value(1))));
-
-//        QDomElement cellElement4 = doc.createElement("cell");
-//        rowElement.appendChild(cellElement4);
-//        cellElement4.appendChild(doc.createCDATASection(cellContent2));
-
-//        QDomElement cellElement5 = doc.createElement("cell");
-//        rowElement.appendChild(cellElement5);
-//        cellElement5.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
-
-//        rowElement.setAttribute("id", i+1);
-//    }
+    for(QString e : userInfoList) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        for(int i = 0; i < e.split(";").size(); i++) {
+            if(i == 0) {
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createCDATASection(cellContent0.arg(QString::number(i+1), e.split(";").value(i))));
+            }
+            else if(i == 3) {
+                QString image = e.split(";").value(i) == "1" ? "stop" : "start";
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createCDATASection(cellContent3.arg(image, e.split(";").value(0))));
+            }
+            else if(i == 4) {
+                QString image = "backup";
+                QString content = "--";
+                if(e.split(";").value(i) == "1")
+                    content = cellContent4.arg(image, e.split(";").value(0));
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createCDATASection(content));
+            }
+            else if(i == 5) {
+                QString image = "restore";
+                QString content = "--";
+                if(e.split(";").value(i) == "1")
+                    content = cellContent5.arg(image, e.split(";").value(0));
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createCDATASection(content));
+            }
+            else if(i == 6) {
+                QString image = "detail";
+                QString content = "--";
+                if(e.split(";").value(i) == "1")
+                    content = cellContent6.arg(image, e.split(";").value(0));
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createCDATASection(content));
+            }
+            else {
+                QDomElement element = doc.createElement("cell");
+                rowElement.appendChild(element);
+                element.appendChild(doc.createTextNode(e.split(";").value(i)));
+            }
+        }
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
@@ -105,7 +133,7 @@ void RenderResponseS3::generateGetS3() {
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode(QString::number(6/*apiOut.size()*/)));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
 
     m_var = doc.toString();
 }
