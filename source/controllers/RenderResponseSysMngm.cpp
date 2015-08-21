@@ -1,5 +1,6 @@
 #include "RenderResponseSysMngm.h"
 
+#include <QProcess>
 #include <QTimeZone>
 #include <QFileInfo>
 #include <QDir>
@@ -981,6 +982,7 @@ void RenderResponseSysMngm::generateGetUpFw() {
 }
 
 void RenderResponseSysMngm::generateReboot() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " system_reboot", true);
+    if(!QProcess::startDetached(API_PATH + SCRIPT_FW_UPGRADE_MGR, QStringList() << "system_reboot"))
+        ;
     m_var = "../web/dsk_mgr/wait.html";
 }

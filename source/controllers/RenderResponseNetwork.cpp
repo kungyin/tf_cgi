@@ -889,8 +889,12 @@ void RenderResponseNetwork::generateSetSshPort() {
     if(!paraPort.isEmpty())
         map.insert("port", paraPort);
 
-    if(setNasCfg("sshd", map))
-        getAPIStdOut(API_PATH + SCRIPT_SSH_CTL + " restart");
+    QString sshCmd = "stop";
+    if(setNasCfg("sshd", map)) {
+        getAPIStdOut(API_PATH + SCRIPT_SSH_CTL + " " + sshCmd);
+        if(paraEnable == "1")
+            getAPIStdOut(API_PATH + SCRIPT_SSH_CTL + " start");
+    }
     else
         ret = "0";
 

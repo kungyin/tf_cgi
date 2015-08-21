@@ -177,7 +177,7 @@ void RenderResponseHome::generateLogin() {
         m_cookies.append(cookieRemMe);
     m_cookies.append(cookiePwd);
 
-    if(apiOut.value(0).compare("1") == 0) {
+    if(apiOut.value(0).compare("1") == 0 || apiOut.value(0).compare("2") == 0) {
         //m_loginUser = User::create(paraUsername, paraPwd);
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
@@ -185,13 +185,13 @@ void RenderResponseHome::generateLogin() {
 
         m_session << paraUsername << "1";
 
-        m_var = "../web/home.html?v=8401878";
+        if(apiOut.value(0).compare("1") == 0)
+            m_var = "../web/home.html?v=8401878";
+        else
+            m_var = "../web/set_passwd.html";
     }
     else if(apiOut.value(0).compare("0") == 0){
         m_var = "../web/relogin.html";
-    }
-    else if(apiOut.value(0).compare("2") == 0){
-        m_var = "../web/set_passwd.html";
     }
 
 }
