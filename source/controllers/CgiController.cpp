@@ -95,9 +95,10 @@ void CgiController::cgiResponse() {
 
     //    QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
     RenderResponse *pRrep = NULL;
-    pRrep = getRenderResponseBaseInstance(httpRequest(), static_cast<CGI_COMMAND>(m_pParseCmd->getCGICmd()));
+    CGI_COMMAND cmd = static_cast<CGI_COMMAND>(m_pParseCmd->getCGICmd());
+    pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
     if(!pRrep) {
-        tError("CgiController::index() -- could not create render instance.");
+        tError("CgiController::index() %d -- could not create render instance.", cmd);
         return;
     }
     pRrep->preRender();
@@ -107,9 +108,13 @@ void CgiController::cgiResponse() {
     case RENDER_TYPE_NULL:
         renderErrorResponse(Tf::OK);
         break;
-    case RENDER_TYPE_STRING:
-        renderText(pRrep->getVar().toString());
+    case RENDER_TYPE_STRING: {
+        QString str = pRrep->getVar().toString();
+        if(cmd == CMD_UI_CHECK_WTO)
+            str = isValidClient(true) ? "success" : "fail";
+        renderText(str);
         break;
+    }
     case RENDER_TYPE_XML:
     {
         QDomDocument doc;
@@ -243,10 +248,11 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
 
 }
 
-bool CgiController::isValidClient() {
+bool CgiController::isValidClient(bool bCookiesOnly) {
+
     bool bValidClient = false;
 
-    if(httpRequest().cookie("username").isEmpty()) {
+    if(!bCookiesOnly && httpRequest().cookie("username").isEmpty()) {
         if(     httpRequest().header().hasRawHeader("Security-Token")
              && httpRequest().header().hasRawHeader("Client-ID")
              && httpRequest().header().hasRawHeader("Time-Stamp")) {
@@ -285,8 +291,10 @@ bool CgiController::isValidClient() {
     else {
         for(TCookie c : httpRequest().cookies())
             if(c.name() == "username")
-                if(session().value(c.value()).toString() == "1")
+                if(session().value(c.value()).toString() == "1") {
                     bValidClient = true;
+                    break;
+                }
     }
 
     return bValidClient;

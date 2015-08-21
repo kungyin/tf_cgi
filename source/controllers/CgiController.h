@@ -23,7 +23,7 @@ private:
     void cgiInit(int group = CMD_GRP_NONE);
     void cgiResponse();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
-    bool isValidClient();
+    bool isValidClient(bool bCookiesOnly = false);
 
     ParseCmd *m_pParseCmd;
 };

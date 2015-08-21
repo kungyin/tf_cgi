@@ -884,8 +884,10 @@ void RenderResponseNetwork::generateSetSshPort() {
     QString ret = "1";
 
     QMap<QString, QString> map;
-    map.insert("enable", paraEnable);
-    map.insert("port", paraPort);
+    if(!paraEnable.isEmpty())
+        map.insert("enable", paraEnable);
+    if(!paraPort.isEmpty())
+        map.insert("port", paraPort);
 
     if(setNasCfg("sshd", map))
         getAPIStdOut(API_PATH + SCRIPT_SSH_CTL + " restart");

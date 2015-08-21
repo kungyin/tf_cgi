@@ -1309,7 +1309,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_PERCENTAGE,               RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_percentage */
     { CMD_GET_FIRMWARE_VERIFY,          RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_firmware_verify */
     { CMD_GET_UP_FW,                    RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_uP_fw */
-    { CMD_REBOOT,                       RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_reboot */
+    { CMD_REBOOT,                       RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_reboot */
 
 //    CMD_SYS_MNGM_END,
 

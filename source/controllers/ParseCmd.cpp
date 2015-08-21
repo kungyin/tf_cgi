@@ -28,11 +28,13 @@ void ParseCmd::parse(QString cmd, int group) {
         int cgiGroupNum = sizeof(CMD_GROUP_SPACE)/sizeof(CMD_GROUP_SPACE[0]);
         for(int i = 0; i < cgiGroupNum; i++) {
             if(group == i) {
-                iSearchStart = CMD_GROUP_SPACE[i][0];
-                iSearchEnd = CMD_GROUP_SPACE[i][1];
+                iSearchStart = CMD_GROUP_SPACE[i][1];
+                iSearchEnd = CMD_GROUP_SPACE[i][2];
+                break;
             }
         }
     }
+
 
     /* 1. content of cmd to CGI_COMMAND */
     int iCmdNumber = -1;

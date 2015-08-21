@@ -835,6 +835,8 @@ void RenderResponseSysMngm::generateSendLogTest() {
 }
 
 void RenderResponseSysMngm::generateLogBackup() {
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " backup");
+
     QFileInfo file(SENDOUT_LOGFILE);
     if(file.exists() && file.isFile())
         m_var = SENDOUT_LOGFILE;
@@ -980,5 +982,5 @@ void RenderResponseSysMngm::generateGetUpFw() {
 
 void RenderResponseSysMngm::generateReboot() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FW_UPGRADE_MGR + " system_reboot", true);
-    m_var = "N/A";
+    m_var = "../web/dsk_mgr/wait.html";
 }

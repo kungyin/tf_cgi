@@ -106,11 +106,9 @@ void RenderResponseHome::generateGetSslInfo() {
 
 }
 
-/* to do - jerry for ian */
 void RenderResponseHome::generateUICheckWto() {
+    /* Return value is not decided here */
     m_var = "success";
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ui_check_wto", true);
-    //m_var = apiOut.isEmpty() ? "fail" : apiOut.at(0);
 }
 
 void RenderResponseHome::generateFWStatus() {
@@ -148,11 +146,8 @@ void RenderResponseHome::generateLogin() {
     if(m_pReq->allParameters().contains("ssl_port"))
         paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
 
-//QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api login#" +
-//                                 allParametersToString(), true);
-    QString args = QString("login#username=%1#pwd=%2#ssl=%3#ssl_port=%4#remeber=%5").arg(paraUsername, paraPwd, paraSsl, paraSslPort, paraType);
-QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api " + args, true);
-tDebug("service_home_api login out = [%s]", apiOut.value(0));
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api login#" +
+                                 allParametersToString(), true);
     QMap<QString, QString> map;
     map.insert("ssl_enable", paraSsl);
     map.insert("ssl_port", paraSslPort);
