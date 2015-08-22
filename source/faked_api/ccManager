@@ -25,7 +25,7 @@
 [ $1 == 'system_get_mtp_info' ] && echo -e "3;HTC;Android Phone" && echo -e "3;HTC;Android Phone"
 [ $1 == 'system_get_usb_printer_info' ] && echo -e "1;HP;Officejet 4620 series;lp0-USB-1" && echo -e "1;HP;Officejet 4620 series;lp1-USB-1"
 [ $1 == 'system_get_ups_info2' ] && echo -e "1;CPS;UPS CP1000AVRLCD"
-[ $1 == 'system_get_device_smart_info' ] && echo -e "Disk1;Seagate;ST3000DM001-9YN166;S1F0HYJ4;39;2930266582" && echo -e "Disk2;WD;WDCWD30EFRX-68EUZN0;WD-WMC4N2584636;35;2930266582"
+[ $1 == 'system_get_device_smart_info' ] && echo -e "Disk1;Seagate;ST3000DM001-9YN166;S1F0HYJ4;39;2930266582;sda" && echo -e "Disk2;WD;WDCWD30EFRX-68EUZN0;WD-WMC4N2584636;35;2930266582;sdb"
 
 [ $1 == 'system_get_device_smart_list' ] && echo -e "1;Raw_Read_Error_Rate;111;099;006;31353592" && echo -e "3;Spin_Up_Time;093;092;000;0" && echo -e "4;Start_Stop_Count;099;099;020;1467" && echo -e "5;Reallocated_Sector_Ct;100;100;036;0" && echo -e "7;Seek_Error_Rate;084;060;030;248765837" && echo -e "9;Power_On_Hours;098;098;000;1780" && echo -e "10;Spin_Retry_Count;100;100;097;0" && echo -e "12;Power_Cycle_Count;099;099;020;1345" && echo -e "183;Runtime_Bad_Block;099;099;000;1" && echo -e "184;End-to-End_Error;100;100;099;0" && echo -e "187;Reported_Uncorrect;088;088;000;12" && echo -e "188;Command_Timeout;100;098;000;8" && echo -e "189;High_Fly_Writes;001;001;000;832" && echo -e "190;Airflow_Temperature_Cel;061;025;045;39" && echo -e "191;G-Sense_Error_Rate;100;100;000;0" && echo -e "192;Power-Off_Retract_Count;100;100;000;834" && echo -e "193;Load_Cycle_Count;099;099;000;3775" && echo -e "194;Temperature_Celsius;039;075;000;39" && echo -e "197;Current_Pending_Sector;100;100;000;0" && echo -e "198;Offline_Uncorrectable;100;100;000;0" && echo -e "199;UDMA_CRC_Error_Count;200;200;000;1" && echo -e "240;Head_Flying_Hours;100;253;000;1346h+19m+20.955s" && echo -e "241;Total_LBAs_Written;100;253;000;13699632494291" && echo -e "242;Total_LBAs_Read;100;253;000;1662653057372"
 
@@ -103,6 +103,13 @@
 [ $1 == 'service_iso_set_iso_config' ] && echo -e "ok;MyISO;/mnt/HD/HD_a2/.systemfile/isodata/48ee0c2343d4_20150709041749"
 [ $1 == 'system_user_set_user_add_session' ] && echo -e "1"
 [ $1 == 'service_get_s3_info' ] && echo -e "sssss;Manual;Ready;1;1;1;1" && echo -e "ffff;5/6 06:08;Ready;0;1;0;1" && echo -e "aaa; 00:04 Daily;Error;0;1;0;1"
+[ $1 == 'service_get_ftp_server_config' ] && echo -e "10;10;21;0;UTF-8;ISO-8859-1;55536:55663;0.0.0.0;0.0.0.0;1;1;0;;0"
+[ $1 == 'service_get_ftp_blockip_list' ] && echo -e "1.2.3.4;0;04/13/15 03:04;;"
+[ $1 == 'service_set_codepage' ] && echo -e "0"
+[ $1 == 'service_check_ftp_port' ] && echo -e "0"
+[ $1 == 'service_get_ftp_server_exip' ] && echo -e "0;10.1.0.1"
+[ $1 == 'service_set_ftp_blockip' ] && echo -e "1"
+[ $1 == 'service_set_ftp_server_state' ] && echo -e "0"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"

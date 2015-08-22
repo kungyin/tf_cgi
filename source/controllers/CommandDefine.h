@@ -30,6 +30,7 @@ enum CGI_COMMAND {
     CMD_FMT_GET_AUTO_REBUILD_INFO,  /* cgi_FMT_Get_Auto_Rebuild_Info */
     CMD_AJAXPLORER_STOP,            /* cgi_AJAXPlorer_Stop */
     CMD_FMT_CREATE_DISKMGR,         /* cgi_FMT_Create_DiskMGR */
+    CMD_FMT_REMAIN_DISKMGR,         /* cgi_FMT_Remain_DiskMGR */
     CMD_DISK_REMOUNT,               /* cgi_Disk_Remount */
     CMD_FMT_GUI_LOG,                /* cgi_FMT_GUI_Log */
     CMD_FMT_REMOUNT_STATE,          /* cgi_Check_Disk_Format_Remount_State */
@@ -345,10 +346,11 @@ enum CGI_COMMAND {
     /**** FTP Server ****/
     CMD_FTP_SERVER_GET_CONFIG,              /* FTP_Server_Get_Config */
     CMD_FTP_SERVER_EXIP_RENEW,              /* FTP_Server_EXIP_Renew */
-    CMD_P2P_GET_PORT,                       /* cgi_p2p_get_port */
+    CMD_P2P_GET_PORT,                       /* p2p_get_port */
     CMD_FTP_SERVER_BLOCKIP_LIST,            /* FTP_Server_BlockIP_List */
     CMD_FTP_SERVER_BLOCKIP_ADD,             /* FTP_Server_BlockIP_Add */
     CMD_FTP_SERVER_ENABLE,                  /* FTP_Server_Enable */
+    CMD_FTP_SERVER_SET_CONFIG,              /* FTP_Server_Set_Config */
     CMD_FTP_SERVER_END,
 
     /**** Time Machine ****/
@@ -520,6 +522,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_FMT_Get_Auto_Rebuild_Info",
     "cgi_AJAXPlorer_Stop",
     "cgi_FMT_Create_DiskMGR",
+    "cgi_FMT_Remain_DiskMGR",
     "cgi_Disk_Remount",
     "cgi_FMT_GUI_Log",
     "cgi_Check_Disk_Format_Remount_State",
@@ -836,10 +839,11 @@ const char CGI_PARA_COMMANDS[][255] = {
     /**** FTP Server ****/    
     "FTP_Server_Get_Config",
     "FTP_Server_EXIP_Renew",
-    "cgi_p2p_get_port",
+    "p2p_get_port",
     "FTP_Server_BlockIP_List",
     "FTP_Server_BlockIP_Add",
     "FTP_Server_Enable",
+    "FTP_Server_Set_Config",
     "",
 
     /**** Time Machine ****/
@@ -1017,6 +1021,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_FMT_GET_AUTO_REBUILD_INFO,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Get_Auto_Rebuild_Info */
     { CMD_AJAXPLORER_STOP,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_AJAXPlorer_Stop */
     { CMD_FMT_CREATE_DISKMGR,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Create_DiskMGR */
+    { CMD_FMT_REMAIN_DISKMGR,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_Remain_DiskMGR */
     { CMD_DISK_REMOUNT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Disk_Remount */
     { CMD_FMT_GUI_LOG,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_FMT_GUI_Log */
     { CMD_FMT_REMOUNT_STATE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Format_Remount_State */
@@ -1335,10 +1340,12 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     /**** FTP Server ****/
     { CMD_FTP_SERVER_GET_CONFIG,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_Get_Config */
     { CMD_FTP_SERVER_EXIP_RENEW,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_EXIP_Renew */
-    { CMD_P2P_GET_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_p2p_get_port */
+    { CMD_P2P_GET_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* p2p_get_port */
     { CMD_FTP_SERVER_BLOCKIP_LIST,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_List */
     { CMD_FTP_SERVER_BLOCKIP_ADD,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_Add */
     { CMD_FTP_SERVER_ENABLE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_Enable */
+    { CMD_FTP_SERVER_SET_CONFIG,        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* FTP_Server_Set_Config */
+
 //    CMD_FTP_SERVER_END,
 
 //    /**** Time Machine ****/

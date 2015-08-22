@@ -16,30 +16,26 @@ void RenderResponseFtp::preRender() {
         return;
 
     switch(m_cmd) {
-/*    case CMD_GUI_CODEPAGE_GET_LIST:
-        codepagegetlist(doc);
-        m_renderType = RENDER_TYPE_XML;
-        break;*/
     case CMD_FTP_SERVER_GET_CONFIG:
-        servergetconfig();
+        generateFtpServerGetConfig();
         break;
     case CMD_FTP_SERVER_EXIP_RENEW:
-        serverexiprenew();
+        generateFtpServerExipRenew();
         break;
-/*    case CMD_GUI_CODE_ADD:
-        codepageadd(doc);
-        break;*/
     case CMD_P2P_GET_PORT:
-        p2pgetport();
+        generateP2pGetPort();
         break;
     case CMD_FTP_SERVER_BLOCKIP_LIST:
-        serverblockiplist();
+        generateFtpServerBlockIPList();
         break;
     case CMD_FTP_SERVER_BLOCKIP_ADD:
-        serverblockipadd();
+        generateFtpServerBlockIPAdd();
         break;
     case CMD_FTP_SERVER_ENABLE:
-        serverenable();
+        generateFtpServerEnable();
+        break;
+    case CMD_FTP_SERVER_SET_CONFIG:
+        generateFtpServerSetConfig();
         break;
     
     default:
@@ -48,185 +44,182 @@ void RenderResponseFtp::preRender() {
 
 }
 
-/*/ todo API
-void RenderResponseFtp::codepagegetlist(QDomDocument &doc) {
-//QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " -g codepage", true, ";");
-
-    QVector<QString> vlang;
-    QVector<QString> vdesc;
-
-    vlang << "UTF-8" << "ISO-8859-1" << "CP865" << "ISO-8859-2"<< "CP1250"<< "BIG5"<< "GB2312"<< "CP1251"<< "ISO-8859-9"<< "EUC-KR"<< "ISO-8859-8";
-    vdesc << "Unicode 8bit" << "Western European" << "MS-DOS Northern European" << "Slavic/Central European"<< "MS Windows Central European"<< "Traditional Chinese"<< "Simplified Chinese"<< "MS Windows Cyrillic"<< "Turkish"<< "Korean"<< "Hebrew";
-
-    QDomElement root = doc.createElement("config");
-    doc.appendChild(root);
-
-    QDomElement resElement = doc.createElement("res");
-    root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
-    for (int i = 0; i < vlang.size(); i++)
-    {
-        QDomElement itemElement = doc.createElement("item");
-        root.appendChild(itemElement);
-        QDomElement langElement = doc.createElement("lang");
-        itemElement.appendChild(langElement);
-        langElement.appendChild(doc.createTextNode(vlang[i]));
-        QDomElement descElement = doc.createElement("desc");
-        itemElement.appendChild(descElement);
-        descElement.appendChild(doc.createTextNode(vdesc[i]));
-    }
-}*/
-
-// todo API
-void RenderResponseFtp::servergetconfig() {
+void RenderResponseFtp::generateFtpServerGetConfig() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " config", true, ",");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_server_config", true, ";");
 
-    QVector<QString> vparam;
-        vparam << "maxclientsnumber" << "maxidletime" << "port" << "flowcontrol"<< "filesystemcharset"<< "clientcharset"<< "passiveportrange"<< "exip"<< "externalip"<< "state"<< "tlsencryption"<< "forcepasvmode"<< "connect_per_ip"<< "fxpaccess";
+    QStringList configTagsElement(QStringList()
+         << "maxclientsnumber" << "maxidletime" << "port" << "flowcontrol"
+         << "filesystemcharset" << "clientcharset" << "passiveportrange"
+         << "exip" << "externalip" << "state" << "tlsencryption"
+         << "forcepasvmode"<< "connect_per_ip"<< "fxpaccess");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    for (int i = 0; i < vparam.size(); i++)
-    {
-        QDomElement maxclientsnumberElement = doc.createElement(vparam[i]);
-        root.appendChild(maxclientsnumberElement);
-        maxclientsnumberElement.appendChild(doc.createTextNode(apiOut.value(i)));
+
+    if( configTagsElement.size() == apiOut.size() ) {
+
+        for(int i=0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(configTagsElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+
     }
+    else {
+        //assert(0);
+        tError("RenderResponseFtp::generateFtpServerGetConfig() :"
+               "configTagsElement size is not equal to apiOut size.");
+
+        tDebug(" %d", apiOut.size());
+        tDebug(" %d", configTagsElement.size());
+
+    }
+
     m_var = doc.toString();
 
 }
 
-// todo API
-void RenderResponseFtp::serverexiprenew() {
+void RenderResponseFtp::generateFtpServerExipRenew() {
 
     QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_server_exip", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement exipElement = doc.createElement("exip");
     root.appendChild(exipElement);
-    exipElement.appendChild(doc.createTextNode("0"));
+    exipElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 
 }
 
-/*
-// todo API
-void RenderResponseFtp::codepageadd(QDomDocument &doc) {
-
-    QDomElement root = doc.createElement("config");
-    doc.appendChild(root);
-
-    QDomElement resElement = doc.createElement("res");
-    root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
-}
-*/
-
-// todo API
-void RenderResponseFtp::p2pgetport() {
+void RenderResponseFtp::generateP2pGetPort() {
 
     QDomDocument doc;
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_check_ftp_port", true, ";");
+
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-// todo API
-void RenderResponseFtp::serverblockiplist() {
+void RenderResponseFtp::generateFtpServerBlockIPList() {
 
     QDomDocument doc;
 
     QString paraPage = m_pReq->allParameters().value("page").toString();
-    QString paraRp = m_pReq->allParameters().value("rp").toString();
-    QString paraQuery = m_pReq->allParameters().value("query").toString();
-    QString paraQType = m_pReq->allParameters().value("qyupe").toString();
-    QString paraField = m_pReq->allParameters().value("f_field").toString();
-    QString paraUser = m_pReq->allParameters().value("user").toString();
+//    QString paraRp = m_pReq->allParameters().value("rp").toString();
+//    QString paraQuery = m_pReq->allParameters().value("query").toString();
+//    QString paraQType = m_pReq->allParameters().value("qyupe").toString();
+//    QString paraField = m_pReq->allParameters().value("f_field").toString();
+//    QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_APPAPI_FTP + " blkiplist", false, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_blockip_list ");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
     for(int i=0; i < apiOut.size(); i++) {
-        QStringList data = apiOut.at(i).split(";");
+        QStringList data = apiOut.value(i).split(";");
 
         QDomElement rowElement1 = doc.createElement("row");
         root.appendChild(rowElement1);
 
-        QDomElement cellElement1 = doc.createElement("cell");
-        rowElement1.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(data.value(0)));
-        QDomElement cellElement2 = doc.createElement("cell");
-        rowElement1.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(data.value(1)));
-        QDomElement cellElement3 = doc.createElement("cell");
-        rowElement1.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(data.value(2)));
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement1.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createTextNode(data.value(3)));
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement1.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(data.value(4)));
+        for(QString e : data) {
+            QDomElement cellElement1 = doc.createElement("cell");
+            rowElement1.appendChild(cellElement1);
+            cellElement1.appendChild(doc.createTextNode(e));
+        }
 
-
-        rowElement1.setAttribute("id", QString::number(i+1));
+        rowElement1.setAttribute("id", i+1);
     }
 
     QDomElement pageElement1 = doc.createElement("page");
     root.appendChild(pageElement1);
-    pageElement1.appendChild(doc.createTextNode("1"));
+    pageElement1.appendChild(doc.createTextNode(paraPage));
     QDomElement totalElement1 = doc.createElement("total");
     root.appendChild(totalElement1);
     totalElement1.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
     m_var = doc.toString();
 
 }
 
-//todo API
-void RenderResponseFtp::serverblockipadd() {
+void RenderResponseFtp::generateFtpServerBlockIPAdd() {
 
     QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_ftp_blockip " + allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-//todo API
-void RenderResponseFtp::serverenable() {
+void RenderResponseFtp::generateFtpServerEnable() {
+
+    QString paraStatus = m_pReq->parameter("f_state");
 
     QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_ftp_server_state " + paraStatus);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
+void RenderResponseFtp::generateFtpServerSetConfig() {
+
+    QMap<QString, QString> map;
+    map.insert("maxclientsnumber", m_pReq->parameter("f_maxuser"));
+    map.insert("maxidletime", m_pReq->parameter("f_idle_time"));
+    map.insert("port", m_pReq->parameter("f_port"));
+    map.insert("flowcontrol", m_pReq->parameter("f_flow_value"));
+    map.insert("filesystemcharset", m_pReq->parameter("f_client_char_defult"));
+    map.insert("clientcharset", m_pReq->parameter("f_client_char"));
+    map.insert("passiveportrange", QUrl::fromPercentEncoding(m_pReq->parameter("f_passive").toLocal8Bit()));
+    map.insert("externalip", m_pReq->parameter("f_external_ip"));
+    map.insert("state", m_pReq->parameter("f_flow"));
+    map.insert("tlsencryption", m_pReq->parameter("f_tls_status"));
+    map.insert("forcepasvmode", m_pReq->parameter("forcepasvmod"));
+    map.insert("anonymous_access", m_pReq->parameter("f_mode"));
+    map.insert("fxpaccess", m_pReq->parameter("f_fxp"));
+
+    if(!setNasCfg("ftp", map))
+        tDebug("setNasCfg ftp failed");
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_modify_ftp_config");
+
+    m_var = "<script>location.href='/web/app_mgr/ftp_setting.html?id=8401878'</script>";
+
+}
 

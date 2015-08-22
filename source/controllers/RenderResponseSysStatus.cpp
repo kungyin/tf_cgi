@@ -424,19 +424,25 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QString uiContent = "<a href=javascript:onclick=GetSmartInfo('sda','0');>"
+    QString uiContent = "<a href=javascript:onclick=GetSmartInfo('%1','0');>"
             "<IMG border='0' src='/web/images/normal.png' alt='Normal'></a>";
 
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        if( 6 == apiOut.value(i).split(";").size() ) {
+        if( 7 == apiOut.value(i).split(";").size() ) {
 
             for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
-
-                QDomElement cellElement = doc.createElement("cell");
-                rowElement.appendChild(cellElement);
-                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+                if(j == 6) {
+                    QDomElement cellElement = doc.createElement("cell");
+                    rowElement.appendChild(cellElement);
+                    cellElement.appendChild(doc.createCDATASection(uiContent.arg(apiOut.value(i).split(";").value(j))));
+                }
+                else {
+                    QDomElement cellElement = doc.createElement("cell");
+                    rowElement.appendChild(cellElement);
+                    cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+                }
             }
         }
         else {
@@ -444,9 +450,6 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
             tError("RenderResponseSysStatus::generateSmartXmlCreateDeviceList(): "
                    "element size is not equal to apiOut size.");
         }
-        QDomElement cellElement2 = doc.createElement("cell");
-        rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createCDATASection(uiContent));
 
         rowElement.setAttribute("id", QString::number(i));
     }

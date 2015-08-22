@@ -46,12 +46,14 @@ public:
 private:
 
     FMT_ARGS getFMTArgs(QStringList &);
+    QString getFMTRemainArgs(QStringList &);
 
     void generateVolumeStatus();
     void generateFMTGetSyncState();
     void generateFMTGetAutoRebuildInfo();
     void generateAJAXPlorerStop();
     void generateFMTCreateDiskMGR();
+    void generateFMTRemainDiskMGR();
     void generateDiskRemount();
     void generateFMTGuiLog();
     void generateFMTRemountState();

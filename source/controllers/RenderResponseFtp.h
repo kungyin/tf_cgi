@@ -14,12 +14,13 @@ public:
 
 private:
 
-    void servergetconfig();
-    void serverexiprenew();
-    void p2pgetport();
-    void serverblockiplist();
-    void serverblockipadd();
-    void serverenable();
+    void generateFtpServerGetConfig();
+    void generateFtpServerExipRenew();
+    void generateP2pGetPort();
+    void generateFtpServerBlockIPList();
+    void generateFtpServerBlockIPAdd();
+    void generateFtpServerEnable();
+    void generateFtpServerSetConfig();
 };
 
 #endif // RENDERRESPONSEFTP_H

@@ -33,6 +33,9 @@ void RenderResponseDisk::preRender() {
     case CMD_FMT_CREATE_DISKMGR:
         generateFMTCreateDiskMGR();
         break;
+    case CMD_FMT_REMAIN_DISKMGR:
+        generateFMTRemainDiskMGR();
+        break;
     case CMD_DISK_REMOUNT:
         generateDiskRemount();
         break;
@@ -207,6 +210,14 @@ FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
     args.createVolume = false;
     if(fmtArgs.value(7).compare("1") == 0)
         args.createVolume = true;
+
+    args.volEnc = "E0";
+    if(fmtArgs.value(12).compare("1") == 0) {
+        args.volEnc = "E1";
+    }
+    args.volEncAutoMount = fmtArgs.value(13).compare("1") == 0 ? "A1" : "A0";
+    args.volEncPwd = "P" + fmtArgs.value(14);
+
     return args;
 }
 
@@ -220,7 +231,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
     paraCreateVolumeInfo = QUrl::fromPercentEncoding(m_pReq->parameter("f_create_volume_info").toLocal8Bit());
     paraAutoSync = m_pReq->parameter("f_auto_sync");
 
-    QStringList apiOut;
+    //QStringList apiOut;
     QStringList paraList = paraCreateVolumeInfo.split(",");
 
     tDebug("paraList size: %d", paraList.size());
@@ -237,7 +248,10 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
                             "-" + args1.raidModeArg + " " +
                             "-" + args1.fileSystemTypeArg + " " +
                             "-" + args1.volSizeArg + " " +
-                            "-" + args1.devNameArg;
+                            "-" + args1.devNameArg + " " +
+                            "-" + args1.volEnc + " " +
+                            "-" + args1.volEncAutoMount + " " +
+                            "-" + args1.volEncPwd;
 
         QString strArg2;
         if(paraList.size() == 30)
@@ -246,7 +260,10 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
                         "-" + args2.raidModeArg + " " +
                         "-" + args2.fileSystemTypeArg + " " +
                         "-" + args2.volSizeArg + " " +
-                        "-" + args2.devNameArg
+                        "-" + args2.devNameArg + " " +
+                        "-" + args2.volEnc + " " +
+                        "-" + args2.volEncAutoMount + " " +
+                        "-" + args2.volEncPwd
                         : "";
 
         QString strArg2WithBlank;
@@ -260,6 +277,91 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
 //                                         strArg1 + strArg2WithBlank,
 //                                         true
 //                                     );
+    }
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement tag1 = doc.createElement("res");
+    root.appendChild(tag1);
+    QDomText t1 = doc.createTextNode("1" /*apiOut.value(0)*/);
+    tag1.appendChild(t1);
+    m_var = doc.toString();
+
+}
+
+QString RenderResponseDisk::getFMTRemainArgs(QStringList &fmtArgs) {
+
+    FMT_ARGS args;
+    args.volNameArg = "v" + fmtArgs.value(0);
+    args.raidModeArg = "m1";
+    if(fmtArgs.value(1).compare("standard") == 0)
+        args.raidModeArg = "m1";
+    else if (fmtArgs.value(1).compare("linar") == 0)
+        args.raidModeArg ="m2";
+    else if (fmtArgs.value(1).compare("raid0") == 0)
+        args.raidModeArg ="m3";
+    else if (fmtArgs.value(1).compare("raid1") == 0)
+        args.raidModeArg ="m4";
+
+    args.fileSystemTypeArg = "f2";
+    if(fmtArgs.value(2).compare("ext3") == 0)
+        args.fileSystemTypeArg = "f2";
+    else if(fmtArgs.value(2).compare("ext4") == 0)
+        args.fileSystemTypeArg ="f3";
+
+    args.volSizeArg = "s" + fmtArgs.value(4);
+
+    /* sdasdb -> sda,sdb */
+    assert(fmtArgs.value(3).size() % 3 == 0);
+    QString devName;
+    for(int i = 0; i < fmtArgs.value(4).size(); i+=3) {
+        if(!devName.isEmpty())
+            devName += ",";
+        devName += fmtArgs.value(4).midRef(i, 3);
+    }
+
+    args.devNameArg = "k" + devName;
+
+    args.volEnc = "E0";
+    if(fmtArgs.value(6).compare("1") == 0) {
+        args.volEnc = "E1";
+
+    }
+    args.volEncAutoMount = fmtArgs.value(7).compare("1") == 0 ? "A1" : "A0";
+    args.volEncPwd = "P" + fmtArgs.value(7);
+
+    QString ret =   "-" + args.volNameArg + " " +
+                        "-" + args.raidModeArg + " " +
+                        "-" + args.fileSystemTypeArg + " " +
+                        "-" + args.volSizeArg + " " +
+                        "-" + args.devNameArg + " " +
+                        "-" + args.volEnc;
+
+    if(args.volEnc == "E1") {
+        ret += QString(" ") +
+                "-" + args.volEncAutoMount + " " +
+                "-" + args.volEncPwd;
+    }
+
+    return ret;
+}
+
+void RenderResponseDisk::generateFMTRemainDiskMGR() {
+    QDomDocument doc;
+    QString paraCreateVolumeInfo;
+
+    paraCreateVolumeInfo = QUrl::fromPercentEncoding(m_pReq->parameter("f_create_volume_info").toLocal8Bit());
+
+    QStringList paraList = paraCreateVolumeInfo.split(",");
+
+    tDebug("paraList size: %d", paraList.size());
+
+    if(paraList.size() == 9) {
+        QString strArg1 = getFMTRemainArgs(paraList);
+
+        tDebug("strArg1: %s", strArg1.toLocal8Bit().data());
+        if(!QProcess::startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1))
+            ;
     }
 
     QDomElement root = doc.createElement("config");

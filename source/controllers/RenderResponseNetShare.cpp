@@ -569,12 +569,16 @@ void RenderResponseNetShare::generateOpenTree() {
     }
 
     QString content;
+    QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
     for(QFileInfo e : fileList) {
         QString fileName = e.fileName();
-        if(e.absoluteFilePath().compare("/mnt/HD/HD_a2") == 0)
-            fileName = "Volume_1";
-        if(e.absoluteFilePath().compare("/mnt/HD/HD_b2") == 0)
-            fileName = "Volume_2";
+
+        for(QString shareEntry : shareInfo) {
+            if(e.absoluteFilePath().compare(shareEntry.split(":").value(1)) == 0) {
+                fileName = shareEntry.split(":").value(0);
+                break;
+            }
+        }
 
         QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
         if(e.isDir()) {
@@ -586,7 +590,14 @@ void RenderResponseNetShare::generateOpenTree() {
             QString fileVolumePath = e.absoluteFilePath();
             fileVolumePath.replace("/mnt/HD/HD_a2", "Volume_1");
             fileVolumePath.replace( "/mnt/HD/HD_b2", "Volume_2");
-
+            if(fileVolumePath.startsWith("/mnt/HD/HD_")) {
+                for(QString shareEntry : shareInfo) {
+                    if(fileVolumePath.startsWith(shareEntry.split(":").value(1))) {
+                        fileVolumePath.replace(shareEntry.split(":").value(1), shareEntry.split(":").value(0));
+                        break;
+                    }
+                }
+            }
             QString line1 = (paraChkFlag.compare("1") == 0) ?
                         checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
             content += cssLiClassWithID.arg(line1).arg(line2);
