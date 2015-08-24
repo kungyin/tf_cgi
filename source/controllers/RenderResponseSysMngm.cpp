@@ -994,9 +994,11 @@ void RenderResponseSysMngm::generateReboot() {
 void RenderResponseSysMngm::daemonize()
 {
 
-  if (fork()) exit(0); // fork.  parent exits.
+  if (fork())
+      exit(0); // fork.  parent exits.
   setsid(); // become process group leader
-  if (fork()) _exit(0); // second parent exits.
+  if (fork())
+      _exit(0); // second parent exits.
   chdir("/"); // just so we don't mysteriously prevent fs unmounts later
   close(0); // close stdin, stdout, stderr.
   close(1);

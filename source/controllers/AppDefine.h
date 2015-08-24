@@ -75,7 +75,7 @@ const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
 const QString DWONLOAD_USER_IMPORT_FILE = API_PATH + "import_file.txt";
 const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
 const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
-const QString SHARE_INFO_FILE = API_PATH + "usbshare_info";
+const QString SHARE_INFO_FILE = API_PATH + "share_info";
 
 #endif
 
