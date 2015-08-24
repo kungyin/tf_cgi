@@ -127,6 +127,9 @@ void RenderResponseNetwork::generateGetLLTD() {
 void RenderResponseNetwork::generateLanXml() {
 
     QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_check_lan_speed", true);
+
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
 
