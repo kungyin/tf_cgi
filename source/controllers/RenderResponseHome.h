@@ -16,6 +16,7 @@ public:
     QList<TCookie> &getCookies() { return m_cookies; }
     QStringList &getSession() { return m_session; }
     QString &getUserLogout() { return m_userLogout; }
+    bool &getIfRedirectSsl() { return m_bRedirect2Ssl; }
 
     //User &getUser() { return m_loginUser; }
 
@@ -34,6 +35,7 @@ private:
     QList<TCookie> m_cookies;
     QStringList m_session;
     QString m_userLogout;
+    bool m_bRedirect2Ssl;
     //User m_loginUser;
 
 };
