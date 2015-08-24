@@ -4,6 +4,11 @@
 DbDataProvider::DbDataProvider(DB_TYPE db_type)
 {
     m_DbType = db_type;
+    if (QSqlDatabase::database().connectionNames().size() > 0)
+    {
+        Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
+            QSqlDatabase::removeDatabase(connName);
+    }
     m_Db = QSqlDatabase::addDatabase("QMYSQL");
     m_Db.setHostName("localhost");
     m_Db.setUserName("root");

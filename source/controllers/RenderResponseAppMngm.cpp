@@ -1655,7 +1655,7 @@ void RenderResponseAppMngm::generateSetRsyncServer() {
                     }
                 }
             }
-    }
+        }
     }
 
     RESULT_STATUS status = SetRsyncInfo(m_pReq->parameter("f_onoff").toInt(),
