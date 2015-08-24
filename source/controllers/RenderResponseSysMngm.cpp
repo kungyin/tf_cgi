@@ -779,9 +779,10 @@ void RenderResponseSysMngm::generateLogSystem() {
     if(logEnd > apiOut.size())
         logEnd = apiOut.size();
     for(int i = logStart; i < logEnd; i++) {
-        QString logDate = apiOut.value(i).section(" ", 0, 2);
-        QString logTime = apiOut.value(i).section(" ", 3, 3);
-        QString logContent = apiOut.value(i).section(" ", 4);
+        QString logDate = apiOut.value(i).section(" ", 0, 1);
+        QString logTime = apiOut.value(i).section(" ", 2, 2);
+        QString strLog = apiOut.value(i).section(" ", 4);
+        QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
 
         QVariantMap itemMap;
         itemMap.insert("id", QString::number(i+1));

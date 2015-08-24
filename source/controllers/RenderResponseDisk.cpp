@@ -181,7 +181,7 @@ FMT_ARGS RenderResponseDisk::getFMTArgs(QStringList &fmtArgs) {
     args.raidModeArg = "m1";
     if(fmtArgs.value(1).compare("standard") == 0)
         args.raidModeArg = "m1";
-    else if (fmtArgs.value(1).compare("linar") == 0)
+    else if (fmtArgs.value(1).compare("linear") == 0)
         args.raidModeArg ="m2";
     else if (fmtArgs.value(1).compare("raid0") == 0)
         args.raidModeArg ="m3";
@@ -255,7 +255,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
 
         QString strArg2;
         if(paraList.size() == 30)
-            strArg2 =  args2.createVolume ?
+            strArg2 =  //args2.createVolume ?
                         "-" + args2.volNameArg + " " +
                         "-" + args2.raidModeArg + " " +
                         "-" + args2.fileSystemTypeArg + " " +
@@ -264,7 +264,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
                         "-" + args2.volEnc + " " +
                         "-" + args2.volEncAutoMount + " " +
                         "-" + args2.volEncPwd
-                        : "";
+                        /*: ""*/;
 
         QString strArg2WithBlank;
         if(!strArg2.isEmpty())
@@ -296,7 +296,7 @@ QString RenderResponseDisk::getFMTRemainArgs(QStringList &fmtArgs) {
     args.raidModeArg = "m1";
     if(fmtArgs.value(1).compare("standard") == 0)
         args.raidModeArg = "m1";
-    else if (fmtArgs.value(1).compare("linar") == 0)
+    else if (fmtArgs.value(1).compare("linear") == 0)
         args.raidModeArg ="m2";
     else if (fmtArgs.value(1).compare("raid0") == 0)
         args.raidModeArg ="m3";
