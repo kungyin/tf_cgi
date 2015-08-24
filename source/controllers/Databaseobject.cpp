@@ -50,8 +50,8 @@ QSqlError DbDataProvider::SelectData(QString selected, QString condition, QStrin
     if (!m_Db.isOpen()) m_Db.open();
     DeleteSqlQuery();
     m_Query = new QSqlQuery(m_Db);
-    QString sql = QString("select %1 from %2 %3 %4 %5 %6").arg(selected, (m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":"tbl_files", ((condition.length() > 0)?condition:""), ((order.length() > 0)?"order by " + order_name:""), order, limit);
-    m_Query->prepare(sql);
+    QString sql = QString("select %1 from %2 %3 %4 %5 %6").arg(selected, (m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":"tbl_files", ((condition.length() > 0)?condition:""), ((order_name.length() > 0)?"order by " + order_name:""), order, limit);
+    m_Query->prepare(sql);tDebug("DbDataProvider::SelectData[%s]", sql.toLocal8Bit().data());
     if (!m_Query->exec()) return m_Query->lastError();
     return m_Db.lastError();
 }
@@ -234,24 +234,4 @@ QSqlError SyslogDbDataProvider::SelectAllApplication(QString database)
 QSqlError SyslogDbDataProvider::GetAllDatabase()
 {
     return DbDataProvider::ShowDatabases();
-}
-
-int SyslogDbDataProvider::GetIdAt(int i)
-{
-    if (GetSelectedData() != NULL && (i > 0 && i < GetSelectedData()->size() - 1))
-    {
-        if (GetSelectedData()->seek(i))
-            return GetSelectedData()->value(0).toInt();
-    }
-    return 0;
-}
-
-QString SyslogDbDataProvider::GetTitleAt(int i)
-{
-    return "";
-}
-
-QString SyslogDbDataProvider::GetDataAt(int i)
-{
-    return "";
 }

@@ -649,7 +649,6 @@ void RenderResponseAppMngm::generateItunesServerRefreshState() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogSearch() {
     QDomDocument doc;
 
@@ -676,9 +675,7 @@ void RenderResponseAppMngm::generateSyslogSearch() {
                            paraLogFacility, paraLogApplication, paraKeyword);
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     int size = sys.GetSize();
@@ -757,7 +754,6 @@ void RenderResponseAppMngm::generateSyslogSearch() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateGetVolumeInfo() {
     QDomDocument doc;
 
@@ -792,7 +788,6 @@ void RenderResponseAppMngm::generateGetVolumeInfo() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
     QDomDocument doc;
 
@@ -802,9 +797,7 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
     QSqlError err = sys.GetAllDatabase();
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     int size = sys.GetSize();
@@ -832,7 +825,6 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogGetConfig() {
     QDomDocument doc;
 
@@ -900,7 +892,6 @@ void RenderResponseAppMngm::generateSyslogGetConfig() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogGetSelectOption() {
     QDomDocument doc;
 
@@ -915,9 +906,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
     QSqlError err = sys.SelectAllServerity(paraDatabase);
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     int size = sys.GetSize(), i = 0;
@@ -942,9 +931,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
     err = sys.SelectAllHost(paraDatabase);
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     size = sys.GetSize();
@@ -968,9 +955,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
     err = sys.SelectAllFacility(paraDatabase);
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     size = sys.GetSize();
@@ -994,9 +979,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
     err = sys.SelectAllApplication(paraDatabase);
     if (err.isValid())
     {
-        QDomElement db_error = doc.createElement("error");
-        doc.appendChild(db_error);
-        db_error.appendChild(doc.createTextNode(err.text()));
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
     size = sys.GetSize();
@@ -1020,7 +1003,6 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogSetConfig() {
 
     QString paraSyslogEnable = m_pReq->allParameters().value("f_syslog_enable").toString();
@@ -1060,7 +1042,6 @@ void RenderResponseAppMngm::generateSyslogSetConfig() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogExport() {
 
     QString paraLogFile = m_pReq->allParameters().value("log_file").toString();
@@ -1080,7 +1061,6 @@ void RenderResponseAppMngm::generateSyslogExport() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogGetExportStatus() {
     QDomDocument doc;
 
