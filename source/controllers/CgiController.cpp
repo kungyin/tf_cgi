@@ -154,8 +154,11 @@ void CgiController::cgiResponse() {
         for(auto e : cookies)
             addCookie(e);
         QStringList s = pRrepHome->getSession();
-        if(!s.isEmpty())
+        if(!s.isEmpty()) {
+            if(session().contains(s.value(0)))
+                session().remove(s.value(0));
             session().insert(s.value(0), s.value(1));
+        }
         //User user = pRrepHome->getUser();
         //bool islogin = userLogin(&user);
         //tDebug("sss %d", islogin);
