@@ -812,7 +812,7 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
         if (sys.GetSelectedData()->next())
         {
             dbName = sys.GetSelectedData()->value(0).toString();
-            if (dbName.indexOf("Syslog_") >= 0)
+            if (dbName.indexOf("Syslog") >= 0)
             {
                 cellElement = doc.createElement("cell");
                 root.appendChild(cellElement);
@@ -910,7 +910,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         return;
     }
     int size = sys.GetSize(), i = 0;
-
+tDebug("severity.size[%d]", size);
     QDomElement severityElement;
     QDomElement severityCellElement;
     if (size > 0)
@@ -934,7 +934,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();
+    size = sys.GetSize();tDebug("host.size[%d]", size);
     QDomElement hostElement;
     QDomElement hostCellElement;
     if (size > 0)
@@ -958,7 +958,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();
+    size = sys.GetSize();tDebug("facility.size[%d]", size);
     QDomElement facilityElement;
     QDomElement facilityCellElement;
     if (size > 0)
@@ -982,7 +982,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();
+    size = sys.GetSize();tDebug("application.size[%d]", size);
     QDomElement applicationElement;
     QDomElement applicationCellElement;
     if (size > 0)

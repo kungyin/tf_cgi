@@ -9,7 +9,7 @@ DbDataProvider::DbDataProvider(DB_TYPE db_type)
         Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
             QSqlDatabase::removeDatabase(connName);
     }
-    m_Db = QSqlDatabase::addDatabase("QMYSQL");
+    m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");
     m_Db.setHostName("localhost");
     m_Db.setUserName("root");
 #ifdef SIMULATOR_MODE
