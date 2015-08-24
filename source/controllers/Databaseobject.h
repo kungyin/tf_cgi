@@ -26,10 +26,7 @@ public:
     virtual QSqlError InsertData(QString condition);
     virtual QSqlError DeleteData(int id);
 
-    virtual int GetSize() = 0;
-    virtual int GetIdAt(int i) = 0;
-    virtual QString GetTitleAt(int i) = 0;
-    virtual QString GetDataAt(int i) = 0;
+    virtual int GetSize() { if (GetSelectedData() != NULL && GetSelectedData()->isSelect()) return GetSelectedData()->size(); else return -1; }
 
     QSqlQuery *GetSelectedData() { return m_Query; }
     QSqlError ShowDatabases();
@@ -56,11 +53,6 @@ public:
     QSqlError GetAllDatabase();
     QString DumpDataFromPara(QString paraLogFile, QString paraDateFrom, QString paraDateTo, QString paraViewSeverity, QString paraLogHost, QString paraLogFacility,
                          QString paraLogApplication, QString paraKeyword, QString paraRp);
-
-    int GetSize() { if (GetSelectedData() != NULL && GetSelectedData()->isSelect()) return GetSelectedData()->size(); else return -1; }
-    int GetIdAt(int i);
-    QString GetTitleAt(int i);
-    QString GetDataAt(int i);
 };
 
 #endif // DATABASEOBJECT
