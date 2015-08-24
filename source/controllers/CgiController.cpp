@@ -28,6 +28,7 @@
 
 
 //#include <TAppSettings>
+#include <TWebApplication>
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -153,12 +154,20 @@ void CgiController::cgiResponse() {
         for(auto e : cookies)
             addCookie(e);
         QStringList s = pRrepHome->getSession();
-        if(!s.isEmpty())
+        if(!s.isEmpty()) {
+            if(session().contains(s.value(0)))
+                session().remove(s.value(0));
             session().insert(s.value(0), s.value(1));
+        }
         //User user = pRrepHome->getUser();
         //bool islogin = userLogin(&user);
         //tDebug("sss %d", islogin);
-        redirect(QUrl(pRrep->getVar().toString()));
+
+        QString redirectUrl(pRrep->getVar().toString());
+        if(pRrepHome->getIfRedirectSsl())
+            redirectUrl = "https://" + httpRequest().header().rawHeader("host") + pRrep->getVar().toString();
+
+        redirect(QUrl(redirectUrl));
     }
         break;
     case RENDER_TYPE_USER_LOGOUT:
@@ -192,6 +201,7 @@ void CgiController::cgiResponse() {
 
     if(pRrep)
         delete pRrep;
+
 }
 
 RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)

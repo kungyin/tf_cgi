@@ -1,6 +1,7 @@
 #include "RenderResponseHome.h"
 
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
+    : m_bRedirect2Ssl(false)
 {
     m_cmd = cmd;
     m_pReq = &req;
@@ -153,11 +154,11 @@ void RenderResponseHome::generateLogin() {
     map.insert("ssl_port", paraSslPort);
 
     if(setNasCfg("web", map)) {
-        //if(paraSsl.compare("1") == 0) {
+        if(paraSsl.compare("1") == 0) {
 #ifndef SIMULATOR_MODE
         //todo: restart.
 #endif
-        //}
+        }
     }
 
     QDateTime expire = QDateTime::currentDateTime();
@@ -178,6 +179,9 @@ void RenderResponseHome::generateLogin() {
     m_cookies.append(cookiePwd);
 
     if(apiOut.value(0).compare("1") == 0 || apiOut.value(0).compare("2") == 0) {
+        if(paraSsl.compare("1") == 0)
+            m_bRedirect2Ssl = true;
+
         //m_loginUser = User::create(paraUsername, paraPwd);
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
@@ -186,9 +190,9 @@ void RenderResponseHome::generateLogin() {
         m_session << paraUsername << "1";
 
         if(apiOut.value(0).compare("1") == 0)
-            m_var = "../web/home.html?v=8401878";
+            m_var = "/web/home.html?v=8401878";
         else
-            m_var = "../web/set_passwd.html";
+            m_var = "/web/set_passwd.html";
     }
     else if(apiOut.value(0).compare("0") == 0){
         m_var = "../web/relogin.html";

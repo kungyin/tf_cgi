@@ -76,6 +76,8 @@ private:
     void generateGetUpFw();
     void generateReboot();
 
+    void daemonize();
+
 };
 
 

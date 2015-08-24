@@ -4,6 +4,8 @@
 #include <QTimeZone>
 #include <QFileInfo>
 #include <QDir>
+#include <QTimer>
+#include <unistd.h>
 
 RenderResponseSysMngm::RenderResponseSysMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -983,7 +985,23 @@ void RenderResponseSysMngm::generateGetUpFw() {
 }
 
 void RenderResponseSysMngm::generateReboot() {
+    daemonize();
     if(!QProcess::startDetached(API_PATH + SCRIPT_FW_UPGRADE_MGR, QStringList() << "system_reboot"))
         ;
     m_var = "../web/dsk_mgr/wait.html";
+}
+
+void RenderResponseSysMngm::daemonize()
+{
+
+  if (fork())
+      exit(0); // fork.  parent exits.
+  setsid(); // become process group leader
+  if (fork())
+      _exit(0); // second parent exits.
+  chdir("/"); // just so we don't mysteriously prevent fs unmounts later
+  close(0); // close stdin, stdout, stderr.
+  close(1);
+  close(2);
+
 }

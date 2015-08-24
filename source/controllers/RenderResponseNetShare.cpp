@@ -588,8 +588,6 @@ void RenderResponseNetShare::generateOpenTree() {
         }
         else {
             QString fileVolumePath = e.absoluteFilePath();
-            fileVolumePath.replace("/mnt/HD/HD_a2", "Volume_1");
-            fileVolumePath.replace( "/mnt/HD/HD_b2", "Volume_2");
             if(fileVolumePath.startsWith("/mnt/HD/HD_")) {
                 for(QString shareEntry : shareInfo) {
                     if(fileVolumePath.startsWith(shareEntry.split(":").value(1))) {
