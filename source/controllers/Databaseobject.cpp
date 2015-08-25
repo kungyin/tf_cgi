@@ -3,16 +3,16 @@
 
 DbDataProvider::DbDataProvider(DB_TYPE db_type)
 {
-    m_DbType = db_type;
-    if (m_Db.isOpen())
-        m_Db.close();
+    m_DbType = db_type;tDebug("1111111111111111111111111111111");
     if (QSqlDatabase::database().connectionNames().size() > 0)
-    {
+    {tDebug("22222222222222222222222");
         Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
             QSqlDatabase::removeDatabase(connName);
-    }
-    m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");
-    m_Db.setHostName("localhost");
+    }tDebug("3333333333333333333333333333333");
+    m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");tDebug("4444444444444444444444444");
+    if (m_Db.isOpen())
+        m_Db.close();
+    tDebug("55555555555555555555555");m_Db.setHostName("localhost");
     m_Db.setUserName("root");
 #ifdef SIMULATOR_MODE
     m_Db.setPassword("00000000");
