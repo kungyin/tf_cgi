@@ -4,14 +4,14 @@
 DbDataProvider::DbDataProvider(DB_TYPE db_type)
 {
     m_DbType = db_type;
+    if (m_Db.isOpen())
+        m_Db.close();
     if (QSqlDatabase::database().connectionNames().size() > 0)
     {
         Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
             QSqlDatabase::removeDatabase(connName);
     }
     m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");
-    if (m_Db.isOpen())
-        m_Db.close();
     m_Db.setHostName("localhost");
     m_Db.setUserName("root");
 #ifdef SIMULATOR_MODE
