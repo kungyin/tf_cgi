@@ -910,7 +910,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         return;
     }
     int size = sys.GetSize(), i = 0;
-tDebug("severity.size[%d]", size);
+
     QDomElement severityElement;
     QDomElement severityCellElement;
     if (size > 0)

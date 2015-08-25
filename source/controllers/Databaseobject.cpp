@@ -4,6 +4,8 @@
 DbDataProvider::DbDataProvider(DB_TYPE db_type)
 {
     m_DbType = db_type;
+    if (m_Db.isOpen())
+        m_Db.close();
     if (QSqlDatabase::database().connectionNames().size() > 0)
     {
         Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
@@ -56,7 +58,7 @@ QSqlError DbDataProvider::SelectData(QString selected, QString condition, QStrin
     DeleteSqlQuery();
     m_Query = new QSqlQuery(m_Db);
     QString sql = QString("select %1 from %2 %3 %4 %5 %6").arg(selected, (m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":"tbl_files", ((condition.length() > 0)?condition:""), ((order_name.length() > 0)?"order by " + order_name:""), order, limit);
-    m_Query->prepare(sql);tDebug("DbDataProvider::SelectData[%s]", sql.toLocal8Bit().data());
+    m_Query->prepare(sql);
     if (!m_Query->exec()) return m_Query->lastError();
     return m_Db.lastError();
 }
