@@ -24,17 +24,17 @@ void ParseCmd::parse(QString cmd, int group) {
     int iSearchStart = 0;
     int iSearchEnd = cgiCommandNum;
 
+    /* Distance of index in CGI_PARA_COMMANDS and CGI_COMMAND is 1. */
     if(group != CMD_GRP_NONE) {
         int cgiGroupNum = sizeof(CMD_GROUP_SPACE)/sizeof(CMD_GROUP_SPACE[0]);
         for(int i = 0; i < cgiGroupNum; i++) {
             if(group == i) {
-                iSearchStart = CMD_GROUP_SPACE[i][1] - 1;
-                iSearchEnd = CMD_GROUP_SPACE[i][2];
+                iSearchStart = CMD_GROUP_SPACE[i][1] + 1;
+                iSearchEnd = CMD_GROUP_SPACE[i][2] + 1;
                 break;
             }
         }
     }
-
 
     /* 1. content of cmd to CGI_COMMAND */
     int iCmdNumber = -1;

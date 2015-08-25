@@ -194,7 +194,7 @@ void RenderResponseHome::generateLogin() {
         else
             m_var = "/web/set_passwd.html";
     }
-    else if(apiOut.value(0).compare("0") == 0){
+    else /*if(apiOut.value(0).compare("0") == 0)*/ {
         m_var = "../web/relogin.html";
     }
 

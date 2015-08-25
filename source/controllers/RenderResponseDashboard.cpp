@@ -1,6 +1,7 @@
 #include "RenderResponseDashboard.h"
 
 RenderResponseDashboard::RenderResponseDashboard(THttpRequest &req, CGI_COMMAND cmd)
+    : m_pSession(NULL)
 {
     m_cmd = cmd;
     m_pReq = &req;
@@ -32,6 +33,19 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);
 
+    QString users;
+    if(m_pSession) {
+        QMapIterator<QString, QVariant> i(*m_pSession);
+        while (i.hasNext()) {
+            i.next();
+            QString split;
+            if(!users.isEmpty())
+                split = ",";
+            if(i.value() == "1")
+                users += split + i.key();
+        }
+    }
+
     QStringList deviceInfoContentElement(QStringList()
             << "hostname" << "modelname" << "fanspeed" << "high_speed_temp"
             << "low_speed_temp" << "onlineuser" << "bonding_enable"
@@ -42,7 +56,10 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
         for(int i = 0; i < apiOut.size(); i++) {
             QDomElement element = doc.createElement(deviceInfoContentElement.value(i));
             root.appendChild(element);
-            element.appendChild(doc.createTextNode(apiOut.value(i)));
+            if(i == 5)
+                element.appendChild(doc.createTextNode(users));
+            else
+                element.appendChild(doc.createTextNode(apiOut.value(i)));
         }
     }
     else {

@@ -504,7 +504,7 @@ enum CGI_COMMAND {
 };
 
 enum SPECIAL_CMD_GROUP {
-    CMD_GRP_NONE,
+    CMD_GRP_NONE = 0,
     CMD_GRP_GOOGLE_DRIVE,
 };
 

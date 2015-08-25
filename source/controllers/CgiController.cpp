@@ -243,8 +243,11 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseAppDownloads(req, cmd);
     else if(cmd < CMD_ADD_ON_END)
         pRrep = new RenderResponseAddOn(req, cmd);
-    else if(cmd < CMD_DASHBOARD_END)
-        pRrep = new RenderResponseDashboard(req, cmd);
+    else if(cmd < CMD_DASHBOARD_END) {
+        RenderResponseDashboard *pDashboard = new RenderResponseDashboard(req, cmd);
+        pDashboard->setSession(session());
+        pRrep = pDashboard;
+    }
     else if(cmd < CMD_FILE_END)
         pRrep = new RenderResponseFileStation(req, cmd);
     else if(cmd < CMD_P2P_END)

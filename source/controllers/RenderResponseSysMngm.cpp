@@ -781,8 +781,11 @@ void RenderResponseSysMngm::generateLogSystem() {
     if(logEnd > apiOut.size())
         logEnd = apiOut.size();
     for(int i = logStart; i < logEnd; i++) {
-        QString logDate = apiOut.value(i).section(" ", 0, 1);
-        QString logTime = apiOut.value(i).section(" ", 2, 2);
+        int diff = 0;
+        if(apiOut.value(i).indexOf("  ") == 3)
+            diff = 1;
+        QString logDate = apiOut.value(i).section(" ", 0, 1 + diff);
+        QString logTime = apiOut.value(i).section(" ", 2 + diff, 2 + diff);
         QString strLog = apiOut.value(i).section(" ", 4);
         QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
 
@@ -994,14 +997,14 @@ void RenderResponseSysMngm::generateReboot() {
 void RenderResponseSysMngm::daemonize()
 {
 
-  if (fork())
-      exit(0); // fork.  parent exits.
-  setsid(); // become process group leader
-  if (fork())
-      _exit(0); // second parent exits.
-  chdir("/"); // just so we don't mysteriously prevent fs unmounts later
-  close(0); // close stdin, stdout, stderr.
-  close(1);
-  close(2);
+    if (fork())
+        exit(0); // fork.  parent exits.
+    setsid(); // become process group leader
+    if (fork())
+        _exit(0); // second parent exits.
+    chdir("/"); // just so we don't mysteriously prevent fs unmounts later
+    close(0); // close stdin, stdout, stderr.
+    close(1);
+    close(2);
 
 }
