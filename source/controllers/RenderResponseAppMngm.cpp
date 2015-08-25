@@ -934,7 +934,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();tDebug("host.size[%d]", size);
+    size = sys.GetSize();
     QDomElement hostElement;
     QDomElement hostCellElement;
     if (size > 0)
@@ -958,7 +958,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();tDebug("facility.size[%d]", size);
+    size = sys.GetSize();
     QDomElement facilityElement;
     QDomElement facilityCellElement;
     if (size > 0)
@@ -982,7 +982,7 @@ void RenderResponseAppMngm::generateSyslogGetSelectOption() {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
         return;
     }
-    size = sys.GetSize();tDebug("application.size[%d]", size);
+    size = sys.GetSize();
     QDomElement applicationElement;
     QDomElement applicationCellElement;
     if (size > 0)
