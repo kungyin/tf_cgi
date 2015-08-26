@@ -188,9 +188,9 @@ void RenderResponseFtp::generateFtpServerEnable() {
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement resElement = doc.createElement("res");
-    root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement resultElement = doc.createElement("result");
+    root.appendChild(resultElement);
+    resultElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 

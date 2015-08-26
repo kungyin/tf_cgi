@@ -696,7 +696,7 @@ void RenderResponseAccount::generateGroupAdd() {
 //    QString paraGroup = m_pReq->allParameters().value("group").toString();
 //    QString paraMember = m_pReq->allParameters().value("member").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " add " +
-                                      allParametersToString(), true);
+                                      allParametersToString("#", ""), true);
 }
 
 

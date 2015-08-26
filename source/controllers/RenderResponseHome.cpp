@@ -1,5 +1,33 @@
 #include "RenderResponseHome.h"
 
+
+void RC4_DeCRYPT_CRYPT(unsigned char * strData, unsigned long nDatalen,
+                       unsigned char * strKey, unsigned long nKeylen )
+{
+    unsigned char sBox[256] = { 0 };
+    int i =0, j = 0,ntemp = 0, key[256] = {0};
+    for(i=0;i<256;i++)
+    {
+        sBox[i]=i;
+        key[i]=strKey[i%nKeylen];
+    }
+    for (i=0; i<256; i++)
+    {
+        j=(j+sBox[i]+key[i])%256;
+        std::swap(sBox[i],sBox[j]);
+    }
+    i =0, j = 0;
+    for(int k=0;k<nDatalen;k++)
+    {
+        i=(i+1)%256;
+        j=(j+sBox[i])%256;
+        std::swap(sBox[i],sBox[j]);
+        ntemp=(sBox[i]+sBox[j])%256;
+        char ch = strData[k] ^ sBox[ntemp];
+        strData[k] = ch;
+    }
+}
+
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
     : m_bRedirect2Ssl(false)
 {
@@ -215,27 +243,36 @@ void RenderResponseHome::generateLogout() {
 
 }
 
-/* todo */
 void RenderResponseHome::generateGetLogItem() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_HOME_API + " -g ssl_info", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " cgi_get_log_item " + allParametersToString());
 
     QDomElement root = doc.createElement("log");
     doc.appendChild(root);
 
-    //for
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
-    QStringList itemContent(QStringList() << "date" << "info");
-    //if( itemContent.size() != apiOut.value(i).split(";").size() ) {
+    for(QString e : apiOut) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        //QStringList itemContent(QStringList() << "date" << "info");
 
-    //for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
-    QDomElement element = doc.createElement(itemContent.value(0));
-    itemElement.appendChild(element);
-    element.appendChild(doc.createTextNode(""));
-    //}
+        int diff = 0;
+        if(e.indexOf("  ") == 3)
+            diff = 1;
+        QString logDate = e.section(" ", 0, 1 + diff);
+        //QString logTime = e.section(" ", 2 + diff, 2 + diff);
+        QString strLog = e.section(" ", 4);
+        QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
+
+        QDomElement dateElement = doc.createElement("data");
+        itemElement.appendChild(dateElement);
+        dateElement.appendChild(doc.createTextNode(logDate));
+        QDomElement infoElement = doc.createElement("info");
+        itemElement.appendChild(infoElement);
+        infoElement.appendChild(doc.createTextNode(logContent));
+    }
     m_var = doc.toString();
 
 }
