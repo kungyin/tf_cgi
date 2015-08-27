@@ -1239,7 +1239,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             }
             QString subComment = QString(taskList[i].comment).mid(1);
             QDateTime datetime = QDateTime::fromString(subComment, "yyyyMMddhhmm");
-            comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy mm:ss"));
+            comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy hh:mm"));
         }
         QDomElement cellElement8 = doc.createElement("cell");
         rowElement1.appendChild(cellElement8);
@@ -1506,7 +1506,7 @@ void RenderResponseAppMngm::generateLocalBackupRenew() {
     renewOrAdd(false);
 
     if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Renew"))
-        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
+        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
     else if(m_pReq->parameter("cmd") == QString("Local_Backup_Renew"))
         m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 }
