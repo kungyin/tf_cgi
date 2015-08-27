@@ -1,4 +1,5 @@
 #include <QProcess>
+#include <QFileInfo>
 #include <cassert>
 
 #include "RenderResponseDisk.h"
@@ -755,87 +756,107 @@ void RenderResponseDisk::generateScanDiskFinish() {
 
 }
 
-/* todo */
 void RenderResponseDisk::generateVeList() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
+
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_VE_list", true, ";");
+
+    QString cellContent3 = "<a href=\"javascript:parent.ve_mount_diag('%1')\"><IMG border='0'"
+            " src='/web/images/mount.png'></a>";
+    QString cellContent4 = "<a href=\"javascript:ve_save_key('%1')\"><IMG border='0'"
+            " src='/web/images/save.png'></a>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-//    if(apiOut.isEmpty()) {
+    for(int i = 0; i < apiOut.size(); i++) {
 
-//        QDomElement rowElement1 = doc.createElement("row");
-//        root.appendChild(rowElement1);
-//        rowElement1.setAttribute("id", "1");
+        QDomElement rowElement1 = doc.createElement("row");
+        root.appendChild(rowElement1);
+        rowElement1.setAttribute("id", i+1);
 
-//        QDomElement cellElement1 = doc.createElement("cell");
-//        rowElement1.appendChild(cellElement1);
-//        cellElement1.appendChild(doc.createTextNode("-"));
-//        QDomElement cellElement2 = doc.createElement("cell");
-//        rowElement1.appendChild(cellElement2);
-//        cellElement2.appendChild(doc.createTextNode("-"));
-//        QDomElement cellElement3 = doc.createElement("cell");
-//        rowElement1.appendChild(cellElement3);
-//        cellElement3.appendChild(doc.createTextNode("-"));
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(apiOut.value(0)));
+        QDomElement cellElement2 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement2);
+        cellElement2.appendChild(doc.createTextNode(apiOut.value(2)));
+        QDomElement cellElement3 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement3);
+        cellElement3.appendChild(doc.createTextNode(apiOut.value(3)));
 
-//    }
+        QString cellContent = "--";
+        if(apiOut.value(4) == "0")
+            cellContent = cellContent3.arg(apiOut.value(1));
+        QDomElement cellElement4 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement4);
+        cellElement4.appendChild(doc.createCDATASection(cellContent));
+
+        cellContent = "--";
+        if(apiOut.value(4) == "1")
+            cellContent = cellContent4.arg(apiOut.value(1));
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement1.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createCDATASection(cellContent));
+
+    }
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("0"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode("1"));
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDisk::generateVePwdCheck() {
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_chk_VE_pwd " +
+                                      allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDisk::generateVeVerifyKeyfile() {
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_export_VE_keyfile " +
+                                      allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("0"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDisk::generateVeModify() {
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -f", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_chk_VE_pwd " +
+                                      allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode("5"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDisk::generateVeSaveFile() {
-//    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " save", true);
-//    QString filePath = apiOut.value(0);
-//    tDebug("file: %s", filePath.toLocal8Bit().data());
-//    QFileInfo file(filePath);
-//    if(file.exists() && file.isFile())
-//        str = filePath;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_export_VE_keyfile " +
+                                      allParametersToString(), true);
+    QString filePath = VE_EXPORT_KEY_FILE;
+    tDebug("file: %s", filePath.toLocal8Bit().data());
+    QFileInfo file(filePath);
+    if(file.exists() && file.isFile())
+        m_var = filePath;
 }

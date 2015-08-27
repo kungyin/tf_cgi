@@ -657,7 +657,7 @@ void RenderResponseNetShare::generateAddSession() {
 //    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_add_session " +
-                                      allParametersToString(), true);
+                                      allParametersToString("#", ""), true);
 
 }
 
