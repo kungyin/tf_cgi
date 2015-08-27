@@ -795,7 +795,7 @@ void RenderResponseSysMngm::generateLogSystem() {
             diff = 1;
         QString logDate = apiOut.value(i).section(" ", 0, 1 + diff);
         QString logTime = apiOut.value(i).section(" ", 2 + diff, 2 + diff);
-        QString strLog = apiOut.value(i).section(" ", 4);
+        QString strLog = apiOut.value(i).section(" ", 4 + diff);
         QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
 
         QVariantMap itemMap;
@@ -900,7 +900,7 @@ void RenderResponseSysMngm::generateUpsMaterList() {
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usp_master_list");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_master_list");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -913,7 +913,7 @@ void RenderResponseSysMngm::generateUpsMaterList() {
         cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
         QDomElement cellElement = doc.createElement("cell");
         rowElement.appendChild(cellElement);
-        cellElement.appendChild(doc.createTextNode(apiOut.value(0)));
+        cellElement.appendChild(doc.createTextNode(apiOut.value(i)));
 
         rowElement.setAttribute("id", i+1);
     }
