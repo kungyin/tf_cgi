@@ -159,7 +159,7 @@ void RenderResponseHome::generateLogin() {
     if(m_pReq->allParameters().contains("username"))
         paraUsername = m_pReq->allParameters().value("username").toString();
     if(m_pReq->allParameters().contains("pwd"))
-        paraPwd = m_pReq->allParameters().value("pwd").toString();
+        paraPwd = QUrl::fromPercentEncoding(m_pReq->allParameters().value("pwd").toByteArray());
     if(m_pReq->allParameters().contains("port"))
         paraPort = m_pReq->allParameters().value("port").toString();
     if(m_pReq->allParameters().contains("f_type"))
@@ -201,11 +201,10 @@ void RenderResponseHome::generateLogin() {
 
     QByteArray pass = paraPrePwd.toLocal8Bit();
     QByteArray name = paraUsername.toLocal8Bit();
-    //char *cPass = pass.data();
-    RC4_DeCRYPT_CRYPT((unsigned char *)(pass.data()), pass.length(), (unsigned char *)(name.data()), name.length());
 
-    TCookie cookiePwd("password", pass.toBase64(QByteArray::Base64UrlEncoding));
-    //tDebug("%s", paraPwd.toLocal8Bit().fromBase64(.data());
+
+    TCookie cookiePwd("password", pass/*.toBase64*(/*QByteArray::OmitTrailingEquals*/);
+    //tDebug("%s", QByteArray::fromBase64(paraPwd.toLocal8Bit()).data());
     cookiePwd.setExpirationDate(expire);
     cookiePwd.setPath("/");
     m_cookies.append(cookieName);
@@ -268,17 +267,17 @@ void RenderResponseHome::generateGetLogItem() {
         int diff = 0;
         if(e.indexOf("  ") == 3)
             diff = 1;
-        QString logDate = e.section(" ", 0, 1 + diff);
+        QString logDateTime = e.section(" ", 0, 2 + diff);
         //QString logTime = e.section(" ", 2 + diff, 2 + diff);
-        QString strLog = e.section(" ", 4);
-        QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
+        QString strLog = e.section(" ", 4 + diff);
+        //QString logContent = strLog.right(strLog.length() - (strLog.indexOf(": ") + 2));
 
-        QDomElement dateElement = doc.createElement("data");
+        QDomElement dateElement = doc.createElement("date");
         itemElement.appendChild(dateElement);
-        dateElement.appendChild(doc.createTextNode(logDate));
+        dateElement.appendChild(doc.createTextNode(logDateTime));
         QDomElement infoElement = doc.createElement("info");
         itemElement.appendChild(infoElement);
-        infoElement.appendChild(doc.createTextNode(logContent));
+        infoElement.appendChild(doc.createTextNode(strLog));
     }
     m_var = doc.toString();
 
