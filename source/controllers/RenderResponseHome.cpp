@@ -201,9 +201,19 @@ void RenderResponseHome::generateLogin() {
 
     QByteArray pass = paraPrePwd.toLocal8Bit();
     QByteArray name = paraUsername.toLocal8Bit();
+    //char *cPass = pass.data();
+    RC4_DeCRYPT_CRYPT((unsigned char *)(pass.data()), pass.length(), (unsigned char *)(name.data()), name.length());
 
+//    QByteArray arr = QByteArray::fromBase64("yZhPvWL");
+//    QString s = QString::fromUtf8(arr);
+//    QByteArray a(s.toLocal8Bit());
+//    QByteArray ad("admin");
+//    tDebug("FFFFFFFF %s", a.data());
+//    RC4_DeCRYPT_CRYPT((unsigned char *)(a.data()), a.length(), (unsigned char *)(ad.data()), ad.length());
+//    tDebug("FFFFFFFF %s", QString::fromUtf8(a).toLocal8Bit().data());
+//    //tDebug("FFFFFFFF %s", QByteArray::fromHex(QByteArray::fromBase64(a)).data());
 
-    TCookie cookiePwd("password", pass/*.toBase64*(/*QByteArray::OmitTrailingEquals*/);
+    TCookie cookiePwd("password", pass.toBase64()/*.toBase64*(/*QByteArray::OmitTrailingEquals*/);
     //tDebug("%s", QByteArray::fromBase64(paraPwd.toLocal8Bit()).data());
     cookiePwd.setExpirationDate(expire);
     cookiePwd.setPath("/");

@@ -550,39 +550,39 @@ void RenderResponseNetwork::generateGetDdnsStatus() {
     QDomDocument doc;
 
     QStringList apiOutList = getAPIStdOut(API_PATH + SCRIPT_DDNS_CTL + " -S");
-    if(apiOutList.size() < 3)
-        return;
 
     QDomElement root = doc.createElement("ddns");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    QDomText statusValue = doc.createTextNode(apiOutList.at(0));
+    QDomText statusValue = doc.createTextNode(apiOutList.value(0));
     statusElement.appendChild(statusValue);
 
     QDomElement updatetimeElement = doc.createElement("updatetime");
     root.appendChild(updatetimeElement);
 
-    bool ok = false;
-    QDomText updateTimeValue;
-    uint iUpdateTime = apiOutList.at(1).toInt(&ok);
-    if(ok) {
-        QDateTime update = QDateTime::fromTime_t(iUpdateTime);
-        updateTimeValue = doc.createTextNode(update.toString("yyyy/M/d h:m:s"));
-    }
-    updatetimeElement.appendChild(updateTimeValue);
-
     QDomElement nexttimeElement = doc.createElement("nexttime");
     root.appendChild(nexttimeElement);
 
-    ok = false;
-    QDomText nextTimeValue;
-    uint iNextTime = apiOutList.at(2).toInt(&ok);
-    if(ok) {
-        QDateTime next = QDateTime::fromTime_t(iNextTime);
-        nextTimeValue = doc.createTextNode(next.toString("yyyy/M/d h:m:s"));
+    if(apiOutList.size() == 3) {
+        bool ok = false;
+        QDomText updateTimeValue;
+        uint iUpdateTime = apiOutList.value(1).toInt(&ok);
+        if(ok) {
+            QDateTime update = QDateTime::fromTime_t(iUpdateTime);
+            updateTimeValue = doc.createTextNode(update.toString("yyyy/M/d h:m:s"));
+        }
+        updatetimeElement.appendChild(updateTimeValue);
+
+        ok = false;
+        QDomText nextTimeValue;
+        uint iNextTime = apiOutList.value(2).toInt(&ok);
+        if(ok) {
+            QDateTime next = QDateTime::fromTime_t(iNextTime);
+            nextTimeValue = doc.createTextNode(next.toString("yyyy/M/d h:m:s"));
+        }
+        nexttimeElement.appendChild(nextTimeValue);
     }
-    nexttimeElement.appendChild(nextTimeValue);
 
     m_var = doc.toString();
 
