@@ -23,7 +23,7 @@
 [ $1 == 'system_get_system_status' ] && echo -e "0;1;1;192.168.100.85;255.255.255.0;192.168.100.5;192.168.100.5;192.168.100.5;34029/5047;1;169.254.0.253;255.255.255.0;192.168.0.1;;;N/A;dlink-8B21F7;workgroup;DNS-340L;CC:B2:55:8B:21:F7;;HP;Officejet 4620 series;100 %;On Line;UPS;Apotop#AP-U1#USBDisk3_1,2.01 GB#USBDisk3_2,2.01 GB#USBDisk3_3,3.52 GB;1433984152"
 [ $1 == 'system_get_hdd_volume_info' ] && echo -e "1;standard;0;2881575288;514476;2881044428;0" && echo -e "2;standard;0;1920264152;200120;1920064032;0"
 [ $1 == 'system_get_mtp_info' ] && echo -e "3;HTC;Android Phone" && echo -e "3;HTC;Android Phone"
-[ $1 == 'system_get_usb_printer_info' ] && echo -e "1;HP;Officejet 4620 series;lp0-USB-1" && echo -e "1;HP;Officejet 4620 series;lp1-USB-1"
+[ $1 == 'system_get_usb_printer_info' ] && echo -e "0,HP,Officejet 4620 series"
 [ $1 == 'system_get_ups_info2' ] && echo -e "1;CPS;UPS CP1000AVRLCD"
 [ $1 == 'system_get_device_smart_info' ] && echo -e "Disk1;Seagate;ST3000DM001-9YN166;S1F0HYJ4;39;2930266582;sda" && echo -e "Disk2;WD;WDCWD30EFRX-68EUZN0;WD-WMC4N2584636;35;2930266582;sdb"
 
@@ -41,7 +41,8 @@
 [ $1 == 'service_set_del_all_share' ] && echo -e "1"
 [ $1 == 'system_chk_admin_pw' ] && echo -e "1"
 [ $1 == 'system_get_system_temperature' ] && echo -e "104:40"
-[ $1 == 'service_get_ups_info' ] && echo -e "1;2;none;0"
+[ $1 == 'service_get_ups_info' ] && echo -e "0,3,192.168.100.201,100,0,1"
+[ $1 == 'service_get_usp_master_list' ] && echo -e "192.168.100.201" && echo -e "192.168.100.202"
 [ $1 == 'service_get_check_ups_ps' ] && echo -e "1"
 [ $1 == 'service_set_ups_slave' ] && echo -e "1"
 [ $1 == 'service_set_usb_storage_umount' ] && echo -e "1"

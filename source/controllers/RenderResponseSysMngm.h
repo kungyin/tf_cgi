@@ -62,6 +62,7 @@ private:
     void generateLogClear();
 
     void generateUpsInfo();
+    void generateUpsMaterList();
     void generateUpsSlaveSetting();
     void generateUpsPs();
     void generateUsbStorageUmount();

@@ -153,6 +153,9 @@ void RenderResponseSysMngm::preRender() {
     case CMD_GUI_UPS_INFO:
         generateUpsInfo();
         break;
+    case CMD_GUI_UPS_MATER_LIST:
+        generateUpsMaterList();
+        break;
     case CMD_GUI_UPS_SLAVE_SETTING:
         generateUpsSlaveSetting();
         break;
@@ -856,26 +859,71 @@ void RenderResponseSysMngm::generateLogClear() {
 void RenderResponseSysMngm::generateUpsInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_info", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_info", true, ",");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement upsPlugmodeElement = doc.createElement("ups_plugmode");
-    root.appendChild(upsPlugmodeElement);
-    upsPlugmodeElement.appendChild(doc.createTextNode(apiOut.value(0)));
-    QDomElement upsModeElement = doc.createElement("ups_mode");
-    root.appendChild(upsModeElement);
-    upsModeElement.appendChild(doc.createTextNode(apiOut.value(1)));
-    QDomElement masterIpElement = doc.createElement("master_ip");
-    root.appendChild(masterIpElement);
-    masterIpElement.appendChild(doc.createTextNode(apiOut.value(2)));
-    QDomElement upsNetworkElement = doc.createElement("ups_network");
-    root.appendChild(upsNetworkElement);
-    upsNetworkElement.appendChild(doc.createTextNode(apiOut.value(3)));
+
+    QList<QString> upsContentElement;
+    upsContentElement << "ups_plugmode" << "ups_mode" << "master_ip" << "ups_network";
+    if(apiOut.size() == 6) {
+        upsContentElement.insert(3, "master_battery");
+        upsContentElement.insert(4, "master_status");
+    }
+
+    if( upsContentElement.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(upsContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
+               "upsContentElement size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 
 }
+
+void RenderResponseSysMngm::generateUpsMaterList() {
+
+    QDomDocument doc;
+    QString paraPage = m_pReq->allParameters().value("page").toString();
+    QString paraRp = m_pReq->allParameters().value("rp").toString();
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usp_master_list");
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+        QDomElement cellElement1 = doc.createElement("cell");
+        rowElement.appendChild(cellElement1);
+        cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
+        QDomElement cellElement = doc.createElement("cell");
+        rowElement.appendChild(cellElement);
+        cellElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+        rowElement.setAttribute("id", i+1);
+    }
+
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode(paraPage));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
+    m_var = doc.toString();
+
+}
+
 
 void RenderResponseSysMngm::generateUpsSlaveSetting() {
 
