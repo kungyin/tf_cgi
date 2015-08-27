@@ -308,6 +308,9 @@ enum CGI_COMMAND {
     CMD_LOG_CLEAR,                          /* cgi_log_clear */
 
     CMD_GUI_UPS_INFO,                       /* GUI_ups_info */
+    CMD_GUI_UPS_MATER_LIST,                 /* GUI_ups_mater_list */
+    CMD_GUI_UPS_STATUS_INFO,                /* GUI_ups_status_info */
+    CMD_GUI_UPS_ADD,                        /* GUI_ups_add */
     CMD_GUI_UPS_SLAVE_SETTING,              /* GUI_ups_slave_setting */
     CMD_GUI_UPS_PS,                         /* GUI_ups_ps */
     CMD_USB_STORAGE_UMOUNT,                 /* cgi_usb_Storage_umount */
@@ -803,6 +806,9 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_log_clear",
 
     "GUI_ups_info",
+    "GUI_ups_mater_list",
+    "GUI_ups_status_info",
+    "GUI_ups_add",
     "GUI_ups_slave_setting",
     "GUI_ups_ps",
     "cgi_usb_Storage_umount",
@@ -1302,6 +1308,9 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_LOG_CLEAR,                    RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_log_clear */
 
     { CMD_GUI_UPS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_info */
+    { CMD_GUI_UPS_MATER_LIST,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_mater_list */
+    { CMD_GUI_UPS_STATUS_INFO,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_status_info */
+    { CMD_GUI_UPS_ADD,                  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_add */
     { CMD_GUI_UPS_SLAVE_SETTING,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_slave_setting */
     { CMD_GUI_UPS_PS,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_ups_ps */
     { CMD_USB_STORAGE_UMOUNT,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_usb_Storage_umount */

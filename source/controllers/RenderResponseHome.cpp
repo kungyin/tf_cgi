@@ -198,7 +198,14 @@ void RenderResponseHome::generateLogin() {
     TCookie cookieRemMe("rembMe", "checked");
     cookieRemMe.setExpirationDate(expire);
     cookieRemMe.setPath("/");
-    TCookie cookiePwd("password", paraPwd.toLocal8Bit());
+
+    QByteArray pass = paraPrePwd.toLocal8Bit();
+    QByteArray name = paraUsername.toLocal8Bit();
+    //char *cPass = pass.data();
+    RC4_DeCRYPT_CRYPT((unsigned char *)(pass.data()), pass.length(), (unsigned char *)(name.data()), name.length());
+
+    TCookie cookiePwd("password", pass.toBase64(QByteArray::Base64UrlEncoding));
+    //tDebug("%s", paraPwd.toLocal8Bit().fromBase64(.data());
     cookiePwd.setExpirationDate(expire);
     cookiePwd.setPath("/");
     m_cookies.append(cookieName);

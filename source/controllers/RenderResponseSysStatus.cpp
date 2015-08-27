@@ -303,27 +303,27 @@ void RenderResponseSysStatus::generateUsbStorageInfo() {
 void RenderResponseSysStatus::generateMtpInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_mtp_info");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mtp_info");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     QList<QString> mtpContentElement;
     mtpContentElement << "usb_port" << "manufacturer" << "product";
 
-    for(int i = 0; i < apiOut.size(); i++) {
+    for(int i = 1; i < apiOut.size(); i++) {
         QDomElement mtpElement = doc.createElement("mtp");
         root.appendChild(mtpElement);
-        if( mtpContentElement.size() == apiOut.value(i).split(";").size() ) {
-            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+        if( mtpContentElement.size() == apiOut.value(i).split(",").size() ) {
+            for(int j = 0; j < apiOut.value(i).split(",").size(); j++) {
 
                 QDomElement element = doc.createElement(mtpContentElement.value(j));
                 mtpElement.appendChild(element);
-                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(",").value(j)));
             }
         }
         else {
@@ -340,7 +340,7 @@ void RenderResponseSysStatus::generateMtpInfo() {
 void RenderResponseSysStatus::generateUsbPrinterInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_usb_printer_info");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_usb_printer_info", true, ",");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -350,26 +350,42 @@ void RenderResponseSysStatus::generateUsbPrinterInfo() {
     resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
 
     QList<QString> printerContentElement;
-    printerContentElement << "usb_port" << "manufacturer" << "product" << "printer_name";
+    printerContentElement << "" << "Manufacturer" << "product";
 
-    for(int i = 0; i < apiOut.size(); i++) {
-        QDomElement printerElement = doc.createElement("printer");
-        root.appendChild(printerElement);
-        if( printerContentElement.size() == apiOut.value(i).split(";").size() ) {
-
-            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
-
-                QDomElement element = doc.createElement(printerContentElement.value(j));
-                printerElement.appendChild(element);
-                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
-            }
-        }
-        else {
-            //assert(0);
-            tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
-                   "printerContentElement size is not equal to apiOut size.");
+    if( printerContentElement.size() == apiOut.size() ) {
+        for(int i = 1; i < apiOut.size(); i++) { //display only "Manufacturer" and "product".
+            QDomElement element = doc.createElement(printerContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
         }
     }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
+               "printerContentElement size is not equal to apiOut size.");
+    }
+
+//    QList<QString> printerContentElement;
+//    printerContentElement << "usb_port" << "manufacturer" << "product" << "printer_name";
+
+//    for(int i = 0; i < apiOut.size(); i++) {
+//        QDomElement printerElement = doc.createElement("printer");
+//        root.appendChild(printerElement);
+//        if( printerContentElement.size() == apiOut.value(i).split(";").size() ) {
+
+//            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+
+//                QDomElement element = doc.createElement(printerContentElement.value(j));
+//                printerElement.appendChild(element);
+//                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+//            }
+//        }
+//        else {
+//            //assert(0);
+//            tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
+//                   "printerContentElement size is not equal to apiOut size.");
+//        }
+//    }
 
     m_var = doc.toString();
 
