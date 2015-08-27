@@ -156,6 +156,12 @@ void RenderResponseSysMngm::preRender() {
     case CMD_GUI_UPS_MATER_LIST:
         generateUpsMaterList();
         break;
+    case CMD_GUI_UPS_STATUS_INFO:
+        generateUpsStatusInfo();
+        break;
+    case CMD_GUI_UPS_ADD:
+        generateUpsAdd();
+        break;
     case CMD_GUI_UPS_SLAVE_SETTING:
         generateUpsSlaveSetting();
         break;
@@ -924,6 +930,55 @@ void RenderResponseSysMngm::generateUpsMaterList() {
 
 }
 
+void RenderResponseSysMngm::generateUpsStatusInfo() {
+
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_status_info", true, ",");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+
+    QList<QString> upsContentElement;
+    upsContentElement << "manufacturer" << "product" << "battery" << "ups_status";
+
+    if(apiOut.isEmpty())
+        apiOut << "--" << "--" << "--" << "--";
+
+    if( upsContentElement.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(upsContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateUsbPrinterInfo() :"
+               "upsContentElement size is not equal to apiOut size.");
+    }
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseSysMngm::generateUpsAdd() {
+
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_add "
+                                      + allParametersToString(), true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
+}
 
 void RenderResponseSysMngm::generateUpsSlaveSetting() {
 

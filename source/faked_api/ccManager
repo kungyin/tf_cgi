@@ -43,6 +43,7 @@
 [ $1 == 'system_get_system_temperature' ] && echo -e "104:40"
 [ $1 == 'service_get_ups_info' ] && echo -e "0,3,192.168.100.201,100,0,1"
 [ $1 == 'service_get_usp_master_list' ] && echo -e "192.168.100.201" && echo -e "192.168.100.202"
+[ $1 == 'service_get_ups_status_info' ] && echo -e "CPS,UPS CP1000AVRLCD,100,On Line"
 [ $1 == 'service_get_check_ups_ps' ] && echo -e "1"
 [ $1 == 'service_set_ups_slave' ] && echo -e "1"
 [ $1 == 'service_set_usb_storage_umount' ] && echo -e "1"
