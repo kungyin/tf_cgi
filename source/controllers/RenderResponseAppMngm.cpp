@@ -1239,7 +1239,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             }
             QString subComment = QString(taskList[i].comment).mid(1);
             QDateTime datetime = QDateTime::fromString(subComment, "yyyyMMddhhmm");
-            comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy mm:ss"));
+            comment = commentStr.arg(arg1).arg(datetime.toString("MM/dd/yy hh:mm"));
         }
         QDomElement cellElement8 = doc.createElement("cell");
         rowElement1.appendChild(cellElement8);
@@ -1310,7 +1310,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.execat = execat.data();
     QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
     taskInfo.login_id = login_id.data();
-    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit()).toUtf8();
+    QString src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit());
     QFile file_src(SHARE_INFO_FILE);
     if (file_src.open(QIODevice::ReadOnly))
     {
@@ -1323,7 +1323,8 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         }
         file_src.close();
     }
-    taskInfo.src = src.data();
+    QByteArray src_b = src.toUtf8();
+    taskInfo.src = src_b.data();
     QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
     taskInfo.src_user = src_user.data();
     QByteArray src_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("f_pwd").toLocal8Bit()).toUtf8();
@@ -1505,7 +1506,7 @@ void RenderResponseAppMngm::generateLocalBackupRenew() {
     renewOrAdd(false);
 
     if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Renew"))
-        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
+        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
     else if(m_pReq->parameter("cmd") == QString("Local_Backup_Renew"))
         m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
 }
@@ -1546,7 +1547,7 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     }
 
     /* Null user is anonymount. */
-    QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit()).toUtf8();
+    QString src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit());
     QFile file(SHARE_INFO_FILE);
     if (file.open(QIODevice::ReadOnly))
     {
@@ -1559,20 +1560,21 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
         }
         file.close();
     }
+    QByteArray src_b = src.toUtf8();
     QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
     RESULT_STATUS resultSatus;
     if (m_pReq->parameter("cmd").contains("Localbackup_"))
         resultSatus = TestBackupTask(m_pReq->parameter("f_type").toInt(),
                                                 user.isEmpty() ? NULL : user.toLocal8Bit().data(),
                                                 pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
-                                                src.data(),
+                                                src_b.data(),
                                                 &testResult);
     else
         resultSatus = TestDownloadTask(m_pReq->parameter("f_type").toInt(),
                                                 user.isEmpty() ? NULL : user.toLocal8Bit().data(),
                                                 pwd.isEmpty() ? NULL : pwd.toLocal8Bit().data(),
                                                 lang.data(),
-                                                src.data(),
+                                                src_b.data(),
                                                 &testResult);
 
     QDomElement root = doc.createElement("config");
