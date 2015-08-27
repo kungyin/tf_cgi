@@ -1305,12 +1305,24 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
 
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
-    taskInfo.is_file = m_pReq->parameter("f_type").toInt() ? 0 : 1;
+    taskInfo.is_file = (m_pReq->parameter("f_type").toInt() == 1) ? 0 : 1;
     QByteArray execat = QUrl::fromPercentEncoding(m_pReq->parameter("f_at").toLocal8Bit()).toUtf8();
     taskInfo.execat = execat.data();
     QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
     taskInfo.login_id = login_id.data();
     QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit()).toUtf8();
+    QFile file_src(SHARE_INFO_FILE);
+    if (file_src.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file_src);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                src.replace(list.value(0), list.value(1));
+        }
+        file_src.close();
+    }
     taskInfo.src = src.data();
     QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
     taskInfo.src_user = src_user.data();
@@ -1535,6 +1547,18 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     /* Null user is anonymount. */
     QByteArray src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit()).toUtf8();
+    QFile file(SHARE_INFO_FILE);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                src.replace(list.value(0), list.value(1));
+        }
+        file.close();
+    }
     QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
     RESULT_STATUS resultSatus;
     if (m_pReq->parameter("cmd").contains("Localbackup_"))
@@ -1769,7 +1793,19 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraDirection = m_pReq->parameter("direction");
     QString paraTask = m_pReq->parameter("task");
     QString paraKeepExistFile = m_pReq->parameter("keep_exist_file");
-    QString paraLocalPath = m_pReq->parameter("local_path");
+    QString paraLocalPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
+    QFile file(SHARE_INFO_FILE);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                paraLocalPath.replace(list.value(0), list.value(1));
+        }
+        file.close();
+    }
     QString paraIncremental = m_pReq->parameter("incremental");
     QString paraEncryption = m_pReq->parameter("encryption");
     QString paraRsyncUser = m_pReq->parameter("rsync_user");

@@ -728,7 +728,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "Local_Backup_Info",
     "Local_Backup_Renew",
     "Local_Backup_Del",
-    "Local_Backup_Test",
+    "Localbackup_Test",
     "Local_Backup_Start",
     "Local_Backup_Stop",
 
