@@ -1169,9 +1169,25 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         QDomElement rowElement1 = doc.createElement("row");
         root.appendChild(rowElement1);
         rowElement1.setAttribute("id", QString::number(i+1));
+        QString src = QString(taskList[i].src);
+        if (!is_download && taskList[i].src[1] != '/')
+        {
+            QFile file_src(SHARE_INFO_FILE);
+            if (file_src.open(QIODevice::ReadOnly))
+            {
+                QTextStream in(&file_src);
+                while (!in.atEnd())
+                {
+                    QStringList list = in.readLine().split(":");
+                    if (!list.isEmpty() && list.length() == 2)
+                        src.replace(list.value(1), list.value(0));
+                }
+                file_src.close();
+            }
+        }
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(QString(taskList[i].src)));
+        cellElement1.appendChild(doc.createTextNode(src));
 
         QString dest = QString(taskList[i].dest);
         QFile file(SHARE_INFO_FILE);
@@ -1390,7 +1406,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     if(SaveTaskXml(taskInfo, &taskId) != RET_SUCCESS)
         tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
 
-    if(taskId)
+    if(bAdd && taskId)
         free(taskId);
 }
 
@@ -1506,9 +1522,9 @@ void RenderResponseAppMngm::generateLocalBackupRenew() {
     renewOrAdd(false);
 
     if(m_pReq->parameter("cmd") == QString("Downloads_Schedule_Renew"))
-        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html?id=8401878'</script>";
+        m_var = "<script>location.href='/web/download_mgr/downloads_setting.html'</script>";
     else if(m_pReq->parameter("cmd") == QString("Local_Backup_Renew"))
-        m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html?id=8401878'</script>";
+        m_var = "<script>location.href='/web/backup_mgr/localbackup_setting.html'</script>";
 }
 
 void RenderResponseAppMngm::generateLocalBackupDel() {
@@ -1669,14 +1685,14 @@ void RenderResponseAppMngm::generateSetRsyncServer() {
             QStringList fileOut = getAPIFileOut(fileInfo.absoluteFilePath(), false, "");
             Q_FOREACH(QString oneLine, fileOut)
             {
-                QStringList lineList = oneLine.split("path=");
+                QStringList lineList = oneLine.split("path = ");
                 if (!lineList.isEmpty() && lineList.length() == 2)
                 {
                     QFile file(RSYNC_SHARE_NODE);
                     if (file.open(QIODevice::Append))
                     {
                         QTextStream out(&file);
-                        out << fileInfo.completeBaseName() << ":" << lineList.value(1)  <<  "\n";
+                        out << fileInfo.completeBaseName().split(".").value(0) << ":" << QByteArray::fromBase64(lineList.value(1).toLocal8Bit())  <<  "\n";
                         file.close();
                     }
                 }
@@ -1796,18 +1812,6 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraTask = m_pReq->parameter("task");
     QString paraKeepExistFile = m_pReq->parameter("keep_exist_file");
     QString paraLocalPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
-    QFile file(SHARE_INFO_FILE);
-    if (file.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                paraLocalPath.replace(list.value(0), list.value(1));
-        }
-        file.close();
-    }
     QString paraIncremental = m_pReq->parameter("incremental");
     QString paraEncryption = m_pReq->parameter("encryption");
     QString paraRsyncUser = m_pReq->parameter("rsync_user");
