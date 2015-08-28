@@ -1752,7 +1752,6 @@ void RenderResponseAppMngm::generateGetBackupList() {
         rowElement.appendChild(cellElement3);
         cellElement3.appendChild(doc.createTextNode(QString(taskList->state)));
 
-        /* what value is taskList->enable? */
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
         QString enable = QString(taskList->enable);
@@ -2003,11 +2002,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
         }
         file.close();
     }
-<<<<<<< Updated upstream
-    if (localPath.at(localPath.length() - 1) != '/') localPath.append("/");
-=======
     if (!localPath.endsWith("/")) localPath.append("/");
->>>>>>> Stashed changes
     QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
     r_info.local_path = local_path.data();
 
