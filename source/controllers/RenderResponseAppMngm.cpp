@@ -1752,11 +1752,10 @@ void RenderResponseAppMngm::generateGetBackupList() {
         rowElement.appendChild(cellElement3);
         cellElement3.appendChild(doc.createTextNode(QString(taskList->state)));
 
-        /* what value is taskList->enable? */
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
         QString enable = QString(taskList->enable);
-        cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg((enable == "0")?"start":"stop", task_name, enable)));
+        cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg((enable == "0")?"start":"stop", task_name, (enable == "0")?"1":"0")));
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
@@ -2003,7 +2002,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
         }
         file.close();
     }
-    if (localPath.at(localPath.length() - 1) != '/') localPath.append("/");
+    if (!localPath.endsWith("/")) localPath.append("/");
     QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
     r_info.local_path = local_path.data();
 
