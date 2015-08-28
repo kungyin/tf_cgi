@@ -1534,17 +1534,20 @@ void RenderResponseAppMngm::generateLocalBackupDel() {
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement idxElement = doc.createElement("idx");
-    root.appendChild(idxElement);
-    idxElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx")));
+    if (result == RET_SUCCESS)
+    {
+        QDomElement idxElement = doc.createElement("idx");
+        root.appendChild(idxElement);
+        idxElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx")));
 
-    QDomElement fnameElement = doc.createElement("fname");
-    root.appendChild(fnameElement);
-    fnameElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx") + ".xml"));
+        QDomElement fnameElement = doc.createElement("fname");
+        root.appendChild(fnameElement);
+        fnameElement.appendChild(doc.createTextNode(m_pReq->parameter("f_idx") + ".xml"));
 
-    QDomElement resultElement = doc.createElement("result");
-    root.appendChild(resultElement);
-    resultElement.appendChild(doc.createTextNode("0"));
+        QDomElement resultElement = doc.createElement("result");
+        root.appendChild(resultElement);
+        resultElement.appendChild(doc.createTextNode("0"));
+    }
     m_var = doc.toString();
 
 }
@@ -1595,6 +1598,11 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
+    if (resultSatus != RET_SUCCESS)
+    {
+        m_var = doc.toString();
+        return;
+    }
 
     QDomElement suserElement = doc.createElement("f_suser");
     root.appendChild(suserElement);
@@ -1812,6 +1820,18 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraTask = m_pReq->parameter("task");
     QString paraKeepExistFile = m_pReq->parameter("keep_exist_file");
     QString paraLocalPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
+    QFile file_src(SHARE_INFO_FILE);
+    if (file_src.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file_src);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                paraLocalPath.replace(list.value(0), list.value(1));
+        }
+        file_src.close();
+    }
     QString paraIncremental = m_pReq->parameter("incremental");
     QString paraEncryption = m_pReq->parameter("encryption");
     QString paraRsyncUser = m_pReq->parameter("rsync_user");
@@ -1842,10 +1862,14 @@ void RenderResponseAppMngm::generateServerTest() {
     if(result.rsync_test_result == 101 ) {
 
         if(paraType == "1") {
-            /* todo: need API */
-            QDomElement remoteHdA2FreeSizeElement = doc.createElement("remote_hd_a2_free_size");
-            root.appendChild(remoteHdA2FreeSizeElement);
-            remoteHdA2FreeSizeElement.appendChild(doc.createTextNode("2.7T"));
+            QDomElement remoteHdA2FreeSizeElement;
+            QStringList remoteHddFreeSize = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE, true, ":");
+            for (int i = 0; i < remoteHddFreeSize.size(); i++)
+            {
+                remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%12_free_size").arg(QChar(i + 97)));
+                root.appendChild(remoteHdA2FreeSizeElement);
+                remoteHdA2FreeSizeElement.appendChild(doc.createTextNode(remoteHddFreeSize.value(i)));
+            }
         }
 
         int count = 0;
@@ -1854,9 +1878,8 @@ void RenderResponseAppMngm::generateServerTest() {
         QStringList remoteNodes;
         for (int i = 0; i < count; i++)
             remoteNodes << node[i];
-        FreeRemoteTaskName(count, &node);
 
-        if(paraType == "2") {
+        //if(paraType == "2") {
             for(QString e : remoteNodes) {
                 QDomElement shareNodeElement = doc.createElement("share_node");
                 root.appendChild(shareNodeElement);
@@ -1865,9 +1888,10 @@ void RenderResponseAppMngm::generateServerTest() {
                 shareNodeElement.appendChild(nameElement);
                 nameElement.appendChild(doc.createTextNode(e));
             }
-        }
+        //}
+        if (count > 0) FreeRemoteTaskName(count, &node);
 
-        char **name = NULL, **path = NULL;
+        /*char **name = NULL, **path = NULL;
         int volCount = 0;
         GetRsyncSharePath(&volCount, &name, &path);
 
@@ -1875,17 +1899,18 @@ void RenderResponseAppMngm::generateServerTest() {
         for(int i=0; i< volCount; i++) {
             shareNodeMap.insert(QString(name[i]), QString(path[i]));
         }
-        FreeRsyncSharePath(volCount, &name, &path);
+        FreeRsyncSharePath(volCount, &name, &path);*/
 
         char *size = NULL;
-        GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
+        //GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
+        GetLocalDeviceSizeString(paraLocalPath.toLocal8Bit().data(), NULL, &size);
         QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
         root.appendChild(localDirectoryUsedSizeElement);
         localDirectoryUsedSizeElement.appendChild(doc.createTextNode(QString(size)));
         if(size)
             free(size);
 
-        if(paraType == "1") {
+        /*if(paraType == "1") {
             for(QString e : shareNodeMap.keys()) {
                 QDomElement shareNodeElement = doc.createElement("share_node");
                 root.appendChild(shareNodeElement);
@@ -1897,7 +1922,7 @@ void RenderResponseAppMngm::generateServerTest() {
                 shareNodeElement.appendChild(pathElement);
                 pathElement.appendChild(doc.createTextNode(shareNodeMap.value(e)));
             }
-        }
+        }*/
     }
     m_var = doc.toString();
 
@@ -1978,6 +2003,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
         }
         file.close();
     }
+    if (localPath.at(localPath.length() - 1) != "/") localPath.append("/");
     QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
     r_info.local_path = local_path.data();
 
