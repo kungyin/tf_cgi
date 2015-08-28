@@ -2003,7 +2003,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
         }
         file.close();
     }
-    if (localPath.at(localPath.length() - 1) != "/") localPath.append("/");
+    if (localPath.at(localPath.length() - 1) != '/') localPath.append("/");
     QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
     r_info.local_path = local_path.data();
 
