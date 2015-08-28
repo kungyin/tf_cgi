@@ -341,7 +341,7 @@ void RenderResponseAccount::generateWebdavAccountMerge() {
 //    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 //    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_user_add_session "
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_webdav_service "
                                       + allParametersToString("#", ""), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

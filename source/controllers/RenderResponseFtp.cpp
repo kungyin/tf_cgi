@@ -205,7 +205,10 @@ void RenderResponseFtp::generateFtpServerSetConfig() {
     map.insert("flowcontrol", m_pReq->parameter("f_flow_value"));
     map.insert("filesystemcharset", m_pReq->parameter("f_client_char_defult"));
     map.insert("clientcharset", m_pReq->parameter("f_client_char"));
-    map.insert("passiveportrange", QUrl::fromPercentEncoding(m_pReq->parameter("f_passive").toLocal8Bit()));
+    QString passivePort = QUrl::fromPercentEncoding(m_pReq->parameter("f_passive").toLocal8Bit());
+    if(passivePort.isEmpty())
+        passivePort = QUrl::fromPercentEncoding(m_pReq->parameter("f_passive_port").toLocal8Bit());
+    map.insert("passiveportrange", passivePort);
     map.insert("externalip", m_pReq->parameter("f_external_ip"));
     map.insert("state", m_pReq->parameter("f_flow"));
     map.insert("tlsencryption", m_pReq->parameter("f_tls_status"));

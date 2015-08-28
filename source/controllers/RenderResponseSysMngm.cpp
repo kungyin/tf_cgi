@@ -968,14 +968,17 @@ void RenderResponseSysMngm::generateUpsStatusInfo() {
 void RenderResponseSysMngm::generateUpsAdd() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_add "
-                                      + allParametersToString(), true);
+    if(!QProcess::startDetached(API_PATH + SCRIPT_MANAGER_API, QStringList() <<
+                                "service_set_ups_add" << allParametersToString()))
+        ;
+//    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_add "
+//                                      + allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    resElement.appendChild(doc.createTextNode("1"));
     m_var = doc.toString();
 
 }

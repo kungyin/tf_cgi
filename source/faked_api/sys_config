@@ -147,3 +147,26 @@ hdd_temperature_kot= C
 
 [tuxera]
 enable = 0
+
+[ftp]
+enable                         = 1
+version                        = 1.00
+maxclientsnumber               = 10
+maxidletime                    = 10
+port                           = 21
+flowcontrol                    = 0
+filesystemcharset              = 
+clientcharset                  = ISO-8859-1
+passiveportrange               = 55536:55663
+externalip                     = 0.0.0.0
+externalip                     =              
+tlsencryption                  = 1
+forcepasvmode                  = 
+blockipstatus                  = 1
+anonymous_access               = 
+connectionperip                = 5
+monitorduration                = 5
+retryfails                     = 5
+fxpaccess                      = 0
+blockduration                  = 5
+
