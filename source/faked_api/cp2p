@@ -1,0 +1,12 @@
+#!/bin/bash
+# Program:
+#       This program shows "Hello World!" in your screen.
+# History:
+# 2005/08/23    VBird   First release
+
+[ $1 == '--get-list' ] && echo -e "0:ubuntu-10.24.1_amd_i384.iso:1:0:650.0MB:50%:0:0.0 Kbps / 0.0 Kbps:H:0" && echo -e "1:ubuntu-10.24.1_amd_i385.iso:2:2:650.0MB:50%:0:0.0 Kbps / 0.0 Kbps:N:0" && echo -e "2:ubuntu-10.24.1_amd_i386.iso:3:0:650.0MB:50%:0:0.0 Kbps / 0.0 Kbps:L:0"
+[ $1 == '--add' ] && echo -e "1;1436477502"
+[ $1 == '--priority' ] && echo -e "1"
+[ $1 == '--remove' ] && echo -e "1"
+
+

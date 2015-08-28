@@ -350,10 +350,10 @@ void RenderResponseSysStatus::generateUsbPrinterInfo() {
     resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
 
     QList<QString> printerContentElement;
-    printerContentElement << "" << "Manufacturer" << "product";
+    printerContentElement << "" << "Manufacturer" << "Product";
 
     if( printerContentElement.size() == apiOut.size() ) {
-        for(int i = 1; i < apiOut.size(); i++) { //display only "Manufacturer" and "product".
+        for(int i = 1; i < apiOut.size(); i++) { //display only "Manufacturer" and "Product".
             QDomElement element = doc.createElement(printerContentElement.value(i));
             root.appendChild(element);
             element.appendChild(doc.createTextNode(apiOut.value(i)));

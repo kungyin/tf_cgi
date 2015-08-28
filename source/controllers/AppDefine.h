@@ -41,6 +41,7 @@ const QString SCRIPT_SSH_CTL        =   "sshctl";
 const QString SCRIPT_TUXERA_API     =   "tuxera";
 const QString SCRIPT_GROUP_MANAGER  =   "groupmgr";
 const QString SCRIPT_START_REMOTE_BACKUP = "StartRemoteBackup";
+const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd_free_size";
 
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
@@ -59,6 +60,8 @@ const QString FIRMWARE_RESULT_FILE = "/tmp/.fw_result";
 const QString DWONLOAD_USER_IMPORT_FILE = "/var/www/web/account_mgr/import_file.txt";
 const QString VE_EXPORT_KEY_FILE = "/tmp/Encrypted-Volume_1.Key";
 const QString SENDOUT_LOGFILE = "/tmp/log.txt";
+const QString P2P_STATE_FILE = "/tmp/p2p_status";
+const QString TORRENT_UPLOAD_FILE = "/tmp/upload/torrent_file";
 const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
 const QString SHARE_INFO_FILE = "/etc/share_info";
 
@@ -77,6 +80,8 @@ const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
 const QString DWONLOAD_USER_IMPORT_FILE = API_PATH + "import_file.txt";
 const QString VE_EXPORT_KEY_FILE = API_PATH + "Encrypted-Volume_1.Key";
 const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
+const QString P2P_STATE_FILE = API_PATH + "p2p_status";
+const QString TORRENT_UPLOAD_FILE = API_PATH + "torrent_file";
 const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 const QString SHARE_INFO_FILE = API_PATH + "share_info";
 

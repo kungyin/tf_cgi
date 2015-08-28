@@ -754,15 +754,17 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
                 }
             }
             else if(i == 4) { //smb_info
+                QDomElement element = doc.createElement(infoTagNames.value(i));
+                root.appendChild(element);
                 for(int j = 0; j < apiOut.value(i).split("#").size(); j++) {
-                    QDomElement element = doc.createElement(infoTagNames.value(i));
-                    root.appendChild(element);
+                    QDomElement itemElement = doc.createElement("item");
+                    itemElement.appendChild(element);
                     QStringList smbTagNames(QStringList()
                         << "share_name" << "privileges");
                     QString value = apiOut.value(i).split("#").value(j);
                     for(int k = 0; k < value.split(",").size(); k++) {
                         QDomElement smbElement = doc.createElement(smbTagNames.value(k));
-                        element.appendChild(smbElement);
+                        itemElement.appendChild(smbElement);
                         smbElement.appendChild(doc.createTextNode(value.split(",").value(k)));
                     }
                 }
