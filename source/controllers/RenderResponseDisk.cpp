@@ -256,7 +256,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
 
         QString strArg2;
         if(paraList.size() == 30)
-            strArg2 =  //args2.createVolume ?
+            strArg2 =  args2.createVolume ?
                         "-" + args2.volNameArg + " " +
                         "-" + args2.raidModeArg + " " +
                         "-" + args2.fileSystemTypeArg + " " +
@@ -265,7 +265,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
                         "-" + args2.volEnc + " " +
                         "-" + args2.volEncAutoMount + " " +
                         "-" + args2.volEncPwd
-                        /*: ""*/;
+                        : "";
 
         QString strArg2WithBlank;
         if(!strArg2.isEmpty())

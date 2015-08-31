@@ -85,6 +85,9 @@ void RenderResponseAppMngm::preRender() {
     case CMD_ITUNES_SERVER_REFRESH_STATE:
         generateItunesServerRefreshState();
         break;
+    case CMD_SYSLOG_SERVER_ENABLE:
+        generateSyslogServerEnable();
+        break;
     case CMD_SYSLOG_SEARCH:
         generateSyslogSearch();
         break;
@@ -646,6 +649,13 @@ void RenderResponseAppMngm::generateItunesServerRefreshState() {
     }
 
     m_var = doc.toString();
+
+}
+
+void RenderResponseAppMngm::generateSyslogServerEnable() {
+    QString paraEnable = m_pReq->parameter("f_syslog_enable");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_syslog_server_enable " + paraEnable);
 
 }
 

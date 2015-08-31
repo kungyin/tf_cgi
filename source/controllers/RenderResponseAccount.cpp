@@ -581,8 +581,9 @@ void RenderResponseAccount::generateGetImportUsers() {
 void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize() {
     QDomDocument doc;
 
-    //QString paraName = m_pReq->allParameters().value("name").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " create_import_user", true);
+    QString paraName = m_pReq->allParameters().value("name").toString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " system_user_get_user_quota_maxsize " +
+                                      paraName, true);
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
     QDomElement maxSizeElement = doc.createElement("max_size");

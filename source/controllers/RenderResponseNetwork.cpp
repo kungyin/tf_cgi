@@ -606,8 +606,8 @@ void RenderResponseNetwork::generateDdns() {
     if(m_pReq->allParameters().contains("f_ddns_re_password"))
         paraRePassword = m_pReq->allParameters().value("f_ddns_re_password").toString();
 
-    if(paraPassword.compare(paraRePassword) != 0)
-        return;
+//    if(paraPassword.compare(paraRePassword) != 0)
+//        return;
 
     QMap<QString, QString> map;
     map.insert("enable", paraEnable);

@@ -36,6 +36,7 @@ private:
     void generateItunesServerRefresh();
     void generateItunesServerRefreshState();
 
+    void generateSyslogServerEnable();
     void generateSyslogSearch();
     void generateGetVolumeInfo();
     void generateSyslogGetLogFileOption();

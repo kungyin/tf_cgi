@@ -214,6 +214,7 @@ enum CGI_COMMAND {
     CMD_ITUNES_SERVER_REFRESH_STATE,        /* iTunes_Server_Refresh_State */
 
     /**** Syslog Server ****/
+    CMD_SYSLOG_SERVER_ENABLE,               /* Syslog_Server_Enable */
     CMD_SYSLOG_SEARCH,                      /* Syslog_Search */
     CMD_GET_VOLUME_INFO,                    /* Get_Volume_Info */
     CMD_SYSLOG_GET_LOG_FILE_OPTION,         /* Syslog_Get_Log_File_Option */
@@ -710,6 +711,7 @@ const char CGI_PARA_COMMANDS[][255] = {
 
 
     /**** Syslog Server ****/
+    "Syslog_Server_Enable",
     "Syslog_Search",
     "Get_Volume_Info",
     "Syslog_Get_Log_File_Option",
@@ -1213,6 +1215,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_ITUNES_SERVER_REFRESH_STATE,  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Refresh_State */
 
     /**** Syslog Server ****/
+    { CMD_SYSLOG_SERVER_ENABLE,         RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Server_Enable */
     { CMD_SYSLOG_SEARCH,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Search */
     { CMD_GET_VOLUME_INFO,              RENDER_TYPE_XML,            OPENED_CMDS          },         /* Get_Volume_Info */
     { CMD_SYSLOG_GET_LOG_FILE_OPTION,   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* Syslog_Get_Log_File_Option */
@@ -1392,7 +1395,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_APKG_DETAIL,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_apkg_detail */
     { CMD_MYFAV_CHECK_IMG,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_check_img */
     { CMD_CHK_HDD_FREE_SIZE,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_hdd_free_size */
-    { CMD_DOWNLOAD_INSTALL_ADDON,        RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* download_install_addon */
+    { CMD_DOWNLOAD_INSTALL_ADDON,        RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* download_install_addon */
     { CMD_CLEAR_ADDON_FILES,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* clear_addon_files */
     { CMD_MODULE_RE_INSTALL,             RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* module_re_install */
     { CMD_INSTALL_3_PARTY_APKG,          RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* install_3_party_apkg */
