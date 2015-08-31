@@ -1756,7 +1756,30 @@ void RenderResponseAppMngm::generateGetBackupList() {
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(QString(taskList->schedule_mode)));
+        QString schedule_mode_trans = "";
+        QString schedule_mode = QString(taskList->schedule_mode);
+        if (schedule_mode == "1") schedule_mode_trans = "Manual";
+        else
+        {
+            REMOTE_BACKUP_INFO r_info;
+            memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
+            GetRemoteTaskXmlValue(taskList->task_name, TAG_R_ALL, &r_info);
+            if (schedule_mode == "2") schedule_mode_trans = QString(r_info.execat) + " Once";
+            else if (schedule_mode == "3")
+            {
+                QString recur_type = QString(r_info.recur_type);
+                if (recur_type == "0") schedule_mode_trans = QString(r_info.execat) + " Schedule";
+                else if (recur_type == "1") schedule_mode_trans = QString(r_info.execat) + " Daily";
+                else if (recur_type == "2")
+                {
+                    QStringList week;
+                    week << "Sun" << "Mon" << "Tue" << "Wed" << "Thu" << "Fri" << "Sat";
+                    if (r_info.recur_date >= 0 && r_info.recur_date <= 6) schedule_mode_trans = week.value(r_info.recur_date) + " Weekly";
+                }
+                else if (recur_type == "3") schedule_mode_trans = QString::number(r_info.recur_date) + " Monthly";
+            }
+        }
+        cellElement2.appendChild(doc.createTextNode(schedule_mode_trans));
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
