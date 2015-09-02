@@ -4,21 +4,17 @@
 DbDataProvider::DbDataProvider(DB_TYPE db_type)
 {
     m_DbType = db_type;
-    if (QSqlDatabase::database().connectionNames().size() > 0)
-    {
-        Q_FOREACH(QString connName, QSqlDatabase::database().connectionNames())
-        {
-            if (QSqlDatabase::database(connName).isOpen())
-                QSqlDatabase::database(connName).close();
-            QSqlDatabase::removeDatabase(connName);
-        }
-    }
-    m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");
-    m_Db.setHostName("localhost");
+    if (QSqlDatabase::database("mysql_connection_1").isValid())
+        m_Db = QSqlDatabase::database("mysql_connection_1");
+    else
+        m_Db = QSqlDatabase::addDatabase("QMYSQL", "mysql_connection_1");
+    if (m_Db.isOpen()) m_Db.close();
+    m_Db.setHostName("127.0.0.1");
     m_Db.setUserName("root");
 #ifdef SIMULATOR_MODE
     m_Db.setPassword("00000000");
 #endif
+    m_Db.setConnectOptions("UNIX_SOCKET=/tmp/mysqld.sock");
     m_Query = NULL;
     SetDatabase();
 }
