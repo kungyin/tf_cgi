@@ -1172,7 +1172,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_GROUP_QUOTA_LIST,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_group_quota_list */
     { CMD_GET_USER_QUOTA_MAXSIZE,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_user_quota_maxsize */
     { CMD_GET_GROUP_QUOTA_MINSIZE,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_group_quota_minsize */
-    { CMD_SET_QUOTA_ONOFF,              RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_quota_onoff */
+    { CMD_SET_QUOTA_ONOFF,              RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_set_quota_onoff */
 //    CMD_ACCOUNT_END,
 
     /**** Network Share ****/

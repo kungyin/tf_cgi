@@ -491,21 +491,25 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_list " + paraField);
 
+    QStringList smartInfoList(apiOut);
+    int rp = paraRp.toInt();
+    if(smartInfoList.size() > rp)
+        smartInfoList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    /* todo: page maybe wrong */
-    for(int i = 0; i < apiOut.size(); i++) {
+    for(int i = 0; i < smartInfoList.size(); i++) {
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
-        if( 6 == apiOut.value(i).split(";").size() ) {
+        if( 6 == smartInfoList.value(i).split(";").size() ) {
 
-            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+            for(int j = 0; j < smartInfoList.value(i).split(";").size(); j++) {
 
                 QDomElement cellElement = doc.createElement("cell");
                 rowElement.appendChild(cellElement);
-                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+                cellElement.appendChild(doc.createTextNode(smartInfoList.value(i).split(";").value(j)));
             }
         }
         else {

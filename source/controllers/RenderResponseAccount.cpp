@@ -740,12 +740,15 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
 
     if( infoTagNames.size() == apiOut.size() ) {
         for(int i = 0; i < apiOut.size(); i++) {
-            if(i == 3) { //quota
+
+            switch(i) {
+            case 3: //quota
+            {
                 for(int j = 0; j < apiOut.value(i).split("#").size(); j++) {
                     QDomElement element = doc.createElement(infoTagNames.value(i));
                     root.appendChild(element);
                     QStringList quotaTagNames(QStringList()
-                        << "v_name" << "size");
+                                              << "v_name" << "size");
                     QString value = apiOut.value(i).split("#").value(j);
                     for(int k = 0; k < value.split(",").size(); k++) {
                         QDomElement quotaElement = doc.createElement(quotaTagNames.value(k));
@@ -754,14 +757,17 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
                     }
                 }
             }
-            else if(i == 4) { //smb_info
+                break;
+
+            case 4: //smb_info
+            {
                 QDomElement element = doc.createElement(infoTagNames.value(i));
                 root.appendChild(element);
                 for(int j = 0; j < apiOut.value(i).split("#").size(); j++) {
                     QDomElement itemElement = doc.createElement("item");
-                    itemElement.appendChild(element);
+                    element.appendChild(itemElement);
                     QStringList smbTagNames(QStringList()
-                        << "share_name" << "privileges");
+                                            << "share_name" << "privileges");
                     QString value = apiOut.value(i).split("#").value(j);
                     for(int k = 0; k < value.split(",").size(); k++) {
                         QDomElement smbElement = doc.createElement(smbTagNames.value(k));
@@ -770,7 +776,10 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
                     }
                 }
             }
-            else if(i == 6) { //webdav_info
+                break;
+
+            case 6: //webdav_info
+            {
                 QDomElement element = doc.createElement(infoTagNames.value(i));
                 root.appendChild(element);
 
@@ -780,10 +789,15 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
                     webdavElement.appendChild(doc.createTextNode(e));
                 }
             }
-            else {
+                break;
+
+            default:
+            {
                 QDomElement element = doc.createElement(infoTagNames.value(i));
                 root.appendChild(element);
                 element.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
+                break;
             }
         }
     }
@@ -1047,5 +1061,6 @@ void RenderResponseAccount::generateSetQuotaOnOff() {
     QString paraOnoff = m_pReq->allParameters().value("onoff").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " set_quota_onoff " + paraOnoff, true);
+    m_var = apiOut.value(0);
 }
 
