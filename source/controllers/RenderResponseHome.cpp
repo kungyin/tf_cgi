@@ -1,35 +1,9 @@
 #include "RenderResponseHome.h"
 
 
-void RC4_DeCRYPT_CRYPT(unsigned char * strData, unsigned long nDatalen,
-                       unsigned char * strKey, unsigned long nKeylen )
-{
-    unsigned char sBox[256] = { 0 };
-    int i =0, j = 0,ntemp = 0, key[256] = {0};
-    for(i=0;i<256;i++)
-    {
-        sBox[i]=i;
-        key[i]=strKey[i%nKeylen];
-    }
-    for (i=0; i<256; i++)
-    {
-        j=(j+sBox[i]+key[i])%256;
-        std::swap(sBox[i],sBox[j]);
-    }
-    i =0, j = 0;
-    for(int k=0;k<nDatalen;k++)
-    {
-        i=(i+1)%256;
-        j=(j+sBox[i])%256;
-        std::swap(sBox[i],sBox[j]);
-        ntemp=(sBox[i]+sBox[j])%256;
-        char ch = strData[k] ^ sBox[ntemp];
-        strData[k] = ch;
-    }
-}
-
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
     : m_bRedirect2Ssl(false)
+    , m_bRemMe(false)
 {
     m_cmd = cmd;
     m_pReq = &req;
@@ -189,38 +163,9 @@ void RenderResponseHome::generateLogin() {
         }
     }
 
-    QDateTime expire = QDateTime::currentDateTime();
-    expire = expire.addSecs(31536000);    // 1 year in seconds.
-
-    TCookie cookieName("uname", paraUsername.toLocal8Bit());
-    cookieName.setExpirationDate(expire);
-    cookieName.setPath("/");
-    TCookie cookieRemMe("rembMe", "checked");
-    cookieRemMe.setExpirationDate(expire);
-    cookieRemMe.setPath("/");
-
-    QByteArray pass = paraPrePwd.toLocal8Bit();
-    QByteArray name = paraUsername.toLocal8Bit();
-    //char *cPass = pass.data();
-    RC4_DeCRYPT_CRYPT((unsigned char *)(pass.data()), pass.length(), (unsigned char *)(name.data()), name.length());
-
-//    QByteArray arr = QByteArray::fromBase64("yZhPvWL");
-//    QString s = QString::fromUtf8(arr);
-//    QByteArray a(s.toLocal8Bit());
-//    QByteArray ad("admin");
-//    tDebug("FFFFFFFF %s", a.data());
-//    RC4_DeCRYPT_CRYPT((unsigned char *)(a.data()), a.length(), (unsigned char *)(ad.data()), ad.length());
-//    tDebug("FFFFFFFF %s", QString::fromUtf8(a).toLocal8Bit().data());
-//    //tDebug("FFFFFFFF %s", QByteArray::fromHex(QByteArray::fromBase64(a)).data());
-
-    TCookie cookiePwd("password", pass.toBase64()/*.toBase64*(/*QByteArray::OmitTrailingEquals*/);
-    //tDebug("%s", QByteArray::fromBase64(paraPwd.toLocal8Bit()).data());
-    cookiePwd.setExpirationDate(expire);
-    cookiePwd.setPath("/");
-    m_cookies.append(cookieName);
-    if(paraC1.compare("ON") == 0 && !paraSsl.compare("1") == 0)
-        m_cookies.append(cookieRemMe);
-    m_cookies.append(cookiePwd);
+    if(paraC1.compare("ON") == 0 && !paraSsl.compare("1") == 0) {
+        m_bRemMe = true;
+    }
 
     if(apiOut.value(0).compare("1") == 0 || apiOut.value(0).compare("2") == 0) {
         if(paraSsl.compare("1") == 0)
@@ -231,7 +176,8 @@ void RenderResponseHome::generateLogin() {
         cookie.setPath("/");
         m_cookies.append(cookie);
 
-        m_session << paraUsername << "1";
+        m_session.first = paraUsername,
+        m_session.second = QDateTime::currentDateTime().toTime_t() + LOGIN_TIMOUT;
 
         if(apiOut.value(0).compare("1") == 0)
             m_var = "/web/home.html?v=8401878";

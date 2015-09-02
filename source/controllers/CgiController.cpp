@@ -24,10 +24,10 @@
 #include "RenderResponseP2pDownloads.h"
 #include "RenderResponseS3.h"
 #include "RenderResponseGoogleDrive.h"
+#include "RenderResponseDropbox.h"
 #include "RenderResponseMyDlink.h"
 
-
-//#include <TAppSettings>
+#include <TAppSettings>
 #include <TWebApplication>
 
 const QString CGI_PARA_CMD_NAME = "cmd";
@@ -153,11 +153,29 @@ void CgiController::cgiResponse() {
         QList<TCookie> cookies = pRrepHome->getCookies();
         for(auto e : cookies)
             addCookie(e);
-        QStringList s = pRrepHome->getSession();
-        if(!s.isEmpty()) {
-            if(session().contains(s.value(0)))
-                session().remove(s.value(0));
-            session().insert(s.value(0), s.value(1));
+
+        QDateTime expire = QDateTime::currentDateTime();
+        expire = expire.addSecs(31536000);    // 1 year in seconds.
+        for(TCookie e : httpRequest().cookies()) {
+            bool add = false;
+            if(QString(e.name()) == QString("rembMe") && pRrepHome->getRemMe())
+                add = true;
+            else if(e.name() == QString("password") || e.name() == QString("uname"))
+                add = true;
+            
+            if(add) {
+                e.setExpirationDate(expire);
+                e.setPath("/");
+                addCookie(e);
+                tDebug("addCookie: %s", e.name().data());
+            }
+        }
+
+        QPair<QString, uint> s = pRrepHome->getSession();
+        if(!s.first.isEmpty()) {
+            if(session().contains(s.first))
+                session().remove(s.first);
+            session().insert(s.first, s.second);
         }
         //User user = pRrepHome->getUser();
         //bool islogin = userLogin(&user);
@@ -256,6 +274,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseS3(req, cmd);
     else if(cmd < CMD_GD_END)
         pRrep = new RenderResponseGoogleDrive(req, cmd);
+    else if(cmd < CMD_DROPBOX_END)
+        pRrep = new RenderResponseDropbox(req, cmd);
 
     return pRrep;
 
@@ -302,12 +322,29 @@ bool CgiController::isValidClient(bool bCookiesOnly) {
         }
     }
     else {
+
+        /* clear expired sessions */
+        QMapIterator<QString, QVariant> i(session());
+        while (i.hasNext()) {
+            i.next();
+            int diff = i.value().toInt() - QDateTime::currentDateTime().toTime_t();
+            if(diff <= 0) {
+                if(i.key().compare(TAppSettings::instance()->value(Tf::SessionCsrfProtectionKey).toString()) != 0) {
+                    session().remove(i.key());
+                    tDebug("remove session: %s", i.key().toLocal8Bit().data());
+                }
+            }
+        }
+
         for(TCookie c : httpRequest().cookies())
-            if(c.name() == "username")
-                if(session().value(c.value()).toString() == "1") {
+            if(c.name() == "username") {
+                if(session().value(c.value()).toInt() > 0) {
+                    session()[c.value()] = QDateTime::currentDateTime().toTime_t() + LOGIN_TIMOUT;
                     bValidClient = true;
                     break;
                 }
+            }
+
     }
 
     return bValidClient;

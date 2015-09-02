@@ -1,3 +1,5 @@
+#include <TAppSettings>
+
 #include "RenderResponseDashboard.h"
 
 RenderResponseDashboard::RenderResponseDashboard(THttpRequest &req, CGI_COMMAND cmd)
@@ -38,11 +40,13 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
         QMapIterator<QString, QVariant> i(*m_pSession);
         while (i.hasNext()) {
             i.next();
-            QString split;
-            if(!users.isEmpty())
-                split = ",";
-            if(i.value() == "1")
-                users += split + i.key();
+            if(i.key().compare(TAppSettings::instance()->value(Tf::SessionCsrfProtectionKey).toString()) != 0) {
+                QString split;
+                if(!users.isEmpty())
+                    split = ",";
+                if(i.value().toInt() >= 0)
+                    users += split + i.key();
+            }
         }
     }
 

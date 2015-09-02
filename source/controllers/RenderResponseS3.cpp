@@ -156,7 +156,7 @@ void RenderResponseS3::generateS3Del() {
 
     QString paraJobName = m_pReq->parameter("f_job_name");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_stop_s3_account "
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_del_s3_account "
                                       + paraJobName, true);
 }
 

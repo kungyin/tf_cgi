@@ -63,13 +63,13 @@ void RenderResponseAddOn::generateModuleShowInstallStatus() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
 
-    QDomElement root = doc.createElement("service");
+    QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QStringList configContentElement(QStringList()
         << "install_type" << "install_status" << "install_error_mesg" << "install_filename");
 
-    if( configContentElement.size() != apiOut.size() ) {
+    if( configContentElement.size() == apiOut.size() ) {
         for(int i = 0; i < apiOut.size(); i++) {
             QDomElement element = doc.createElement(configContentElement.value(i));
             root.appendChild(element);
@@ -91,13 +91,13 @@ void RenderResponseAddOn::generateGetAllApps() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_get_allapps", true, ";");
 
-    QDomElement root = doc.createElement("service");
+    QDomElement root = doc.createElement("allapps");
     doc.appendChild(root);
 
     QStringList allappsContentElement(QStringList()
         << "status" << "path" << "model");
 
-    if( allappsContentElement.size() != apiOut.size() ) {
+    if( allappsContentElement.size() == apiOut.size() ) {
         for(int i = 0; i < apiOut.size(); i++) {
             QDomElement element = doc.createElement(allappsContentElement.value(i));
             root.appendChild(element);
@@ -130,7 +130,7 @@ void RenderResponseAddOn::generateGetApkgDetail() {
         << "show_name" << "name" << "category" << "description" << "version" << "update" << "show"
         << "show" << "size" << "developer" << "website" << "forum" << "platform" << "screenshot");
 
-//    if( itemContentElement.size() != apiOut.size() ) {
+//    if( itemContentElement.size() == apiOut.size() ) {
 //        for(int i = 0; i < apiOut.size(); i++) {
 //            QDomElement element = doc.createElement(itemContentElement.value(i));
 //            apkgElement.appendChild(element);

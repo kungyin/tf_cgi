@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#define LOGIN_TIMOUT 1800
+
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_SCANDISK_API   =   "scandisk";
 const QString SCRIPT_HOME_API       =   "sysapi_home";

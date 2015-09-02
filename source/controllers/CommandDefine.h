@@ -444,6 +444,7 @@ enum CGI_COMMAND {
     CMD_GET_COOLIRIS_RSS,                    /* get_cooliris_rss*/
     CMD_FILE_END,
 
+    /**** P2P download ****/
     CMD_P2P_STATE,                           /* p2p_state */
     CMD_P2P_GET_LIST_BY_PRIORITY,            /* p2p_get_list_by_priority */
     CMD_P2P_ADD_TORRENT_URL,                 /* p2p_add_torrent_url */
@@ -461,6 +462,7 @@ enum CGI_COMMAND {
     CMD_P2P_SET_CONFIG,                      /* p2p_set_config */
     CMD_P2P_END,
 
+    /**** Amazon S3 ****/
     CMD_GET_S3,                              /* cgi_get_s3 */
     CMD_S3,                                  /* cgi_s3 */
     CMD_S3_MODIFY,                           /* cgi_s3_modify */
@@ -473,12 +475,28 @@ enum CGI_COMMAND {
     CMD_CLEAR_PERCENT,                       /* clear_percent */
     CMD_S3_END,
 
+    /**** Google Dirve ****/
     CMD_GD_1,                                /* 1 */
     CMD_GD_2,                                /* 2 */
     CMD_GD_3,                                /* 3 */
     CMD_GD_4,                                /* 4 */
     CMD_GD_END,
 
+    /**** Dropbox ****/
+    CMD_DROPBOX_REFRESH_STATUS,              /* cgi_Dropbox_refresh_status */
+    CMD_DROPBOX_GET_INFO,                    /* cgi_Dropbox_get_info */
+    CMD_DROPBOX_API_CHANGE_PATH,             /* cgi_Dropbox_api_change_path */
+    CMD_DROPBOX_GET_ACCESS_URL,              /* cgi_Dropbox_get_access_url */
+    CMD_DROPBOX_ENABLE,                      /* cgi_Dropbox_enable */
+    CMD_OPEN_NEW_FOLDER_ENCODE,              /* cgi_open_new_folder_encode */
+    CMD_DROPBOX_CHECK_FOLDER_EXIST,          /* cgi_Dropbox_check_folder_exist */
+    CMD_DROPBOX_SET_INTERVAL,                /* cgi_Dropbox_set_interval */
+    CMD_DROPBOX_SYNC_NOW,                    /* cgi_Dropbox_sync_now */
+    CMD_DROPBOX_UNLINK,                      /* cgi_Dropbox_unlink */
+    CMD_DROPBOX_FILE_TREE,                   /* cgi_Dropbox_file_tree */
+    CMD_DROPBOX_END,
+
+    /**** MyDlink Account ****/
     CMD_1,                                   /* 1 */
     CMD_2,                                   /* 2 */
     CMD_3,                                   /* 3 */
@@ -978,6 +996,20 @@ const char CGI_PARA_COMMANDS[][255] = {
     "4",
     "",
 
+    /**** Dropbox ****/
+    "cgi_Dropbox_refresh_status",
+    "cgi_Dropbox_get_info",
+    "cgi_Dropbox_api_change_path",
+    "cgi_Dropbox_get_access_url",
+    "cgi_Dropbox_enable",
+    "cgi_open_new_folder_encode",
+    "cgi_Dropbox_check_folder_exist",
+    "cgi_Dropbox_set_interval",
+    "cgi_Dropbox_sync_now",
+    "cgi_Dropbox_unlink",
+    "cgi_Dropbox_file_tree",
+    "",
+
     /**** Mydlink Account ****/
     "1",
     "2",
@@ -1009,6 +1041,7 @@ const int EQUAL_COMMANDS[][2] {
     { CMD_READ_OPEN_TREE,           CMD_OPEN_TREE           },
     { CMD_GENERIC_OPEN_TREE,        CMD_OPEN_TREE           },
     { CMD_OPEN_USB_TREE,            CMD_OPEN_TREE           },
+    { CMD_DROPBOX_FILE_TREE,        CMD_OPEN_TREE           },
     { CMD_DOWNLOADS_SCHEDULE_NOW,   CMD_LOCAL_BACKUP_NOW    },
     { CMD_DOWNLOADS_SCHEDULE_LIST,  CMD_LOCAL_BACKUP_LIST   },
     { CMD_DOWNLOADS_SCHEDULE_ADD,   CMD_LOCAL_BACKUP_ADD    },
@@ -1482,6 +1515,19 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GD_3,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 3 */
     { CMD_GD_4,                          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 4 */
     // CMD_GD_END,
+
+    { CMD_DROPBOX_REFRESH_STATUS,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_refresh_status */
+    { CMD_DROPBOX_GET_INFO,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_get_info */
+    { CMD_DROPBOX_API_CHANGE_PATH,       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_api_change_path */
+    { CMD_DROPBOX_GET_ACCESS_URL,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_get_access_url */
+    { CMD_DROPBOX_ENABLE,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_enable */
+    { CMD_OPEN_NEW_FOLDER_ENCODE,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_open_new_folder_encode */
+    { CMD_DROPBOX_CHECK_FOLDER_EXIST,    RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_check_folder_exist */
+    { CMD_DROPBOX_SET_INTERVAL,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_set_interval */
+    { CMD_DROPBOX_SYNC_NOW,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_sync_now */
+    { CMD_DROPBOX_UNLINK,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_unlink */
+    { CMD_DROPBOX_FILE_TREE,             RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_Dropbox_file_tree */
+    // CMD_DROPBOX_END,
 
     { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
     { CMD_2,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */

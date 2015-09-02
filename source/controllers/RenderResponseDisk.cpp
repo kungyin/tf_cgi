@@ -315,10 +315,10 @@ QString RenderResponseDisk::getFMTRemainArgs(QStringList &fmtArgs) {
     /* sdasdb -> sda,sdb */
     assert(fmtArgs.value(3).size() % 3 == 0);
     QString devName;
-    for(int i = 0; i < fmtArgs.value(4).size(); i+=3) {
+    for(int i = 0; i < fmtArgs.value(3).size(); i+=3) {
         if(!devName.isEmpty())
             devName += ",";
-        devName += fmtArgs.value(4).midRef(i, 3);
+        devName += fmtArgs.value(3).midRef(i, 3);
     }
 
     args.devNameArg = "k" + devName;
