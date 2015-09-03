@@ -84,7 +84,7 @@ void RenderResponseDropbox::generateDropboxGetInfo() {
         << "rm_dbox_dirs" << "mv_dbox_files" << "mv_dbox_dirs" << "downloads_bytes" << "uploads_bytes"
         << "sync_errors" << "running_state" << "need_space");
 
-//    if( configContentElement.size() != apiOut.size() ) {
+//    if( configContentElement.size() == apiOut.size() ) {
 //        for(int i = 0; i < apiOut.size(); i++) {
 //            QDomElement element = doc.createElement(configContentElement.value(i));
 //            root.appendChild(element);

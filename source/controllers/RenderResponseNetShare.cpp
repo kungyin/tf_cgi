@@ -528,7 +528,7 @@ void RenderResponseNetShare::generateOpenTree() {
     QString paraShowFile = m_pReq->parameter("show_file");
     QString paraChkFlag = m_pReq->parameter("chk_flag");
     QString paraFileType = m_pReq->parameter("file_type");
-//    QString paraFuncId = m_pReq->parameter("function_id");
+    QString paraFuncId = m_pReq->parameter("function_id");
 //    QString paraFilterFile = m_pReq->parameter("filter_file");
 //    QString paraRootPath = m_pReq->parameter("root_path");
 
@@ -555,17 +555,30 @@ void RenderResponseNetShare::generateOpenTree() {
     QListIterator<QFileInfo> iter(fileList);
     while (iter.hasNext()) {
         QFileInfo entry = iter.next();
-        if(!paraFileType.isEmpty())
-            if(!entry.isDir() && entry.suffix() != paraFileType) {
-                fileList.removeOne(entry);
-                continue;
-            }
+
         if(            entry.fileName() == "lost+found"
                     || entry.fileName() == "Nas_Prog"
                     || entry.fileName() == "aMule"
                     || entry.fileName() == "ShareCenter_Sync") {
             fileList.removeOne(entry);
+            continue;
         }
+
+        if(paraShowFile == "0") {
+            if(!entry.isDir()) {
+                fileList.removeOne(entry);
+                continue;
+            }
+        }
+        else if(paraShowFile == "1") {
+            if(paraFuncId == "iso_mount") {
+                if(entry.isDir() || entry.suffix().compare("iso", Qt::CaseInsensitive) == 0)
+                    continue;
+                fileList.removeOne(entry);
+                continue;
+            }
+        }
+
     }
 
     QString content;
@@ -657,7 +670,7 @@ void RenderResponseNetShare::generateAddSession() {
 //    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_add_session " +
-                                      allParametersToString("#", ""), true);
+                                      allParametersToString(), true);
 
 }
 
@@ -749,7 +762,7 @@ void RenderResponseNetShare::generateWebdavAccountAdd() {
 //    QString paraUser = m_pReq->allParameters().value("f_user").toString();
 //    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_webdav_account_add " +
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_share_webdav_account_add " +
                                       allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");

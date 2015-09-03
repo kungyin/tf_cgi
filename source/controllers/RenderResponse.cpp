@@ -224,7 +224,9 @@ QString RenderResponse::allParametersToString(QString before, QString after) {
             QString value = QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
             if(!before.isEmpty())
                 value.replace(before, after);
-            ret += entryKey + "=" + value;
+            else
+                value.replace("#", QString::null);
+            ret += entryKey + "=" + value.simplified();
         }
     }
 

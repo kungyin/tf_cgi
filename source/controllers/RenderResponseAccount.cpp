@@ -342,7 +342,7 @@ void RenderResponseAccount::generateWebdavAccountMerge() {
 //    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_webdav_service "
-                                      + allParametersToString("#", ""), true);
+                                      + allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -697,7 +697,7 @@ void RenderResponseAccount::generateGroupAdd() {
 //    QString paraGroup = m_pReq->allParameters().value("group").toString();
 //    QString paraMember = m_pReq->allParameters().value("member").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " add " +
-                                      allParametersToString("#", ""), true);
+                                      allParametersToString(), true);
 }
 
 
@@ -825,7 +825,7 @@ void RenderResponseAccount::generateGroupModify() {
 //    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " modify " +
-                                      allParametersToString("#", ""), true);
+                                      allParametersToString(), true);
 }
 
 void RenderResponseAccount::generateGroupDel() {

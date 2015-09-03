@@ -440,7 +440,7 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    QString uiContent = "<a href=javascript:onclick=GetSmartInfo('%1','0');>"
+    QString uiContent = "<a href=javascript:onclick=GetSmartInfo('%1','%2');>"
             "<IMG border='0' src='/web/images/normal.png' alt='Normal'></a>";
 
     for(int i = 0; i < apiOut.size(); i++) {
@@ -452,7 +452,8 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
                 if(j == 6) {
                     QDomElement cellElement = doc.createElement("cell");
                     rowElement.appendChild(cellElement);
-                    cellElement.appendChild(doc.createCDATASection(uiContent.arg(apiOut.value(i).split(";").value(j))));
+                    cellElement.appendChild(doc.createCDATASection(
+                             uiContent.arg(apiOut.value(i).split(";").value(j), QString::number(i))));
                 }
                 else {
                     QDomElement cellElement = doc.createElement("cell");

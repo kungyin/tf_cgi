@@ -270,7 +270,7 @@ void RenderResponseP2pDownloads::generateP2pGetTorrentScheduling() {
         << "name" << "f_type" << "st_year" << "st_mon" << "st_day"
         << "st_hours" << "st_min" << "stop_time" << "result");
 
-//    if( configContentElement.size() != apiOut.size() ) {
+//    if( configContentElement.size() == apiOut.size() ) {
 //        for(int i = 0; i < apiOut.size(); i++) {
 //            QDomElement element = doc.createElement(configContentElement.value(i));
 //            root.appendChild(element);
