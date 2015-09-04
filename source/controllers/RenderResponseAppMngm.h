@@ -21,6 +21,7 @@ private:
     void generateUpnpAvServerGetConfig();
     void generateUpnpAvServer();
     void generateUpnpAvServerGetSqldbState();
+    void generateUpnpAvServerPrescanFinished();
     void generateGuiCodepageGetList();
     void generateItunesServerGetXml();
     void generateItunesServerReady();
@@ -29,12 +30,14 @@ private:
     void generateSqldbStopFinish();
     void generateUpnpAvServerPrescan();
     void generateUpnpAvServerPathDel();
+    void generateSqldbStop();
     void generateUpnpAvServerSetting();
     void generateGuiCodepageAdd();
     void generateItunesServerSetting();
     void generateItunesServerCheckPs();
     void generateItunesServerRefresh();
     void generateItunesServerRefreshState();
+    void generateChkRefreshStatus();
 
     void generateSyslogServerEnable();
     void generateSyslogSearch();

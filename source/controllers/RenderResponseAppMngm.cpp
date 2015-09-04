@@ -43,6 +43,9 @@ void RenderResponseAppMngm::preRender() {
     case CMD_UPNP_AV_SERVER_GET_SQLDB_STATE:
         generateUpnpAvServerGetSqldbState();
         break;
+    case CMD_UPNP_AV_SERVER_PRESCAN_FINISHED:
+        generateUpnpAvServerPrescanFinished();
+        break;
     case CMD_GUI_CODEPAGE_GET_LIST:
         generateGuiCodepageGetList();
         break;
@@ -67,6 +70,9 @@ void RenderResponseAppMngm::preRender() {
     case CMD_UPNP_AV_SERVER_PATH_DEL:
         generateUpnpAvServerPathDel();
         break;
+    case CMD_SQLDB_STOP:
+        generateSqldbStop();
+        break;
     case CMD_UPNP_AV_SERVER_SETTING:
         generateUpnpAvServerSetting();
         break;
@@ -84,6 +90,9 @@ void RenderResponseAppMngm::preRender() {
         break;
     case CMD_ITUNES_SERVER_REFRESH_STATE:
         generateItunesServerRefreshState();
+        break;
+    case CMD_CHK_REFRESH_STATUS:
+        generateChkRefreshStatus();
         break;
     case CMD_SYSLOG_SERVER_ENABLE:
         generateSyslogServerEnable();
@@ -225,8 +234,8 @@ void RenderResponseAppMngm::generateNfsEnable() {
 }
 
 void RenderResponseAppMngm::generateCheckDb() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_check_db", true);
-    m_var = apiOut.value(0);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_check_db", true);
+    m_var = "no";//apiOut.value(0);
 }
 
 void RenderResponseAppMngm::generateUpnpAvServerPathList() {
@@ -238,40 +247,69 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
+    MediaDbDataProvider media;
+    QSqlError err = media.SelectFolderList(paraPage, paraRp);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        return;
+    }
+    int size = media.GetSize();
 
     QString cellContent1 = "<a href=javascript:upnp_path_refresh_one('%1');><IMG border='0' "
                             "src='/web/images/refresh_over.png'></a>";
-    QString cellContent2 = "<IMG border='0' src='/web/images/on.png'>";
+    QString cellContent2 = "<IMG border='0' src='/web/images/%1.png'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
-    for(int i=0; i < apiOut.size(); i++) {
+    for(int i=0; i < size; i++) {
+        if (media.GetSelectedData()->next())
+        {
+            QDomElement rowElement = doc.createElement("row");
+            root.appendChild(rowElement);
 
-        QDomElement rowElement = doc.createElement("row");
-        root.appendChild(rowElement);
+            QDomElement cellElement1 = doc.createElement("cell");
+            rowElement.appendChild(cellElement1);
+            cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
 
-        QDomElement cellElement1 = doc.createElement("cell");
-        rowElement.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
+            QString folderPath = media.GetSelectedData()->value("folder_path").toString(), folderPathTrans = "Shared folder does not exist.";
+            bool valid = false;
+            QFile file_src(SHARE_INFO_FILE);
+            if (file_src.open(QIODevice::ReadOnly))
+            {
+                QTextStream in(&file_src);
+                while (!in.atEnd())
+                {
+                    QStringList list = in.readLine().split(":");
+                    if (!list.isEmpty() && list.length() == 2 && folderPath.startsWith(list.value(1)))
+                    {
+                        valid = true;
+                        folderPathTrans = folderPath;
+                        folderPathTrans.replace(list.value(1), list.value(0));
+                        break;
+                    }
+                }
+                file_src.close();
+            }
+            QDomElement cellElement2 = doc.createElement("cell");
+            rowElement.appendChild(cellElement2);
+            cellElement2.appendChild(doc.createTextNode(folderPathTrans));
 
-        QDomElement cellElement2 = doc.createElement("cell");
-        rowElement.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(0)));
+            QDomElement cellElement3 = doc.createElement("cell");
+            rowElement.appendChild(cellElement3);
+            cellElement3.appendChild(doc.createCDATASection((valid)?cellContent1.arg(media.GetSelectedData()->value("folder_id").toString()):cellContent2.arg("refresh_normal")));
 
-        QDomElement cellElement3 = doc.createElement("cell");
-        rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createCDATASection(cellContent1.arg(apiOut.value(i).split(";").value(1))));
+            QDomElement cellElement4 = doc.createElement("cell");
+            rowElement.appendChild(cellElement4);
+            cellElement4.appendChild(doc.createCDATASection(cellContent2.arg((valid)?"on":"status_fail")));
 
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createCDATASection(cellContent2));
+            QDomElement cellElement5 = doc.createElement("cell");
+            rowElement.appendChild(cellElement5);
+            cellElement5.appendChild(doc.createTextNode(folderPath));
 
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
-
-        rowElement.setAttribute("id", i+1);
+            rowElement.setAttribute("id", media.GetSelectedData()->value("folder_id").toInt());
+        }
     }
 
     QDomElement pageElement = doc.createElement("page");
@@ -280,7 +318,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+    totalElement.appendChild(doc.createTextNode(QString::number(size)));
 
     m_var = doc.toString();
 
@@ -304,33 +342,61 @@ void RenderResponseAppMngm::generateUpnpAvServerGetConfig() {
 void RenderResponseAppMngm::generateUpnpAvServer() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_av_server");
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_av_server");
+    int ret = 0;
+    MediaDbDataProvider media;
+    QSqlError err = media.GetServerStatus(&ret);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        return;
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    resElement.appendChild(doc.createTextNode(QString::number(ret)));
 
     m_var = doc.toString();
-
 }
 
 void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_sqldb_state");
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_sqldb_state");
+    int percent = 0;
+    QString filePath = "";
+    MediaDbDataProvider media;
+    QSqlError err = media.GetPercentAndFile(&percent, &filePath);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        return;
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement dbStateElement = doc.createElement("db_state");
     root.appendChild(dbStateElement);
-    dbStateElement.appendChild(doc.createTextNode(apiOut.value(0).split("=").value(1).trimmed()));
+    dbStateElement.appendChild(doc.createTextNode(QString::number(percent)));
     QDomElement dbFileElement = doc.createElement("db_file");
     root.appendChild(dbFileElement);
-    dbFileElement.appendChild(doc.createTextNode(apiOut.value(1).split("=").value(1).trimmed()));
+    dbFileElement.appendChild(doc.createTextNode(filePath));
     m_var = doc.toString();
 
+}
+
+void RenderResponseAppMngm::generateUpnpAvServerPrescanFinished()
+{
+    QDomDocument doc;
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+    m_var = doc.toString();
 }
 
 void RenderResponseAppMngm::generateGuiCodepageGetList() {
@@ -439,8 +505,32 @@ void RenderResponseAppMngm::generateItunesServerReady() {
 void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_check_path "
-                                      + allParametersToString(), true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_check_path "
+    //                                  + allParametersToString(), true);
+    int res = 1;
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    MediaDbDataProvider media;
+    QStringList folderList = media.GetFolderAll();
+    Q_FOREACH(QString folder, folderList)
+    {
+        if (paraDir.startsWith(folder))
+        {
+            res = 2;
+            break;
+        }
+    }
+    QFile file_src(SHARE_INFO_FILE);
+    if (file_src.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file_src);
+        while (!in.atEnd())
+        {
+            QStringList list = in.readLine().split(":");
+            if (!list.isEmpty() && list.length() == 2)
+                paraDir.replace(list.value(1), list.value(0));
+        }
+        file_src.close();
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -449,10 +539,10 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
 
     QDomElement resElement = doc.createElement("res");
     itemElement.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+    resElement.appendChild(doc.createTextNode(QString::number(res)));
     QDomElement pathElement = doc.createElement("path");
     itemElement.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    pathElement.appendChild(doc.createTextNode(paraDir));
 
     m_var = doc.toString();
 
@@ -461,15 +551,34 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
 void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder "
-                                      + allParametersToString(), true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder "
+    //                                  + allParametersToString(), true);
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    QString paraRefresh = m_pReq->parameter("f_refresh");
+    int res = (paraRefresh == "0")?0:1;
+    QFileInfo info(paraDir);
+    if (info.isDir())
+    {
+        MediaDbDataProvider media;
+        QStringList folderList = media.GetFolderAll();
+        Q_FOREACH(QString folder, folderList)
+        {
+            if (paraDir.startsWith(folder))
+            {
+                res = 2;
+                break;
+            }
+        }
+    } else res = 2;
+    getAPIStdOut("ScanSender addfolder " + paraDir, true);
+    if (res == 1) getAPIStdOut("ScanSender start " + paraDir, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    resElement.appendChild(doc.createTextNode(QString::number(res)));
 
     m_var = doc.toString();
 
@@ -478,14 +587,22 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
 void RenderResponseAppMngm::generateSqldbStopFinish() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_sqldb_stop ", true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_sqldb_stop ", true);
+    int ret = 0;
+    MediaDbDataProvider media;
+    QSqlError err = media.GetServerStatus(&ret);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        return;
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    resElement.appendChild(doc.createTextNode((ret == 2)?"1":"0"));
 
     m_var = doc.toString();
 
@@ -494,15 +611,20 @@ void RenderResponseAppMngm::generateSqldbStopFinish() {
 void RenderResponseAppMngm::generateUpnpAvServerPrescan() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_prescan "
-                                      + allParametersToString(), true);
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_prescan "
+    //                                  + allParametersToString(), true);
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    if (paraDir == "all")
+        getAPIStdOut("ScanSender startall", true);
+    else
+        getAPIStdOut("ScanSender start " + paraDir, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    resElement.appendChild(doc.createTextNode("1"));
 
     m_var = doc.toString();
 
@@ -511,26 +633,59 @@ void RenderResponseAppMngm::generateUpnpAvServerPrescan() {
 void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_delete "
-                                      + allParametersToString());
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder_delete "
+    //                                  + allParametersToString());
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    QStringList dirList = paraDir.split("*");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
 
-    QDomElement resElement = doc.createElement("res");
-    itemElement.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(apiOut.isEmpty() ? "0" : "1"));
+    Q_FOREACH(QString dir, dirList)
+    {
+        getAPIStdOut("ScanSender delfolder " + dir, true);
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
 
-    for(QString e : apiOut) {
+        QDomElement resElement = doc.createElement("res");
+        itemElement.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode("1"));
+
+        QFile file_src(SHARE_INFO_FILE);
+        if (file_src.open(QIODevice::ReadOnly))
+        {
+            QTextStream in(&file_src);
+            while (!in.atEnd())
+            {
+                QStringList list = in.readLine().split(":");
+                if (!list.isEmpty() && list.length() == 2)
+                    dir.replace(list.value(1), list.value(0));
+            }
+            file_src.close();
+        }
         QDomElement pathElement = doc.createElement("path");
         itemElement.appendChild(pathElement);
-        pathElement.appendChild(doc.createTextNode(e));
+        pathElement.appendChild(doc.createTextNode(dir));
     }
 
     m_var = doc.toString();
 
+}
+
+void RenderResponseAppMngm::generateSqldbStop()
+{
+    QDomDocument doc;
+    QString paraType = QUrl::fromPercentEncoding(m_pReq->parameter("ftype").toLocal8Bit());
+    getAPIStdOut("ScanSender " + paraType, true);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
+
+    m_var = doc.toString();
 }
 
 void RenderResponseAppMngm::generateUpnpAvServerSetting() {
@@ -650,6 +805,47 @@ void RenderResponseAppMngm::generateItunesServerRefreshState() {
 
     m_var = doc.toString();
 
+}
+
+void RenderResponseAppMngm::generateChkRefreshStatus()
+{
+    QDomDocument doc;
+    QDomElement root = doc.createElement("info");
+    doc.appendChild(root);
+    int percent = -1;
+    QString fileName = "";
+    MediaDbDataProvider media;
+    QSqlError err = media.GetPercentAndFile(&percent, &fileName);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        return;
+    }
+    QDomElement percentElement = doc.createElement("percent");
+    root.appendChild(percentElement);
+    percentElement.appendChild(doc.createTextNode((percent == -1)?"":QString::number(percent)));
+    QDomElement typeElement = doc.createElement("type");
+    root.appendChild(typeElement);
+    typeElement.appendChild(doc.createTextNode((percent == -1)?"":"multimedia"));
+    QDomElement fileElement = doc.createElement("filename");
+    root.appendChild(fileElement);
+    fileElement.appendChild(doc.createTextNode((percent == -1)?"":fileName));
+    int status = 0;
+    err = media.GetServerStatus(&status);
+    if (err.isValid())
+    {
+        tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        QDomElement resElement = doc.createElement("res");
+        root.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode((percent == -1)?"0":"1"));
+        m_var = doc.toString();
+        return;
+    }
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode((percent == -1)?"0":(status == 3)?"3":"1"));
+
+    m_var = doc.toString();
 }
 
 void RenderResponseAppMngm::generateSyslogServerEnable() {
@@ -1390,7 +1586,15 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         taskInfo.recur_date = m_pReq->parameter("f_period_month").toInt();
 
     taskInfo.is_inc = 1;
-    QByteArray rename = QUrl::fromPercentEncoding(m_pReq->parameter("f_rename").toLocal8Bit()).toUtf8();
+    QStringList src_ext = src.split(".", QString::SkipEmptyParts);
+    QString add_ext = "";
+    if (!src_ext.isEmpty() && src_ext.length() > 0)
+        add_ext = src_ext.value(src_ext.length() - 1);
+    QString rename_s = QUrl::fromPercentEncoding(m_pReq->parameter("f_rename").toLocal8Bit());
+    QStringList rename_ext = rename_s.split(".", QString::SkipEmptyParts);
+    if (add_ext != "" && (rename_ext.isEmpty() || rename_ext.value(rename_ext.length() - 1) != add_ext))
+        rename_s.append("." + add_ext);
+    QByteArray rename = rename_s.toUtf8();
     taskInfo.rename = rename.data();
     QByteArray charset = m_pReq->parameter("f_lang").toUtf8();
     taskInfo.charset = charset.data();
@@ -2188,7 +2392,8 @@ void RenderResponseAppMngm::generateEnableDisableSchedule() {
 
 void RenderResponseAppMngm::generateBackupNow() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + m_pReq->parameter("name"));
+    QString name = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + name);
     m_var = "N/A";
 
 }

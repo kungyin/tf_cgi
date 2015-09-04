@@ -50,12 +50,12 @@ void DbDataProvider::DeleteSqlQuery()
     }
 }
 
-QSqlError DbDataProvider::SelectData(QString selected, QString condition, QString order_name, QString order, QString limit)
+QSqlError DbDataProvider::SelectData(QString selected, QString condition, QString order_name, QString order, QString limit, QString table)
 {
     if (!m_Db.isOpen()) m_Db.open();
     DeleteSqlQuery();
     m_Query = new QSqlQuery(m_Db);
-    QString sql = QString("select %1 from %2 %3 %4 %5 %6").arg(selected, (m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":"tbl_files", ((condition.length() > 0)?condition:""), ((order_name.length() > 0)?"order by " + order_name:""), order, limit);
+    QString sql = QString("select %1 from %2 %3 %4 %5 %6").arg(selected, (m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":table, ((condition.length() > 0)?condition:""), ((order_name.length() > 0)?"order by " + order_name:""), order, limit);
     m_Query->prepare(sql);
     if (!m_Query->exec()) return m_Query->lastError();
     return m_Db.lastError();
@@ -114,11 +114,6 @@ QSqlError DbDataProvider::ShowDatabases()
 
 SyslogDbDataProvider::SyslogDbDataProvider()
     : DbDataProvider(DB_TYPE_SYSLOG)
-{
-
-}
-
-SyslogDbDataProvider::~SyslogDbDataProvider()
 {
 
 }
@@ -239,4 +234,83 @@ QSqlError SyslogDbDataProvider::SelectAllApplication(QString database)
 QSqlError SyslogDbDataProvider::GetAllDatabase()
 {
     return DbDataProvider::ShowDatabases();
+}
+
+MediaDbDataProvider::MediaDbDataProvider()
+    : DbDataProvider(DB_TYPE_MULTI_MEDIA)
+{
+
+}
+
+QSqlError MediaDbDataProvider::SelectFolderList(QString paraPage, QString paraRp)
+{
+    QString limit = "";
+    if (!paraPage.isEmpty() && paraRp.length() > 0)
+    {
+        int offset = (paraPage.toInt() - 1) * paraRp.toInt();
+        limit = QString("limit %1,%2 ").arg(QString::number(offset), paraRp);
+    }
+    return DbDataProvider::SelectData("*", "", "", "", limit, "tbl_multimedia_folder");
+}
+
+QSqlError MediaDbDataProvider::GetServerStatus(int *status)
+{
+    *status = 0;
+    if (!m_Db.isOpen()) m_Db.open();
+    QString sql = "select * from tbl_multimedia_folder where scan_status='pause'";
+    QSqlQuery q(m_Db);
+    q.prepare(sql);
+    if (q.exec() && q.size() > 0) *status = 3;
+    if (*status == 0)
+    {
+        sql = "select * from tbl_multimedia_folder where scan_status='stop'";
+        q.clear();
+        q.prepare(sql);
+        if (q.exec() && q.size() > 0) *status = 2;
+    }
+    if (*status == 0)
+    {
+        sql = "select * from tbl_multimedia_folder where scan_status='scan'";
+        q.clear();
+        q.prepare(sql);
+        if (q.exec() && q.size() > 0) *status = 1;
+    }
+    m_Db.close();
+    return m_Db.lastError();
+}
+
+QSqlError MediaDbDataProvider::GetPercentAndFile(int *percent, QString *filePath)
+{
+    if (!m_Db.isOpen()) m_Db.open();
+    QString sql = "select round(sum(current_file_count)/sum(pre_file_count))*100 as a from tbl_multimedia_folder where scan_status='scan' or scan_status='finish'";
+    QSqlQuery q(m_Db);
+    q.prepare(sql);
+    if (q.exec() && q.size() > 0 && q.next()) *percent = q.value("a").toInt();
+    sql = "select current_scan_file from tbl_multimedia_folder where scan_status='scan' limit 1";
+    q.clear();
+    q.prepare(sql);
+    if (q.exec() && q.size() > 0 && q.next()) *filePath = q.value("current_scan_file").toString();
+    m_Db.close();
+    return m_Db.lastError();
+}
+
+QStringList MediaDbDataProvider::GetFolderAll()
+{
+    QStringList list;
+    if (!m_Db.isOpen()) m_Db.open();
+    QSqlQuery q(m_Db);
+    QString sql = "select folder_path from tbl_multimedia_folder";
+    q.prepare(sql);
+    if (!q.exec())
+        qDebug() << q.lastError();
+    if (q.size() > 0)
+    {
+        list.clear();
+        while (q.next())
+        {
+            list.append(q.value("folder_path").toString());
+        }
+    }
+    m_Db.close();
+    return list;
 }
