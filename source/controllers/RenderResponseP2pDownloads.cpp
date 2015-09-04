@@ -18,6 +18,9 @@ void RenderResponseP2pDownloads::preRender() {
     case CMD_P2P_STATE:
         generateP2pState();
         break;
+    case CMD_P2P_HOME_STATE:
+        generateP2PHomeState();
+        break;
     case CMD_P2P_GET_LIST_BY_PRIORITY:
         generateP2pGetListByPriority();
         break;
@@ -78,6 +81,23 @@ void RenderResponseP2pDownloads::generateP2pState() {
     QDomElement p2pElement = doc.createElement("p2p");
     root.appendChild(p2pElement);
     p2pElement.appendChild(doc.createTextNode(p2pInfo.value("enable")));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseP2pDownloads::generateP2PHomeState() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_p2p_home_stat");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resultElement = doc.createElement("result");
+    root.appendChild(resultElement);
+    resultElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
@@ -256,12 +276,13 @@ void RenderResponseP2pDownloads::generateP2pDelAllCompleted() {
 
 }
 
-/* todo: need API */
 void RenderResponseP2pDownloads::generateP2pGetTorrentScheduling() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QString paraTorrentIndex = m_pReq->parameter("f_torrent_index");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " service_get_p2p_torrent_schedue " +
+                                      paraTorrentIndex, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -270,36 +291,62 @@ void RenderResponseP2pDownloads::generateP2pGetTorrentScheduling() {
         << "name" << "f_type" << "st_year" << "st_mon" << "st_day"
         << "st_hours" << "st_min" << "stop_time" << "result");
 
-//    if( configContentElement.size() == apiOut.size() ) {
-//        for(int i = 0; i < apiOut.size(); i++) {
-//            QDomElement element = doc.createElement(configContentElement.value(i));
-//            root.appendChild(element);
-//            element.appendChild(doc.createTextNode(apiOut.value(i)));
-//        }
-//    }
-//    else {
-//        //assert(0);
-//        tError("RenderResponseSysStatus::generateModuleShowInstallStatus(): "
-//               "configContentElement size is not equal to apiOut size.");
-//    }
+    if( configTagNames.size() == apiOut.size() ) {
+        if(apiOut.value(1) == "none") {
+            QStringList configTagNamesNone(QStringList()
+                << "name" << "f_type" << "start_time" << "stop_time" << "result");
+            QStringList configContents(QStringList()
+                << apiOut.value(0) << apiOut.value(1) << apiOut.value(2) << apiOut.value(3) << apiOut.value(8));
+
+            for(int i = 0; i < configContents.size(); i++) {
+                QDomElement element = doc.createElement(configTagNamesNone.value(i));
+                root.appendChild(element);
+                element.appendChild(doc.createTextNode(configContents.value(i)));
+            }
+        }
+        else {
+            for(int i = 0; i < apiOut.size(); i++) {
+                QDomElement element = doc.createElement(configTagNames.value(i));
+                root.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i)));
+            }
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateP2pGetTorrentScheduling(): "
+               "configTagNames size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseP2pDownloads::generateP2pTorrentSchedulingSet() {
 
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QString paraTorrentIndex = m_pReq->parameter("f_torrent_index");
+    QString paraStartTime = m_pReq->parameter("f_start_time");
+    QString paraStopTime = m_pReq->parameter("f_stop_time");
+    QString paraType = m_pReq->parameter("f_type");
+
+    QString date = QDate::currentDate().toString("yyyyMMdd");
+    QString isDialy = paraType == "daily" ? "1" : "0";
+    QString scheduleFormat("%1%2%3");
+    QString schedule = scheduleFormat.arg(isDialy, date, paraStartTime);
+    if(!paraStopTime.isEmpty())
+        schedule += date + paraStopTime;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_P2P_API +
+                 " --set-schedule 1 " + paraTorrentIndex + " " + schedule, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
-    resultElement.appendChild(doc.createTextNode("1"));
+    resultElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 

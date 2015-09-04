@@ -446,6 +446,7 @@ enum CGI_COMMAND {
 
     /**** P2P download ****/
     CMD_P2P_STATE,                           /* p2p_state */
+    CMD_P2P_HOME_STATE,                      /* p2p_home_state */
     CMD_P2P_GET_LIST_BY_PRIORITY,            /* p2p_get_list_by_priority */
     CMD_P2P_ADD_TORRENT_URL,                 /* p2p_add_torrent_url */
     CMD_P2P_GET_URL_STATE,                   /* p2p_get_url_state */
@@ -960,6 +961,7 @@ const char CGI_PARA_COMMANDS[][255] = {
 
     /**** P2P download ****/
     "p2p_state",
+    "p2p_home_state",
     "p2p_get_list_by_priority",
     "p2p_add_torrent_url",
     "p2p_get_url_state",
@@ -1481,6 +1483,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     //CMD_FILE_END,
 
     { CMD_P2P_STATE,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_state */
+    { CMD_P2P_HOME_STATE,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_home_state */
     { CMD_P2P_GET_LIST_BY_PRIORITY,      RENDER_TYPE_JOSEN,         COOKIE_REQ_CMDS          },         /* p2p_get_list_by_priority */
     { CMD_P2P_ADD_TORRENT_URL,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_add_torrent_url */
     { CMD_P2P_GET_URL_STATE,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_url_state */

@@ -760,7 +760,7 @@ void RenderResponseSysMngm::generateSmsTest() {
 }
 
 void RenderResponseSysMngm::generateSmsTestResult() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_send test", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_test_result", true);
     m_var = apiOut.value(0);
 }
 

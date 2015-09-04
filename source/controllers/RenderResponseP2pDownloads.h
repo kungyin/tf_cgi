@@ -14,6 +14,7 @@ public:
 
 private:
     void generateP2pState();
+    void generateP2PHomeState();
     void generateP2pGetListByPriority();
     void generateP2pAddTorrentUrl();
     void generateP2pGetUrlState();
