@@ -198,6 +198,7 @@ enum CGI_COMMAND {
     CMD_UPNP_AV_SERVER_GET_CONFIG,          /* UPnP_AV_Server_Get_Config */
     CMD_UPNP_AV_SERVER,                     /* UPnP_AV_Server */
     CMD_UPNP_AV_SERVER_GET_SQLDB_STATE,     /* UPnP_AV_Server_Get_SQLDB_State */
+    CMD_UPNP_AV_SERVER_PRESCAN_FINISHED,    /* UPnP_AV_Server_Prescan_Finished */
     CMD_GUI_CODEPAGE_GET_LIST,              /* GUI_codepage_get_list */
     CMD_ITUNES_SERVER_GET_XML,              /* iTunes_Server_Get_XML */
     CMD_ITUNES_SERVER_READY,                /* iTunes_Server_Ready */
@@ -206,12 +207,14 @@ enum CGI_COMMAND {
     CMD_SQLDB_STOP_FINISH,                  /* CGI_SQLDB_Stop_Finish */
     CMD_UPNP_AV_SERVER_PRESCAN,             /* UPnP_AV_Server_Prescan */
     CMD_UPNP_AV_SERVER_PATH_DEL,            /* UPnP_AV_Server_Path_Del */
+    CMD_SQLDB_STOP,                         /* CGI_SQLDB_Stop */
     CMD_UPNP_AV_SERVER_SETTING,             /* UPnP_AV_Server_Setting */
     CMD_GUI_CODEPAGE_ADD,                   /* GUI_codepage_add */
     CMD_ITUNES_SERVER_SETTING,              /* iTunes_Server_Setting */
     CMD_ITUNES_SERVER_CHECK_PS,             /* iTunes_Server_Check_PS */
     CMD_ITUNES_SERVER_REFRESH,              /* iTunes_Server_Refresh */
     CMD_ITUNES_SERVER_REFRESH_STATE,        /* iTunes_Server_Refresh_State */
+    CMD_CHK_REFRESH_STATUS,                  /* cgi_chk_refresh_status */
 
     /**** Syslog Server ****/
     CMD_SYSLOG_SERVER_ENABLE,               /* Syslog_Server_Enable */
@@ -421,7 +424,6 @@ enum CGI_COMMAND {
 //    CMD_GET_AIRPLAY_DEVICE,                  /* cgi_get_airplay_device */
 //    CMD_ROTATE_IMAGE,                        /* cgi_rotate_image */
 //    CMD_GET_COOLIRIS,                        /* cgi_get_cooliris */
-//    CMD_CHK_REFRESH_STATUS,                  /* cgi_chk_refresh_status */
 //    CMD_PHOTO_END,
 
     /**** File ****/
@@ -712,6 +714,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "UPnP_AV_Server_Get_Config",
     "UPnP_AV_Server",
     "UPnP_AV_Server_Get_SQLDB_State",
+    "UPnP_AV_Server_Prescan_Finished",
     "GUI_codepage_get_list",
     "iTunes_Server_Get_XML",
     "iTunes_Server_Ready",
@@ -720,12 +723,14 @@ const char CGI_PARA_COMMANDS[][255] = {
     "CGI_SQLDB_Stop_Finish",
     "UPnP_AV_Server_Prescan",
     "UPnP_AV_Server_Path_Del",
+    "CGI_SQLDB_Stop",
     "UPnP_AV_Server_Setting",
     "GUI_codepage_add",
     "iTunes_Server_Setting",
     "iTunes_Server_Check_PS",
     "iTunes_Server_Refresh",
     "iTunes_Server_Refresh_State",
+    "cgi_chk_refresh_status",
 
 
     /**** Syslog Server ****/
@@ -935,7 +940,6 @@ const char CGI_PARA_COMMANDS[][255] = {
 //    "cgi_get_airplay_device",
 //    "cgi_rotate_image",
 //    "cgi_get_cooliris",
-//    "cgi_chk_refresh_status",
 //    ""
 
     /**** File ****/
@@ -1232,6 +1236,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_UPNP_AV_SERVER_GET_CONFIG,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Get_Config */
     { CMD_UPNP_AV_SERVER,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server */
     { CMD_UPNP_AV_SERVER_GET_SQLDB_STATE, RENDER_TYPE_XML,          COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Get_SQLDB_State */
+    { CMD_UPNP_AV_SERVER_PRESCAN_FINISHED,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Prescan_Finished */
     { CMD_GUI_CODEPAGE_GET_LIST,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_codepage_get_list */
     { CMD_ITUNES_SERVER_GET_XML,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Get_XML */
     { CMD_ITUNES_SERVER_READY,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Ready */
@@ -1240,12 +1245,14 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SQLDB_STOP_FINISH,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* CGI_SQLDB_Stop_Finish */
     { CMD_UPNP_AV_SERVER_PRESCAN,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Prescan */
     { CMD_UPNP_AV_SERVER_PATH_DEL,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Path_Del */
+    { CMD_SQLDB_STOP,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* CGI_SQLDB_Stop */
     { CMD_UPNP_AV_SERVER_SETTING,       RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* UPnP_AV_Server_Setting */
     { CMD_GUI_CODEPAGE_ADD,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* GUI_codepage_add */
     { CMD_ITUNES_SERVER_SETTING,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Setting */
     { CMD_ITUNES_SERVER_CHECK_PS,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Check_PS */
     { CMD_ITUNES_SERVER_REFRESH,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Refresh */
     { CMD_ITUNES_SERVER_REFRESH_STATE,  RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* iTunes_Server_Refresh_State */
+    { CMD_CHK_REFRESH_STATUS,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_chk_refresh_status */
 
     /**** Syslog Server ****/
     { CMD_SYSLOG_SERVER_ENABLE,         RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* Syslog_Server_Enable */
@@ -1457,7 +1464,6 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    { CMD_GET_AIRPLAY_DEVICE,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_airplay_device */
 //    { CMD_ROTATE_IMAGE,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_rotate_image */
 //    { CMD_GET_COOLIRIS,                  RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_get_cooliris */
-//    { CMD_CHK_REFRESH_STATUS,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_refresh_status */
     //CMD_PHOTO_END,
 
     { CMD_FOLDER_CONTENT,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_folder_content */
