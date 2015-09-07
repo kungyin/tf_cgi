@@ -149,8 +149,8 @@ void RenderResponseHome::generateLogin() {
     if(m_pReq->allParameters().contains("ssl_port"))
         paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api login#" +
-                                 allParametersToString(), true);
+    QString loginPara = "login#" + allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api " + loginPara, true);
     QMap<QString, QString> map;
     map.insert("ssl_enable", paraSsl);
     map.insert("ssl_port", paraSslPort);

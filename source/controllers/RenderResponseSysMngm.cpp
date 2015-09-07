@@ -968,7 +968,7 @@ void RenderResponseSysMngm::generateUpsStatusInfo() {
 void RenderResponseSysMngm::generateUpsAdd() {
 
     QDomDocument doc;
-    if(!QProcess::startDetached(API_PATH + SCRIPT_MANAGER_API, QStringList() <<
+    if(!startDetached(API_PATH + SCRIPT_MANAGER_API, QStringList() <<
                                 "service_set_ups_add" << allParametersToString()))
         ;
 //    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_add "
@@ -1095,7 +1095,7 @@ void RenderResponseSysMngm::generateGetUpFw() {
 
 void RenderResponseSysMngm::generateReboot() {
     daemonize();
-    if(!QProcess::startDetached(API_PATH + SCRIPT_FW_UPGRADE_MGR, QStringList() << "system_reboot"))
+    if(!startDetached(API_PATH + SCRIPT_FW_UPGRADE_MGR, QStringList() << "system_reboot"))
         ;
     m_var = "../web/dsk_mgr/wait.html";
 }

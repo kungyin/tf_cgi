@@ -339,7 +339,7 @@ void RenderResponseNetwork::generateLanXml2() {
 
 #ifndef SIMULATOR_MODE
     tDebug("exec: %s", NETWORK_SCRIPT.toLocal8Bit().data());
-    if(!QProcess::startDetached(NETWORK_SCRIPT, QStringList() << "restart"))
+    if(!startDetached(NETWORK_SCRIPT, QStringList() << "restart"))
         tError("process cannot be started: %s", NETWORK_SCRIPT.toLocal8Bit().data());
 #endif
 

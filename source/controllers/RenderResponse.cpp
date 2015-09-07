@@ -44,6 +44,19 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     return ret;
 }
 
+bool RenderResponse::startDetached(QString name, QStringList &arguments) {
+
+    QString apiCmd = name;
+    for(QString e : arguments)
+        apiCmd += " " + e;
+
+    tDebug("RenderResponse::startDetached() - apiCmd: %s", apiCmd.toLocal8Bit().data());
+    if(!QProcess::startDetached(name, arguments))
+        return false;
+
+    return true;
+}
+
 QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QString splitChar) {
     QStringList ret;
 
@@ -214,14 +227,16 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
     return ret;
 }
 
-QString RenderResponse::allParametersToString(QString before, QString after) {
+QString RenderResponse::allParametersToString(bool bDecode, QString before, QString after) {
 
     QString ret;
     if(m_pReq) {
         for ( QString entryKey : m_pReq->allParameters().keys() ) {
             if(!ret.isEmpty())
                 ret += "#";
-            QString value = QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
+            QString value = m_pReq->allParameters().value(entryKey).toString();
+            if(bDecode)
+                value = QUrl::fromPercentEncoding(m_pReq->allParameters().value(entryKey).toByteArray());
             if(!before.isEmpty())
                 value.replace(before, after);
             else
@@ -229,6 +244,11 @@ QString RenderResponse::allParametersToString(QString before, QString after) {
             ret += entryKey + "=" + value.simplified();
         }
     }
+
+//    if(!ret.isEmpty()) {
+//        ret.prepend("\"");
+//        ret.append("\"");
+//    }
 
     return ret;
 }

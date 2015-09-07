@@ -10,7 +10,7 @@ INCLUDEPATH += ../helpers ../models \
 DEPENDPATH  += ../helpers ../models
 LIBS += -L../lib -lhelper -lmodel
 
-VERSION = $$system("git rev-list HEAD --count")_$$system(date +"%m-%d-%y")
+VERSION = $$system("git rev-parse --abbrev-ref HEAD")_$$system("git rev-list HEAD --count")_$$system(date +"%m-%d-%y")
 
 unix:!macx {
 
