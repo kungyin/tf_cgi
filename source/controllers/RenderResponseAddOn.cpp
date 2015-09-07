@@ -53,6 +53,9 @@ void RenderResponseAddOn::preRender() {
     case CMD_MODULE_UNINSTALL:
         generateModuleUninstall();
         break;
+    case CMD_APP:
+        generateApp();
+        break;
 
     default:
         break;
@@ -208,12 +211,12 @@ void RenderResponseAddOn::generateModuleReInstall() {
     m_var = "<script>location.href='/web/addon_center/installed.html'</script>";
 }
 
-/* todo */
 void RenderResponseAddOn::generateInstall3PartyApkg() {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " install_3_party_apkg " +
+                                      allParametersToString(), true);
 
-    m_var = "<script>location.href='/web/addon_center/installed.html'</script>";
+    m_var = "<script>location.href='/web/addon_center/installed.html?id=8401878'</script>";
 }
 
 void RenderResponseAddOn::generateUninstallAddOn() {
@@ -232,38 +235,44 @@ void RenderResponseAddOn::generateUninstallAddOn() {
 
 }
 
-/* todo */
 void RenderResponseAddOn::generateModuleEnableDisable() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_enable_disable", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
-    resultElement.appendChild(doc.createTextNode("1"));
+    resultElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseAddOn::generateModuleUninstall() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_uninstall", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement moduleNameElement = doc.createElement("module_name");
     root.appendChild(moduleNameElement);
-    moduleNameElement.appendChild(doc.createTextNode("wordpress"));
+    moduleNameElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
-    resultElement.appendChild(doc.createTextNode("1"));
+    resultElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 
+}
+
+void RenderResponseAddOn::generateApp() {
+    if(!m_pReq->multipartFormData().isEmpty()) {
+        if(m_pReq->multipartFormData().renameUploadedFile("file", PACKAGE_FILE, true)) {
+            m_var = "<script>location.href='/web/addon_center/installed.html?id=8401878'</script>";
+        }
+    }
 }
 

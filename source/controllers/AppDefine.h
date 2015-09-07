@@ -66,6 +66,7 @@ const QString P2P_STATE_FILE = "/tmp/p2p_status";
 const QString TORRENT_UPLOAD_FILE = "/tmp/upload/torrent_file";
 const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
 const QString SHARE_INFO_FILE = "/etc/share_info";
+const QString PACKAGE_FILE = "/var/upload/pkg.bin";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
 
@@ -86,6 +87,7 @@ const QString P2P_STATE_FILE = API_PATH + "p2p_status";
 const QString TORRENT_UPLOAD_FILE = API_PATH + "torrent_file";
 const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 const QString SHARE_INFO_FILE = API_PATH + "share_info";
+const QString PACKAGE_FILE = API_PATH + "pkg.bin";
 
 #endif
 

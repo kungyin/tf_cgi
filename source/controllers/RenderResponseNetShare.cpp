@@ -245,26 +245,26 @@ void RenderResponseNetShare::generateGetSession() {
         rowElement.appendChild(cellElement2);
         cellElement2.appendChild(doc.createTextNode(e.split(";").value(1).isEmpty() ? "-" : e.split(";").value(1)));
 
-        QString cell3 = e.split(";").value(2).isEmpty() ? "-" : cellContentCifs.arg(e.split(";").value(2));
+        QString cell3 = e.split(";").value(2).isEmpty() ? "-" : cellContentCifs.arg(QString::number(i+1));
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
         cellElement3.appendChild(doc.createCDATASection(cell3));
 
-        QString cell4 = e.split(";").value(3) == "1" ? cellContentFtp.arg(e.split(";").value(3)) : "-";
+        QString cell4 = e.split(";").value(3) == "1" ? cellContentFtp.arg(QString::number(i+1)) : "-";
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
         cellElement4.appendChild(doc.createCDATASection(cell4));
 
         QString nfsInfo = e.split(";").value(4);
         QString cell5 = nfsInfo.isEmpty() ? "-" : cellContentNfs.arg(
-                 QString::number(i), QString::number(i), nfsInfo);
+                 QString::number(i+1), QString::number(i+1), nfsInfo);
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
         cellElement5.appendChild(doc.createCDATASection(cell5));
 
         QString webdavInfo = e.split(";").value(5);
         QString cell6 = webdavInfo.isEmpty() ? "-" : cellContentWebdav.arg(
-                 QString::number(i), QString::number(i), webdavInfo);
+                 QString::number(i+1), QString::number(i+1), webdavInfo);
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
         cellElement6.appendChild(doc.createCDATASection(cell6));
@@ -274,6 +274,7 @@ void RenderResponseNetShare::generateGetSession() {
         cellElement7.appendChild(doc.createTextNode("-"));
 
         rowElement.setAttribute("id", i+1);
+        i++;
     }
 
     QDomElement pageElement = doc.createElement("page");
@@ -420,7 +421,7 @@ void RenderResponseNetShare::generateUserList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_user_list");
-    QString cellContent("<input type='checkbox' name='C_%1' value='%2&' rel='%3'>");
+    QString cellContent("<input type='checkbox' name='C_%1' value='%2' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -483,9 +484,15 @@ void RenderResponseNetShare::generateGroupList() {
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
         cellElement2.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("r").arg(e)));
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("d").arg(e)));
+        if(paraField == "false") {
+            QDomElement cellElement4 = doc.createElement("cell");
+            rowElement.appendChild(cellElement4);
+            cellElement4.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("w").arg(e)));
+        }
+        QDomElement cellElement5 = doc.createElement("cell");
+        rowElement.appendChild(cellElement5);
+        cellElement5.appendChild(doc.createCDATASection(cellContent.arg(QString::number(i)).arg("d").arg(e)));
+
         i++;
     }
     QDomElement pageElement = doc.createElement("page");

@@ -25,6 +25,7 @@ private:
     void generateUninstallAddOn();
     void generateModuleEnableDisable();
     void generateModuleUninstall();
+    void generateApp();
 
 };
 
