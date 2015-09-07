@@ -365,7 +365,7 @@ void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
     QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_sqldb_state");
-    int percent = 0;
+    int percent = -1;
     QString filePath = "";
     MediaDbDataProvider media;
     QSqlError err = media.GetPercentAndFile(&percent, &filePath);
@@ -377,7 +377,7 @@ void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement dbStateElement = doc.createElement("db_state");
+    QDomElement dbStateElement = doc.createElement("db_stste");
     root.appendChild(dbStateElement);
     dbStateElement.appendChild(doc.createTextNode(QString::number(percent)));
     QDomElement dbFileElement = doc.createElement("db_file");

@@ -13,8 +13,9 @@ DbDataProvider::DbDataProvider(DB_TYPE db_type)
     m_Db.setUserName("root");
 #ifdef SIMULATOR_MODE
     m_Db.setPassword("00000000");
-#endif
+#else
     m_Db.setConnectOptions("UNIX_SOCKET=/tmp/mysqld.sock");
+#endif
     m_Query = NULL;
     SetDatabase();
 }
@@ -282,8 +283,18 @@ QSqlError MediaDbDataProvider::GetServerStatus(int *status)
 QSqlError MediaDbDataProvider::GetPercentAndFile(int *percent, QString *filePath)
 {
     if (!m_Db.isOpen()) m_Db.open();
-    QString sql = "select round(sum(current_file_count)/sum(pre_file_count))*100 as a from tbl_multimedia_folder where scan_status='scan' or scan_status='finish'";
+    QString sql = "select * from tbl_multimedia_folder where scan_status='scan' or scan_status='finish'";
     QSqlQuery q(m_Db);
+    q.prepare(sql);
+    if (q.exec() && q.size() <= 0)
+    {
+        *percent = 100;
+        q.clear();
+        if (m_Db.isOpen()) m_Db.close();
+        *filePath = "finish";
+        return m_Db.lastError();
+    }
+    sql = "select floor(sum(current_file_count)*100/sum(pre_file_count)) as a from tbl_multimedia_folder where scan_status='scan' or scan_status='finish'";
     q.prepare(sql);
     if (q.exec() && q.size() > 0 && q.next()) *percent = q.value("a").toInt();
     sql = "select current_scan_file from tbl_multimedia_folder where scan_status='scan' limit 1";
