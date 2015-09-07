@@ -1619,6 +1619,12 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.comment = NULL;
     if(SaveTaskXml(taskInfo, &taskId) != RET_SUCCESS)
         tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
+    else
+    {
+        QDateTime curDatetime = QDateTime::currentDateTime();
+        if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") < curDatetime.toString("yyyyMMddhhmm"))
+            StartTask(taskId);
+    }
 
     if(bAdd && taskId)
         free(taskId);
@@ -2291,6 +2297,9 @@ void RenderResponseAppMngm::generateSetSchedule() {
         r_info.execat = execat.data();
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
+    QDateTime curDatetime = QDateTime::currentDateTime();
+    if (r_info.recur_type == 0 && execat < curDatetime.toString("yyyyMMddhhmm"))
+        StartStopRemoteTask(task_name.data(), "1");
 
     m_var = "N/A";
 

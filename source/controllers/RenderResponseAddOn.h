@@ -26,6 +26,8 @@ private:
     void generateModuleEnableDisable();
     void generateModuleUninstall();
     void generateApp();
+	void generateMyFavSet();
+    void generateMyFavGetSortInfo();
 
 };
 

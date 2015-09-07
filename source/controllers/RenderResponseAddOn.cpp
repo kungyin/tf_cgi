@@ -2,6 +2,9 @@
 
 #include "RenderResponseAddOn.h"
 
+#include <QDir>
+#include <QXmlStreamWriter>
+
 RenderResponseAddOn::RenderResponseAddOn(THttpRequest &req, CGI_COMMAND cmd)
 {
     m_cmd = cmd;
@@ -56,6 +59,11 @@ void RenderResponseAddOn::preRender() {
     case CMD_APP:
         generateApp();
         break;
+	case CMD_MYFAV_SET:
+        generateMyFavSet();
+        break;
+    case CMD_MYFAV_GET_SORT_INFO:
+        generateMyFavGetSortInfo();
 
     default:
         break;
@@ -274,5 +282,82 @@ void RenderResponseAddOn::generateApp() {
             m_var = "<script>location.href='/web/addon_center/installed.html?id=8401878'</script>";
         }
     }
+}
+
+void RenderResponseAddOn::generateMyFavSet()
+{
+    int res = 0, i = 0;
+    QDomDocument doc;
+    QString paraUser = m_pReq->parameter("f_user");
+    int paraNum = m_pReq->parameter("f_num").toInt();
+    QString paraSort = m_pReq->parameter("f_sort");
+    QStringList paraLists;
+    for (i = 0; i < paraNum; i++)
+        paraLists.append(QUrl::fromPercentEncoding(m_pReq->parameter("f_lst" + QString::number(i)).toLocal8Bit()));
+    if (paraNum > 0 && !paraLists.isEmpty() && paraLists.length() > 0)
+    {
+        QDir dir(MY_FAVORITE_FOLDER);
+        if (!dir.exists()) dir.mkpath(MY_FAVORITE_FOLDER);
+        QDir dirXml(MY_FAVORITE_WEB_FOLDER);
+        if (!dirXml.exists()) dirXml.mkpath(MY_FAVORITE_WEB_FOLDER);
+        QString userPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_FOLDER, paraUser);
+        QFile file(userPath);
+        if (file.open(QIODevice::WriteOnly))
+        {
+            QXmlStreamWriter writer(&file);
+            writer.setAutoFormatting(true);
+            writer.writeStartDocument();
+            writer.writeStartElement("config");
+            writer.writeTextElement("sort", paraSort);
+            writer.writeStartElement("my_favorite");
+            for (i = 0; i < paraNum; i++)
+            {
+                writer.writeStartElement("item");
+                QStringList addonLists = paraLists.value(i).split(",");
+                if (!addonLists.isEmpty() && addonLists.length() == 6)
+                {
+                    writer.writeTextElement("name", addonLists.value(1));
+                    writer.writeTextElement("show_name", addonLists.value(5));
+                    writer.writeTextElement("flag", addonLists.value(0));
+                    QString path = QString("%1?id=%2").arg(addonLists.value(4), addonLists.value(1));
+                    writer.writeTextElement("path", path);
+                }
+                writer.writeEndElement();
+            }
+            writer.writeEndElement();
+            writer.writeEndElement();
+            writer.writeEndDocument();
+            file.close();
+            QString newPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_WEB_FOLDER, paraUser);
+            QFile::copy(userPath, newPath);
+            res = 1;
+        }
+    }
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(QString::number(res)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateMyFavGetSortInfo()
+{
+    int res = 2;
+    QDomDocument doc;
+    QString paraUser = m_pReq->parameter("f_user");
+    QString path = QString("%1gui_%2.xml").arg(MY_FAVORITE_WEB_FOLDER, paraUser);
+    QFile file(path);
+    if (file.exists()) res = 0;
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(QString::number(res)));
+
+    m_var = doc.toString();
 }
 
