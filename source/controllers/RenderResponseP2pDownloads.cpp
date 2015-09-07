@@ -405,7 +405,7 @@ void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_setting_info", true, ":");
 
-    QDomElement root = doc.createElement("device_info");
+    QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
     QStringList configTagNames(QStringList()
@@ -438,26 +438,53 @@ void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
     m_var = doc.toString();
 }
 
+/*
+ * [p2p enable][HD_a2];[HD_b2];[selected_hdd]
+//device not found
+1;;;
+
+//device found
+// two hdd and select Volume_1
+0;Volume_1;Volume_2;Volume_1
+
+// one hdd and select Volume_1
+0;Volume_1;;Volume_1
+*/
 void RenderResponseP2pDownloads::generateP2pGetHd() {
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_save_device", true, ";");
     QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
 
-    QString selectClass = "<select size=\"1\" name=\"f_hdd_list\" disabled>\n"
-                          "%1"
+    QStringList apiOutShared = apiOut.mid(1, 2);
+
+    QString selectClass = "<select size=\"1\" name=\"f_hdd_list\"%1>\n"
+                          "%2"
                           "</select>";
     QString optionClass =  "    <option value=\"%1\"%2>%3</option>\n";
     QString opt;
 
-    for(int i = 0; i<shareInfo.size(); i++) {
-        QString folderName = shareInfo.value(i).right(shareInfo.value(i).length()
-                                                      - (shareInfo.value(i).lastIndexOf("/") + 1));
+    for(int i = 0; i<apiOutShared.size(); i++) {
+        if(apiOutShared.value(i).isEmpty())
+            continue;
+
+        QString folderName;
+        for(QString e : shareInfo) {
+            if(e.contains(apiOutShared.value(i))) {
+                folderName = e.right(e.length() - (e.lastIndexOf("/") + 1));
+                break;
+            }
+        }
+        if(folderName.isEmpty())
+            continue;
+
         QString select;
-        if(i == 0)
+        if(apiOut.value(3) == apiOutShared.value(i))
             select = " selected";
-        opt += optionClass.arg(folderName, select, shareInfo.value(i).split(":").value(0));
+        opt += optionClass.arg(folderName, select, apiOutShared.value(i));
     }
 
-    m_var = selectClass.arg(opt);
+    QString disableValue = apiOut.value(0).compare("1") == 0 ? " disabled" : "";
+    m_var = selectClass.arg(disableValue, opt);
 
 }
 

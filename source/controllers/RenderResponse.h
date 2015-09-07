@@ -18,12 +18,13 @@ public:
 protected:
 
     QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",");
+    bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
     bool setNasCfg(QString, QString, QString);
     bool setNasCfg(QString, QMap<QString, QString> &);
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
-    QString allParametersToString(QString before = QString::null, QString after = QString::null);
+    QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
     QString sizeHuman(qint64);
 
     inline int getTotalPages(int, int);

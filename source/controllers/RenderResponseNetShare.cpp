@@ -139,8 +139,9 @@ void RenderResponseNetShare::preRender() {
 void RenderResponseNetShare::generateModuleGetInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_pkg_list_info", true, ";");
-    QStringList apkgList = apiOut.value(0).split("#");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
+    QStringList apkgList = apiOut;
+    apkgList.removeFirst();
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -149,14 +150,17 @@ void RenderResponseNetShare::generateModuleGetInfo() {
         << "Name" << "ShowName" << "Enable" << "URL" << "User" << "Center"
         << "user_control" << "version" << "date" << "path");
 
+    QDomElement apkgElement = doc.createElement("apkg");
+    root.appendChild(apkgElement);
+
     for(QString e : apkgList) {
-        if( itemTagNames.size() == e.split(",").size() ) {
-            QDomElement apkgElement = doc.createElement("apkg");
-            root.appendChild(apkgElement);
-            for(int i = 0; i < e.split(",").size(); i++) {
+        if( itemTagNames.size() == e.split(";").size() ) {
+            QDomElement itemElement = doc.createElement("Item");
+            apkgElement.appendChild(itemElement);
+            for(int i = 0; i < e.split(";").size(); i++) {
                 QDomElement element = doc.createElement(itemTagNames.value(i));
-                apkgElement.appendChild(element);
-                element.appendChild(doc.createTextNode(e.split(",").value(i)));
+                itemElement.appendChild(element);
+                element.appendChild(doc.createTextNode(e.split(";").value(i)));
             }
         }
         else {
@@ -168,7 +172,7 @@ void RenderResponseNetShare::generateModuleGetInfo() {
 
     QDomElement p2pEnableElement = doc.createElement("p2p_enable");
     root.appendChild(p2pEnableElement);
-    p2pEnableElement.appendChild(doc.createTextNode(apiOut.value(1)));
+    p2pEnableElement.appendChild(doc.createTextNode(apiOut.value(0).split(";").value(0)));
 
     m_var = doc.toString();
 

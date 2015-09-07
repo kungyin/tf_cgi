@@ -1,3 +1,5 @@
+#include <QProcess>
+
 #include "RenderResponseAddOn.h"
 
 #include <QDir>
@@ -122,35 +124,23 @@ void RenderResponseAddOn::generateGetAllApps() {
 
 }
 
-/* todo */
 void RenderResponseAddOn::generateGetApkgDetail() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
 
-    QDomElement root = doc.createElement("config");
-    doc.appendChild(root);
-    QDomElement apkgElement = doc.createElement("apkg");
-    root.appendChild(apkgElement);
-    QDomElement itemElement = doc.createElement("item");
-    apkgElement.appendChild(itemElement);
+    QString xmlFile = QUrl::fromPercentEncoding(m_pReq->parameter("xml_path").toLocal8Bit());
 
-    QStringList itemContentElement(QStringList()
-        << "show_name" << "name" << "category" << "description" << "version" << "update" << "show"
-        << "show" << "size" << "developer" << "website" << "forum" << "platform" << "screenshot");
-
-//    if( itemContentElement.size() == apiOut.size() ) {
-//        for(int i = 0; i < apiOut.size(); i++) {
-//            QDomElement element = doc.createElement(itemContentElement.value(i));
-//            apkgElement.appendChild(element);
-//            element.appendChild(doc.createTextNode(apiOut.value(i)));
-//        }
-//    }
-//    else {
-//        //assert(0);
-//        tError("RenderResponseSysStatus::generateGetApkgDetail(): "
-//               "itemContentElement size is not equal to apiOut size.");
-//    }
+    QFile file(xmlFile);
+    if (file.open(QIODevice::ReadOnly)) {
+        if (!doc.setContent(&file)) {
+            tError("RenderResponseAddOn::generateGetApkgDetail(): file %s is not XML.",
+                   xmlFile.toLocal8Bit().data());
+        }
+        file.close();
+    }
+    else
+        tError("RenderResponseAddOn::generateGetApkgDetail(): file %s does not exist.",
+               xmlFile.toLocal8Bit().data());
 
     m_var = doc.toString();
 
@@ -191,8 +181,9 @@ void RenderResponseAddOn::generateChkHddFreeSize() {
 
 void RenderResponseAddOn::generateDownloadInstallAddOn() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " download_install_addon " +
-                                      allParametersToString(), true);
+    if(startDetached(API_PATH + SCRIPT_MANAGER_API, QStringList()
+                                << "download_install_addon" << allParametersToString(false)))
+        ;
 
 }
 
@@ -208,7 +199,7 @@ void RenderResponseAddOn::generateClearAddOnFiles() {
     QDomElement installStatusElement = doc.createElement("install_status");
     root.appendChild(installStatusElement);
     installStatusElement.appendChild(doc.createTextNode(apiOut.value(0)));
-    if(!apiOut.value(1).isEmpty()) {
+    if(apiOut.value(1) != "N/A") {
         QDomElement urlElement = doc.createElement("sc_url");
         root.appendChild(urlElement);
         urlElement.appendChild(doc.createTextNode(apiOut.value(1)));

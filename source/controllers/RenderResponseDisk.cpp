@@ -272,7 +272,7 @@ void RenderResponseDisk::generateFMTCreateDiskMGR() {
             strArg2WithBlank = " " + strArg2;
 
         tDebug("strArg1: %s, strArg2: %s", strArg1.toLocal8Bit().data(), strArg2.toLocal8Bit().data());
-        if(!QProcess::startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1 << strArg2))
+        if(!startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1 << strArg2))
             ;
 //        apiOut = getAPIStdOut(API_PATH + SCRIPT_DISK_MANAGER + " " +
 //                                         strArg1 + strArg2WithBlank,
@@ -361,7 +361,7 @@ void RenderResponseDisk::generateFMTRemainDiskMGR() {
         QString strArg1 = getFMTRemainArgs(paraList);
 
         tDebug("strArg1: %s", strArg1.toLocal8Bit().data());
-        if(!QProcess::startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1))
+        if(!startDetached(SCRIPT_DISK_MANAGER, QStringList() << strArg1))
             ;
     }
 
@@ -734,7 +734,7 @@ void RenderResponseDisk::generateScanDiskRunE2fsck() {
     if(!setNasCfg("scandisk", "scanned_volume", paraDevice))
         tDebug("setNasCfg scandisk failed");
     else
-        if(!QProcess::startDetached(API_PATH + SCRIPT_SCANDISK_API, QStringList() << "-r"))
+        if(!startDetached(API_PATH + SCRIPT_SCANDISK_API, QStringList() << "-r"))
             ;
 
     QDomElement root = doc.createElement("script");

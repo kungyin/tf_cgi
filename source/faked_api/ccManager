@@ -117,6 +117,8 @@
 [ $1 == 'service_p2p_current_state' ] && echo -e "0"
 [ $1 == 'serice_get_p2p_Detail_info' ] && echo -e "ubuntu-15.04-desktop-amd64.iso;ubuntu-15.04-desktop-amd64.iso;1"
 [ $1 == 'cgi_get_allapps' ] && echo -e "0;/xml/addon_eng.xml;DNS-340L"
+[ $1 == 'Module_Get_Info' ] && echo -e "1;2" && echo -e "elephantdrive;D-Link Vault;0;index.php;0;0;0;2.7.20140709d;20140709;/mnt/HD/HD_a2/Nas_Prog/elephantdrive" && echo -e "elephantdrive;D-Link Vault;0;index.php;0;0;0;2.7.20140709d;20140709;/mnt/HD/HD_a2/Nas_Prog/elephantdrive"
+[ $1 == 'service_get_p2p_save_device' ] && echo -e "0;Volume_1;Volume_2;Volume_1"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"
