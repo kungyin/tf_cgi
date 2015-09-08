@@ -629,16 +629,51 @@ void RenderResponseSysStatus::generateModuleList() {
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
+    QString imgSignSrc("<img border='0' src='/web/images/sign_ok.png'>");
+    QString imgStatusSrc("<img border='0' src='/web/images/%1.png'>");
+    QString pkgJs("<a href=javascript:enable('%1','%2','app')>"
+                  "<img border='0' src='/web/images/%3.png'></a>");
+    QString delModJs("<a href=javascript:del_module('%1','app')>"
+                     "<img border='0' src='/web/images/delete_over.png'></a>");
+
     for(int i = 0; i < apiOut.size(); i++) {
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
 
-        if( 3 == apiOut.value(i).split(";").size() ) {
-            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
-                QDomElement cellElement = doc.createElement("cell");
-                rowElement.appendChild(cellElement);
-                cellElement.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
-            }
+        if( 4 == apiOut.value(i).split(";").size() ) {
+            QDomElement cellElement1 = doc.createElement("cell");
+            rowElement.appendChild(cellElement1);
+            cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
+
+            QDomElement cellElement2 = doc.createElement("cell");
+            rowElement.appendChild(cellElement2);
+            cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(1)));
+
+            QDomElement cellElement3 = doc.createElement("cell");
+            rowElement.appendChild(cellElement3);
+            cellElement3.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
+
+            QDomElement cellElement4 = doc.createElement("cell");
+            rowElement.appendChild(cellElement4);
+            cellElement4.appendChild(doc.createCDATASection(imgSignSrc));
+
+            QString imgOnOffPic = apiOut.value(i).split(";").value(3) == "1" ? "on" : "off";
+            QDomElement cellElement5 = doc.createElement("cell");
+            rowElement.appendChild(cellElement5);
+            cellElement5.appendChild(doc.createCDATASection(imgStatusSrc.arg(imgOnOffPic)));
+
+            QString imgStartStopPic = apiOut.value(i).split(";").value(3) == "1" ? "stop" : "start";
+            QString arg = apiOut.value(i).split(";").value(3) == "1" ? "0" : "1";
+            QDomElement cellElement6 = doc.createElement("cell");
+            rowElement.appendChild(cellElement6);
+            cellElement6.appendChild(doc.createCDATASection(pkgJs.
+                                       arg(apiOut.value(i).split(";").value(0), arg, imgStartStopPic)));
+
+            QDomElement cellElement7 = doc.createElement("cell");
+            rowElement.appendChild(cellElement7);
+            cellElement7.appendChild(doc.createCDATASection(delModJs.
+                                       arg(apiOut.value(i).split(";").value(0))));
+
         }
         else {
             //assert(0);
@@ -646,32 +681,10 @@ void RenderResponseSysStatus::generateModuleList() {
                    "element size is not equal to apiOut size.");
         }
 
-        /* todo */
-        QDomElement cellElement4 = doc.createElement("cell");
-        rowElement.appendChild(cellElement4);
-        cellElement4.appendChild(doc.createCDATASection(
-                                     "<img border='0' src='/web/images/sign_ok.png'>"));
-
-        QDomElement cellElement5 = doc.createElement("cell");
-        rowElement.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createCDATASection(
-                                     "<img border='0' src='/web/images/off.png'>"));
-
-        QDomElement cellElement6 = doc.createElement("cell");
-        rowElement.appendChild(cellElement6);
-        cellElement6.appendChild(doc.createCDATASection(
-                                     "<a href=javascript:enable('Transmission','1','app')>"
-                                     "<img border='0' src='/web/images/start.png'></a>"));
-
-        QDomElement cellElement7 = doc.createElement("cell");
-        rowElement.appendChild(cellElement7);
-        cellElement7.appendChild(doc.createCDATASection(
-                                     "<a href=javascript:del_module('Transmission','app')>"
-                                     "<img border='0' src='/web/images/delete_over.png'></a>"));
-
-        rowElement.setAttribute("id", QString::number(i+1));
+        rowElement.setAttribute("id", i);
 
     }
+
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
     pageElement.appendChild(doc.createTextNode(paraPage));

@@ -181,9 +181,11 @@ void CgiController::cgiResponse() {
         //bool islogin = userLogin(&user);
         //tDebug("sss %d", islogin);
 
-        QString redirectUrl(pRrep->getVar().toString());
+        QString redirectUrl;
+        QString protocol = "http://";
         if(pRrepHome->getIfRedirectSsl())
-            redirectUrl = "https://" + httpRequest().header().rawHeader("host") + pRrep->getVar().toString();
+            protocol = "https://";
+        redirectUrl = protocol + httpRequest().header().rawHeader("host") + pRrep->getVar().toString();
 
         redirect(QUrl(redirectUrl));
     }

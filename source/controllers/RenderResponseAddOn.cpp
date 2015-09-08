@@ -59,6 +59,9 @@ void RenderResponseAddOn::preRender() {
     case CMD_APP:
         generateApp();
         break;
+    case CMD_APPLICATION_1ST:
+        generateApplication1st();
+        break;
 	case CMD_MYFAV_SET:
         generateMyFavSet();
         break;
@@ -246,7 +249,8 @@ void RenderResponseAddOn::generateUninstallAddOn() {
 void RenderResponseAddOn::generateModuleEnableDisable() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_enable_disable", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_enable_disable " +
+                                      allParametersToString(), true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -261,7 +265,8 @@ void RenderResponseAddOn::generateModuleEnableDisable() {
 void RenderResponseAddOn::generateModuleUninstall() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_uninstall", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_uninstall " +
+                                      allParametersToString(), true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -282,6 +287,40 @@ void RenderResponseAddOn::generateApp() {
             m_var = "<script>location.href='/web/addon_center/installed.html?id=8401878'</script>";
         }
     }
+}
+
+void RenderResponseAddOn::generateApplication1st() {
+
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_application_lst");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QStringList itemTags(QStringList()
+        << "status" << "ShowName" << "Enable" << "URL" << "User" << "Center"
+                         << "Icon_Disable" << "Icon_MouseOver" << "Icon_MouseOut");
+
+    for(int i = 0; i < apiOut.size(); i++) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+        if( itemTags.size() == apiOut.value(i).split(";").size() ) {
+
+            for(int j = 0; j < apiOut.value(i).split(";").size(); j++) {
+                QDomElement element = doc.createElement(itemTags.value(j));
+                itemElement.appendChild(element);
+                element.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(j)));
+            }
+        }
+        else {
+            //assert(0);
+            tError("RenderResponseSysStatus::generateApplication1st(): "
+                   "itemTags size is not equal to apiOut size.");
+        }
+    }
+
+    m_var = doc.toString();
+
 }
 
 void RenderResponseAddOn::generateMyFavSet()

@@ -151,15 +151,18 @@ void RenderResponseHome::generateLogin() {
 
     QString loginPara = "login#" + allParametersToString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api " + loginPara, true);
-    QMap<QString, QString> map;
-    map.insert("ssl_enable", paraSsl);
-    map.insert("ssl_port", paraSslPort);
 
-    if(setNasCfg("web", map)) {
-        if(paraSsl.compare("1") == 0) {
+    if(!paraSsl.isEmpty() && !paraSslPort.isEmpty()) {
+        QMap<QString, QString> map;
+        map.insert("ssl_enable", paraSsl);
+        map.insert("ssl_port", paraSslPort);
+
+        if(setNasCfg("web", map)) {
+            if(paraSsl.compare("1") == 0) {
 #ifndef SIMULATOR_MODE
-        //todo: restart.
+                //todo: restart.
 #endif
+            }
         }
     }
 
@@ -185,7 +188,7 @@ void RenderResponseHome::generateLogin() {
             m_var = "/web/set_passwd.html";
     }
     else /*if(apiOut.value(0).compare("0") == 0)*/ {
-        m_var = "../web/relogin.html";
+        m_var = "/web/relogin.html";
     }
 
 }

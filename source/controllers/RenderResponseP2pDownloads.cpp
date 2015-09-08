@@ -403,7 +403,7 @@ void RenderResponseP2pDownloads::generateP2pDelTorrent() {
 
 void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_setting_info", true, ":");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_setting_info", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
