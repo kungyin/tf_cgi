@@ -187,8 +187,9 @@ void RenderResponseP2pDownloads::generateP2pAddTorrentUrl() {
 
     QDomDocument doc;
 
-    QString url = QUrl::fromPercentEncoding(m_pReq->parameter("f_torrent_url").toLocal8Bit());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_P2P_API + " --add " + url , true, ";");
+    //QString url = QUrl::fromPercentEncoding(m_pReq->parameter("f_torrent_url").toLocal8Bit());
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_url_torrent " +
+                                      allParametersToString() , true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -243,6 +244,7 @@ void RenderResponseP2pDownloads::generateP2pAddTorrentFileNew() {
     QString ret("0");
     if(!m_pReq->multipartFormData().isEmpty()) {
         if(m_pReq->multipartFormData().renameUploadedFile("f_torrent_file", TORRENT_UPLOAD_FILE, true)) {
+            getAPIStdOut(API_PATH + SCRIPT_P2P_API + " --add " + TORRENT_UPLOAD_FILE);
             ret = "1";
         }
     }
