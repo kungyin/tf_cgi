@@ -843,7 +843,7 @@ void RenderResponseAppMngm::generateChkRefreshStatus()
     }
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode((percent == -1)?"0":(status == 3)?"3":"1"));
+    resElement.appendChild(doc.createTextNode((percent == 100)?"0":(status == 3)?"3":"1"));
 
     m_var = doc.toString();
 }
@@ -1333,8 +1333,8 @@ QString RenderResponseAppMngm::getIcon(QString status) {
         ret = img.arg("status_ok");
     else if(status == "4")
         ret = img.arg("status_fail");
-    else if(status == "5")
-        ret = img.arg("Icon_stop");
+    else if(status == "6")
+        ret = img.arg("icon_stop");
 
     return ret;
 }
@@ -1415,7 +1415,10 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        cellElement3.appendChild((QString(taskList[i].status) == "2")?doc.createCDATASection(strProgressBar.arg(QString::number(i+1))
+        if (QString(taskList[i].status) == "3")
+            cellElement3.appendChild(doc.createCDATASection(strProgressBar.arg(QString::number(i+1)).arg(QString("100"))));
+        else
+            cellElement3.appendChild((QString(taskList[i].status) == "2")?doc.createCDATASection(strProgressBar.arg(QString::number(i+1))
                                                     .arg(QString(taskList[i].percent))):doc.createTextNode("--"));
 
         QDomElement cellElement4 = doc.createElement("cell");
@@ -1438,7 +1441,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             arg1 = "localbackup";
 
         QString arg2 = "--";
-        if (QString(taskList[i].status) == "0")
+        if (QString(taskList[i].status) == "0" || QString(taskList[i].status) == "4")
             arg2 = "start";
         else if(QString(taskList[i].status) == "2")
             arg2 = "stop";
@@ -1520,6 +1523,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
 
     QString paraLoginMethod = m_pReq->parameter("f_login_method");
     DOWNLOAD_TASK_INFO taskInfo;
+    memset(&taskInfo, 0, sizeof(DOWNLOAD_TASK_INFO));
 
     taskInfo.is_download = 1;
     if(m_pReq->parameter("cmd").contains("Local_Backup_"))
@@ -1590,12 +1594,16 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     QString add_ext = "";
     if (!src_ext.isEmpty() && src_ext.length() > 0)
         add_ext = src_ext.value(src_ext.length() - 1);
+    QByteArray rename = NULL;
     QString rename_s = QUrl::fromPercentEncoding(m_pReq->parameter("f_rename").toLocal8Bit());
-    QStringList rename_ext = rename_s.split(".", QString::SkipEmptyParts);
-    if (add_ext != "" && (rename_ext.isEmpty() || rename_ext.value(rename_ext.length() - 1) != add_ext))
-        rename_s.append("." + add_ext);
-    QByteArray rename = rename_s.toUtf8();
-    taskInfo.rename = rename.data();
+    if (!rename_s.isEmpty() && rename_s.length() > 0)
+    {
+        QStringList rename_ext = rename_s.split(".", QString::SkipEmptyParts);
+        if (add_ext != "" && (rename_ext.isEmpty() || rename_ext.value(rename_ext.length() - 1) != add_ext))
+            rename_s.append("." + add_ext);
+        rename = rename_s.toUtf8();
+        taskInfo.rename = rename.data();
+    }
     QByteArray charset = m_pReq->parameter("f_lang").toUtf8();
     taskInfo.charset = charset.data();
 
@@ -1621,8 +1629,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
     else
     {
-        QDateTime curDatetime = QDateTime::currentDateTime();
-        if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") < curDatetime.toString("yyyyMMddhhmm"))
+        if (taskInfo.recur_type == 0)
             StartTask(taskId);
     }
 
@@ -1672,7 +1679,7 @@ void RenderResponseAppMngm::generateLocalBackupInfo() {
 
     QDomElement fileTypeElement = doc.createElement("file_type");
     root.appendChild(fileTypeElement);
-    fileTypeElement.appendChild(doc.createTextNode(QString(task.is_file) == "1" ? "0" : "1"));
+    fileTypeElement.appendChild(doc.createTextNode((task.is_file == 1) ? "0" : "1"));
 
     QDomElement srcElement = doc.createElement("src");
     root.appendChild(srcElement);
@@ -2105,7 +2112,7 @@ void RenderResponseAppMngm::generateServerTest() {
 
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
-            QStringList remoteHddFreeSize = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE, true, ":");
+            QStringList remoteHddFreeSize = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE + " free_size", true, ":");
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
                 remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%12_free_size").arg(QChar(i + 97)));
@@ -2297,9 +2304,8 @@ void RenderResponseAppMngm::generateSetSchedule() {
         r_info.execat = execat.data();
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
-    QDateTime curDatetime = QDateTime::currentDateTime();
-    if (r_info.recur_type == 0 && execat < curDatetime.toString("yyyyMMddhhmm"))
-        StartStopRemoteTask(task_name.data(), "1");
+    if (r_info.recur_type == 0)
+        StartRemoteTask(task_name.data());
 
     m_var = "N/A";
 

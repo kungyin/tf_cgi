@@ -25,6 +25,7 @@ DbDataProvider::~DbDataProvider()
     DeleteSqlQuery();
     if (m_Db.isOpen())
         m_Db.close();
+    QSqlDatabase::removeDatabase("mysql_connection_1");
 }
 
 void DbDataProvider::SetDatabase()

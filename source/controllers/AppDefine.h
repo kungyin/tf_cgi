@@ -44,7 +44,7 @@ const QString SCRIPT_TUXERA_API     =   "tuxera";
 const QString SCRIPT_GROUP_MANAGER  =   "groupmgr";
 const QString SCRIPT_START_REMOTE_BACKUP = "StartRemoteBackup";
 const QString SCRIPT_P2P_API        =   "cp2p";
-const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd_free_size";
+const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
 
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
 const QString SYSTEM_PT_FILE        =   "/etc/systempt";
