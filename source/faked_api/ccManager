@@ -120,6 +120,7 @@
 [ $1 == 'Module_Get_Info' ] && echo -e "1;2" && echo -e "elephantdrive;D-Link Vault;0;index.php;0;0;0;2.7.20140709d;20140709;/mnt/HD/HD_a2/Nas_Prog/elephantdrive" && echo -e "elephantdrive;D-Link Vault;0;index.php;0;0;0;2.7.20140709d;20140709;/mnt/HD/HD_a2/Nas_Prog/elephantdrive"
 [ $1 == 'service_get_p2p_save_device' ] && echo -e "0;Volume_1;Volume_2;Volume_1"
 [ $1 == 'cgi_application_lst' ] && echo -e "Joomla;Joomla;0;Joomla.html;0;0;1;1;1" && echo -e "gallery2;Photo Center;0;gallery2.html;0;0;1;1;1"
+[ $1 == 'module_Get_One_Info' ] && echo -e "Volume_1/Nas_Prog/ajaxplorer;1.00;09/07/2015;1;1"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"

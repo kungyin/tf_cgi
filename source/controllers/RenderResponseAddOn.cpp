@@ -62,6 +62,9 @@ void RenderResponseAddOn::preRender() {
     case CMD_APPLICATION_1ST:
         generateApplication1st();
         break;
+    case CMD_MODULE_GET_ONE_INFO:
+        generateModuleGetOneInfo();
+        break;
 	case CMD_MYFAV_SET:
         generateMyFavSet();
         break;
@@ -318,6 +321,42 @@ void RenderResponseAddOn::generateApplication1st() {
                    "itemTags size is not equal to apiOut size.");
         }
     }
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseAddOn::generateModuleGetOneInfo() {
+
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_Get_One_Info " +
+                                      allParametersToString(), true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QStringList itemTags(QStringList()
+        << "path" << "version" << "date" << "apkg_status");
+
+    QDomElement itemElement = doc.createElement("Item");
+    root.appendChild(itemElement);
+
+    if( itemTags.size() == apiOut.size()-1 ) {
+        for(int i = 0; i < apiOut.size()-1; i++) {
+            QDomElement element = doc.createElement(itemTags.value(i));
+            itemElement.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseSysStatus::generateModuleGetOneInfo(): "
+               "itemTags size is not equal to apiOut size.");
+    }
+
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(4)));
 
     m_var = doc.toString();
 

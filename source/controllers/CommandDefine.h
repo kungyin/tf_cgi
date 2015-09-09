@@ -405,6 +405,7 @@ enum CGI_COMMAND {
     CMD_MODULE_UNINSTALL,                    /* module_uninstall */
     CMD_APP,                                 /* app */
     CMD_APPLICATION_1ST,                     /* cgi_application_lst */
+    CMD_MODULE_GET_ONE_INFO,                 /* module_Get_One_Info */
     CMD_MYFAV_SET,                           /* cgi_myfavorite_set */
     CMD_MYFAV_GET_SORT_INFO,                 /* cgi_myfavorite_get_sort_info */
     CMD_ADD_ON_END,
@@ -926,6 +927,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "module_uninstall",
     "app",
     "cgi_application_lst",
+    "module_Get_One_Info",
     "cgi_myfavorite_set",
     "cgi_myfavorite_get_sort_info",
     "",
@@ -1454,6 +1456,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MODULE_UNINSTALL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_uninstall */
     { CMD_APP,                           RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* app */
     { CMD_APPLICATION_1ST,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_application_lst */
+    { CMD_MODULE_GET_ONE_INFO,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_Get_One_Info */
 	{ CMD_MYFAV_SET,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_set */
     { CMD_MYFAV_GET_SORT_INFO,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_get_sort_info */
 

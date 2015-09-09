@@ -27,6 +27,7 @@ private:
     void generateModuleUninstall();
     void generateApp();
     void generateApplication1st();
+    void generateModuleGetOneInfo();
 	void generateMyFavSet();
     void generateMyFavGetSortInfo();
 
