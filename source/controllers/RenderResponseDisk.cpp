@@ -760,7 +760,7 @@ void RenderResponseDisk::generateVeList() {
     QDomDocument doc;
 
     QString paraPage = m_pReq->allParameters().value("page").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_VE_list", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_VE_list");
 
     QString cellContent3 = "<a href=\"javascript:parent.ve_mount_diag('%1')\"><IMG border='0'"
             " src='/web/images/mount.png'></a>";
@@ -778,24 +778,24 @@ void RenderResponseDisk::generateVeList() {
 
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
-        cellElement1.appendChild(doc.createTextNode(apiOut.value(0)));
+        cellElement1.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(0)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
-        cellElement2.appendChild(doc.createTextNode(apiOut.value(2)));
+        cellElement2.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(2)));
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement1.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(apiOut.value(3)));
+        cellElement3.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(3)));
 
         QString cellContent = "--";
         if(apiOut.value(4) == "0")
-            cellContent = cellContent3.arg(apiOut.value(1));
+            cellContent = cellContent3.arg(apiOut.value(i).split(";").value(1));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
         cellElement4.appendChild(doc.createCDATASection(cellContent));
 
         cellContent = "--";
         if(apiOut.value(4) == "1")
-            cellContent = cellContent4.arg(apiOut.value(1));
+            cellContent = cellContent4.arg(apiOut.value(i).split(";").value(1));
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);
         cellElement5.appendChild(doc.createCDATASection(cellContent));

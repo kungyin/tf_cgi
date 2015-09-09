@@ -26,6 +26,7 @@ private:
     void generateP2pDetailTorrent();
     void generateP2pPrioritySet();
     void generateP2pDelTorrent();
+    void generateP2pGetTorrentInfo();
 
     void generateP2pGetSettingInfo();
     void generateP2pGetHd();

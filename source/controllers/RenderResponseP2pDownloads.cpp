@@ -54,6 +54,9 @@ void RenderResponseP2pDownloads::preRender() {
     case CMD_P2P_DEL_TORRENT:
         generateP2pDelTorrent();
         break;
+    case CMD_P2P_GET_TORRENT_INFO:
+        generateP2pGetTorrentInfo();
+        break;
     case CMD_P2P_GET_SETTING_INFO:
         generateP2pGetSettingInfo();
         break;
@@ -398,6 +401,26 @@ void RenderResponseP2pDownloads::generateP2pDelTorrent() {
     QDomElement resultElement = doc.createElement("result");
     root.appendChild(resultElement);
     resultElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseP2pDownloads::generateP2pGetTorrentInfo() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " serice_get_p2p_torrent_info", true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement numElement = doc.createElement("downloading_num");
+    root.appendChild(numElement);
+    numElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(apiOut.value(1)));
 
     m_var = doc.toString();
 

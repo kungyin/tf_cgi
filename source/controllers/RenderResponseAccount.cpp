@@ -783,11 +783,16 @@ void RenderResponseAccount::generateGetModifyGroupInfo() {
                 QDomElement element = doc.createElement(infoTagNames.value(i));
                 root.appendChild(element);
 
-                for(QString e : apiOut.value(i).split("#")) {
-                    QDomElement webdavElement = doc.createElement("item");
-                    element.appendChild(webdavElement);
-                    webdavElement.appendChild(doc.createTextNode(e));
+                if(!apiOut.value(i).isEmpty()) {
+                    for(QString e : apiOut.value(i).split("#")) {
+                        QDomElement webdavElement = doc.createElement("item");
+                        element.appendChild(webdavElement);
+                        webdavElement.appendChild(doc.createTextNode(e));
+                    }
                 }
+                else
+                    /* for sdupid web parser */
+                    element.appendChild(doc.createTextNode(""));
             }
                 break;
 
@@ -1061,6 +1066,6 @@ void RenderResponseAccount::generateSetQuotaOnOff() {
     QString paraOnoff = m_pReq->allParameters().value("onoff").toString();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " set_quota_onoff " + paraOnoff, true);
-    m_var = apiOut.value(0);
+    m_var = "/web/account_mgr/quota.html";
 }
 
