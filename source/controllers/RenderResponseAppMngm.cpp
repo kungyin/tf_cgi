@@ -1638,7 +1638,8 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         tDebug("RenderResponseAppMngm::generateLocalBackupAdd() : failed");
     else
     {
-        if (taskInfo.recur_type == 0)
+        QDateTime curDatetime = QDateTime::currentDateTime();
+        if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") <= curDatetime.toString("yyyyMMddhhmm"))
             StartTask(taskId);
     }
 
@@ -2295,12 +2296,12 @@ void RenderResponseAppMngm::generateSetSchedule() {
         r_info.recur_type = 0;
         r_info.recur_date = 0;
         execat = QString("").toUtf8();
-        r_info.execat = execat.data();
         if (m_pReq->parameter("backup_now") == "1")
         {
             QDateTime curDatetime = QDateTime::currentDateTime();
-            curDatetime.time().addSecs(60 - curDatetime.time().second());
+            execat = curDatetime.toString("yyyyMMddhhmm").toLocal8Bit();
         }
+        r_info.execat = execat.data();
     }
     else if (m_pReq->parameter("schedule_type") == "2")
     {
@@ -2333,7 +2334,8 @@ void RenderResponseAppMngm::generateSetSchedule() {
         r_info.execat = execat.data();
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
-    if (r_info.recur_type == 0)
+    QDateTime curDatetime = QDateTime::currentDateTime();
+    if (r_info.recur_type == 0 && execat.length() > 0 && QString(execat) <= curDatetime.toString("yyyyMMddhhmm"))
         StartRemoteTask(task_name.data());
 
     m_var = "N/A";
