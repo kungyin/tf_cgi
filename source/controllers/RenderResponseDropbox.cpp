@@ -103,7 +103,7 @@ void RenderResponseDropbox::generateDropboxGetInfo() {
 void RenderResponseDropbox::generateDropboxAPIChangePath() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_api_change_path ",
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_api_change_path " +
                                       allParametersToString());
 
     QDomElement root = doc.createElement("path");

@@ -123,6 +123,7 @@
 [ $1 == 'module_Get_One_Info' ] && echo -e "Volume_1/Nas_Prog/ajaxplorer;1.00;09/07/2015;1;1"
 [ $1 == 'system_get_VE_list' ] && echo -e "Volume_1;1;raid0;ext4;1" && echo -e "Volume_2;2;linear;ext4;1"
 [ $1 == 'cgi_Dropbox_get_info' ] && echo -e "1;/mnt/HD/HD_a2/jerry;1800;;1438764141;kao Jackal;calcompsw1@gmail.com;214748364;344283226;1;;;;;;;;;;;;;;0;"
+[ $1 == 'cgi_get_airplay_device' ] && echo -e "Apple TV;_airplay._tcp;B8782E2923EA@Apple TV;_raop._tcp"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"

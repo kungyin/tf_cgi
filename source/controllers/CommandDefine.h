@@ -505,6 +505,14 @@ enum CGI_COMMAND {
     CMD_DROPBOX_FILE_TREE,                   /* cgi_Dropbox_file_tree */
     CMD_DROPBOX_END,
 
+    /**** Airplay ****/
+    CMD_GET_AIRPLAY_DEVICE,                  /* cgi_get_airplay_device */
+    CMD_SET_AIRPLAY_DEVICE,                  /* cgi_set_airplay_device */
+    CMD_CHK_AIRPLAY_STATUS,                  /* cgi_chk_airplay_status */
+    CMD_SET_AIRPLAY_SOURCE,                  /* cgi_set_airplay_source */
+    CMD_AIRPLAY_STOP,                        /* cgi_airplay_stop */
+    CMD_AIRPLAY_END,
+
     /**** MyDlink Account ****/
     CMD_1,                                   /* 1 */
     CMD_2,                                   /* 2 */
@@ -1026,6 +1034,14 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_Dropbox_sync_now",
     "cgi_Dropbox_unlink",
     "cgi_Dropbox_file_tree",
+    "",
+
+    /**** Airplay ****/
+    "cgi_get_airplay_device",
+    "cgi_set_airplay_device",
+    "cgi_chk_airplay_status",
+    "cgi_set_airplay_source",
+    "cgi_airplay_stop",
     "",
 
     /**** Mydlink Account ****/
@@ -1555,6 +1571,14 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_DROPBOX_UNLINK,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_Dropbox_unlink */
     { CMD_DROPBOX_FILE_TREE,             RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_Dropbox_file_tree */
     // CMD_DROPBOX_END,
+
+    /**** Airplay ****/
+    { CMD_GET_AIRPLAY_DEVICE,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_airplay_device */
+    { CMD_SET_AIRPLAY_DEVICE,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_set_airplay_device */
+    { CMD_CHK_AIRPLAY_STATUS,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_chk_airplay_status */
+    { CMD_SET_AIRPLAY_SOURCE,            RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_set_airplay_source */
+    { CMD_AIRPLAY_STOP,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_airplay_stop */
+    //CMD_AIRPLAY_END,
 
     { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
     { CMD_2,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */

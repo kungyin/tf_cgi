@@ -60,7 +60,8 @@ HEADERS += applicationcontroller.h \
     FileSuffixDescription.h \
     RenderResponseS3.h \
     RenderResponseGoogleDrive.h \
-    RenderResponseDropbox.h
+    RenderResponseDropbox.h \
+    RenderResponseAirplay.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -85,4 +86,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseMyDlink.cpp \
     RenderResponseS3.cpp \
     RenderResponseGoogleDrive.cpp \
-    RenderResponseDropbox.cpp
+    RenderResponseDropbox.cpp \
+    RenderResponseAirplay.cpp

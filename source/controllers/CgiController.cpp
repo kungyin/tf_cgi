@@ -25,6 +25,7 @@
 #include "RenderResponseS3.h"
 #include "RenderResponseGoogleDrive.h"
 #include "RenderResponseDropbox.h"
+#include "RenderResponseAirplay.h"
 #include "RenderResponseMyDlink.h"
 
 #include <TAppSettings>
@@ -278,6 +279,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseGoogleDrive(req, cmd);
     else if(cmd < CMD_DROPBOX_END)
         pRrep = new RenderResponseDropbox(req, cmd);
+    else if(cmd < CMD_AIRPLAY_END)
+        pRrep = new RenderResponseAirplay(req, cmd);
 
     return pRrep;
 
