@@ -52,27 +52,25 @@ void RenderResponseDropbox::preRender() {
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxRefreshStatus() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_refresh_status");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("result");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("1"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxGetInfo() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_get_info", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -84,143 +82,140 @@ void RenderResponseDropbox::generateDropboxGetInfo() {
         << "rm_dbox_dirs" << "mv_dbox_files" << "mv_dbox_dirs" << "downloads_bytes" << "uploads_bytes"
         << "sync_errors" << "running_state" << "need_space");
 
-//    if( configContentElement.size() == apiOut.size() ) {
-//        for(int i = 0; i < apiOut.size(); i++) {
-//            QDomElement element = doc.createElement(configContentElement.value(i));
-//            root.appendChild(element);
-//            element.appendChild(doc.createTextNode(apiOut.value(i)));
-//        }
-//    }
-//    else {
-//        //assert(0);
-//        tError("RenderResponseDropbox::generateDropboxGetInfo(): "
-//               "configContentElement size is not equal to apiOut size.");
-//    }
+    tDebug("%d %d", configContentElement.size(), apiOut.size());
+    if( configContentElement.size() == apiOut.size() ) {
+        for(int i = 0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(configContentElement.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseDropbox::generateDropboxGetInfo(): "
+               "configContentElement size is not equal to apiOut size.");
+    }
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxAPIChangePath() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_api_change_path ",
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("path");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode("Volume_1/dropbox"));
+    root.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxGetAccessUrl() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_get_access_url " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("URL");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("https://www.dropbox.com/1/oauth/authorize?oauth_token"
-          "=223fTLwDvmqVkPTU&amp;oauth_callback=http://192.168.100.85/web/backup_mgr/dropbox.php"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxEnable() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_enable");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("result");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("1"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxNewFolderEncode() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_open_new_folder_encode " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("mkdir");
     doc.appendChild(root);
     QDomElement element = doc.createElement("status");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("ok"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxCheckFolderExist() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_check_folder_exist " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("exist");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode("1"));
+    root.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxSetInterval() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_set_interval " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("result");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("1"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxSyncNow() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_sync_now");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("result");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("1"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseDropbox::generateDropboxUnlink() {
 
     QDomDocument doc;
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_unlink");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement element = doc.createElement("result");
     root.appendChild(element);
-    element.appendChild(doc.createTextNode("1"));
+    element.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
