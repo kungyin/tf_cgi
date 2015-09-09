@@ -301,11 +301,11 @@ void RenderResponseAddOn::generateApplication1st() {
     doc.appendChild(root);
 
     QStringList itemTags(QStringList()
-        << "status" << "ShowName" << "Enable" << "URL" << "User" << "Center"
+        << "Name" << "ShowName" << "Enable" << "URL" << "User" << "Center"
                          << "Icon_Disable" << "Icon_MouseOver" << "Icon_MouseOut");
 
     for(int i = 0; i < apiOut.size(); i++) {
-        QDomElement itemElement = doc.createElement("item");
+        QDomElement itemElement = doc.createElement("Item");
         root.appendChild(itemElement);
         if( itemTags.size() == apiOut.value(i).split(";").size() ) {
 
@@ -396,9 +396,8 @@ void RenderResponseAddOn::generateMyFavSet()
                 {
                     writer.writeTextElement("name", addonLists.value(1));
                     writer.writeTextElement("show_name", addonLists.value(5));
-                    writer.writeTextElement("flag", addonLists.value(0));
-                    QString path = QString("%1?id=%2").arg(addonLists.value(4), addonLists.value(1));
-                    writer.writeTextElement("path", path);
+                    writer.writeTextElement("flag", (addonLists.value(0) == "0")?"1":addonLists.value(0));
+                    writer.writeTextElement("path", addonLists.value(4));
                 }
                 writer.writeEndElement();
             }
@@ -407,6 +406,7 @@ void RenderResponseAddOn::generateMyFavSet()
             writer.writeEndDocument();
             file.close();
             QString newPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_WEB_FOLDER, paraUser);
+            QFile::remove(newPath);
             QFile::copy(userPath, newPath);
             res = 1;
         }
