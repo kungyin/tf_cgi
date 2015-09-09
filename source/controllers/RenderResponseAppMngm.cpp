@@ -1441,7 +1441,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             arg1 = "localbackup";
 
         QString arg2 = "--";
-        if (QString(taskList[i].status) == "0" || QString(taskList[i].status) == "4")
+        if (QString(taskList[i].status) == "0" || QString(taskList[i].status) == "4" || QString(taskList[i].status) == "6")
             arg2 = "start";
         else if(QString(taskList[i].status) == "2")
             arg2 = "stop";
@@ -1549,6 +1549,14 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         }
         file_src.close();
     }
+    if (src.endsWith("/"))
+    {
+        if (taskInfo.is_file == 1) src.remove(src.length(), 1);
+    }
+    else
+    {
+        if (taskInfo.is_file == 0) src.append("/");
+    }
     QByteArray src_b = src.toUtf8();
     taskInfo.src = src_b.data();
     QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
@@ -1569,6 +1577,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         }
         file.close();
     }
+    if (!dest.endsWith("/")) dest.append("/");
     QByteArray dest_b = dest.toUtf8();
     taskInfo.dest = dest_b.data();
 
@@ -2121,14 +2130,14 @@ void RenderResponseAppMngm::generateServerTest() {
             }
         }
 
-        int count = 0;
-        char **node = NULL;
-        GetRemoteRsyncSharePath(paraIp.toLocal8Bit().data(), &count, &node);
-        QStringList remoteNodes;
-        for (int i = 0; i < count; i++)
-            remoteNodes << node[i];
+        if(paraType == "2") {
+            int count = 0;
+            char **node = NULL;
+            GetRemoteRsyncSharePath(paraIp.toLocal8Bit().data(), &count, &node);
+            QStringList remoteNodes;
+            for (int i = 0; i < count; i++)
+                remoteNodes << node[i];
 
-        //if(paraType == "2") {
             for(QString e : remoteNodes) {
                 QDomElement shareNodeElement = doc.createElement("share_node");
                 root.appendChild(shareNodeElement);
@@ -2137,8 +2146,27 @@ void RenderResponseAppMngm::generateServerTest() {
                 shareNodeElement.appendChild(nameElement);
                 nameElement.appendChild(doc.createTextNode(e));
             }
-        //}
-        if (count > 0) FreeRemoteTaskName(count, &node);
+            if (count > 0) FreeRemoteTaskName(count, &node);
+        }
+        else
+        {
+            QStringList remoteHddShareNodes = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE + " share_node");
+            Q_FOREACH(QString n, remoteHddShareNodes)
+            {
+                QStringList remoteHddShareNode = n.split(":");
+                for (int i = 0; i < remoteHddShareNode.size(); i++) {
+                    QDomElement shareNodeElement = doc.createElement("share_node");
+                    root.appendChild(shareNodeElement);
+
+                    QDomElement nameElement = doc.createElement("name");
+                    shareNodeElement.appendChild(nameElement);
+                    nameElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
+                    QDomElement pathElement = doc.createElement("name");
+                    shareNodeElement.appendChild(pathElement);
+                    pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
+                }
+            }
+        }
 
         /*char **name = NULL, **path = NULL;
         int volCount = 0;
@@ -2237,6 +2265,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     QByteArray remote_ip = QUrl::fromPercentEncoding(m_pReq->parameter("ip").toLocal8Bit()).toUtf8();
     r_info.remote_ip = remote_ip.data();
     QByteArray remote_path = QUrl::fromPercentEncoding(m_pReq->parameter("remote_path").toLocal8Bit()).toUtf8();
+    if (!remote_path.endsWith('/')) remote_path.append('/');
     r_info.remote_path = remote_path.data();
 
     QString localPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
