@@ -5,7 +5,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
-
+#include <QProcess>
 
 RenderResponseAppMngm::RenderResponseAppMngm(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -2094,6 +2094,7 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraIncremental = m_pReq->parameter("incremental");
     QString paraEncryption = m_pReq->parameter("encryption");
     QString paraRsyncUser = m_pReq->parameter("rsync_user");
+    if (paraType == "1" && paraRsyncUser.isEmpty()) paraRsyncUser = "root";
     QString paraRsyncPw = m_pReq->parameter("rsync_pw");
     QString paraSshUser = m_pReq->parameter("ssh_user");
     QString paraSshPw = m_pReq->parameter("ssh_pw");
@@ -2122,7 +2123,12 @@ void RenderResponseAppMngm::generateServerTest() {
 
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
-            QStringList remoteHddFreeSize = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE + " free_size", true, ":");
+            QString arg = QString("%1 %2@%3 '%4 free_size'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QProcess process;
+            process.start(arg);
+            process.waitForFinished();
+            QString readAll = QString(process.readAllStandardOutput());tDebug("11111111111111111111111[%s]\n", readAll.toLocal8Bit().data());
+            QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
                 remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%12_free_size").arg(QChar(i + 97)));
@@ -2151,10 +2157,15 @@ void RenderResponseAppMngm::generateServerTest() {
         }
         else
         {
-            QStringList remoteHddShareNodes = getAPIStdOut(SCRIPT_REMOTE_HD_SIZE + " share_node");
+            QString arg = QString("%1 %2@%3 '%4 share_node'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QProcess process;
+            process.start(arg);
+            process.waitForFinished();
+            QString readAll = QString(process.readAllStandardOutput());tDebug("2222222222222222222222222222[%s]\n", readAll.toLocal8Bit().data());
+            QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
-                QStringList remoteHddShareNode = n.split(":");
+                QStringList remoteHddShareNode = n.split(":", QString::SkipEmptyParts);
                 for (int i = 0; i < remoteHddShareNode.size(); i++) {
                     QDomElement shareNodeElement = doc.createElement("share_node");
                     root.appendChild(shareNodeElement);
@@ -2162,7 +2173,7 @@ void RenderResponseAppMngm::generateServerTest() {
                     QDomElement nameElement = doc.createElement("name");
                     shareNodeElement.appendChild(nameElement);
                     nameElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
-                    QDomElement pathElement = doc.createElement("name");
+                    QDomElement pathElement = doc.createElement("path");
                     shareNodeElement.appendChild(pathElement);
                     pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
                 }
