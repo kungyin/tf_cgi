@@ -2131,7 +2131,7 @@ void RenderResponseAppMngm::generateServerTest() {
             QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
-                remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%1\2_free_size").arg(QChar(i + 97)));
+                remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%1%2_free_size").arg(QChar(i + 97), "2"));
                 root.appendChild(remoteHdA2FreeSizeElement);
                 remoteHdA2FreeSizeElement.appendChild(doc.createTextNode(remoteHddFreeSize.value(i)));
             }
