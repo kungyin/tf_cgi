@@ -17,7 +17,7 @@ public:
 
 protected:
 
-    QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",");
+    QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
     bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
     bool setNasCfg(QString, QString, QString);
@@ -26,6 +26,7 @@ protected:
     QMap<QString, QString> getNasCfg(QString);
     QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
     QString sizeHuman(qint64);
+    void replaceVoltoRealPath(QString &);
 
     inline int getTotalPages(int, int);
 

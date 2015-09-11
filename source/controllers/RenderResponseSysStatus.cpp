@@ -215,6 +215,10 @@ void RenderResponseSysStatus::generateStatusVolumeInfo() {
         usedRateElement.appendChild(doc.createTextNode(entry.split(";").value(6)));
     }
 
+    QDomElement countElement = doc.createElement("count");
+    root.appendChild(countElement);
+    countElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
     m_var = doc.toString();
 
 }

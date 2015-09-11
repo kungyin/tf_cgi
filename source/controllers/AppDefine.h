@@ -55,6 +55,7 @@ const QString MY_FAVORITE_WEB_FOLDER=   "/var/www/xml/";
 
 const QString API_PATH = "";
 const QString ENV_PATH = "";
+const QString FILE_TMP_PATH = "/var/upload";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backupconfig.tar";
 const QString FIRMWARE_FILE = "/mnt/HD_a4/genius_fw.bin";
@@ -76,6 +77,7 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 
 const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
+const QString FILE_TMP_PATH = "./tmp";
 const QString SYS_CONFIG_FILE = API_PATH + "sys_config";
 const QString USER_IMPORT_FILE = API_PATH + "backupconfig.tar";
 const QString FIRMWARE_FILE = API_PATH + "genius_fw.bin";

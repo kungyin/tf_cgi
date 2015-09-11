@@ -3,26 +3,45 @@
 
 #include "RenderResponse.h"
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar) {
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSystem) {
     QStringList ret;
-    QStringList input = apiCmd.split(" ");
+    QString cmd;
+    QStringList input;
 
-    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s", apiCmd.toLocal8Bit().data());
+#ifndef SIMULATOR_MODE
+    if(bUseSystem) {
+        input = QStringList() << "-c" << apiCmd;
+        cmd = "sh";
+//        system(apiCmd.toLocal8Bit().data());
+//        return ret;
+    }
+#else
+    bUseSystem = false;
+#endif
+
+
+    if(!bUseSystem) {
+        input = apiCmd.split(" ");
+        cmd = input.value(0);
+        input.removeFirst();
+    }
+
+    QString strList;
+    for(QString e : input) {
+        if(strList.isEmpty())
+            strList += e;
+        else
+            strList += " " + e;
+    }
+
+    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList.toLocal8Bit().data());
     if(input.isEmpty())
         return ret;
 
-    QString cmd = input.value(0);
-//    QFileInfo fileInfo(cmd);
-//    if ( !fileInfo.exists() || !fileInfo.isFile() ) {
-//        tError("RenderResponse::getAPIStdOut() -- file %s does not exist", cmd.toLocal8Bit().data());
-//        return ret;
-//    }
-
-    input.removeFirst();
-
     QProcess process;
     process.start(cmd, input);
-    process.waitForFinished();
+
+    process.waitForFinished(-1);
     QString allOut = QString(process.readAllStandardOutput());
     ret = allOut.split("\n");
     tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
@@ -274,4 +293,16 @@ QString RenderResponse::sizeHuman(qint64 size)
         fileSize /= 1024.0;
     }
     return QString::number(fileSize, 'f', 2) + " " + unit;
+}
+
+
+void RenderResponse::replaceVoltoRealPath(QString &path)
+{
+    QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
+    for(QString e : shareInfo) {
+        if(path.startsWith(e.split(":").value(0))) {
+            path.replace(e.split(":").value(0), e.split(":").value(1));
+            break;
+        }
+    }
 }

@@ -604,6 +604,9 @@ void RenderResponseNetShare::generateOpenTree() {
             }
         }
 
+        if(e.absoluteDir().absolutePath() == "/mnt/HD" && !fileName.startsWith("Volume_"))
+            break;
+
         QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
         if(e.isDir()) {
             QString line1 = (paraChkFlag.compare("1") == 0) ?

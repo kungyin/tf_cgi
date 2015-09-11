@@ -247,8 +247,7 @@ void RenderResponseFileStation::generateEmptyFolder() {
     QString ret = "-3";
     if(paraDir.startsWith("Volume_")) {
         QString dirPath = paraDir;
-        dirPath.replace("Volume_1", "/mnt/HD/HD_a2");
-        dirPath.replace("Volume_2", "/mnt/HD/HD_b2");
+        replaceVoltoRealPath(dirPath);
 
         QFileInfo dirInfo(dirPath);
         if(dirInfo.isDir() && dirInfo.exists()) {
@@ -303,15 +302,6 @@ void RenderResponseFileStation::generateChkFile() {
     m_var = dir.exists(paraName) ? "0" : "1";
 }
 
-QString RenderResponseFileStation::getTempPath(const QString &path) {
-    QString tmpPath;
-    if(path.startsWith("/mnt/HD/HD_a2"))
-        tmpPath = "/mnt/HD/HD_a2/.tmp";
-    else
-        tmpPath = "/mnt/HD/HD_b2/.tmp";
-    return tmpPath;
-}
-
 void RenderResponseFileStation::generateCompress() {
 
     QDomDocument doc;
@@ -321,31 +311,30 @@ void RenderResponseFileStation::generateCompress() {
 
     QString ret = "error";
 
-    QString tmpPath = getTempPath(paraPath);
-    QDir dir(QFileInfo(tmpPath).absoluteDir());
-    bool bMkdir = dir.mkdir(".tmp");
-    if(bMkdir || QDir(tmpPath).exists()) {
+    QString tmpPath(FILE_TMP_PATH);
+    if(QDir(tmpPath).exists()) {
 
-        QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0775);
-        QString zipFileName = paraName + ".zip";
+        //QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0775);
+        QString outFileName;
 
-        if(paraName.endsWith(".zip")) {
-            zipFileName = paraName;
-            QString dest = tmpPath + QDir::separator() + zipFileName;
+        if(!QFileInfo(QDir(paraPath).absolutePath() + QDir::separator() + paraName).isDir()) {
+            outFileName = paraName;
+            QString dest = tmpPath + QDir::separator() + outFileName;
             if(QFile::exists(dest))
                 QFile::remove(dest);
-            QFile::copy(QDir(paraPath).absolutePath() + QDir::separator() + zipFileName,
+            QFile::copy(QDir(paraPath).absolutePath() + QDir::separator() + outFileName,
                         dest);
         }
         else {
+            outFileName = paraName + ".zip";
             QString currentPath = QDir::currentPath();
             QDir::setCurrent(paraPath);
-            QString compressCmd = "zip -FSr %1/%2 %2";
-            getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName));
+            QString compressCmd = "zip -FSr \"%1/%2\" \"%2\"";
+            getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName), false, "", true);
             QDir::setCurrent(currentPath);
         }
 
-        QFileInfo zipFileInfo(tmpPath + QDir::separator() + zipFileName);
+        QFileInfo zipFileInfo(tmpPath + QDir::separator() + outFileName);
         if(zipFileInfo.exists())
             ret = "ok";
 
@@ -366,11 +355,17 @@ void RenderResponseFileStation::generateDownload() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path1").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
 
-    QString tmpPath = getTempPath(paraPath);
-    QString zipFileName = paraName.endsWith(".zip") ? paraName : paraName + ".zip";
+    QString tmpPath(FILE_TMP_PATH);
+    QString zipFileName = paraName;
     QFileInfo file(tmpPath + QDir::separator() + zipFileName);
     if(file.exists() && file.isFile()) {
         m_var = file.absoluteFilePath();
+    }
+    else {
+        zipFileName += ".zip";
+        file = QFileInfo(tmpPath + QDir::separator() + zipFileName);
+        if(file.exists() && file.isFile())
+            m_var = file.absoluteFilePath();
     }
 
 }
@@ -388,6 +383,7 @@ bool RenderResponseFileStation::copy(QString &source, QString &dest) {
         }
     }
     else {
+        tDebug("%s, %s", source.toLocal8Bit().data(), dest.toLocal8Bit().data());
         return QFile::copy(source, dest);
     }
 
@@ -401,10 +397,8 @@ void RenderResponseFileStation::generateCp() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
 
-    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
     QString dest = paraPath;
-    dest.replace("Volume_1", "/mnt/HD/HD_a2");
-    dest.replace("Volume_2", "/mnt/HD/HD_b2");
+    replaceVoltoRealPath(dest);
 
     QString ret = copy(paraSourcePath, dest) ? "ok" : "error";
 
@@ -424,10 +418,8 @@ void RenderResponseFileStation::generateMove() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraSourcePath = QUrl::fromPercentEncoding(m_pReq->parameter("source_path").toLocal8Bit());
 
-    /* todo: Volume_1 is /mnt/HD/HD_a2 ?? */
     QString dest = paraPath;
-    dest.replace("Volume_1", "/mnt/HD/HD_a2");
-    dest.replace("Volume_2", "/mnt/HD/HD_b2");
+    replaceVoltoRealPath(dest);
 
     bool bRemove = false;
     if(copy(paraSourcePath, dest)) {
@@ -572,8 +564,9 @@ void RenderResponseFileStation::generateAddZip() {
 
         QString currentPath = QDir::currentPath();
         QDir::setCurrent(paraPath);
-        QString compressCmd = "zip -r %1/%2 %3";
-        getAPIStdOut(compressCmd.arg(paraPath).arg(zipFileName).arg(paraSelectName.replace("*", " ")));
+        QString compressCmd = "zip -r \"%1/%2\" \"%3\"";
+
+        getAPIStdOut(compressCmd.arg(paraPath).arg(zipFileName).arg(paraSelectName.replace("*", " ")), false, "", true);
         QDir::setCurrent(currentPath);
 
         QFileInfo zipFileInfo(paraPath + QDir::separator() + zipFileName);
@@ -596,8 +589,8 @@ bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString 
     if(dir.exists()) {
         QString currentPath = QDir::currentPath();
         QDir::setCurrent(path);
-        QString compressCmd = "%1 %2";
-        getAPIStdOut(compressCmd.arg(cmd).arg(name));
+        QString uncompressCmd = "%1 \"%2\"";
+        getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", true);
         QDir::setCurrent(currentPath);
 
         return true;
@@ -612,7 +605,7 @@ void RenderResponseFileStation::generateUnzip() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
 
-    QString ret = unArchive(paraPath, paraName, "unzip") ? "ok" : "error";
+    QString ret = unArchive(paraPath, paraName, "unzip -o") ? "ok" : "error";
 
     QDomElement root = doc.createElement("result");
     doc.appendChild(root);
