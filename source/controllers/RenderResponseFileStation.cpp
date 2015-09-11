@@ -298,8 +298,16 @@ void RenderResponseFileStation::generateChkFile() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
 
+    QString ret = "1";
+    QString source = FILE_TMP_PATH + QDir::separator() + paraName;
+    if(QFile::copy(source, paraPath))
+        ret = "0";
+
     QDir dir(paraPath);
-    m_var = dir.exists(paraName) ? "0" : "1";
+    if(!dir.exists(paraName))
+        ret = "1";
+
+    m_var = ret;
 }
 
 void RenderResponseFileStation::generateCompress() {
