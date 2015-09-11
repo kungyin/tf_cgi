@@ -70,6 +70,10 @@ void RenderResponseAddOn::preRender() {
         break;
     case CMD_MYFAV_GET_SORT_INFO:
         generateMyFavGetSortInfo();
+        break;
+    case CMD_MYFAV_COMPARE_APKG:
+        generateMyFavCompareApkg();
+        break;
 
     default:
         break;
@@ -369,6 +373,14 @@ void RenderResponseAddOn::generateMyFavSet()
     QString paraUser = m_pReq->parameter("f_user");
     int paraNum = m_pReq->parameter("f_num").toInt();
     QString paraSort = m_pReq->parameter("f_sort");
+    QString userPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_FOLDER, paraUser);
+    QString newPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_WEB_FOLDER, paraUser);
+    if (paraNum <= 0)
+    {
+        QFile::remove(userPath);
+        QFile::remove(newPath);
+        res = 1;
+    }
     QStringList paraLists;
     for (i = 0; i < paraNum; i++)
         paraLists.append(QUrl::fromPercentEncoding(m_pReq->parameter("f_lst" + QString::number(i)).toLocal8Bit()));
@@ -378,7 +390,6 @@ void RenderResponseAddOn::generateMyFavSet()
         if (!dir.exists()) dir.mkpath(MY_FAVORITE_FOLDER);
         QDir dirXml(MY_FAVORITE_WEB_FOLDER);
         if (!dirXml.exists()) dirXml.mkpath(MY_FAVORITE_WEB_FOLDER);
-        QString userPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_FOLDER, paraUser);
         QFile file(userPath);
         if (file.open(QIODevice::WriteOnly))
         {
@@ -405,7 +416,6 @@ void RenderResponseAddOn::generateMyFavSet()
             writer.writeEndElement();
             writer.writeEndDocument();
             file.close();
-            QString newPath = QString("%1gui_%2.xml").arg(MY_FAVORITE_WEB_FOLDER, paraUser);
             QFile::remove(newPath);
             QFile::copy(userPath, newPath);
             res = 1;
@@ -435,6 +445,18 @@ void RenderResponseAddOn::generateMyFavGetSortInfo()
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(QString::number(res)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateMyFavCompareApkg()
+{
+    QDomDocument doc;
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode("1"));
 
     m_var = doc.toString();
 }
