@@ -70,6 +70,7 @@ private:
     void generateCheckDiskRemountState();
     void generateScanDiskRunE2fsck();
     void generateScanDiskFinish();
+    void generateScanDisk();
     void generateVeList();
     void generateVePwdCheck();
     void generateVeVerifyKeyfile();

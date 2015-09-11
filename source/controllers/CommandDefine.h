@@ -45,6 +45,7 @@ enum CGI_COMMAND {
     CMD_CHECK_DISK_REMOUNT_STATUS,  /* cgi_Check_Disk_Remount_State */
     CMD_SCANDISK_RUN_E2FSCK,        /* ScanDisk_run_e2fsck */
     CMD_SCANDISK_FINISH,            /* ScanDisk_Finish */
+    CMD_SCANDISK,                   /* ScanDisk */
     CMD_VE_LIST,                    /* cgi_VE_List */
     CMD_VE_PWD_CHECK,               /* cgi_VE_PWD_Check */
     CMD_VE_VERIFY_KEYFILE,          /* cgi_VE_Verify_KeyFile */
@@ -356,6 +357,7 @@ enum CGI_COMMAND {
     CMD_P2P_GET_PORT,                       /* p2p_get_port */
     CMD_FTP_SERVER_BLOCKIP_LIST,            /* FTP_Server_BlockIP_List */
     CMD_FTP_SERVER_BLOCKIP_ADD,             /* FTP_Server_BlockIP_Add */
+    CMD_FTP_SERVER_BLOCKIP_DEL,             /* FTP_Server_BlockIP_Del */
     CMD_FTP_SERVER_ENABLE,                  /* FTP_Server_Enable */
     CMD_FTP_SERVER_SET_CONFIG,              /* FTP_Server_Set_Config */
     CMD_FTP_SERVER_END,
@@ -475,6 +477,7 @@ enum CGI_COMMAND {
     CMD_GET_S3,                              /* cgi_get_s3 */
     CMD_S3,                                  /* cgi_s3 */
     CMD_S3_MODIFY,                           /* cgi_s3_modify */
+    CMD_S3_GET_MODIFY,                       /* cgi_s3_get_modify */
     CMD_S3_DEL,                              /* cgi_s3_del */
     CMD_S3_START,                            /* cgi_s3_start */
     CMD_S3_STOP,                             /* cgi_s3_stop */
@@ -576,6 +579,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_Check_Disk_Remount_State",
     "ScanDisk_run_e2fsck",
     "ScanDisk_Finish",
+    "ScanDisk",
     "cgi_VE_List",
     "cgi_VE_PWD_Check",
     "cgi_VE_Verify_KeyFile",
@@ -888,6 +892,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "p2p_get_port",
     "FTP_Server_BlockIP_List",
     "FTP_Server_BlockIP_Add",
+    "FTP_Server_BlockIP_Del",
     "FTP_Server_Enable",
     "FTP_Server_Set_Config",
     "",
@@ -1006,6 +1011,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_s3",
     "cgi_s3",
     "cgi_s3_modify",
+    "cgi_s3_get_modify",
     "cgi_s3_del",
     "cgi_s3_start",
     "cgi_s3_stop",
@@ -1111,6 +1117,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_CHECK_DISK_REMOUNT_STATUS,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Remount_State */
     { CMD_SCANDISK_RUN_E2FSCK,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_run_e2fsck */
     { CMD_SCANDISK_FINISH,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_Finish */
+    { CMD_SCANDISK,                     RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk */
     { CMD_VE_LIST,                      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_List */
     { CMD_VE_PWD_CHECK,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_PWD_Check */
     { CMD_VE_VERIFY_KEYFILE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Verify_KeyFile */
@@ -1425,6 +1432,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_P2P_GET_PORT,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* p2p_get_port */
     { CMD_FTP_SERVER_BLOCKIP_LIST,      RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_List */
     { CMD_FTP_SERVER_BLOCKIP_ADD,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_Add */
+    { CMD_FTP_SERVER_BLOCKIP_DEL,       RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_BlockIP_Del */
     { CMD_FTP_SERVER_ENABLE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* FTP_Server_Enable */
     { CMD_FTP_SERVER_SET_CONFIG,        RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* FTP_Server_Set_Config */
 
@@ -1544,6 +1552,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_S3,                        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_s3 */
     { CMD_S3,                            RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3 */
     { CMD_S3_MODIFY,                     RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_modify */
+    { CMD_S3_GET_MODIFY,                 RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_s3_get_modify */
     { CMD_S3_DEL,                        RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_s3_del */
     { CMD_S3_START,                      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_start */
     { CMD_S3_STOP,                       RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_s3_stop */

@@ -24,6 +24,9 @@ void RenderResponseS3::preRender() {
     case CMD_S3_MODIFY:
         generateS3Modify();
         break;
+    case CMD_S3_GET_MODIFY:
+        generateS3GetModify();
+        break;
     case CMD_S3_DEL:
         generateS3Del();
         break;
@@ -152,6 +155,37 @@ void RenderResponseS3::generateS3Modify() {
     m_var = apiOut.value(0);
 }
 
+void RenderResponseS3::generateS3GetModify() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_modify "
+                                      + allParametersToString(), true, ";");
+
+    QDomElement root = doc.createElement("s3");
+    doc.appendChild(root);
+
+    QStringList s3Tags(QStringList()
+        << "dir" << "backuptype" << "a_key" << "p_key" << "b_path" << "location" << "n_path" << "schedule"
+                       << "mday" << "hour" << "min");
+
+    if( s3Tags.size() == apiOut.size() ) {
+        for(int i=0; i < apiOut.size(); i++) {
+            QDomElement element = doc.createElement(s3Tags.value(i));
+            root.appendChild(element);
+            element.appendChild(doc.createTextNode(apiOut.value(i)));
+        }
+    }
+    else {
+        //assert(0);
+        tError("RenderResponseS3::generateS3GetModify() :"
+            "s3Tags size is not equal to apiOut size.");
+
+    }
+
+    m_var = doc.toString();
+}
+
 void RenderResponseS3::generateS3Del() {
 
     QString paraJobName = m_pReq->parameter("f_job_name");
@@ -237,9 +271,6 @@ void RenderResponseS3::generateGetPercent() {
         //assert(0);
         tError("RenderResponseS3::generateGetPercent() :"
             "itemContentElement size is not equal to apiOut size.");
-
-        tDebug(" %d", apiOut.size());
-        tDebug(" %d", itemContentElement.size());
 
     }
 

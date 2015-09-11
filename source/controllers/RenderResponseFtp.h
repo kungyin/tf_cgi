@@ -19,6 +19,7 @@ private:
     void generateP2pGetPort();
     void generateFtpServerBlockIPList();
     void generateFtpServerBlockIPAdd();
+    void generateFtpServerBlockIPDel();
     void generateFtpServerEnable();
     void generateFtpServerSetConfig();
 };

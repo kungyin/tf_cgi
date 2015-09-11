@@ -31,6 +31,9 @@ void RenderResponseFtp::preRender() {
     case CMD_FTP_SERVER_BLOCKIP_ADD:
         generateFtpServerBlockIPAdd();
         break;
+    case CMD_FTP_SERVER_BLOCKIP_DEL:
+        generateFtpServerBlockIPDel();
+        break;
     case CMD_FTP_SERVER_ENABLE:
         generateFtpServerEnable();
         break;
@@ -170,6 +173,23 @@ void RenderResponseFtp::generateFtpServerBlockIPAdd() {
     doc.appendChild(root);
 
     QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
+
+}
+
+void RenderResponseFtp::generateFtpServerBlockIPDel() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " FTP_Server_BlockIP_Del " + allParametersToString());
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement resElement = doc.createElement("result");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();

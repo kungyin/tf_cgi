@@ -79,6 +79,9 @@ void RenderResponseDisk::preRender() {
     case CMD_SCANDISK_FINISH:
         generateScanDiskFinish();
         break;
+    case CMD_SCANDISK:
+        generateScanDisk();
+        break;
     case CMD_VE_LIST:
         generateVeList();
         break;
@@ -754,6 +757,21 @@ void RenderResponseDisk::generateScanDiskFinish() {
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
+}
+
+void RenderResponseDisk::generateScanDisk() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SCANDISK_API + " -s", true);
+
+    QString ret = "/web/dsk_mgr/hd_scandisk_state.html";
+    if(apiOut.value(0) == "1")
+        ret = "/web/dsk_mgr/hd_scandisk_ok.html";
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement urlElement = doc.createElement("url");
+    root.appendChild(urlElement);
+    urlElement.appendChild(doc.createTextNode(ret));
+    m_var = doc.toString();
 }
 
 void RenderResponseDisk::generateVeList() {

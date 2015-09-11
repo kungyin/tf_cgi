@@ -16,6 +16,7 @@ private:
     void generateGetS3();
     void generateS3();
     void generateS3Modify();
+    void generateS3GetModify();
     void generateS3Del();
     void generateS3Start();
     void generateS3Stop();
