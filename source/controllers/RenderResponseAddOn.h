@@ -28,8 +28,9 @@ private:
     void generateApp();
     void generateApplication1st();
     void generateModuleGetOneInfo();
-	void generateMyFavSet();
+    void generateMyFavSet();
     void generateMyFavGetSortInfo();
+    void generateMyFavCompareApkg();
 
 };
 

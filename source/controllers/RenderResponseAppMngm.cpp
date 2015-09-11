@@ -2123,15 +2123,15 @@ void RenderResponseAppMngm::generateServerTest() {
 
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
-            QString arg = QString("%1 %2@%3 '%4 free_size'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QString arg = QString("bash -c \"%1 %2@%3 '%4 free_size'\"").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
             QProcess process;
             process.start(arg);
             process.waitForFinished();
-            QString readAll = QString(process.readAllStandardOutput());tDebug("11111111111111111111111[%s]\n", readAll.toLocal8Bit().data());
+            QString readAll = QString(process.readAllStandardOutput());
             QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
-                remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%12_free_size").arg(QChar(i + 97)));
+                remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%1\2_free_size").arg(QChar(i + 97)));
                 root.appendChild(remoteHdA2FreeSizeElement);
                 remoteHdA2FreeSizeElement.appendChild(doc.createTextNode(remoteHddFreeSize.value(i)));
             }
@@ -2157,25 +2157,25 @@ void RenderResponseAppMngm::generateServerTest() {
         }
         else
         {
-            QString arg = QString("%1 %2@%3 '%4 share_node'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QString arg = QString("bash -c \"%1 %2@%3 '%4 share_node'\"").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
             QProcess process;
             process.start(arg);
             process.waitForFinished();
-            QString readAll = QString(process.readAllStandardOutput());tDebug("2222222222222222222222222222[%s]\n", readAll.toLocal8Bit().data());
+            QString readAll = QString(process.readAllStandardOutput());
             QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
                 QStringList remoteHddShareNode = n.split(":", QString::SkipEmptyParts);
-                for (int i = 0; i < remoteHddShareNode.size(); i++) {
+                if (remoteHddShareNode.size() == 2) {
                     QDomElement shareNodeElement = doc.createElement("share_node");
                     root.appendChild(shareNodeElement);
 
                     QDomElement nameElement = doc.createElement("name");
                     shareNodeElement.appendChild(nameElement);
-                    nameElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
+                    nameElement.appendChild(doc.createTextNode(remoteHddShareNode.value(0)));
                     QDomElement pathElement = doc.createElement("path");
                     shareNodeElement.appendChild(pathElement);
-                    pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(i)));
+                    pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(1)));
                 }
             }
         }
@@ -2229,6 +2229,7 @@ void RenderResponseAppMngm::generateCheckRsyncRw() {
     QByteArray paraIncremental = m_pReq->parameter("incremental").toLocal8Bit();
     QString paraEncryption = m_pReq->parameter("encryption");
     QByteArray paraRsyncUser = m_pReq->parameter("rsync_user").toLocal8Bit();
+    if (paraType == "1" && paraRsyncUser.isEmpty()) paraRsyncUser = "root";
     QByteArray paraRsyncPw = m_pReq->parameter("rsync_pw").toLocal8Bit();
     QByteArray paraSshUser = m_pReq->parameter("ssh_user").toLocal8Bit();
     QByteArray paraSshPw = m_pReq->parameter("ssh_pw").toLocal8Bit();
@@ -2266,7 +2267,9 @@ void RenderResponseAppMngm::generateSetSchedule() {
     r_info.is_keep_exist_file = m_pReq->parameter("keep_exist_file").toInt();
     r_info.is_inc_enable = m_pReq->parameter("incremental").toInt();
     r_info.inc_number = m_pReq->parameter("inc_num").toInt();
-    QByteArray rsync_user = QUrl::fromPercentEncoding(m_pReq->parameter("rsync_user").toLocal8Bit()).toUtf8();
+    QString paraRsyncUser = m_pReq->parameter("rsync_user");
+    if (r_info.server_type == 1 && paraRsyncUser.isEmpty()) paraRsyncUser = "root";
+    QByteArray rsync_user = QUrl::fromPercentEncoding(paraRsyncUser.toLocal8Bit()).toUtf8();
     r_info.rsync_user = rsync_user.data();
     QByteArray rsync_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("rsync_pw").toLocal8Bit()).toUtf8();
     r_info.rsync_pwd = rsync_pwd.data();

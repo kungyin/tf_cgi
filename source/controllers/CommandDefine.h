@@ -410,6 +410,7 @@ enum CGI_COMMAND {
     CMD_MODULE_GET_ONE_INFO,                 /* module_Get_One_Info */
     CMD_MYFAV_SET,                           /* cgi_myfavorite_set */
     CMD_MYFAV_GET_SORT_INFO,                 /* cgi_myfavorite_get_sort_info */
+    CMD_MYFAV_COMPARE_APKG,                  /* cgi_myfavorite_compare_apkg */
     CMD_ADD_ON_END,
 
     /**** Dashboard ****/
@@ -944,6 +945,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "module_Get_One_Info",
     "cgi_myfavorite_set",
     "cgi_myfavorite_get_sort_info",
+    "cgi_myfavorite_compare_apkg",
     "",
 
     /**** Dashboard ****/
@@ -1483,8 +1485,9 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_APP,                           RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* app */
     { CMD_APPLICATION_1ST,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_application_lst */
     { CMD_MODULE_GET_ONE_INFO,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_Get_One_Info */
-	{ CMD_MYFAV_SET,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_set */
+    { CMD_MYFAV_SET,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_set */
     { CMD_MYFAV_GET_SORT_INFO,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_get_sort_info */
+    { CMD_MYFAV_COMPARE_APKG,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_compare_apkg */
 
     //CMD_ADD_ON_END,
 
