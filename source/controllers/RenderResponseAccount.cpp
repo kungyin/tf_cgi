@@ -293,7 +293,7 @@ void RenderResponseAccount::generateGetSmbList() {
 void RenderResponseAccount::generateUserAdd() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " system_user_add_user " + allParametersToString("#", ","), true);
+                                      " system_user_add_user " + allParametersToString(), true);
 
 }
 
