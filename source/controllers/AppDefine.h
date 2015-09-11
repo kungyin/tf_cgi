@@ -50,6 +50,7 @@ const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync
 const QString SYSTEM_PT_FILE        =   "/etc/systempt";
 const QString MY_FAVORITE_FOLDER    =   "/etc/sysconfig/config/myfavorite/";
 const QString MY_FAVORITE_WEB_FOLDER=   "/var/www/xml/";
+const QString SSH_AUTO_ROOT         =   "ssh -i /etc/ssh/dlink_dsa_key -o StrictHostKeyChecking=no";
 
 #ifndef SIMULATOR_MODE
 
