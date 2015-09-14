@@ -617,28 +617,8 @@ void RenderResponseDisk::generateGetTestStatus() {
 void RenderResponseDisk::generateSmartSetSchedule() {
     QDomDocument doc;
 
-    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
-    QString paraDevice = m_pReq->allParameters().value("f_device").toString();
-    QString paraType = m_pReq->allParameters().value("f_type").toString();
-    QString paraHour = m_pReq->allParameters().value("f_hour").toString();
-    QString paraMin = m_pReq->allParameters().value("f_min").toString();
-    QString paraWeekly = m_pReq->allParameters().value("f_weekly").toString();
-    QString paraDay = m_pReq->allParameters().value("f_day").toString();
-    QString paraTestType = m_pReq->allParameters().value("f_test_type").toString();
-    QString paraSlot = m_pReq->allParameters().value("f_slot").toString();
-    QString paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
-
-    QString allPara;
-    allPara =   "f_flag=" + paraFlag + "#" +
-                "f_device=" + paraDevice.replace(" ", ",") + "#" +
-                "f_type=" + paraType + "#" +
-                "f_hour=" + paraHour + "#" +
-                "f_min=" + paraMin + "#" +
-                "f_weekly=" + paraWeekly + "#" +
-                "f_day=" + paraDay + "#" +
-                "f_test_type=" + paraTestType;
-
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_schedule " + allPara);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_schedule " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

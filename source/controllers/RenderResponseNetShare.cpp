@@ -226,6 +226,8 @@ void RenderResponseNetShare::generateGetSession() {
     QString cellContentNfs =
             "<img src='../images/detail.png' onclick='show_nfs_detail(\"%1\",\"#flex1\")'>"
             "<input type='hidden' name=\"nfs_%2\" id=\"nfs_%2\" value=\"%3\">";
+    QString cellContentNfsEmpty =
+            "-<input type='hidden' name=\"nfs_%1\" id=\"nfs_%1\" value=\"null:null\">";
     QString cellContentWebdav =
             "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#flex1\")'>"
             "<input type=\"hidden\" name=\"webdav_%2\" id=\"webdav_%2\" value=\"%3\">";
@@ -245,26 +247,26 @@ void RenderResponseNetShare::generateGetSession() {
         rowElement.appendChild(cellElement2);
         cellElement2.appendChild(doc.createTextNode(e.split(";").value(1).isEmpty() ? "-" : e.split(";").value(1)));
 
-        QString cell3 = e.split(";").value(2).isEmpty() ? "-" : cellContentCifs.arg(QString::number(i+1));
+        QString cell3 = e.split(";").value(2).isEmpty() ? "-" : cellContentCifs.arg(QString::number(i));
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
         cellElement3.appendChild(doc.createCDATASection(cell3));
 
-        QString cell4 = e.split(";").value(3) == "1" ? cellContentFtp.arg(QString::number(i+1)) : "-";
+        QString cell4 = e.split(";").value(3) == "1" ? cellContentFtp.arg(QString::number(i)) : "-";
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
         cellElement4.appendChild(doc.createCDATASection(cell4));
 
         QString nfsInfo = e.split(";").value(4);
-        QString cell5 = nfsInfo.isEmpty() ? "-" : cellContentNfs.arg(
-                 QString::number(i+1), QString::number(i+1), nfsInfo);
+        QString cell5 = nfsInfo.isEmpty() ? cellContentNfsEmpty.arg(QString::number(i))
+                                          : cellContentNfs.arg(QString::number(i), QString::number(i), nfsInfo);
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
         cellElement5.appendChild(doc.createCDATASection(cell5));
 
         QString webdavInfo = e.split(";").value(5);
         QString cell6 = webdavInfo.isEmpty() ? "-" : cellContentWebdav.arg(
-                 QString::number(i+1), QString::number(i+1), webdavInfo);
+                 QString::number(i), QString::number(i), webdavInfo);
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement.appendChild(cellElement6);
         cellElement6.appendChild(doc.createCDATASection(cell6));
