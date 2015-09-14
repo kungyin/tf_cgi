@@ -1978,19 +1978,19 @@ void RenderResponseAppMngm::generateGetBackupList() {
 
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement.appendChild(cellElement1);
-        QString task_name = QString(taskList->task_name);
+        QString task_name = QString(taskList[i].task_name);
         cellElement1.appendChild(doc.createTextNode(task_name));
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement.appendChild(cellElement2);
         QString schedule_mode_trans = "";
-        QString schedule_mode = QString(taskList->schedule_mode);
+        QString schedule_mode = QString(taskList[i].schedule_mode);
         if (schedule_mode == "1") schedule_mode_trans = "Manual";
         else
         {
             REMOTE_BACKUP_INFO r_info;
             memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
-            GetRemoteTaskXmlValue(taskList->task_name, TAG_R_ALL, &r_info);
+            GetRemoteTaskXmlValue(taskList[i].task_name, TAG_R_ALL, &r_info);
             if (schedule_mode == "2") schedule_mode_trans = QString(r_info.execat) + " Once";
             else if (schedule_mode == "3")
             {
@@ -2010,11 +2010,11 @@ void RenderResponseAppMngm::generateGetBackupList() {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(QString(taskList->state)));
+        cellElement3.appendChild(doc.createTextNode(QString(taskList[i].state)));
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        QString enable = QString(taskList->enable);
+        QString enable = QString(taskList[i].enable);
         cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg((enable == "0")?"start":"stop", task_name, (enable == "0")?"1":"0")));
 
         QDomElement cellElement5 = doc.createElement("cell");
