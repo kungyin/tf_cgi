@@ -172,7 +172,7 @@ void RenderResponseFtp::generateFtpServerBlockIPAdd() {
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    QDomElement resElement = doc.createElement("res");
+    QDomElement resElement = doc.createElement("result");
     root.appendChild(resElement);
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();

@@ -793,12 +793,9 @@ void RenderResponseNetShare::generateWebdavAccountAdd() {
 }
 
 void RenderResponseNetShare::generateDeleteSession() {
-//    QString paraName = m_pReq->allParameters().value("name").toString();
-//    QString paraPath = m_pReq->allParameters().value("path").toString();
-//    QString paraHost = m_pReq->allParameters().value("host").toString();
-//    QString paraSmbPath = m_pReq->allParameters().value("smb_path").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_del_session ", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_del_session " +
+                                      allParametersToString(), true);
 }
 
 void RenderResponseNetShare::generateWebdavAccountDel() {

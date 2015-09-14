@@ -125,6 +125,7 @@
 [ $1 == 'cgi_Dropbox_get_info' ] && echo -e "1;/mnt/HD/HD_a2/jerry;1800;;1438764141;kao Jackal;calcompsw1@gmail.com;214748364;344283226;1;;;;;;;;;;;;;;0;"
 [ $1 == 'cgi_get_airplay_device' ] && echo -e "Apple TV;_airplay._tcp;B8782E2923EA@Apple TV;_raop._tcp"
 [ $1 == 'service_get_s3_modify' ] && echo -e "0;0;AKIAIM3Q5UJQT27HCYVQ;de9V0Ye2A5TsSUQg16TSoFPs1A36nauQsASUdd3j;jackal888;0;Volume_1/Allen;4;4/5;11;57"
+[ $1 == 'FTP_Server_BlockIP_Del' ] && echo -e "1"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"
