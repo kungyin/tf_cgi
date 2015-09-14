@@ -1,6 +1,8 @@
 #include <QDir>
 #include <QCryptographicHash>
 
+#include <unistd.h>
+
 #include "RenderResponseFileStation.h"
 #include "FileSuffixDescription.h"
 
@@ -29,14 +31,27 @@ bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = tr
             tDebug("Copy file fail: %s", from.toLocal8Bit().data());
             return false;
         }
+        else {
+            QFileInfo fromInfo = QFileInfo(from);
+            if(chown(to.toLocal8Bit().data(), fromInfo.ownerId(), fromInfo.groupId()) != 0) {
+                tDebug("chwon failed: %s", to.toLocal8Bit().data());
+                return false;
+            }
+        }
     }
 
     foreach(QString copyDir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         QString from = fromDir + copyDir;
         QString to = toDir + copyDir;
 
-        if (dir.mkpath(to))
+        if (dir.mkpath(to)) {
             QFile::setPermissions(to, (QFileDevice::Permission)0x0775);
+            QFileInfo fromInfo = QFileInfo(from);
+            if(chown(to.toLocal8Bit().data(), fromInfo.ownerId(), fromInfo.groupId()) != 0) {
+                tDebug("chwon failed: %s", to.toLocal8Bit().data());
+                return false;
+            }
+        }
         else
             return false;
 
@@ -387,12 +402,23 @@ bool RenderResponseFileStation::copy(QString &source, QString &dest) {
     if(sourceInfo.isDir()) {
         if (QDir().mkpath(dest)) {
             QFile::setPermissions(dest, (QFileDevice::Permission)0x0775);
+            QFileInfo sourceInfo = QFileInfo(source);
+            if(chown(dest.toLocal8Bit().data(), sourceInfo.ownerId(), sourceInfo.groupId()) != 0) {
+                tDebug("chwon failed: %s", dest.toLocal8Bit().data());
+                return false;
+            }
             return copyDirRecursive(source, dest);
         }
     }
     else {
+        bool bCopy = QFile::copy(source, dest);
         tDebug("%s, %s", source.toLocal8Bit().data(), dest.toLocal8Bit().data());
-        return QFile::copy(source, dest);
+        QFileInfo sourceInfo = QFileInfo(source);
+        if(chown(dest.toLocal8Bit().data(), sourceInfo.ownerId(), sourceInfo.groupId()) != 0) {
+            tDebug("chwon failed: %s", dest.toLocal8Bit().data());
+            bCopy = false;
+        }
+        return bCopy;
     }
 
     return false;
