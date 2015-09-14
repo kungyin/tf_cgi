@@ -377,7 +377,7 @@ void RenderResponseSysMngm::generateGetRestoreStatus() {
 }
 
 void RenderResponseSysMngm::generateRestart() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
+    startDetached(API_PATH + SCRIPT_POWER_API, QStringList() << "restart");
     m_var = "/web/dsk_mgr/wait.html";
 }
 
@@ -422,7 +422,7 @@ void RenderResponseSysMngm::generateRestoreConf() {
             QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CONFIG_API + " load", true);
             if(apiOut.value(0).compare("0") == 0) {
                 m_var = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
-                getAPIStdOut(API_PATH + SCRIPT_POWER_API + " restart");
+                startDetached(API_PATH + SCRIPT_POWER_API, QStringList() << "restart");
             }
         }
     }
