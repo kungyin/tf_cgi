@@ -18,6 +18,8 @@ private:
     bool unArchive(QString &, QString &, QString);
     QString getSecretPath(QString);
 
+    void generateOpenTree();
+    void generateOpenNewFolder();
     void generateFolderContent();
     void generateEmptyFolder();
     void generateGetUserQuota();

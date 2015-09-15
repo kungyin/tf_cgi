@@ -2,6 +2,8 @@
 #include <QCryptographicHash>
 
 #include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include "RenderResponseFileStation.h"
 #include "FileSuffixDescription.h"
@@ -13,7 +15,6 @@ bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = tr
 
     fromDir += QDir::separator();
     toDir += QDir::separator();
-
 
     foreach(QString copyFile, dir.entryList(QDir::Files)) {
         QString from = fromDir + copyFile;
@@ -45,7 +46,7 @@ bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = tr
         QString to = toDir + copyDir;
 
         if (dir.mkpath(to)) {
-            QFile::setPermissions(to, (QFileDevice::Permission)0x0775);
+            QFile::setPermissions(to, (QFileDevice::Permission)0x0777);
             QFileInfo fromInfo = QFileInfo(from);
             if(chown(to.toLocal8Bit().data(), fromInfo.ownerId(), fromInfo.groupId()) != 0) {
                 tDebug("chwon failed: %s", to.toLocal8Bit().data());
@@ -60,6 +61,56 @@ bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = tr
     }
 
     return true;
+}
+
+bool getUid(const char *username, uint &uid) {
+    struct passwd pwd;
+    struct passwd *result;
+    char *buf;
+    long bufsize;
+
+    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if (bufsize == -1)          /* Value was indeterminate */
+        bufsize = 16384;        /* Should be more than enough */
+
+    buf = (char *)malloc(bufsize);
+    if (buf == NULL) {
+        //perror("malloc");
+        return false;
+    }
+
+    getpwnam_r(username, &pwd, buf, bufsize, &result);
+    if (result != NULL) {
+        uid = pwd.pw_uid;
+        return true;
+    }
+
+    return false;
+}
+
+bool getGid(const char *groupName, uint &gid) {
+    struct group gwd;
+    struct group *result;
+    char *buf;
+    long bufsize;
+
+    bufsize = sysconf(_SC_GETGR_R_SIZE_MAX);
+    if (bufsize == -1)          /* Value was indeterminate */
+        bufsize = 16384;        /* Should be more than enough */
+
+    buf = (char *)malloc(bufsize);
+    if (buf == NULL) {
+        //perror("malloc");
+        return false;
+    }
+
+    getgrnam_r(groupName, &gwd, buf, bufsize, &result);
+    if (result != NULL) {
+        gid = gwd.gr_gid;
+        return true;
+    }
+
+    return false;
 }
 
 RenderResponseFileStation::RenderResponseFileStation(THttpRequest &req, CGI_COMMAND cmd)
@@ -77,6 +128,12 @@ void RenderResponseFileStation::preRender() {
         return;
 
     switch(m_cmd) {
+    case CMD_OPEN_TREE:
+        generateOpenTree();
+        break;
+    case CMD_OPEN_NEW_FOLDER:
+        generateOpenNewFolder();
+        break;
     case CMD_FOLDER_CONTENT:
         generateFolderContent();
         break;
@@ -150,6 +207,151 @@ QString RenderResponseFileStation::getFileDescription(QString &suffix) {
 
 }
 
+void RenderResponseFileStation::generateOpenTree() {
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("dir").toLocal8Bit());
+    QString paraShowFile = m_pReq->parameter("show_file");
+    QString paraChkFlag = m_pReq->parameter("chk_flag");
+    QString paraFileType = m_pReq->parameter("file_type");
+    QString paraFuncId = m_pReq->parameter("function_id");
+//    QString paraFilterFile = m_pReq->parameter("filter_file");
+//    QString paraRootPath = m_pReq->parameter("root_path");
+
+    QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n"
+                            "%1"
+                         "</ul>";
+    QString cssLiClass =        "    <li class=\"directory collapsed%1\">\n"
+                                "%2%3"
+                                "    </li>\n";
+    /* todo */
+    QString cssLiClassWithID =  "    <li id=\"eve_test_456\" class=\"file ext_zip\">\n"
+                                "%1%2"
+                                "    </li>\n";
+    QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\" %2rel=\"%3\">\n";
+    QString checkboxSrc = "src=\"%1\" ";
+    QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
+
+    QDir dir(paraDir);
+    QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
+    if(paraShowFile.compare("1") == 0)
+        filters |= QDir::AllEntries;
+    QFileInfoList fileList = dir.entryInfoList(filters);
+
+    QListIterator<QFileInfo> iter(fileList);
+    while (iter.hasNext()) {
+        QFileInfo entry = iter.next();
+
+        if(            entry.fileName() == "lost+found"
+                    || entry.fileName() == "Nas_Prog"
+                    || entry.fileName() == "aMule"
+                    || entry.fileName() == "ShareCenter_Sync") {
+            fileList.removeOne(entry);
+            continue;
+        }
+
+        if(paraShowFile == "0") {
+            if(!entry.isDir()) {
+                fileList.removeOne(entry);
+                continue;
+            }
+        }
+        else if(paraShowFile == "1") {
+            if(paraFuncId == "iso_mount") {
+                if(entry.isDir() || entry.suffix().compare("iso", Qt::CaseInsensitive) == 0)
+                    continue;
+                fileList.removeOne(entry);
+                continue;
+            }
+        }
+
+    }
+
+    QString content;
+    QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
+    for(QFileInfo e : fileList) {
+        QString fileName = e.fileName();
+
+        for(QString shareEntry : shareInfo) {
+            if(e.absoluteFilePath().compare(shareEntry.split(":").value(1)) == 0) {
+                fileName = shareEntry.split(":").value(0);
+                break;
+            }
+        }
+
+        if(e.absoluteDir().absolutePath() == "/mnt/HD" && !fileName.startsWith("Volume_"))
+            break;
+
+        QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
+        if(e.isDir()) {
+            QString line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
+            content += cssLiClass.arg("").arg(line1).arg(line2);
+        }
+        else {
+            QString fileVolumePath = e.absoluteFilePath();
+            if(fileVolumePath.startsWith("/mnt/HD/HD_")) {
+                for(QString shareEntry : shareInfo) {
+                    if(fileVolumePath.startsWith(shareEntry.split(":").value(1))) {
+                        fileVolumePath.replace(shareEntry.split(":").value(1), shareEntry.split(":").value(0));
+                        break;
+                    }
+                }
+            }
+            QString line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
+            content += cssLiClassWithID.arg(line1).arg(line2);
+        }
+    }
+
+    /* If it was not rooted path, we can add folder. */
+    QString dirAbsolutePath(dir.absolutePath());
+    if(     !(dirAbsolutePath.compare("/mnt/HD") == 0 ||
+             dirAbsolutePath.compare("/mnt/USB") == 0)) {
+        QString line2 = hrefLine.arg(dirAbsolutePath + "/new/").arg("New");
+        content += cssLiClass.arg(" add").arg("").arg(line2);
+    }
+
+    m_var = cssUlClass.arg(content);
+}
+
+void RenderResponseFileStation::generateOpenNewFolder() {
+
+    QDomDocument doc;
+
+    QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("dir").toLocal8Bit());
+    QString paraFileName = m_pReq->parameter("filename");
+    QString paraShowFile = m_pReq->parameter("show_file");
+    QString paraChkFlag = m_pReq->parameter("chk_flag");
+    //QString paraFileType = m_pReq->parameter("file_type");
+    QString paraFuncId = m_pReq->parameter("function_id");
+    QString paraFilterFile = m_pReq->parameter("filter_file");
+    QString paraRootPath = m_pReq->parameter("root_path");
+
+    QDir dir(paraDir);
+    bool bMkdir = dir.mkdir(paraFileName);
+    if(bMkdir) {
+        QFileInfo fileInfo = QFileInfo(dir.absolutePath() + QDir::separator() + paraFileName);
+        QFile(fileInfo.absoluteFilePath()).setPermissions((QFileDevice::Permission)0x0777);
+
+        uint gid, uid;
+        if(getGid("allaccount", gid) && getUid("nobody", uid)) {
+            if(chown(fileInfo.absoluteFilePath().toLocal8Bit().data(), uid, gid) != 0)
+                tDebug("chwon failed: %s", fileInfo.absolutePath().toLocal8Bit().data());
+        }
+        else
+            tDebug("UID or GID is not found.");
+    }
+    QString ret = bMkdir ? "ok" : "error";
+
+    QDomElement root = doc.createElement("mkdir");
+    doc.appendChild(root);
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(ret));
+
+    m_var = doc.toString();
+
+}
 
 void RenderResponseFileStation::generateFolderContent() {
     QDomDocument doc;
@@ -315,8 +517,39 @@ void RenderResponseFileStation::generateChkFile() {
 
     QString ret = "1";
     QString source = FILE_TMP_PATH + QDir::separator() + paraName;
-    if(QFile::copy(source, paraPath))
+    QString dest = paraPath + QDir::separator() + paraName;
+
+    if(QFile::copy(source, dest)) {
+
+        QFileInfo fileInfo = QFileInfo(dest);
+        QFile(fileInfo.absoluteFilePath()).setPermissions((QFileDevice::Permission)0x0666);
+
+        QByteArray user = m_pReq->cookie("username");
+        if(!user.isEmpty()) {
+            uint uid;
+            if(getUid(user.data(), uid)) {
+                uint gid;
+                bool bFound = false;
+                if(uid == 0) {
+                    gid = 0;
+                    bFound = true;
+                }
+                else {
+                    if(getGid("allaccount", gid))
+                        bFound = true;
+                }
+
+                if(bFound) {
+                    if(chown(dest.toLocal8Bit().data(), uid, gid) != 0)
+                        tDebug("chwon failed: %s", dest.toLocal8Bit().data());
+                }
+            }
+        }
         ret = "0";
+    }
+
+    if(QFile::exists(source))
+        QFile::remove(source);
 
     QDir dir(paraPath);
     if(!dir.exists(paraName))
@@ -337,7 +570,7 @@ void RenderResponseFileStation::generateCompress() {
     QString tmpPath(FILE_TMP_PATH);
     if(QDir(tmpPath).exists()) {
 
-        //QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0775);
+        //QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0777);
         QString outFileName;
 
         if(!QFileInfo(QDir(paraPath).absolutePath() + QDir::separator() + paraName).isDir()) {
@@ -401,7 +634,7 @@ bool RenderResponseFileStation::copy(QString &source, QString &dest) {
     dest += sourceInfo.fileName();
     if(sourceInfo.isDir()) {
         if (QDir().mkpath(dest)) {
-            QFile::setPermissions(dest, (QFileDevice::Permission)0x0775);
+            QFile::setPermissions(dest, (QFileDevice::Permission)0x0777);
             QFileInfo sourceInfo = QFileInfo(source);
             if(chown(dest.toLocal8Bit().data(), sourceInfo.ownerId(), sourceInfo.groupId()) != 0) {
                 tDebug("chwon failed: %s", dest.toLocal8Bit().data());

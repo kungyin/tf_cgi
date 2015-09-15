@@ -25,8 +25,6 @@ private:
     void generateUserList();
     void generateGroupList();
     void generateGetAllIsoShare();
-    void generateOpenTree();
-    void generateOpenNewFolder();
     void generateAddSession();
     void generateSetNfsShare();
     void generateGetModifySession();

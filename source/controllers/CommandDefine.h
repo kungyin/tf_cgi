@@ -156,8 +156,6 @@ enum CGI_COMMAND {
     CMD_GROUP_LIST,                         /* cgi_group_list */
     //CMD_GET_ALL_SESSION,                    /* cgi_get_all_session */
     CMD_GET_ALL_ISO_SHARE,                  /* cgi_get_all_iso_share */
-    CMD_OPEN_TREE,                          /* cgi_open_tree */
-    CMD_OPEN_NEW_FOLDER,                    /* cgi_open_new_folder */
     //CMD_FTP_SERVICE,                        /* cgi_ftp_service */
     CMD_ADD_SESSION,                        /* cgi_add_session */
     CMD_SET_NFS_SHARE,                      /* cgi_set_nfs_share */
@@ -435,6 +433,8 @@ enum CGI_COMMAND {
 //    CMD_PHOTO_END,
 
     /**** File ****/
+    CMD_OPEN_TREE,                           /* cgi_open_tree */
+    CMD_OPEN_NEW_FOLDER,                     /* cgi_open_new_folder */
     CMD_FOLDER_CONTENT,                      /* cgi_folder_content */
     CMD_EMPTY_FOLDER,                        /* cgi_empty_folder */
     CMD_GET_USER_QUOTA,                      /* cgi_get_user_quota */
@@ -691,8 +691,6 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_group_list",
     //"cgi_get_all_session",
     "cgi_get_all_iso_share",
-    "cgi_open_tree",
-    "cgi_open_new_folder",
     //"cgi_ftp_service",
     "cgi_add_session",
     "cgi_set_nfs_share",
@@ -970,6 +968,8 @@ const char CGI_PARA_COMMANDS[][255] = {
 //    ""
 
     /**** File ****/
+    "cgi_open_tree",
+    "cgi_open_new_folder",
     "cgi_folder_content",
     "cgi_empty_folder",
     "cgi_get_user_quota",
@@ -1232,8 +1232,6 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GROUP_LIST,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_group_list */
     //CMD_GET_ALL_SESSION,                    /* cgi_get_all_session */
     { CMD_GET_ALL_ISO_SHARE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_all_iso_share */
-    { CMD_OPEN_TREE,                    RENDER_TYPE_HTML,           COOKIE_REQ_CMDS      },         /* cgi_open_tree */
-    { CMD_OPEN_NEW_FOLDER,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_open_new_folder */
     //CMD_FTP_SERVICE,                        /* cgi_ftp_service */
     { CMD_ADD_SESSION,                  RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_add_session */
     { CMD_SET_NFS_SHARE,                RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_set_nfs_share */
@@ -1512,6 +1510,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
 //    { CMD_GET_COOLIRIS,                  RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_get_cooliris */
     //CMD_PHOTO_END,
 
+    { CMD_OPEN_TREE,                    RENDER_TYPE_HTML,           COOKIE_REQ_CMDS          },         /* cgi_open_tree */
+    { CMD_OPEN_NEW_FOLDER,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS          },         /* cgi_open_new_folder */
     { CMD_FOLDER_CONTENT,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_folder_content */
     { CMD_EMPTY_FOLDER,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_empty_folder */
     { CMD_GET_USER_QUOTA,                RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_user_quota */
