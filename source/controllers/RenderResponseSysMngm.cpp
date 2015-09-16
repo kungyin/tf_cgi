@@ -424,6 +424,8 @@ void RenderResponseSysMngm::generateRestoreConf() {
                 m_var = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
                 startDetached(API_PATH + SCRIPT_POWER_API, QStringList() << "restart");
             }
+            else
+                m_var = "<script>parent.location.href='/web/system_mgr/system.html'</script>";
         }
     }
 

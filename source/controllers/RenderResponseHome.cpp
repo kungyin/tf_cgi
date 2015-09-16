@@ -1,5 +1,19 @@
 #include "RenderResponseHome.h"
 
+static QMap<QString, QString> lang_map {
+
+    { "zh-tw",  "TC"    },
+    { "de",     "DE"    },
+    { "en-us",  "EN"    },
+    { "es",     "ES-DI" },
+    { "es-es",  "ES-EU" },
+    { "fr",     "FR"    },
+    { "it",     "IT"    },
+    { "pt",     "PT"    },
+    { "ru",     "RU"    },
+    { "zh-cn",  "SC"    },
+
+};
 
 RenderResponseHome::RenderResponseHome(THttpRequest &req, CGI_COMMAND cmd)
     : m_bRedirect2Ssl(false)
@@ -86,9 +100,33 @@ void RenderResponseHome::generateGetUserLanguage() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_user_language", true, ";");
 
+    QString ret = apiOut.value(0);
+    QString retFormat = "%1,%1.xml";
+    bool bFound = true;
+    QString langCode = apiOut.value(0).split(",").value(0);
+    if(langCode == "Auto") {
+        bFound = false;
+        /* eg. zh-TW,zh;q=0.8,en-US;q=0.6,en;q=0.4 */
+        QString detectedLang(m_pReq->header().rawHeader("Accept-Language").split(';').value(0).split(',').value(0));
+        tDebug("RenderResponseHome::generateGetUserLanguage() detectedLang: %s", detectedLang.toLocal8Bit().data());
+
+        QMapIterator<QString, QString> i(lang_map);
+        while (i.hasNext()) {
+            i.next();
+            if(detectedLang.startsWith(i.key(), Qt::CaseInsensitive)) {
+                ret = retFormat.arg(i.value());
+                bFound = true;
+                break;
+            }
+        }
+    }
+
+    if(!bFound)
+        ret = retFormat.arg("EN");
+
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);
-    root.appendChild(doc.createTextNode(apiOut.value(0)));
+    root.appendChild(doc.createTextNode(ret));
     m_var = doc.toString();
 
 }
