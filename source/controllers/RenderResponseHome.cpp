@@ -101,7 +101,7 @@ void RenderResponseHome::generateGetUserLanguage() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_user_language", true, ";");
 
     QString ret = apiOut.value(0);
-    QString retFormat = "%1,%1.xml";
+    QString retFormat = "%1,%2.xml";
     bool bFound = true;
     QString langCode = apiOut.value(0).split(",").value(0);
     if(langCode == "Auto") {
@@ -114,7 +114,7 @@ void RenderResponseHome::generateGetUserLanguage() {
         while (i.hasNext()) {
             i.next();
             if(detectedLang.startsWith(i.key(), Qt::CaseInsensitive)) {
-                ret = retFormat.arg(i.value());
+                ret = retFormat.arg(langCode, i.value());
                 bFound = true;
                 break;
             }
@@ -122,7 +122,7 @@ void RenderResponseHome::generateGetUserLanguage() {
     }
 
     if(!bFound)
-        ret = retFormat.arg("EN");
+        ret = retFormat.arg(langCode, "EN");
 
     QDomElement root = doc.createElement("language");
     doc.appendChild(root);

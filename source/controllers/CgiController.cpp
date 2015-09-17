@@ -30,6 +30,7 @@
 
 #include <TAppSettings>
 #include <TWebApplication>
+#include <TSessionStore>
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -74,11 +75,16 @@ void CgiController::cgiInit(int group) {
     QVariantMap parasMap = httpRequest().allParameters();
     QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
     tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
+    tDebug("<< id %s >>", session().id().data());
+    //setSession(session());
 
     m_pParseCmd = new ParseCmd(paraCmd, group);
 
     /* Verify client which ia valid */
-
+    //if(!isValidClient(true)) {
+        //renderErrorResponse(Tf::NotFound);
+        //return;
+    //}
 #ifndef SIMULATOR_MODE
     if(m_pParseCmd->getFilterType() == COOKIE_REQ_CMDS) {
         if(!isValidClient()) {
@@ -103,6 +109,7 @@ void CgiController::cgiResponse() {
         tError("CgiController::index() %d -- could not create render instance.", cmd);
         return;
     }
+    connect(pRrep, SIGNAL(typeChanged(RENDER_TYPE)), this, SLOT(renderTypeChanged(RENDER_TYPE)));
     pRrep->preRender();
 
     /* render */
@@ -286,6 +293,12 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
 
 }
 
+void CgiController::renderTypeChanged(RENDER_TYPE type) {
+
+    m_pParseCmd->changeRenderType(type);
+
+}
+
 bool CgiController::isValidClient(bool bCookiesOnly) {
 
     bool bValidClient = false;
@@ -332,6 +345,9 @@ bool CgiController::isValidClient(bool bCookiesOnly) {
         QMapIterator<QString, QVariant> i(session());
         while (i.hasNext()) {
             i.next();
+
+            //tDebug("YYYYYYYY %s", i.key().toLocal8Bit().data());
+
             int diff = i.value().toInt() - QDateTime::currentDateTime().toTime_t();
             if(diff <= 0) {
                 if(i.key().compare(TAppSettings::instance()->value(Tf::SessionCsrfProtectionKey).toString()) != 0) {

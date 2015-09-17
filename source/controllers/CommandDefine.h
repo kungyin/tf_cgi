@@ -51,6 +51,8 @@ enum CGI_COMMAND {
     CMD_VE_VERIFY_KEYFILE,          /* cgi_VE_Verify_KeyFile */
     CMD_VE_MODIFY,                  /* cgi_VE_Mofify */
     CMD_VE_SAVE_FILE,               /* cgi_VE_Save_File */
+    CMD_VE_LOAD_MODULE,             /* cgi_VE_Load_Module */
+    CMD_VE_LOAD_MODULE_STATE,       /* cgi_VE_Load_Module_State */
     CMD_DISK_END,
 
     /**** Home Page ****/
@@ -469,6 +471,8 @@ enum CGI_COMMAND {
     CMD_P2P_PRIORITY_SET,                    /* p2p_priority_set */
     CMD_P2P_DEL_TORRENT,                     /* p2p_del_torrent */
     CMD_P2P_GET_TORRENT_INFO,                /* p2p_get_torrent_info */
+    CMD_P2P_START_TORRENT,                   /* p2p_start_torrent */
+    CMD_P2P_PAUSE_TORRENT,                   /* p2p_pause_torrent */
     CMD_P2P_GET_SETTING_INFO,                /* p2p_get_setting_info */
     CMD_P2P_GET_HD,                          /* p2p_get_hd */
     CMD_P2P_SET_CONFIG,                      /* p2p_set_config */
@@ -586,6 +590,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_VE_Verify_KeyFile",
     "cgi_VE_Mofify",
     "cgi_VE_Save_File",
+    "cgi_VE_Load_Module",
+    "cgi_VE_Load_Module_State",
     "",
 
     /**** Home Page ****/
@@ -1004,6 +1010,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "p2p_priority_set",
     "p2p_del_torrent",
     "p2p_get_torrent_info",
+    "p2p_start_torrent",
+    "p2p_pause_torrent",
     "p2p_get_setting_info",
     "p2p_get_hd",
     "p2p_set_config",
@@ -1125,6 +1133,9 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_VE_VERIFY_KEYFILE,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Verify_KeyFile */
     { CMD_VE_MODIFY,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Mofify */
     { CMD_VE_SAVE_FILE,                 RENDER_TYPE_FILE,           COOKIE_REQ_CMDS      },          /* cgi_VE_Save_File */
+    { CMD_VE_LOAD_MODULE,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Load_Module */
+    { CMD_VE_LOAD_MODULE_STATE,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Load_Module_State */
+
 
     //{ CMD_DISK_END,                     RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
 
@@ -1546,6 +1557,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_P2P_PRIORITY_SET,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_priority_set */
     { CMD_P2P_DEL_TORRENT,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_del_torrent */
     { CMD_P2P_GET_TORRENT_INFO,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_torrent_info */
+    { CMD_P2P_START_TORRENT,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_start_torrent */
+    { CMD_P2P_PAUSE_TORRENT,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_pause_torrent */
     { CMD_P2P_GET_SETTING_INFO,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* p2p_get_setting_info */
     { CMD_P2P_GET_HD,                    RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* p2p_get_hd */
     { CMD_P2P_SET_CONFIG,                RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* p2p_set_config */

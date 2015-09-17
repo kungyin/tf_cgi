@@ -18,6 +18,7 @@ public:
 public slots:
     void process();
     void processGoogleDrive();
+    void renderTypeChanged(RENDER_TYPE);
 
 private:
     void cgiInit(int group = CMD_GRP_NONE);

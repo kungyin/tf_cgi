@@ -424,8 +424,10 @@ void RenderResponseSysMngm::generateRestoreConf() {
                 m_var = "<script>parent.location.href='/web/dsk_mgr/wait.html'</script>";
                 startDetached(API_PATH + SCRIPT_POWER_API, QStringList() << "restart");
             }
-            else
-                m_var = "<script>parent.location.href='/web/system_mgr/system.html'</script>";
+            else {
+                m_var = "/web/system_mgr/system.html";
+                emit typeChanged(RENDER_TYPE_REDIRECT);
+            }
         }
     }
 
@@ -1049,6 +1051,8 @@ void RenderResponseSysMngm::generateFirmVXml() {
     QDomDocument doc;
     QMap<QString, QString> systemInfo = getNasCfg("system");
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_RTC_API + " -m", true, "=");
+
     QDomElement root = doc.createElement("version");
     doc.appendChild(root);
     QDomElement fwElement = doc.createElement("fw");
@@ -1056,7 +1060,7 @@ void RenderResponseSysMngm::generateFirmVXml() {
     fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
     QDomElement oledElement = doc.createElement("oled");
     root.appendChild(oledElement);
-    oledElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver").section('.', 0, 2)));
+    oledElement.appendChild(doc.createTextNode("1.0" + apiOut.value(1).trimmed().remove("v")));
     m_var = doc.toString();
 
 }

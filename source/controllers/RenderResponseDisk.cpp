@@ -97,6 +97,12 @@ void RenderResponseDisk::preRender() {
     case CMD_VE_SAVE_FILE:
         generateVeSaveFile();
         break;
+    case CMD_VE_LOAD_MODULE:
+        generateVeLoadModule();
+        break;
+    case CMD_VE_LOAD_MODULE_STATE:
+        generateVeLoadModuleState();
+        break;
 
     default:
         break;
@@ -838,7 +844,7 @@ void RenderResponseDisk::generateVeVerifyKeyfile() {
 
 void RenderResponseDisk::generateVeModify() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_chk_VE_pwd " +
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_VE_pwd " +
                                       allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -857,4 +863,33 @@ void RenderResponseDisk::generateVeSaveFile() {
     QFileInfo file(filePath);
     if(file.exists() && file.isFile())
         m_var = filePath;
+}
+
+
+void RenderResponseDisk::generateVeLoadModule() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Load_Module");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseDisk::generateVeLoadModuleState() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Load_Module_State");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
 }

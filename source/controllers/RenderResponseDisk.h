@@ -76,6 +76,8 @@ private:
     void generateVeVerifyKeyfile();
     void generateVeModify();
     void generateVeSaveFile();
+    void generateVeLoadModule();
+    void generateVeLoadModuleState();
 
 };
 

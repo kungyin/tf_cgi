@@ -15,6 +15,9 @@ public:
 
     QVariant &getVar() { return m_var; }
 
+signals:
+    void typeChanged(RENDER_TYPE);
+
 protected:
 
     QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);

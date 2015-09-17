@@ -170,3 +170,5 @@ retryfails                     = 5
 fxpaccess                      = 0
 blockduration                  = 5
 
+[p2p]
+enable			       = 1

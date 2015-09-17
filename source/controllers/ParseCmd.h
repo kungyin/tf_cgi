@@ -14,6 +14,7 @@ public:
     inline int getCGICmd() { return m_iCommand; }
     inline int getRenderType() { return m_iRenderType; }
     inline int getFilterType() { return m_iFilterType; }
+    inline void changeRenderType(RENDER_TYPE type) { m_iRenderType = type; }
 
 private:
 
