@@ -847,11 +847,10 @@ void RenderResponseSysMngm::generateLogServer() {
                                       " " + paraPort);
 }
 
-/* todo */
+
 void RenderResponseSysMngm::generateSendLogTest() {
-    QString paraIp = m_pReq->allParameters().value("f_ip").toString();
-    QString paraPort = m_pReq->allParameters().value("f_port").toString();
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " get_cfg", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " service_syslog_send_test " +
+                                      allParametersToString());
 }
 
 void RenderResponseSysMngm::generateLogBackup() {

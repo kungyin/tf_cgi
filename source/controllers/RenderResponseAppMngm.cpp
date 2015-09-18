@@ -1288,10 +1288,9 @@ void RenderResponseAppMngm::generateSyslogGetExportStatus() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateSyslogClear() {
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_syslog_clear");
 
 }
 
