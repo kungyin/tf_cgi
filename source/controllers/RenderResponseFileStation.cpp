@@ -261,6 +261,12 @@ void RenderResponseFileStation::generateOpenTree() {
                 fileList.removeOne(entry);
                 continue;
             }
+            else if(paraFuncId == "zip") {
+                if(entry.isDir() || entry.suffix().compare("zip", Qt::CaseInsensitive) == 0)
+                    continue;
+                fileList.removeOne(entry);
+                continue;
+            }
         }
 
     }
