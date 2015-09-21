@@ -1803,17 +1803,22 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
 
     /* Null user is anonymount. */
     QString src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit());
-    QFile file(SHARE_INFO_FILE);
-    if (file.open(QIODevice::ReadOnly))
+    bool isLan = false;
+    if (!src.isEmpty() && src.length() > 2 && src.at(1) == '/') isLan = true;
+    if (!isLan)
     {
-        QTextStream in(&file);
-        while (!in.atEnd())
+        QFile file(SHARE_INFO_FILE);
+        if (file.open(QIODevice::ReadOnly))
         {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                src.replace(list.value(0), list.value(1));
+            QTextStream in(&file);
+            while (!in.atEnd())
+            {
+                QStringList list = in.readLine().split(":");
+                if (!list.isEmpty() && list.length() == 2)
+                    src.replace(list.value(0), list.value(1));
+            }
+            file.close();
         }
-        file.close();
     }
     QByteArray src_b = src.toUtf8();
     QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
