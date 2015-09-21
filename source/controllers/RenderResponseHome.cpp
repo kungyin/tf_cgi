@@ -217,8 +217,8 @@ void RenderResponseHome::generateLogin() {
         cookie.setPath("/");
         m_cookies.append(cookie);
 
-        m_session.first = paraUsername,
-        m_session.second = QDateTime::currentDateTime().toTime_t() + LOGIN_TIMOUT;
+        m_session.first = "user";
+        m_session.second = paraUsername;
 
         if(apiOut.value(0).compare("1") == 0)
             m_var = "/web/home.html?v=8401878";

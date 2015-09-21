@@ -25,14 +25,16 @@ void RenderResponseMyDlink::preRender() {
 /* todo */
 void RenderResponseMyDlink::generateInfo() {
 
-//    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
-    QString ret = "Product=dlink-8B21F7\n"
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
+    QString fmtOut = "Product=dlink-8B21F7\n"
             "Model=DNS-320L-B\n"
             "Version=1.01.0905.2014\n"
             "Build=\n"
-            "Macaddr=CC:B2:55:8B:21:F7\n"
+            "Macaddr=%1\n"
             "Wireless=NO\n"
             "Ptz=";
+
+    QString ret = fmtOut.arg(apiOut.value(0));
     m_var = ret;
 
 }

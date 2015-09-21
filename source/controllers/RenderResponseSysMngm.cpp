@@ -199,6 +199,13 @@ void RenderResponseSysMngm::preRender() {
     case CMD_REBOOT:
         generateReboot();
         break;
+    case CMD_GET_LIVE_FIRM:
+        generateGetLiveFirm();
+        break;
+    case CMD_SET_LIVE_FIRM:
+        generateSetLiveFirm();
+        break;
+
     default:
         break;
     }
@@ -1117,5 +1124,43 @@ void RenderResponseSysMngm::daemonize()
     close(0); // close stdin, stdout, stderr.
     close(1);
     close(2);
+
+}
+
+void RenderResponseSysMngm::generateGetLiveFirm() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " get_live_firm", true, ";");
+
+    QDomElement root = doc.createElement("live_fw");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement lastTimeElement = doc.createElement("last_time");
+    root.appendChild(lastTimeElement);
+    lastTimeElement.appendChild(doc.createTextNode(apiOut.value(1) + ":" + apiOut.value(2)));
+    QDomElement progressElement = doc.createElement("progress");
+    root.appendChild(progressElement);
+    progressElement.appendChild(doc.createTextNode(apiOut.value(3)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseSysMngm::generateSetLiveFirm() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " set_live_firm", true, ";");
+
+    QDomElement root = doc.createElement("live_fw");
+    doc.appendChild(root);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
 
 }

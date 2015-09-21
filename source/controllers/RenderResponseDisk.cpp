@@ -791,14 +791,14 @@ void RenderResponseDisk::generateVeList() {
         cellElement3.appendChild(doc.createTextNode(apiOut.value(i).split(";").value(3)));
 
         QString cellContent = "--";
-        if(apiOut.value(4) == "0")
+        if(apiOut.value(i).split(";").value(4) == "0")
             cellContent = cellContent3.arg(apiOut.value(i).split(";").value(1));
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement1.appendChild(cellElement4);
         cellElement4.appendChild(doc.createCDATASection(cellContent));
 
         cellContent = "--";
-        if(apiOut.value(4) == "1")
+        if(apiOut.value(i).split(";").value(4) == "1")
             cellContent = cellContent4.arg(apiOut.value(i).split(";").value(1));
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);

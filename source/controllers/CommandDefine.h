@@ -328,6 +328,8 @@ enum CGI_COMMAND {
     CMD_GET_PERCENTAGE,                     /* cgi_get_percentage */
     CMD_GET_FIRMWARE_VERIFY,                /* cgi_get_firmware_verify */
     CMD_GET_UP_FW,                          /* cgi_get_uP_fw */
+    CMD_GET_LIVE_FIRM,                      /* get_live_firm */
+    CMD_SET_LIVE_FIRM,                      /* set_live_firm */
     CMD_REBOOT,                             /* cgi_reboot */
 
     CMD_SYS_MNGM_END,
@@ -871,6 +873,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_get_firmware_verify",
     "cgi_get_uP_fw",
     "cgi_reboot",
+    "get_live_firm",
+    "set_live_firm",
     "",
 
     /**** System Status ****/
@@ -1415,6 +1419,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_FIRMWARE_VERIFY,          RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_firmware_verify */
     { CMD_GET_UP_FW,                    RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_uP_fw */
     { CMD_REBOOT,                       RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_reboot */
+    { CMD_GET_LIVE_FIRM,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm */
+    { CMD_SET_LIVE_FIRM,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* set_live_firm */
 
 //    CMD_SYS_MNGM_END,
 

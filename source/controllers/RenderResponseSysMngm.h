@@ -78,9 +78,10 @@ private:
     void generateGetFirmwareVerify();
     void generateGetUpFw();
     void generateReboot();
-
     void daemonize();
 
+    void generateGetLiveFirm();
+    void generateSetLiveFirm();
 };
 
 

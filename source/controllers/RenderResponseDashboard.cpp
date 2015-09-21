@@ -1,9 +1,10 @@
 #include <TAppSettings>
+#include <TWebApplication>
+#include <QDir>
 
 #include "RenderResponseDashboard.h"
 
 RenderResponseDashboard::RenderResponseDashboard(THttpRequest &req, CGI_COMMAND cmd)
-    : m_pSession(NULL)
 {
     m_cmd = cmd;
     m_pReq = &req;
@@ -35,19 +36,25 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);
 
-    QString users;
-    if(m_pSession) {
-        QMapIterator<QString, QVariant> i(*m_pSession);
-        while (i.hasNext()) {
-            i.next();
-            if(i.key().compare(TAppSettings::instance()->value(Tf::SessionCsrfProtectionKey).toString()) != 0) {
-                QString split;
-                if(!users.isEmpty())
-                    split = ",";
-                if(i.value().toInt() >= 0)
-                    users += split + i.key();
-            }
+    QDir dir(sessionDirPath());
+    QDir::Filters filters = QDir::Files;
+    QFileInfoList fileList = dir.entryInfoList(filters);
+
+    QSet<QString> usersSet;
+    QListIterator<QFileInfo> iter(fileList);
+    while (iter.hasNext()) {
+        QFileInfo entry = iter.next();
+        if(entry.fileName().length() == 40) {
+            usersSet.insert(find(entry.fileName().toLocal8Bit()).value("user").toString());
         }
+    }
+
+    QString users;
+    for(QString e : usersSet) {
+        QString split;
+        if(!users.isEmpty())
+            split = ",";
+        users += split + e;
     }
 
     QStringList deviceInfoContentElement(QStringList()
@@ -75,3 +82,25 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     m_var = doc.toString();
 }
 
+TSession RenderResponseDashboard::find(const QByteArray &id)
+{
+    QFileInfo fi(sessionDirPath() + id);
+
+    if (fi.exists()) {
+        QFile file(fi.filePath());
+
+        if (file.open(QIODevice::ReadOnly)) {
+            QDataStream ds(&file);
+            TSession result(id);
+            ds >> *static_cast<QVariantMap *>(&result);
+            if (ds.status() == QDataStream::Ok)
+                return result;
+        }
+    }
+    return TSession();
+}
+
+QString RenderResponseDashboard::sessionDirPath()
+{
+    return Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
+}

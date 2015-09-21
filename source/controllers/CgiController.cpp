@@ -31,6 +31,8 @@
 #include <TAppSettings>
 #include <TWebApplication>
 #include <TSessionStore>
+#include <QDir>
+
 
 const QString CGI_PARA_CMD_NAME = "cmd";
 
@@ -44,15 +46,19 @@ CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
     : m_pParseCmd(NULL)
 {
+
     tDebug("\n  --------------------------- start -----------------------------------");
 #ifdef SIMULATOR_MODE
     tDebug("** SIMULATOR_MODE is enabled. **");
 #endif
+    getSessionTime();
+
 }
 
 
 CgiController::~CgiController()
 {
+    resetSessionTime();
     if(m_pParseCmd)
         delete m_pParseCmd;
 
@@ -72,20 +78,12 @@ void CgiController::processGoogleDrive() {
 
 void CgiController::cgiInit(int group) {
     /* Parse command */
-    QVariantMap parasMap = httpRequest().allParameters();
-    QString paraCmd = parasMap.value(CGI_PARA_CMD_NAME).toString();
+    QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
     tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
-    tDebug("<< id %s >>", session().id().data());
-    //setSession(session());
-
     m_pParseCmd = new ParseCmd(paraCmd, group);
 
-    /* Verify client which ia valid */
-    //if(!isValidClient(true)) {
-        //renderErrorResponse(Tf::NotFound);
-        //return;
-    //}
 #ifndef SIMULATOR_MODE
+    /* Verify client which ia valid */
     if(m_pParseCmd->getFilterType() == COOKIE_REQ_CMDS) {
         if(!isValidClient()) {
             renderErrorResponse(Tf::NotFound);
@@ -179,15 +177,12 @@ void CgiController::cgiResponse() {
             }
         }
 
-        QPair<QString, uint> s = pRrepHome->getSession();
+        QPair<QString, QString> s = pRrepHome->getSession();
         if(!s.first.isEmpty()) {
             if(session().contains(s.first))
                 session().remove(s.first);
             session().insert(s.first, s.second);
         }
-        //User user = pRrepHome->getUser();
-        //bool islogin = userLogin(&user);
-        //tDebug("sss %d", islogin);
 
         QString redirectUrl;
         QString protocol = "http://";
@@ -232,6 +227,48 @@ void CgiController::cgiResponse() {
 
 }
 
+void CgiController::getSessionTime() {
+
+    QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
+
+    if(paraCmd == "cgi_get_temperature" || paraCmd == "cgi_get_device_detail_info") {
+        QString dirPath = Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
+        QDir dir(dirPath);
+        QDir::Filters filters = QDir::Files;
+        QFileInfoList fileList = dir.entryInfoList(filters);
+
+        QListIterator<QFileInfo> iter(fileList);
+        while (iter.hasNext()) {
+            QFileInfo entry = iter.next();
+            QList<QDateTime> orginalTime = QList<QDateTime>() << entry.lastRead() << entry.lastModified();
+            map.insert(entry.fileName(), orginalTime);
+        }
+    }
+}
+
+void CgiController::resetSessionTime() {
+    QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
+
+    if(paraCmd == "cgi_get_temperature" || paraCmd == "cgi_get_device_detail_info") {
+        QString dirPath = Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
+        QDir dir(dirPath);
+        QDir::Filters filters = QDir::Files;
+        QFileInfoList fileList = dir.entryInfoList(filters);
+
+        QListIterator<QFileInfo> iter(fileList);
+        while (iter.hasNext()) {
+            QFileInfo entry = iter.next();
+            QList<QDateTime> orginalTime = map.value(entry.fileName());
+            if(!orginalTime.isEmpty()) {
+                struct timeval tvp[2];
+                tvp[0].tv_sec = orginalTime.value(0).toTime_t();
+                tvp[1].tv_sec = orginalTime.value(1).toTime_t();
+                utimes(entry.absoluteFilePath().toLocal8Bit().data(), tvp);
+            }
+        }
+    }
+}
+
 RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)
 {
     if(cmd < CMD_NONE)
@@ -271,11 +308,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseAppDownloads(req, cmd);
     else if(cmd < CMD_ADD_ON_END)
         pRrep = new RenderResponseAddOn(req, cmd);
-    else if(cmd < CMD_DASHBOARD_END) {
-        RenderResponseDashboard *pDashboard = new RenderResponseDashboard(req, cmd);
-        pDashboard->setSession(session());
-        pRrep = pDashboard;
-    }
+    else if(cmd < CMD_DASHBOARD_END)
+        pRrep = new RenderResponseDashboard(req, cmd);
     else if(cmd < CMD_FILE_END)
         pRrep = new RenderResponseFileStation(req, cmd);
     else if(cmd < CMD_P2P_END)
@@ -340,32 +374,14 @@ bool CgiController::isValidClient(bool bCookiesOnly) {
         }
     }
     else {
-
-        /* clear expired sessions */
-        QMapIterator<QString, QVariant> i(session());
-        while (i.hasNext()) {
-            i.next();
-
-            //tDebug("YYYYYYYY %s", i.key().toLocal8Bit().data());
-
-            int diff = i.value().toInt() - QDateTime::currentDateTime().toTime_t();
-            if(diff <= 0) {
-                if(i.key().compare(TAppSettings::instance()->value(Tf::SessionCsrfProtectionKey).toString()) != 0) {
-                    session().remove(i.key());
-                    tDebug("remove session: %s", i.key().toLocal8Bit().data());
-                }
-            }
-        }
-
-        for(TCookie c : httpRequest().cookies())
+        for(TCookie c : httpRequest().cookies()) {
             if(c.name() == "username") {
-                if(session().value(c.value()).toInt() > 0) {
-                    session()[c.value()] = QDateTime::currentDateTime().toTime_t() + LOGIN_TIMOUT;
+                if(session().value("user").toByteArray() == c.value()) {
                     bValidClient = true;
                     break;
                 }
             }
-
+        }
     }
 
     return bValidClient;

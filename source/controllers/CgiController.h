@@ -23,8 +23,11 @@ public slots:
 private:
     void cgiInit(int group = CMD_GRP_NONE);
     void cgiResponse();
+    void getSessionTime();
+    void resetSessionTime();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
     bool isValidClient(bool bCookiesOnly = false);
+    QMap<QString, QList<QDateTime>> map;
 
     ParseCmd *m_pParseCmd;
 };
