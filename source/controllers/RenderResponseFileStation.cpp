@@ -286,10 +286,11 @@ void RenderResponseFileStation::generateOpenTree() {
         if(e.absoluteDir().absolutePath() == "/mnt/HD" && !fileName.startsWith("Volume_"))
             break;
 
-        QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
+
         if(e.isDir()) {
             QString line1 = (paraChkFlag.compare("1") == 0) ?
                         checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
+            QString line2 = hrefLine.arg(e.absoluteFilePath() + QDir::separator()).arg(fileName);
             content += cssLiClass.arg("").arg(line1).arg(line2);
         }
         else {
@@ -304,6 +305,7 @@ void RenderResponseFileStation::generateOpenTree() {
             }
             QString line1 = (paraChkFlag.compare("1") == 0) ?
                         checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
+            QString line2 = hrefLine.arg(e.absoluteFilePath()).arg(fileName);
             content += cssLiClassWithID.arg(line1).arg(line2);
         }
     }
