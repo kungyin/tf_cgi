@@ -3,6 +3,11 @@
 
 #include "RenderResponse.h"
 
+//RenderResponse::RenderResponse()
+//    : m_diffTime(0)
+//{
+//}
+
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSystem) {
     QStringList ret;
     QString cmd;

@@ -25,11 +25,14 @@ private:
     void cgiResponse();
     void getSessionTime();
     void resetSessionTime();
+    //bool modifySessionTime();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
     bool isValidClient(bool bCookiesOnly = false);
     QMap<QString, QList<QDateTime>> map;
 
     ParseCmd *m_pParseCmd;
+    //int m_diffTime;
+    //QString m_sessionId;
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);

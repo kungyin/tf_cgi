@@ -10,10 +10,13 @@ class T_CONTROLLER_EXPORT RenderResponse : public QObject {
 
 public:
 
+    //RenderResponse();
     virtual void preRender() = 0;
     virtual ~RenderResponse() {}
 
     QVariant &getVar() { return m_var; }
+//    int getSessionDiff() { return m_diffTime; }
+//    void setSessionDiff(int diff) { m_diffTime = diff; }
 
 signals:
     void typeChanged(RENDER_TYPE);
@@ -39,6 +42,8 @@ protected:
     THttpRequest *m_pReq;
 
 private:
+
+    int m_diffTime;
 
 };
 

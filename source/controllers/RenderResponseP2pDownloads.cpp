@@ -163,10 +163,10 @@ void RenderResponseP2pDownloads::generateP2pGetListByPriority() {
         QString jsCont = "-";
         switch(itemValues.value(9).toInt()) {
         case 0:
-            jsCont = jsContent.arg("stop", "0");
+            jsCont = jsContent.arg("stop", QString::number(i+1));
             break;
         case 1:
-            jsCont = jsContent.arg("start", "1");
+            jsCont = jsContent.arg("start", QString::number(i+1));
             break;
         default:
             break;

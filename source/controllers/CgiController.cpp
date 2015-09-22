@@ -30,7 +30,6 @@
 
 #include <TAppSettings>
 #include <TWebApplication>
-#include <TSessionStore>
 #include <QDir>
 
 
@@ -45,6 +44,7 @@ const char VALID_CLIENT_ID[][255] = {
 CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
     : m_pParseCmd(NULL)
+    //, m_diffTime(0)
 {
 
     tDebug("\n  --------------------------- start -----------------------------------");
@@ -59,6 +59,8 @@ CgiController::CgiController(/*const CgiController &other*/)
 CgiController::~CgiController()
 {
     resetSessionTime();
+    //modifySessionTime();
+
     if(m_pParseCmd)
         delete m_pParseCmd;
 
@@ -99,7 +101,6 @@ void CgiController::cgiResponse() {
     if(!m_pParseCmd)
         return;
 
-    //    QString key = Tf::appSettings()->value(Tf::SessionCsrfProtectionKey).toString();
     RenderResponse *pRrep = NULL;
     CGI_COMMAND cmd = static_cast<CGI_COMMAND>(m_pParseCmd->getCGICmd());
     pRrep = getRenderResponseBaseInstance(httpRequest(), cmd);
@@ -222,6 +223,9 @@ void CgiController::cgiResponse() {
         break;
     }
 
+    //m_diffTime = pRrep->getSessionDiff();
+    //m_sessionId = session().id();
+
     if(pRrep)
         delete pRrep;
 
@@ -268,6 +272,32 @@ void CgiController::resetSessionTime() {
         }
     }
 }
+
+
+//bool CgiController::modifySessionTime()
+//{
+//     QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
+
+//    if((!m_sessionId.isEmpty() && m_diffTime != 0) || paraCmd == "ui_check_wto") {
+//        QFileInfo sessionFileInfo(Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator() + m_sessionId);
+//        if(sessionFileInfo.exists()) {
+
+//            struct timeval tvp[2];
+//            tvp[0].tv_sec = sessionFileInfo.lastRead().toTime_t();
+//            tvp[1].tv_sec = sessionFileInfo.lastModified().toTime_t() + m_diffTime;
+//            int r = utimes(sessionFileInfo.absoluteFilePath().toLocal8Bit().data(), tvp);
+
+//            if(r == -1) {
+//                tDebug("CgiController::modifySessionTime - failed, m_diffTime: %d", m_diffTime);
+//                return false;
+//            }
+//            tDebug("CgiController::modifySessionTime - successfully, m_diffTime: %d", m_diffTime);
+//            return true;
+//        }
+//    }
+
+//    return false;
+//}
 
 RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)
 {
