@@ -261,16 +261,25 @@ void RenderResponseSysMngm::generateManualTime() {
     QString paraMin = m_pReq->allParameters().value("f_min").toString();
     QString paraSec = m_pReq->allParameters().value("f_sec").toString();
 
-    QString timeToSet = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
-                               QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt())).toString("yyyy-MM-dd hh:mm:ss");
+    QDateTime manualTime = QDateTime(QDate(paraYear.toInt(), paraMonth.toInt(), paraDay.toInt()),
+            QTime(paraHour.toInt(), paraMin.toInt(), paraSec.toInt()));
+    QDateTime currentTime = QDateTime::currentDateTime();
+    //setSessionDiff(manualTime.toTime_t() - currentTime.toTime_t());
 
-    tDebug("set date/time: %s", timeToSet.toLocal8Bit().data());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " set " + timeToSet, true);
+    tDebug("set date/time: %s", manualTime.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data());
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " set " + manualTime.toString("yyyy-MM-dd hh:mm:ss"), true);
+
 }
 
 void RenderResponseSysMngm::generateTimezone() {
+
     QString paraTimezone = m_pReq->allParameters().value("f_timezone").toString();
+
+    //QDateTime currentTimeBefore = QDateTime::currentDateTime();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TIMEZONE_API + " " + paraTimezone, true);
+    //QDateTime currentTimeAfter = QDateTime::currentDateTime();
+
+    //setSessionDiff(currentTimeBefore.toTime_t() - currentTimeAfter.toTime_t());
 
 }
 
