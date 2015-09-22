@@ -823,13 +823,13 @@ void RenderResponseAppMngm::generateChkRefreshStatus()
     }
     QDomElement percentElement = doc.createElement("percent");
     root.appendChild(percentElement);
-    percentElement.appendChild(doc.createTextNode((percent == -1)?"":QString::number(percent)));
+    percentElement.appendChild(doc.createTextNode((percent == -1 || percent == 100)?"":QString::number(percent)));
     QDomElement typeElement = doc.createElement("type");
     root.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode((percent == -1)?"":"multimedia"));
+    typeElement.appendChild(doc.createTextNode((percent == -1 || percent == 100)?"":"multimedia"));
     QDomElement fileElement = doc.createElement("filename");
     root.appendChild(fileElement);
-    fileElement.appendChild(doc.createTextNode((percent == -1)?"":fileName));
+    fileElement.appendChild(doc.createTextNode((percent == -1 || percent == 100)?"":fileName));
     int status = 0;
     err = media.GetServerStatus(&status);
     if (err.isValid())
@@ -2353,7 +2353,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
     QDateTime curDatetime = QDateTime::currentDateTime();
-    if (r_info.recur_type == 0 && execat.length() > 0 && QString(execat) <= curDatetime.toString("yyyyMMddhhmm"))
+    if (m_pReq->parameter("backup_now") == "1" || (r_info.recur_type == 0 && execat.length() > 0 && QString(execat) <= curDatetime.toString("yyyyMMddhhmm")))
         StartRemoteTask(task_name.data());
 
     m_var = "N/A";
