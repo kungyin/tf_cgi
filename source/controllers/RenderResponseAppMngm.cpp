@@ -273,25 +273,9 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
             rowElement.appendChild(cellElement1);
             cellElement1.appendChild(doc.createTextNode(QString::number(i+1)));
 
-            QString folderPath = media.GetSelectedData()->value("folder_path").toString(), folderPathTrans = "Shared folder does not exist.";
-            bool valid = false;
-            QFile file_src(SHARE_INFO_FILE);
-            if (file_src.open(QIODevice::ReadOnly))
-            {
-                QTextStream in(&file_src);
-                while (!in.atEnd())
-                {
-                    QStringList list = in.readLine().split(":");
-                    if (!list.isEmpty() && list.length() == 2 && folderPath.startsWith(list.value(1)))
-                    {
-                        valid = true;
-                        folderPathTrans = folderPath;
-                        folderPathTrans.replace(list.value(1), list.value(0));
-                        break;
-                    }
-                }
-                file_src.close();
-            }
+            QString folderPath = media.GetSelectedData()->value("folder_path").toString(), folderPathTrans = folderPath;
+            bool valid = replaceVoltoRealPath(folderPathTrans, true);
+            if (!valid) folderPathTrans = "Shared folder does not exist.";
             QDomElement cellElement2 = doc.createElement("cell");
             rowElement.appendChild(cellElement2);
             cellElement2.appendChild(doc.createTextNode(folderPathTrans));
@@ -519,18 +503,7 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
             break;
         }
     }
-    QFile file_src(SHARE_INFO_FILE);
-    if (file_src.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file_src);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                paraDir.replace(list.value(1), list.value(0));
-        }
-        file_src.close();
-    }
+    replaceVoltoRealPath(paraDir, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -651,18 +624,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
         itemElement.appendChild(resElement);
         resElement.appendChild(doc.createTextNode("1"));
 
-        QFile file_src(SHARE_INFO_FILE);
-        if (file_src.open(QIODevice::ReadOnly))
-        {
-            QTextStream in(&file_src);
-            while (!in.atEnd())
-            {
-                QStringList list = in.readLine().split(":");
-                if (!list.isEmpty() && list.length() == 2)
-                    dir.replace(list.value(1), list.value(0));
-            }
-            file_src.close();
-        }
+        replaceVoltoRealPath(dir, true);
         QDomElement pathElement = doc.createElement("path");
         itemElement.appendChild(pathElement);
         pathElement.appendChild(doc.createTextNode(dir));
@@ -1375,38 +1337,13 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         root.appendChild(rowElement1);
         rowElement1.setAttribute("id", QString::number(i+1));
         QString src = QString(taskList[i].src);
-        if (!is_download && taskList[i].src[1] != '/')
-        {
-            QFile file_src(SHARE_INFO_FILE);
-            if (file_src.open(QIODevice::ReadOnly))
-            {
-                QTextStream in(&file_src);
-                while (!in.atEnd())
-                {
-                    QStringList list = in.readLine().split(":");
-                    if (!list.isEmpty() && list.length() == 2)
-                        src.replace(list.value(1), list.value(0));
-                }
-                file_src.close();
-            }
-        }
+        replaceVoltoRealPath(src, true);
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
         cellElement1.appendChild(doc.createTextNode(src));
 
         QString dest = QString(taskList[i].dest);
-        QFile file(SHARE_INFO_FILE);
-        if (file.open(QIODevice::ReadOnly))
-        {
-            QTextStream in(&file);
-            while (!in.atEnd())
-            {
-                QStringList list = in.readLine().split(":");
-                if (!list.isEmpty() && list.length() == 2)
-                    dest.replace(list.value(1), list.value(0));
-            }
-            file.close();
-        }
+        replaceVoltoRealPath(dest, true);
 
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
@@ -1536,18 +1473,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
     taskInfo.login_id = login_id.data();
     QString src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit());
-    QFile file_src(SHARE_INFO_FILE);
-    if (file_src.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file_src);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                src.replace(list.value(0), list.value(1));
-        }
-        file_src.close();
-    }
+    replaceVoltoRealPath(src);
     if (src.endsWith("/"))
     {
         if (taskInfo.is_file == 1) src.remove(src.length(), 1);
@@ -1564,18 +1490,7 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.src_pwd = src_pwd.data();
 
     QString dest = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
-    QFile file(SHARE_INFO_FILE);
-    if (file.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                dest.replace(list.value(0), list.value(1));
-        }
-        file.close();
-    }
+    replaceVoltoRealPath(dest);
     if (!dest.endsWith("/")) dest.append("/");
     QByteArray dest_b = dest.toUtf8();
     taskInfo.dest = dest_b.data();
@@ -1695,18 +1610,7 @@ void RenderResponseAppMngm::generateLocalBackupInfo() {
     srcElement.appendChild(doc.createTextNode(QString(task.src)));
 
     QString dest = QString(task.dest);
-    QFile file(SHARE_INFO_FILE);
-    if (file.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                dest.replace(list.value(1), list.value(0));
-        }
-        file.close();
-    }
+    replaceVoltoRealPath(dest, true);
     QDomElement destElement = doc.createElement("dest");
     root.appendChild(destElement);
     destElement.appendChild(doc.createTextNode(dest));
@@ -1805,21 +1709,7 @@ void RenderResponseAppMngm::generateLocalBackupTest() {
     QString src = QUrl::fromPercentEncoding(m_pReq->parameter("f_src").toLocal8Bit());
     bool isLan = false;
     if (!src.isEmpty() && src.length() > 2 && src.at(1) == '/') isLan = true;
-    if (!isLan)
-    {
-        QFile file(SHARE_INFO_FILE);
-        if (file.open(QIODevice::ReadOnly))
-        {
-            QTextStream in(&file);
-            while (!in.atEnd())
-            {
-                QStringList list = in.readLine().split(":");
-                if (!list.isEmpty() && list.length() == 2)
-                    src.replace(list.value(0), list.value(1));
-            }
-            file.close();
-        }
-    }
+    if (!isLan) replaceVoltoRealPath(src);
     QByteArray src_b = src.toUtf8();
     QByteArray lang = m_pReq->parameter("f_lang").toLocal8Bit();
     RESULT_STATUS resultSatus;
@@ -2083,18 +1973,7 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraTask = m_pReq->parameter("task");
     QString paraKeepExistFile = m_pReq->parameter("keep_exist_file");
     QString paraLocalPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
-    QFile file_src(SHARE_INFO_FILE);
-    if (file_src.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file_src);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                paraLocalPath.replace(list.value(0), list.value(1));
-        }
-        file_src.close();
-    }
+    replaceVoltoRealPath(paraLocalPath);
     QString paraIncremental = m_pReq->parameter("incremental");
     QString paraEncryption = m_pReq->parameter("encryption");
     QString paraRsyncUser = m_pReq->parameter("rsync_user");
@@ -2288,18 +2167,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     r_info.remote_path = remote_path.data();
 
     QString localPath = QUrl::fromPercentEncoding(m_pReq->parameter("local_path").toLocal8Bit());
-    QFile file(SHARE_INFO_FILE);
-    if (file.open(QIODevice::ReadOnly))
-    {
-        QTextStream in(&file);
-        while (!in.atEnd())
-        {
-            QStringList list = in.readLine().split(":");
-            if (!list.isEmpty() && list.length() == 2)
-                localPath.replace(list.value(0), list.value(1));
-        }
-        file.close();
-    }
+    replaceVoltoRealPath(localPath);
     if (!localPath.endsWith("/")) localPath.append("/");
     QByteArray local_path = QUrl::fromPercentEncoding(localPath.toLocal8Bit()).toUtf8();
     r_info.local_path = local_path.data();

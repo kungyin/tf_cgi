@@ -32,7 +32,7 @@ protected:
     QMap<QString, QString> getNasCfg(QString);
     QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
     QString sizeHuman(qint64);
-    void replaceVoltoRealPath(QString &);
+    bool replaceVoltoRealPath(QString &, bool reverse = false);
 
     inline int getTotalPages(int, int);
 
