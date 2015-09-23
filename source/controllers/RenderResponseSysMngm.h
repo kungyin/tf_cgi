@@ -82,6 +82,8 @@ private:
 
     void generateGetLiveFirm();
     void generateSetLiveFirm();
+    void generateCheckLiveFirm();
+    void generateGetLiveFirmVer();
 };
 
 

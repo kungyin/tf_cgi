@@ -205,6 +205,12 @@ void RenderResponseSysMngm::preRender() {
     case CMD_SET_LIVE_FIRM:
         generateSetLiveFirm();
         break;
+    case CMD_CHECK_LIVE_FIRM:
+        generateCheckLiveFirm();
+        break;
+    case CMD_GET_LIVE_FIRM_VER:
+        generateGetLiveFirmVer();
+        break;
 
     default:
         break;
@@ -1160,15 +1166,38 @@ void RenderResponseSysMngm::generateGetLiveFirm() {
 
 void RenderResponseSysMngm::generateSetLiveFirm() {
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " set_live_firm", true, ";");
+    m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
+
+}
+
+void RenderResponseSysMngm::generateCheckLiveFirm() {
+
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " set_live_firm", true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " check_live_firm");
 
     QDomElement root = doc.createElement("live_fw");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseSysMngm::generateGetLiveFirmVer() {
+
+    QDomDocument doc;
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " get_live_firm_ver");
+
+    QDomElement root = doc.createElement("live_fw");
+    doc.appendChild(root);
+    QDomElement verElement = doc.createElement("ver");
+    root.appendChild(verElement);
+    verElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
 
