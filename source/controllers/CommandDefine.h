@@ -328,9 +328,11 @@ enum CGI_COMMAND {
     CMD_GET_PERCENTAGE,                     /* cgi_get_percentage */
     CMD_GET_FIRMWARE_VERIFY,                /* cgi_get_firmware_verify */
     CMD_GET_UP_FW,                          /* cgi_get_uP_fw */
+    CMD_REBOOT,                             /* cgi_reboot */
     CMD_GET_LIVE_FIRM,                      /* get_live_firm */
     CMD_SET_LIVE_FIRM,                      /* set_live_firm */
-    CMD_REBOOT,                             /* cgi_reboot */
+    CMD_CHECK_LIVE_FIRM,                    /* check_live_firm */
+    CMD_GET_LIVE_FIRM_VER,                  /* get_live_firm_ver */
 
     CMD_SYS_MNGM_END,
 
@@ -875,6 +877,8 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_reboot",
     "get_live_firm",
     "set_live_firm",
+    "check_live_firm",
+    "get_live_firm_ver",
     "",
 
     /**** System Status ****/
@@ -1420,7 +1424,9 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_UP_FW,                    RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_uP_fw */
     { CMD_REBOOT,                       RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_reboot */
     { CMD_GET_LIVE_FIRM,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm */
-    { CMD_SET_LIVE_FIRM,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* set_live_firm */
+    { CMD_SET_LIVE_FIRM,                RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* set_live_firm */
+    { CMD_CHECK_LIVE_FIRM,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* check_live_firm */
+    { CMD_GET_LIVE_FIRM_VER,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm_ver */
 
 //    CMD_SYS_MNGM_END,
 
