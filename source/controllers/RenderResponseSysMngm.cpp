@@ -1155,10 +1155,10 @@ void RenderResponseSysMngm::generateGetLiveFirm() {
     statusElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement lastTimeElement = doc.createElement("last_time");
     root.appendChild(lastTimeElement);
-    lastTimeElement.appendChild(doc.createTextNode(apiOut.value(1) + ":" + apiOut.value(2)));
+    lastTimeElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement progressElement = doc.createElement("progress");
     root.appendChild(progressElement);
-    progressElement.appendChild(doc.createTextNode(apiOut.value(3)));
+    progressElement.appendChild(doc.createTextNode(apiOut.value(2)));
 
     m_var = doc.toString();
 
