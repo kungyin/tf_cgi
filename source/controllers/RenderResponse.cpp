@@ -301,13 +301,28 @@ QString RenderResponse::sizeHuman(qint64 size)
 }
 
 
-void RenderResponse::replaceVoltoRealPath(QString &path)
+bool RenderResponse::replaceVoltoRealPath(QString &path, bool reverse)
 {
+    bool ret = false;
     QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
     for(QString e : shareInfo) {
-        if(path.startsWith(e.split(":").value(0))) {
-            path.replace(e.split(":").value(0), e.split(":").value(1));
-            break;
+        QStringList list = e.split(":", QString::SkipEmptyParts);
+        if (list.isEmpty() || list.length() != 2) continue;
+        if (reverse)
+        {
+            if(path.startsWith(list.value(1))) {
+                path.replace(list.value(1), list.value(0));
+                ret = true;
+                break;
+            }
+        }
+        else
+        {
+            if(path.startsWith(list.value(0))) {
+                path.replace(list.value(0), list.value(1));
+                ret = true;
+                break;
+            }
         }
     }
 }
