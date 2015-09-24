@@ -211,6 +211,9 @@ void RenderResponseSysMngm::preRender() {
     case CMD_GET_LIVE_FIRM_VER:
         generateGetLiveFirmVer();
         break;
+    case CMD_FIRMWARE_DOWNLOAD:
+        generateFirmwareDownload();
+        break;
 
     default:
         break;
@@ -1166,8 +1169,9 @@ void RenderResponseSysMngm::generateGetLiveFirm() {
 
 void RenderResponseSysMngm::generateSetLiveFirm() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " set_live_firm", true, ";");
-    m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
+    if(startDetached(API_PATH + SCRIPT_MANAGER_API, QStringList()
+                                << "check_live_firm"))
+        ;
 
 }
 
@@ -1200,5 +1204,11 @@ void RenderResponseSysMngm::generateGetLiveFirmVer() {
     verElement.appendChild(doc.createTextNode(apiOut.value(0)));
 
     m_var = doc.toString();
+
+}
+
+void RenderResponseSysMngm::generateFirmwareDownload() {
+
+    m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
 
 }
