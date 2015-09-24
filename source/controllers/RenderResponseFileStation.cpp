@@ -2,116 +2,12 @@
 #include <QCryptographicHash>
 
 #include <unistd.h>
-#include <pwd.h>
-#include <grp.h>
+
 
 #include "RenderResponseFileStation.h"
 #include "FileSuffixDescription.h"
 
-bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = true)
-{
-    QDir dir;
-    dir.setPath(fromDir);
 
-    fromDir += QDir::separator();
-    toDir += QDir::separator();
-
-    foreach(QString copyFile, dir.entryList(QDir::Files)) {
-        QString from = fromDir + copyFile;
-        QString to = toDir + copyFile;
-
-        if (QFile::exists(to)) {
-            if (replaceOnConflit) {
-                if (!QFile::remove(to))
-                    return false;
-            }
-            else
-                continue;
-        }
-        if (!QFile::copy(from, to)) {
-            tDebug("Copy file fail: %s", from.toLocal8Bit().data());
-            return false;
-        }
-        else {
-            QFileInfo fromInfo = QFileInfo(from);
-            if(chown(to.toLocal8Bit().data(), fromInfo.ownerId(), fromInfo.groupId()) != 0) {
-                tDebug("chwon failed: %s", to.toLocal8Bit().data());
-                return false;
-            }
-        }
-    }
-
-    foreach(QString copyDir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-        QString from = fromDir + copyDir;
-        QString to = toDir + copyDir;
-
-        if (dir.mkpath(to)) {
-            QFile::setPermissions(to, (QFileDevice::Permission)0x0777);
-            QFileInfo fromInfo = QFileInfo(from);
-            if(chown(to.toLocal8Bit().data(), fromInfo.ownerId(), fromInfo.groupId()) != 0) {
-                tDebug("chwon failed: %s", to.toLocal8Bit().data());
-                return false;
-            }
-        }
-        else
-            return false;
-
-        if (!copyDirRecursive(from, to, replaceOnConflit))
-            return false;
-    }
-
-    return true;
-}
-
-bool getUid(const char *username, uint &uid) {
-    struct passwd pwd;
-    struct passwd *result;
-    char *buf;
-    long bufsize;
-
-    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (bufsize == -1)          /* Value was indeterminate */
-        bufsize = 16384;        /* Should be more than enough */
-
-    buf = (char *)malloc(bufsize);
-    if (buf == NULL) {
-        //perror("malloc");
-        return false;
-    }
-
-    getpwnam_r(username, &pwd, buf, bufsize, &result);
-    if (result != NULL) {
-        uid = pwd.pw_uid;
-        return true;
-    }
-
-    return false;
-}
-
-bool getGid(const char *groupName, uint &gid) {
-    struct group gwd;
-    struct group *result;
-    char *buf;
-    long bufsize;
-
-    bufsize = sysconf(_SC_GETGR_R_SIZE_MAX);
-    if (bufsize == -1)          /* Value was indeterminate */
-        bufsize = 16384;        /* Should be more than enough */
-
-    buf = (char *)malloc(bufsize);
-    if (buf == NULL) {
-        //perror("malloc");
-        return false;
-    }
-
-    getgrnam_r(groupName, &gwd, buf, bufsize, &result);
-    if (result != NULL) {
-        gid = gwd.gr_gid;
-        return true;
-    }
-
-    return false;
-}
 
 RenderResponseFileStation::RenderResponseFileStation(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -572,37 +468,7 @@ void RenderResponseFileStation::generateCompress() {
 
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = m_pReq->parameter("name");
-
-    QString ret = "error";
-
-    QString tmpPath(FILE_TMP_PATH);
-    if(QDir(tmpPath).exists()) {
-
-        //QFile::setPermissions(tmpPath, (QFileDevice::Permission)0x0777);
-        QString outFileName;
-
-        if(!QFileInfo(QDir(paraPath).absolutePath() + QDir::separator() + paraName).isDir()) {
-            outFileName = paraName;
-            QString dest = tmpPath + QDir::separator() + outFileName;
-            if(QFile::exists(dest))
-                QFile::remove(dest);
-            QFile::copy(QDir(paraPath).absolutePath() + QDir::separator() + outFileName,
-                        dest);
-        }
-        else {
-            outFileName = paraName + ".zip";
-            QString currentPath = QDir::currentPath();
-            QDir::setCurrent(paraPath);
-            QString compressCmd = "zip -FSr \"%1/%2\" \"%2\"";
-            getAPIStdOut(compressCmd.arg(tmpPath).arg(paraName), false, "", true);
-            QDir::setCurrent(currentPath);
-        }
-
-        QFileInfo zipFileInfo(tmpPath + QDir::separator() + outFileName);
-        if(zipFileInfo.exists())
-            ret = "ok";
-
-    }
+    QString ret = compress(paraPath, paraName) ? "ok" : "error";
 
     QDomElement root = doc.createElement("result");
     doc.appendChild(root);
@@ -632,37 +498,6 @@ void RenderResponseFileStation::generateDownload() {
             m_var = file.absoluteFilePath();
     }
 
-}
-
-bool RenderResponseFileStation::copy(QString &source, QString &dest) {
-
-    QFileInfo sourceInfo(source);
-    if(!dest.endsWith(QDir::separator()))
-        dest += QDir::separator();
-    dest += sourceInfo.fileName();
-    if(sourceInfo.isDir()) {
-        if (QDir().mkpath(dest)) {
-            QFile::setPermissions(dest, (QFileDevice::Permission)0x0777);
-            QFileInfo sourceInfo = QFileInfo(source);
-            if(chown(dest.toLocal8Bit().data(), sourceInfo.ownerId(), sourceInfo.groupId()) != 0) {
-                tDebug("chwon failed: %s", dest.toLocal8Bit().data());
-                return false;
-            }
-            return copyDirRecursive(source, dest);
-        }
-    }
-    else {
-        bool bCopy = QFile::copy(source, dest);
-        tDebug("%s, %s", source.toLocal8Bit().data(), dest.toLocal8Bit().data());
-        QFileInfo sourceInfo = QFileInfo(source);
-        if(chown(dest.toLocal8Bit().data(), sourceInfo.ownerId(), sourceInfo.groupId()) != 0) {
-            tDebug("chwon failed: %s", dest.toLocal8Bit().data());
-            bCopy = false;
-        }
-        return bCopy;
-    }
-
-    return false;
 }
 
 void RenderResponseFileStation::generateCp() {
@@ -696,16 +531,7 @@ void RenderResponseFileStation::generateMove() {
     QString dest = paraPath;
     replaceVoltoRealPath(dest);
 
-    bool bRemove = false;
-    if(copy(paraSourcePath, dest)) {
-        QFileInfo fileInfo(paraSourcePath);
-        if(fileInfo.isDir())
-            bRemove = QDir(paraSourcePath).removeRecursively();
-        else
-            bRemove = QFile(paraSourcePath).remove();
-    }
-
-    QString ret = bRemove ? "ok" : "error";
+    QString ret = move(paraSourcePath, dest) ? "ok" : "error";
 
     QDomElement root = doc.createElement("result");
     doc.appendChild(root);
@@ -721,14 +547,7 @@ void RenderResponseFileStation::generateDel() {
     QDomDocument doc;
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
 
-    QFileInfo fileInfo(paraPath);
-    bool bRemove = false;
-    if(fileInfo.isDir())
-        bRemove = QDir(paraPath).removeRecursively();
-    else
-        bRemove = QFile(paraPath).remove();
-
-    QString ret = bRemove ? "ok" : "error";
+    QString ret = remove(paraPath) ? "ok" : "error";
 
     QDomElement root = doc.createElement("result");
     doc.appendChild(root);

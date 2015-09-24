@@ -18,6 +18,7 @@ public:
 public slots:
     void process();
     void processGoogleDrive();
+    void processMydlink();
     void renderTypeChanged(RENDER_TYPE);
 
 private:
@@ -28,6 +29,7 @@ private:
     //bool modifySessionTime();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
     bool isValidClient(bool bCookiesOnly = false);
+    bool isValidClientWithPwd();
     QMap<QString, QList<QDateTime>> map;
 
     ParseCmd *m_pParseCmd;

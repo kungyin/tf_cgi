@@ -1,9 +1,9 @@
 #ifndef RENDERRESPONSEFILESTATION_H
 #define RENDERRESPONSEFILESTATION_H
 
-#include "RenderResponse.h"
+#include "RenderResponseFileOpBase.h"
 
-class T_CONTROLLER_EXPORT RenderResponseFileStation : public RenderResponse {
+class T_CONTROLLER_EXPORT RenderResponseFileStation : public RenderResponseFileOpBase {
     Q_OBJECT
 
 public:
@@ -14,7 +14,6 @@ public:
 
 private:
     QString getFileDescription(QString &);
-    bool copy(QString &, QString &);
     bool unArchive(QString &, QString &, QString);
     QString getSecretPath(QString);
 

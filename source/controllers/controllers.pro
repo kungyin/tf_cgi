@@ -49,7 +49,6 @@ HEADERS += applicationcontroller.h \
     RenderResponseFtp.h \
     RenderResponseTimeMachine.h \
     RenderResponseSetupWizard.h \
-    RenderResponseAppDownloads.h \
     ext_libs/inc/http_ftp_download.h \
     RenderResponseAddOn.h \
     Databaseobject.h \
@@ -61,7 +60,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseS3.h \
     RenderResponseGoogleDrive.h \
     RenderResponseDropbox.h \
-    RenderResponseAirplay.h
+    RenderResponseAirplay.h \
+    RenderResponseFileOpBase.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -77,7 +77,6 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseFtp.cpp \
     RenderResponseTimeMachine.cpp \
     RenderResponseSetupWizard.cpp \
-    RenderResponseAppDownloads.cpp \
     RenderResponseAddOn.cpp \
     Databaseobject.cpp \
     RenderResponseDashboard.cpp \
@@ -87,4 +86,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseS3.cpp \
     RenderResponseGoogleDrive.cpp \
     RenderResponseDropbox.cpp \
-    RenderResponseAirplay.cpp
+    RenderResponseAirplay.cpp \
+    RenderResponseFileOpBase.cpp

@@ -1,9 +1,9 @@
 #ifndef RENDERRESPONSEMYDLINK_H
 #define RENDERRESPONSEMYDLINK_H
 
-#include "RenderResponse.h"
+#include "RenderResponseFileOpBase.h"
 
-class T_CONTROLLER_EXPORT RenderResponseMyDlink : public RenderResponse {
+class T_CONTROLLER_EXPORT RenderResponseMyDlink : public RenderResponseFileOpBase {
     Q_OBJECT
 
 public:
@@ -14,6 +14,15 @@ public:
 
 private:
     void generateInfo();
+    void generateLogin();
+    void generateSetDeviceName();
+    void generateGetDeviceInfo();
+    void generateListVolume();
+    void generateListFolder();
+
+    bool isLogin();
+    void generatePrefix(QDomDocument &);
+    bool m_bLoginStatus;
 
 };
 

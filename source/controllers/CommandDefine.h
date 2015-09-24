@@ -19,6 +19,7 @@ enum COMMAND_ALLOW {
     LOGIN_CMDS      =   1,
     OPENED_CMDS     =   1 << 1,
     COOKIE_REQ_CMDS =   1 << 2,  // login with cookie required.
+    PASSWD_REQ_CMDS =   1 << 3,  // Use username and password.
 };
 
 enum CGI_COMMAND {
@@ -557,12 +558,14 @@ enum CGI_COMMAND {
 enum SPECIAL_CMD_GROUP {
     CMD_GRP_NONE = 0,
     CMD_GRP_GOOGLE_DRIVE,
+    CMD_GRP_MYDLINK
 };
 
 const int CMD_GROUP_SPACE[][3] {
     /* group_name,                  start,                  end */
-    { CMD_GRP_NONE,                 0,                      CMD_SIZE - 1   },
-    { CMD_GRP_GOOGLE_DRIVE,         CMD_GD_1,               CMD_GD_END     },
+    { CMD_GRP_NONE,                 0,                      CMD_SIZE - 1        },
+    { CMD_GRP_GOOGLE_DRIVE,         CMD_GD_1,               CMD_GD_END          },
+    { CMD_GRP_MYDLINK,              CMD_1,                  CMD_MYDLINK_END     },
 };
 
 const char CGI_PARA_COMMANDS[][255] = {
@@ -1424,7 +1427,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_UP_FW,                    RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_get_uP_fw */
     { CMD_REBOOT,                       RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* cgi_reboot */
     { CMD_GET_LIVE_FIRM,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm */
-    { CMD_SET_LIVE_FIRM,                RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* set_live_firm */
+    { CMD_SET_LIVE_FIRM,                RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* set_live_firm */
     { CMD_CHECK_LIVE_FIRM,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* check_live_firm */
     { CMD_GET_LIVE_FIRM_VER,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm_ver */
 
@@ -1617,28 +1620,28 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_AIRPLAY_STOP,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_airplay_stop */
     //CMD_AIRPLAY_END,
 
-    { CMD_1,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 1 */
-    { CMD_2,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 2 */
-    { CMD_3,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 3 */
-    { CMD_4,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 4 */
-    { CMD_5,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 5 */
-    { CMD_6,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 6 */
-    { CMD_7,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 7 */
-    { CMD_8,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 8 */
-    { CMD_9,                             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 9 */
-    { CMD_10,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 10 */
-    { CMD_11,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 11 */
-    { CMD_12,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 12 */
-    { CMD_13,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 13 */
-    { CMD_14,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 14 */
-    { CMD_15,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 15 */
-    { CMD_16,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 16 */
-    { CMD_17,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 17 */
-    { CMD_18,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 18 */
-    { CMD_19,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 19 */
-    { CMD_20,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 20 */
-    { CMD_21,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 21 */
-    { CMD_22,                            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* 22 */
+    { CMD_1,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 1 */
+    { CMD_2,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 2 */
+    { CMD_3,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 3 */
+    { CMD_4,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 4 */
+    { CMD_5,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 5 */
+    { CMD_6,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
+    { CMD_7,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
+    { CMD_8,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 8 */
+    { CMD_9,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 9 */
+    { CMD_10,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 10 */
+    { CMD_11,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 11 */
+    { CMD_12,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 12 */
+    { CMD_13,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 13 */
+    { CMD_14,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 14 */
+    { CMD_15,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 15 */
+    { CMD_16,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 16 */
+    { CMD_17,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 17 */
+    { CMD_18,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 18 */
+    { CMD_19,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 19 */
+    { CMD_20,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 20 */
+    { CMD_21,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 21 */
+    { CMD_22,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 22 */
 
     //CMD_MYDLINK_END,
 

@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#define LOGIN_TIMOUT 1800
+const QString MYDLINK_VERSION       =   "1.8";
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_SCANDISK_API   =   "scandisk";

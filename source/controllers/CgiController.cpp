@@ -17,7 +17,6 @@
 #include "RenderResponseFtp.h"
 #include "RenderResponseTimeMachine.h"
 #include "RenderResponseSetupWizard.h"
-#include "RenderResponseAppDownloads.h"
 #include "RenderResponseAddOn.h"
 #include "RenderResponseDashboard.h"
 #include "RenderResponseFileStation.h"
@@ -78,6 +77,11 @@ void CgiController::processGoogleDrive() {
     cgiResponse();
 }
 
+void CgiController::processMydlink() {
+    cgiInit(CMD_GRP_MYDLINK);
+    cgiResponse();
+}
+
 void CgiController::cgiInit(int group) {
     /* Parse command */
     QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
@@ -92,7 +96,14 @@ void CgiController::cgiInit(int group) {
             return;
         }
     }
+    else
 #endif
+//    if(m_pParseCmd->getFilterType() == PASSWD_REQ_CMDS) {
+//        if(!isValidClientWithPwd()) {
+//            renderErrorResponse(Tf::NotFound);
+//            return;
+//        }
+//    }
 
 }
 
@@ -306,8 +317,7 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
 
     RenderResponse *pRrep = NULL;
     if(cmd == CMD_NONE) {
-        if( req.header().path().contains("info.cgi") ||
-            req.header().path().contains("mydlink.cgi"))
+        if( req.header().path().contains("info.cgi"))
             pRrep = new RenderResponseMyDlink(req, cmd);
         else
             tError("CgiController::index() -- command: (null) is an invalided command");
@@ -334,8 +344,6 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseTimeMachine(req, cmd);
     else if(cmd < CMD_SETUP_WIZARD_END)
         pRrep = new RenderResponseSetupWizard(req, cmd);
-    else if(cmd < CMD_APP_DOWNLOAD_END)
-        pRrep = new RenderResponseAppDownloads(req, cmd);
     else if(cmd < CMD_ADD_ON_END)
         pRrep = new RenderResponseAddOn(req, cmd);
     else if(cmd < CMD_DASHBOARD_END)
@@ -352,6 +360,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseDropbox(req, cmd);
     else if(cmd < CMD_AIRPLAY_END)
         pRrep = new RenderResponseAirplay(req, cmd);
+    else if(cmd < CMD_MYDLINK_END)
+        pRrep = new RenderResponseMyDlink(req, cmd);
 
     return pRrep;
 
@@ -416,5 +426,10 @@ bool CgiController::isValidClient(bool bCookiesOnly) {
 
     return bValidClient;
 }
+
+bool CgiController::isValidClientWithPwd() {
+    return true;
+}
+
 
 T_REGISTER_CONTROLLER(cgicontroller);
