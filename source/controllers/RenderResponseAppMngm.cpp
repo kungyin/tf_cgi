@@ -781,7 +781,7 @@ void RenderResponseAppMngm::generateChkRefreshStatus()
     if (err.isValid())
     {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
-        return;
+        //return;
     }
     QDomElement percentElement = doc.createElement("percent");
     root.appendChild(percentElement);
