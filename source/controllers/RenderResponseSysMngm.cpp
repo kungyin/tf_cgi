@@ -1209,6 +1209,7 @@ void RenderResponseSysMngm::generateGetLiveFirmVer() {
 
 void RenderResponseSysMngm::generateFirmwareDownload() {
 
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_firmware_download");
     m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
 
 }
