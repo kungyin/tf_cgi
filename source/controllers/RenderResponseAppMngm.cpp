@@ -1430,22 +1430,25 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
 }
 
-/* todo */
 void RenderResponseAppMngm::generateLocalBackupSambaFormat() {
     QDomDocument doc;
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_FTP_API + " -g codepage");
+    QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
-    //for
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
+    for(QString e : shareInfo) {
+        QStringList list = e.split(":", QString::SkipEmptyParts);
+        if (list.isEmpty() || list.length() != 2) continue;
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
 
-    QDomElement volElement = doc.createElement("vol");
-    itemElement.appendChild(volElement);
-    volElement.appendChild(doc.createTextNode("Volume_1"));
+        QDomElement volElement = doc.createElement("vol");
+        itemElement.appendChild(volElement);
+        volElement.appendChild(doc.createTextNode(list.value(0)));
+    }
 
     m_var = doc.toString();
 
@@ -1474,14 +1477,12 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.login_id = login_id.data();
     QString src = QUrl::fromPercentEncoding(m_pReq->parameter((taskInfo.is_download == 1)?"f_URL":"f_url").toLocal8Bit());
     replaceVoltoRealPath(src);
-    if (src.endsWith("/"))
-    {
-        if (taskInfo.is_file == 1) src.remove(src.length(), 1);
-    }
-    else
-    {
-        if (taskInfo.is_file == 0) src.append("/");
-    }
+    if (src.endsWith("/")) {if (taskInfo.is_file == 1) src.remove(src.length(), 1);}
+    else {if (taskInfo.is_file == 0) src.append("/");}
+    bool user_wrong = true;
+    QFileInfo info(src);
+    if ((info.isDir() && taskInfo.is_file == 0) || (!info.isDir() && taskInfo.is_file == 1)) user_wrong = false;
+
     QByteArray src_b = src.toUtf8();
     taskInfo.src = src_b.data();
     QByteArray src_user = QUrl::fromPercentEncoding(m_pReq->parameter("f_user").toLocal8Bit()).toUtf8();
@@ -1553,8 +1554,17 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     else
     {
         QDateTime curDatetime = QDateTime::currentDateTime();
-        if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") <= curDatetime.toString("yyyyMMddhhmm"))
-            StartTask(taskId);
+        if (user_wrong)
+        {
+            QString status = "4";
+            QString comment = status + curDatetime.toString("yyyyMMddhhmm");
+            UpdateXmlStatus(taskId, status.toUtf8().data(), comment.toUtf8().data());
+        }
+        else
+        {
+            if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") <= curDatetime.toString("yyyyMMddhhmm"))
+                StartTask(taskId);
+        }
     }
 
     if(bAdd && taskId)
