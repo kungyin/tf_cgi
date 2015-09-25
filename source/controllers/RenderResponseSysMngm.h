@@ -84,6 +84,8 @@ private:
     void generateSetLiveFirm();
     void generateCheckLiveFirm();
     void generateGetLiveFirmVer();
+    void generateFirmwareDownload();
+
 };
 
 

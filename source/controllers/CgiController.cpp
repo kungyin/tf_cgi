@@ -207,8 +207,7 @@ void CgiController::cgiResponse() {
         break;
     case RENDER_TYPE_USER_LOGOUT:
     {
-        RenderResponseHome *pRrepHome = qobject_cast<RenderResponseHome *>(pRrep);
-        session().remove(pRrepHome->getUserLogout());
+        session().reset();
         redirect(QUrl(pRrep->getVar().toString()));
         break;
     }

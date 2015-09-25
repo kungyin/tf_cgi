@@ -19,6 +19,14 @@ private:
     void generateGetDeviceInfo();
     void generateListVolume();
     void generateListFolder();
+    void generateDownload();
+    void generateMove();
+    void generateCopy();
+    void generateRename();
+    void generateDu();
+    void generateCompress();
+    void generateMkdir();
+    void generateGetLog();
 
     bool isLogin();
     void generatePrefix(QDomDocument &);

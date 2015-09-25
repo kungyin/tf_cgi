@@ -58,6 +58,7 @@ const QString SSH_AUTO_ROOT         =   "ssh -i /etc/ssh/dlink_dsa_key -o Strict
 const QString API_PATH = "";
 const QString ENV_PATH = "";
 const QString FILE_TMP_PATH = "/var/upload";
+const QString MYDLINK_TMP_PATH = "/var/www/mydlink/tmp";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backup.tgz";
 const QString FIRMWARE_FILE = "/mnt/HD_a4/genius_fw.bin";
@@ -80,6 +81,7 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
 const QString FILE_TMP_PATH = "./tmp";
+const QString MYDLINK_TMP_PATH = "./tmp";
 const QString SYS_CONFIG_FILE = API_PATH + "sys_config";
 const QString USER_IMPORT_FILE = API_PATH + "backup.tgz";
 const QString FIRMWARE_FILE = API_PATH + "genius_fw.bin";
@@ -95,6 +97,10 @@ const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 const QString SHARE_INFO_FILE = API_PATH + "share_info";
 const QString PACKAGE_FILE = API_PATH + "pkg.bin";
 
+
 #endif
+
+const QString MYDLINK_LOG_FILE = MYDLINK_TMP_PATH + "/upload_log.txt";
+
 
 #endif // APPDEFINE_H

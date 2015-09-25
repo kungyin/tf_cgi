@@ -1,13 +1,10 @@
 #include <QDir>
-#include <QCryptographicHash>
 
 #include <unistd.h>
 
 
 #include "RenderResponseFileStation.h"
 #include "FileSuffixDescription.h"
-
-
 
 RenderResponseFileStation::RenderResponseFileStation(THttpRequest &req, CGI_COMMAND cmd)
 {
@@ -230,22 +227,7 @@ void RenderResponseFileStation::generateOpenNewFolder() {
     QString paraFilterFile = m_pReq->parameter("filter_file");
     QString paraRootPath = m_pReq->parameter("root_path");
 
-    QDir dir(paraDir);
-    bool bMkdir = dir.mkdir(paraFileName);
-    if(bMkdir) {
-        QFileInfo fileInfo = QFileInfo(dir.absolutePath() + QDir::separator() + paraFileName);
-        QFile(fileInfo.absoluteFilePath()).setPermissions((QFileDevice::Permission)0x0777);
-
-        uint gid, uid;
-        if(getGid("allaccount", gid) && getUid("nobody", uid)) {
-            if(chown(fileInfo.absoluteFilePath().toLocal8Bit().data(), uid, gid) != 0)
-                tDebug("chwon failed: %s", fileInfo.absolutePath().toLocal8Bit().data());
-        }
-        else
-            tDebug("UID or GID is not found.");
-    }
-    QString ret = bMkdir ? "ok" : "error";
-
+    QString ret = mkdir(paraDir, paraFileName) ? "ok" : "error";
     QDomElement root = doc.createElement("mkdir");
     doc.appendChild(root);
 
@@ -736,33 +718,6 @@ void RenderResponseFileStation::generateUntar() {
     m_var = doc.toString();
 
 }
-
-/* lighttpd secret dwonload:
- * 1. a secret string (user supplied)
- * 2. <rel-path> (starts with /)
- * 3. <timestamp-in-hex>
- */
-QString RenderResponseFileStation::getSecretPath(QString filePath) {
-    QString secDownloadPath;
-
-    if(QFileInfo(filePath).exists()) {
-        filePath.remove("/mnt");
-        QByteArray hexTime = QByteArray::number(QDateTime::currentDateTime().toTime_t(), 16);
-        QByteArray hashResult = QCryptographicHash::hash("TNo5FFCWt1gT" +
-                                                         filePath.toLocal8Bit() +
-                                                         hexTime,
-                                                         QCryptographicHash::Md5)
-                                                        .toHex();
-
-        secDownloadPath = QString("/sdownload/%1/%2%3")
-                .arg(QString(hashResult))
-                .arg(QString(hexTime))
-                .arg(filePath);
-    }
-
-    return secDownloadPath;
-}
-
 
 void RenderResponseFileStation::generateGetSecDownloadUrl() {
 

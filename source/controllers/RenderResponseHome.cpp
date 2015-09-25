@@ -233,15 +233,14 @@ void RenderResponseHome::generateLogin() {
 
 void RenderResponseHome::generateLogout() {
 
-    QString paraUsername;
-    QString paraOS;
+//    QString paraUsername;
+//    QString paraOS;
 
-    if(m_pReq->allParameters().contains("name"))
-        paraUsername = m_pReq->allParameters().value("name").toString();
-    if(m_pReq->allParameters().contains("os"))
-        paraOS = m_pReq->allParameters().value("os").toString();
+//    if(m_pReq->allParameters().contains("name"))
+//        paraUsername = m_pReq->allParameters().value("name").toString();
+//    if(m_pReq->allParameters().contains("os"))
+//        paraOS = m_pReq->allParameters().value("os").toString();
 
-    m_userLogout = paraUsername;
     m_var = "..";
 
 }

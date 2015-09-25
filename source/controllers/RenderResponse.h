@@ -34,7 +34,7 @@ protected:
     QString sizeHuman(qint64);
     bool replaceVoltoRealPath(QString &, bool reverse = false);
 
-    inline int getTotalPages(int, int);
+    int getTotalPages(int, int);
 
     CGI_COMMAND m_cmd;
     QVariant m_var;

@@ -15,12 +15,17 @@ protected:
     bool getGid(const char *, uint &);
 
     bool compress(const QString &, const QString &);
+    QString compressTgz(const QString &, const QString &);
     bool copy(const QString &, const QString &);
     bool move(const QString &, const QString &);
     bool remove(const QString &);
+    bool mkdir(const QString &, const QString &);
+
+    QString getSecretPath(QString);
+    quint64 getSize(const QString &);
+
 
 private:
-    bool copyDirRecursive(QString, QString, bool replaceOnConflit = true);
 
 };
 

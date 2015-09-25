@@ -334,6 +334,7 @@ enum CGI_COMMAND {
     CMD_SET_LIVE_FIRM,                      /* set_live_firm */
     CMD_CHECK_LIVE_FIRM,                    /* check_live_firm */
     CMD_GET_LIVE_FIRM_VER,                  /* get_live_firm_ver */
+    CMD_FIRMWARE_DOWNLOAD,                  /* cgi_firmware_download */
 
     CMD_SYS_MNGM_END,
 
@@ -882,6 +883,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "set_live_firm",
     "check_live_firm",
     "get_live_firm_ver",
+    "cgi_firmware_download",
     "",
 
     /**** System Status ****/
@@ -1430,6 +1432,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SET_LIVE_FIRM,                RENDER_TYPE_REDIRECT,       COOKIE_REQ_CMDS      },         /* set_live_firm */
     { CMD_CHECK_LIVE_FIRM,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* check_live_firm */
     { CMD_GET_LIVE_FIRM_VER,            RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* get_live_firm_ver */
+    { CMD_FIRMWARE_DOWNLOAD,            RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_firmware_download */
 
 //    CMD_SYS_MNGM_END,
 
@@ -1625,7 +1628,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_3,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 3 */
     { CMD_4,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 4 */
     { CMD_5,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 5 */
-    { CMD_6,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
+    { CMD_6,                             RENDER_TYPE_FILE,          PASSWD_REQ_CMDS          },         /* 6 */
     { CMD_7,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
     { CMD_8,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 8 */
     { CMD_9,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 9 */
