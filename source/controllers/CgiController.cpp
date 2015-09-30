@@ -96,7 +96,6 @@ void CgiController::cgiInit(int group) {
             return;
         }
     }
-    else
 #endif
 //    if(m_pParseCmd->getFilterType() == PASSWD_REQ_CMDS) {
 //        if(!isValidClientWithPwd()) {
