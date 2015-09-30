@@ -25,6 +25,7 @@ public:
     virtual QSqlError UpdateData(int id, QString condition);
     virtual QSqlError InsertData(QString condition);
     virtual QSqlError DeleteData(int id);
+    int GetTotalSize(QString condition, QString table = "tbl_files");
 
     virtual int GetSize() { if (GetSelectedData() != NULL && GetSelectedData()->isSelect()) return GetSelectedData()->size(); else return -1; }
 
@@ -44,7 +45,7 @@ public:
 
     QSqlError SelectDataFromPara(QString paraPage, QString paraRp, QString paraSortname, QString paraSortorder, QString paraQuery, QString paraQType,
                          QString paraField, QString paraUser, QString paraLogFile, QString paraDateFrom, QString paraDateTo, QString paraViewSeverity,
-                         QString paraLogHost, QString paraLogFacility, QString paraLogApplication, QString paraKeyword);
+                         QString paraLogHost, QString paraLogFacility, QString paraLogApplication, QString paraKeyword, int *totalCnt);
     QSqlError SelectAllServerity(QString database);
     QSqlError SelectAllHost(QString database);
     QSqlError SelectAllFacility(QString database);
@@ -59,7 +60,7 @@ class T_CONTROLLER_EXPORT MediaDbDataProvider : public DbDataProvider
 public:
     MediaDbDataProvider();
 
-    QSqlError SelectFolderList(QString paraPage, QString paraRp);
+    QSqlError SelectFolderList(QString paraPage, QString paraRp, int *totalCnt);
     QSqlError GetServerStatus(int *status);
     QSqlError GetPercentAndFile(int *percent, QString *filePath);
     QStringList GetFolderAll();

@@ -325,4 +325,5 @@ bool RenderResponse::replaceVoltoRealPath(QString &path, bool reverse)
             }
         }
     }
+    return ret;
 }
