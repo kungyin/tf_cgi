@@ -63,6 +63,19 @@ QSqlError DbDataProvider::SelectData(QString selected, QString condition, QStrin
     return m_Db.lastError();
 }
 
+int DbDataProvider::GetTotalSize(QString condition, QString table)
+{
+    int ret = 0;
+    if (!m_Db.isOpen()) m_Db.open();
+    QSqlQuery q(m_Db);
+    QString sql = QString("select count(*) as a from %1 %2").arg((m_DbType == DB_TYPE_SYSLOG)?"SystemEvents":table, ((condition.length() > 0)?condition:""));
+    q.prepare(sql);
+    if (q.exec() && q.next())
+        ret = q.value("a").toInt();
+    m_Db.close();
+    return ret;
+}
+
 QString DbDataProvider::DumpData(QString database, QString selected, QString condition, QString limit)
 {
     QProcess process, processZip;
@@ -122,7 +135,7 @@ SyslogDbDataProvider::SyslogDbDataProvider()
 
 QSqlError SyslogDbDataProvider::SelectDataFromPara(QString paraPage, QString paraRp, QString paraSortname, QString paraSortorder, QString paraQuery, QString paraQType,
                      QString paraField, QString paraUser, QString paraLogFile, QString paraDateFrom, QString paraDateTo, QString paraViewSeverity,
-                     QString paraLogHost, QString paraLogFacility, QString paraLogApplication, QString paraKeyword)
+                     QString paraLogHost, QString paraLogFacility, QString paraLogApplication, QString paraKeyword, int *totalCnt)
 {
     QString condition = "where ", limit = "";
     if (!paraLogFile.isNull() && !paraLogFile.isEmpty()) DbDataProvider::SetDatabase(paraLogFile);
@@ -163,6 +176,7 @@ QSqlError SyslogDbDataProvider::SelectDataFromPara(QString paraPage, QString par
         int offset = (paraPage.toInt() - 1) * paraRp.toInt();
         limit = QString("limit %1,%2 ").arg(QString::number(offset), paraRp);
     }
+    *totalCnt = DbDataProvider::GetTotalSize((condition.length() > 7)?condition:"");
     return DbDataProvider::SelectData("*", (condition.length() > 7)?condition:"", paraSortname, paraSortorder, limit);
 }
 
@@ -244,7 +258,7 @@ MediaDbDataProvider::MediaDbDataProvider()
 
 }
 
-QSqlError MediaDbDataProvider::SelectFolderList(QString paraPage, QString paraRp)
+QSqlError MediaDbDataProvider::SelectFolderList(QString paraPage, QString paraRp, int *totalCnt)
 {
     QString limit = "";
     if (!paraPage.isEmpty() && paraRp.length() > 0)
@@ -252,6 +266,7 @@ QSqlError MediaDbDataProvider::SelectFolderList(QString paraPage, QString paraRp
         int offset = (paraPage.toInt() - 1) * paraRp.toInt();
         limit = QString("limit %1,%2 ").arg(QString::number(offset), paraRp);
     }
+    *totalCnt = DbDataProvider::GetTotalSize("", "tbl_multimedia_folder");
     return DbDataProvider::SelectData("*", "", "", "", limit, "tbl_multimedia_folder");
 }
 

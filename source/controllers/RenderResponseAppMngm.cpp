@@ -248,8 +248,9 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
+    int totalCnt = 0;
     MediaDbDataProvider media;
-    QSqlError err = media.SelectFolderList(paraPage, paraRp);
+    QSqlError err = media.SelectFolderList(paraPage, paraRp, &totalCnt);
     if (err.isValid())
     {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
@@ -259,7 +260,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
 
     QString cellContent1 = "<a href=javascript:upnp_path_refresh_one('%1');><IMG border='0' "
                             "src='/web/images/refresh_over.png'></a>";
-    QString cellContent2 = "<IMG border='0' src='/web/images/%1.png'>";
+    QString cellContent2 = "<IMG border='0' src='/web/images/%1'>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -282,11 +283,11 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
 
             QDomElement cellElement3 = doc.createElement("cell");
             rowElement.appendChild(cellElement3);
-            cellElement3.appendChild(doc.createCDATASection((valid)?cellContent1.arg(media.GetSelectedData()->value("folder_id").toString()):cellContent2.arg("refresh_normal")));
+            cellElement3.appendChild(doc.createCDATASection((valid)?cellContent1.arg(media.GetSelectedData()->value("folder_id").toString()):cellContent2.arg("refresh_normal.PNG")));
 
             QDomElement cellElement4 = doc.createElement("cell");
             rowElement.appendChild(cellElement4);
-            cellElement4.appendChild(doc.createCDATASection(cellContent2.arg((valid)?"on":"status_fail")));
+            cellElement4.appendChild(doc.createCDATASection(cellContent2.arg((valid)?"on.png":"status_fail.png")));
 
             QDomElement cellElement5 = doc.createElement("cell");
             rowElement.appendChild(cellElement5);
@@ -302,7 +303,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode(QString::number(size)));
+    totalElement.appendChild(doc.createTextNode(QString::number(totalCnt)));
 
     m_var = doc.toString();
 
@@ -837,10 +838,11 @@ void RenderResponseAppMngm::generateSyslogSearch() {
     QString paraLogApplication = m_pReq->allParameters().value("log_application").toString();
     QString paraKeyword = m_pReq->allParameters().value("f_keyword").toString();
 
+    int totalCnt = 0;
     SyslogDbDataProvider sys;
     QSqlError err = sys.SelectDataFromPara(paraPage, paraRp, paraSortname, paraSortorder, paraQuery, paraQType, paraField,
                            paraUser, paraLogFile, paraDateFrom, paraDateTo, paraViewSeverity, paraLogHost,
-                           paraLogFacility, paraLogApplication, paraKeyword);
+                           paraLogFacility, paraLogApplication, paraKeyword, &totalCnt);
     if (err.isValid())
     {
         tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
@@ -916,7 +918,7 @@ void RenderResponseAppMngm::generateSyslogSearch() {
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
-    totalElement.appendChild(doc.createTextNode(QString::number(size)));
+    totalElement.appendChild(doc.createTextNode(QString::number(totalCnt)));
 
     m_var = doc.toString();
 
@@ -1363,7 +1365,9 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement1.appendChild(cellElement5);
-        cellElement5.appendChild(doc.createTextNode(QString(taskList[i].speed)));
+        QString speed = QString(taskList[i].speed);
+        if (speed == "0") speed += "KB";
+        cellElement5.appendChild(doc.createTextNode(speed));
 
         QDateTime execat = QDateTime::fromString(QString(taskList[i].execat), "yyyyMMddhhmm");
         QDomElement cellElement6 = doc.createElement("cell");
@@ -1412,7 +1416,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
 
         QDomElement cellElement10 = doc.createElement("cell");
         rowElement1.appendChild(cellElement10);
-        cellElement10.appendChild(doc.createTextNode(QString(taskList[i].speed)));
+        cellElement10.appendChild(doc.createTextNode(speed));
 
         FreeList(&taskList[i]);
 
