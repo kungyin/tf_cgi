@@ -103,6 +103,9 @@ void RenderResponseDisk::preRender() {
     case CMD_VE_LOAD_MODULE_STATE:
         generateVeLoadModuleState();
         break;
+    case CMD_VE_MOUNT_VOLUME:
+        generateVeMountVolume();
+        break;
 
     default:
         break;
@@ -624,7 +627,7 @@ void RenderResponseDisk::generateSmartSetSchedule() {
     QDomDocument doc;
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_schedule " +
-                                      allParametersToString());
+                                      allParametersToString(true, " ", ","));
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -883,6 +886,21 @@ void RenderResponseDisk::generateVeLoadModule() {
 void RenderResponseDisk::generateVeLoadModuleState() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Load_Module_State");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseDisk::generateVeMountVolume() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Volume " +
+                                      allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
