@@ -24,11 +24,9 @@ void RenderResponseMyDlink::preRender() {
     else {
         m_bLoginStatus = isLogin();
 
-
         switch(m_cmd) {
         case CMD_1:
             generateLogin();
-            tDebug("OOOOOOOOOOOOOO");
             break;
         case CMD_2:
             generateSetDeviceName();
@@ -36,9 +34,9 @@ void RenderResponseMyDlink::preRender() {
         case CMD_3:
             generateGetDeviceInfo();
             break;
-//        case CMD_4:
-//            generateListVolume();
-//            break;
+        case CMD_4:
+            generateListVolume();
+            break;
         case CMD_5:
             generateListFolder();
             break;
@@ -66,16 +64,9 @@ void RenderResponseMyDlink::preRender() {
         case CMD_14:
             generateMkdir();
             break;
-
-//        case CMD_12:
-//            generateDu();
-//            break;
-//        case CMD_12:
-//            generateDu();
-//            break;
-//        case CMD_12:
-//            generateDu();
-//            break;
+        case CMD_17:
+            generateRestart();
+            break;
         case CMD_20:
             generateGetLog();
             break;
@@ -87,19 +78,23 @@ void RenderResponseMyDlink::preRender() {
 
 }
 
-/* todo */
 void RenderResponseMyDlink::generateInfo() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
-    QString fmtOut = "Product=dlink-8B21F7\n"
-            "Model=DNS-320L-B\n"
-            "Version=1.01.0905.2014\n"
+    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
+    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
+    QMap<QString, QString> systemInfo = getNasCfg("system");
+
+    QString fmtOut = "Product=%1\n"
+            "Model=%2\n"
+            "Version=%3\n"
             "Build=\n"
-            "Macaddr=%1\n"
+            "Macaddr=%4\n"
             "Wireless=NO\n"
             "Ptz=";
 
-    QString ret = fmtOut.arg(apiOut.value(0));
+    QString ret = fmtOut.arg(apiOutDev.value(0), apiOutModel.value(0),
+                             systemInfo.value("sw_ver"), apiOutMac.value(0));
     m_var = ret;
 
 }
@@ -108,10 +103,10 @@ void RenderResponseMyDlink::generateInfo() {
 bool RenderResponseMyDlink::isLogin() {
 
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QString loginStr = "login#username=" + QByteArray::fromBase64(paraName.toLocal8Bit()) +
-            "#pwd=" + QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
+    QString loginStr = QByteArray::fromBase64(paraName.toLocal8Bit()) +
+            " " + QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api " + loginStr, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD + " " + loginStr, true);
     return apiOut.value(0) == "1" ? true : false;
 
 }
@@ -141,38 +136,40 @@ void RenderResponseMyDlink::generateLogin() {
 
 }
 
-/* todo */
 void RenderResponseMyDlink::generateSetDeviceName() {
 
     QDomDocument doc;
     generatePrefix(doc);
 
     QString paraDeviceName = QUrl::fromPercentEncoding(m_pReq->parameter("device_name").toLocal8Bit());
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " set ", true, ";");
+    QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+
+    QString paraToSet = " set %1 %2 %3";
+    QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + paraToSet
+                                         .arg(paraDeviceName)
+                                         .arg(apiOutGet.value(1))
+                                         .arg(apiOutGet.value(2)), true, ";");
 
     QDomElement root = doc.documentElement();
-    //if(m_bLoginStatus) {
+    if(m_bLoginStatus) {
         QDomElement versionElement = doc.createElement("version");
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
-    //}
-
-        QDomElement statusElement = doc.createElement("status");
-        root.appendChild(statusElement);
-        statusElement.appendChild(doc.createTextNode("0"));
+    }
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(apiOutSet.value(0)));
 
     m_var = doc.toString();
 
 }
 
-/* todo */
 void RenderResponseMyDlink::generateGetDeviceInfo() {
 
     QDomDocument doc;
     generatePrefix(doc);
 
     QString paraType = m_pReq->parameter("type").toLocal8Bit();
-    QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
 
     QDomElement root = doc.documentElement();
 
@@ -182,21 +179,260 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
 
         if(paraType == "1") {
+            QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+            QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
+            QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
+
             QDomElement deviceNameElement = doc.createElement("device_name");
             root.appendChild(deviceNameElement);
             deviceNameElement.appendChild(doc.createTextNode(apiOutDevice.value(0)));
             QDomElement modelNameElement = doc.createElement("model_name");
             root.appendChild(modelNameElement);
-            modelNameElement.appendChild(doc.createTextNode(""));
+            modelNameElement.appendChild(doc.createTextNode(apiOutModel.value(0)));
             QDomElement macElement = doc.createElement("mac");
             root.appendChild(macElement);
-            macElement.appendChild(doc.createTextNode(""));
+            macElement.appendChild(doc.createTextNode(apiOutMac.value(0)));
+        }
+        else if(paraType == "2") {
+            QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+            QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
+            QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
+            QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
+            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+            QMap<QString, QString> systemInfo = getNasCfg("system");
+
+            QDomElement memorySizeElement = doc.createElement("memroy_size");
+            root.appendChild(memorySizeElement);
+            memorySizeElement.appendChild(doc.createTextNode(apiOutDev.value(11)));
+            QDomElement sysTempElement = doc.createElement("system_temp");
+            root.appendChild(sysTempElement);
+            sysTempElement.appendChild(doc.createTextNode(apiOutTemp.value(0)));
+            QDomElement uptimeElement = doc.createElement("system_uptime");
+            root.appendChild(uptimeElement);
+            uptimeElement.appendChild(doc.createTextNode(apiOutSysStatus.value(27)));
+            QDomElement fwElement = doc.createElement("fw_ver");
+            root.appendChild(fwElement);
+            fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
+            QDomElement abnormalShutdownElement = doc.createElement("abnormal_shutdown");
+            root.appendChild(abnormalShutdownElement);
+            abnormalShutdownElement.appendChild(doc.createTextNode(apiOutFwStatus.value(0) == "1" ? "1" : "0"));
+
+            QDomElement disksElement = doc.createElement("disks");
+            root.appendChild(disksElement);
+
+            QStringList disksTagNames(QStringList()
+                << "device" << "manufacture" << "model" << "size" << "serial");
+            for(QString e : apiOutSmartList) {
+
+                QStringList disksContents(QStringList()
+                    << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
+                                          << e.split(";").value(5) << e.split(";").value(3));
+
+                QDomElement diskElement = doc.createElement("disk");
+                disksElement.appendChild(diskElement);
+                for(int i = 0; i < disksTagNames.size(); i++) {
+                    QDomElement element = doc.createElement(disksTagNames.value(i));
+                    diskElement.appendChild(element);
+                    element.appendChild(doc.createTextNode(disksContents.value(i)));
+                }
+            }
+        }
+        else if(paraType == "3") {
+            QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info").value(0).split(";");
+
+            QDomElement rxElement = doc.createElement("rx");
+            root.appendChild(rxElement);
+            rxElement.appendChild(doc.createTextNode(apiOut.value(1)));
+            QDomElement txElement = doc.createElement("tx");
+            root.appendChild(txElement);
+            txElement.appendChild(doc.createTextNode(apiOut.value(2)));
+            QDomElement cpuLoadElement = doc.createElement("cpu_load");
+            root.appendChild(cpuLoadElement);
+            cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10)));
+
+            int iMemUsed = apiOut.value(5).toInt() - apiOut.value(6).toInt();
+            QDomElement memUsedElement = doc.createElement("memory_used");
+            root.appendChild(memUsedElement);
+            memUsedElement.appendChild(doc.createTextNode(QString::number(iMemUsed)));
+        }
+        else if(paraType == "4") {
+            QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+            QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
+
+            QDomElement servicesElement = doc.createElement("services");
+            root.appendChild(servicesElement);
+
+            QStringList serviceNames(QStringList()
+                << "Ftp" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
+            QString serviceName = "%1 Server";
+
+            QStringList serviceStatus(QStringList()
+                << apiOutServices.value(6) << apiOutServices.value(4) << apiOutItunes.value(0)
+                << apiOutServices.value(1) << apiOutServices.value(0) << apiOutServices.value(9));
+
+            for(int i = 0; i < serviceNames.size(); i++) {
+                QDomElement serviceElement = doc.createElement("service");
+                servicesElement.appendChild(serviceElement);
+                QDomElement nameElement = doc.createElement("name");
+                serviceElement.appendChild(nameElement);
+                nameElement.appendChild(doc.createTextNode(serviceName.arg(serviceNames.value(i))));
+                QDomElement statusElement = doc.createElement("status");
+                serviceElement.appendChild(statusElement);
+                statusElement.appendChild(doc.createTextNode(serviceStatus.value(0)));
+            }
+        }
+        else if(paraType == "5") {
+            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+
+            QDomElement disksElement = doc.createElement("new_disks");
+            root.appendChild(disksElement);
+
+            QStringList disksTagNames(QStringList()
+                << "device" << "manufacture" << "model" << "size");
+            for(QString e : apiOutSmartList) {
+
+                QStringList disksContents(QStringList()
+                    << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
+                                          << e.split(";").value(5));
+
+                QDomElement diskElement = doc.createElement("disk");
+                disksElement.appendChild(diskElement);
+                for(int i = 0; i < disksTagNames.size(); i++) {
+                    QDomElement element = doc.createElement(disksTagNames.value(i));
+                    diskElement.appendChild(element);
+                    element.appendChild(doc.createTextNode(disksContents.value(i)));
+                }
+            }
+
+            QStringList typeTagNames(QStringList()
+                << "standard" << "jbod" << "raid0" << "raid1" << "raid5" << "raid5_spare"
+                << "raid10"  << "raid0_jbod" << "raid1_jbod" << "raid5_jbod"
+                << "raid5_spare_jbod" << "raid10_jbod");
+            QStringList typeContents(QStringList()
+                << "1" << "1" << "1" << "1" << "0" << "0"
+                << "0"  << "1" << "1" << "0"
+                << "0" << "0");
+            for(int i = 0; i < typeTagNames.size(); i++) {
+                QDomElement element = doc.createElement(typeTagNames.value(i));
+                root.appendChild(element);
+                element.appendChild(doc.createTextNode(typeContents.value(i)));
+            }
+
+        }
+        else if(paraType == "6") {
+            QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
+            QStringList apiOutModule = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
+
+            QDomElement servicesElement = doc.createElement("services");
+            root.appendChild(servicesElement);
+
+            QStringList serviceNames(QStringList()
+                << "My Photos" << "My Music" << "My Files" << "P2P Download" << "My Surveillance");
+
+            // todo : My Surveillance
+            QString hasHdd = shareInfo.isEmpty() ? "0" : "1";
+            QStringList serviceStatus(QStringList()
+                << hasHdd << hasHdd << hasHdd
+                << apiOutModule.value(0).split(";").value(0) << "0");
+
+            QStringList servicePort(QStringList()
+                << "80" << "80" << "80" << "" << "8080");
+
+            QStringList servicePage(QStringList()
+                << "photo_center/index.html" << "MyMusic/index.html"
+                << "web/web_file/web_file_server.html" << "web/download_mgr/p2p_main.html"
+                << "MySurveillance/index.html");
+
+            for(int i = 0; i < serviceNames.size(); i++) {
+                QDomElement serviceElement = doc.createElement("service");
+                servicesElement.appendChild(serviceElement);
+                QDomElement nameElement = doc.createElement("name");
+                serviceElement.appendChild(nameElement);
+                nameElement.appendChild(doc.createTextNode(serviceNames.value(i)));
+                QDomElement statusElement = doc.createElement("status");
+                serviceElement.appendChild(statusElement);
+                statusElement.appendChild(doc.createTextNode(serviceStatus.value(i)));
+                QDomElement portElement = doc.createElement("port");
+                serviceElement.appendChild(portElement);
+                portElement.appendChild(doc.createTextNode(servicePort.value(i)));
+                QDomElement pageElement = doc.createElement("page");
+                serviceElement.appendChild(pageElement);
+                pageElement.appendChild(doc.createTextNode(servicePage.value(i)));
+            }
+
         }
     }
 
     m_var = doc.toString();
 
 }
+
+void RenderResponseMyDlink::generateListVolume() {
+
+    QDomDocument doc;
+    generatePrefix(doc);
+
+    QDomElement root = doc.documentElement();
+    if(m_bLoginStatus) {
+        QDomElement versionElement = doc.createElement("version");
+        root.appendChild(versionElement);
+        versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+
+        QStringList apiOutVolInfo = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_hdd_volume_info");
+
+        QMap<QString, QString> map;
+        QDomDocument readFileDoc;
+        QFile file(SCANDISK_PROGRESS_FILE);
+        if (file.open(QIODevice::ReadOnly)) {
+            if (!readFileDoc.setContent(&file)) {
+                tError("RenderResponseAddOn::generateListVolume(): file %s is not XML.",
+                       SCANDISK_PROGRESS_FILE.toLocal8Bit().data());
+            }
+            else {
+                QDomElement readFileDocRoot;
+                readFileDocRoot = readFileDoc.documentElement();
+                QDomNodeList list = readFileDocRoot.childNodes();
+                for(int i = 0; i < list.size(); i++)
+                    map.insert(list.at(i).toElement().tagName(), list.at(i).toElement().text());
+            }
+            file.close();
+        }
+        else
+            tError("RenderResponseAddOn::generateListVolume(): file %s does not exist.",
+                   SCANDISK_PROGRESS_FILE.toLocal8Bit().data());
+
+        QDomElement volumesElement = doc.createElement("volumes");
+        root.appendChild(volumesElement);
+        for(QString e : apiOutVolInfo) {
+            QStringList volItem = e.split(";");
+            QStringList volTagNames(QStringList()
+                << "label" << "path" << "type" << "total_size" << "used_size" << "free_size"
+                << "permission" << "scandisk");
+
+            QString volumeName = QString("Volume_%1").arg(volItem.value(0));
+            QString realPath = volumeName;
+            replaceVoltoRealPath(realPath);
+            QString scandiskStatus = "0";
+            if(map.value("scanned_volume") == volumeName)
+                scandiskStatus = map.value("result");
+            QStringList volContents(QStringList()
+                << volumeName << realPath << volItem.value(1) << volItem.value(3) << volItem.value(4)
+                << volItem.value(5) << "2" << scandiskStatus);
+
+            QDomElement volumeElement = doc.createElement("volume");
+            volumesElement.appendChild(volumeElement);
+            for(int i = 0; i < volTagNames.size(); i++) {
+                QDomElement element = doc.createElement(volTagNames.value(i));
+                volumeElement.appendChild(element);
+                element.appendChild(doc.createTextNode(volContents.value(i)));
+            }
+        }
+    }
+
+    m_var = doc.toString();
+
+}
+
 
 void RenderResponseMyDlink::generateListFolder() {
 
@@ -467,6 +703,26 @@ void RenderResponseMyDlink::generateMkdir() {
             versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
         }
     }
+    m_var = doc.toString();
+
+}
+
+void RenderResponseMyDlink::generateRestart() {
+    QDomDocument doc;
+    generatePrefix(doc);
+
+    QDomElement root = doc.documentElement();
+    startDetached(API_PATH + SCRIPT_POWER_API, QStringList() << "restart");
+    if(m_bLoginStatus) {
+        QDomElement versionElement = doc.createElement("version");
+        root.appendChild(versionElement);
+        versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+    }
+
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode("1"));
+
     m_var = doc.toString();
 
 }

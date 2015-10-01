@@ -45,6 +45,7 @@ const QString SCRIPT_GROUP_MANAGER  =   "groupmgr";
 const QString SCRIPT_START_REMOTE_BACKUP = "StartRemoteBackup";
 const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_RTC_API        =   "crtc";
+const QString SCRIPT_CHK_PWD        =   "ccpwd";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
 
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
@@ -72,6 +73,8 @@ const QString P2P_STATE_FILE = "/tmp/p2p_status";
 const QString TORRENT_UPLOAD_FILE = "/tmp/upload/torrent_file";
 const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
 const QString SHARE_INFO_FILE = "/etc/share_info";
+const QString MODEL_FILE = "/etc/model";
+const QString SCANDISK_PROGRESS_FILE = "/var/www/xml/scandisk.xml";
 const QString PACKAGE_FILE = "/var/upload/pkg.bin";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
@@ -95,6 +98,8 @@ const QString P2P_STATE_FILE = API_PATH + "p2p_status";
 const QString TORRENT_UPLOAD_FILE = API_PATH + "torrent_file";
 const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 const QString SHARE_INFO_FILE = API_PATH + "share_info";
+const QString MODEL_FILE = API_PATH + "model";
+const QString SCANDISK_PROGRESS_FILE = API_PATH + "scandisk.xml";
 const QString PACKAGE_FILE = API_PATH + "pkg.bin";
 
 

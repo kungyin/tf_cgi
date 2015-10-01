@@ -161,8 +161,11 @@ void RenderResponseTimeMachine::generateTmSet() {
 
     QString paraEnable = m_pReq->parameter("enable");
 
-    if(setNasCfg("time_machine", "enable", paraEnable))
+    if(setNasCfg("time_machine", "enable", paraEnable)) {
+        if(paraEnable == "1")
+            setNasCfg("afp", "enable", paraEnable);
         getAPIStdOut(API_PATH + SCRIPT_AFP_CTL + " restart", true);
+    }
     else
         tDebug("RenderResponseTimeMachine::generateTmSet(): setNasCfg time_machine failed");
 

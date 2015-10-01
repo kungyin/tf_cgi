@@ -26,6 +26,7 @@ private:
     void generateDu();
     void generateCompress();
     void generateMkdir();
+    void generateRestart();
     void generateGetLog();
 
     bool isLogin();

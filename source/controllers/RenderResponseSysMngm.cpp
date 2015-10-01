@@ -874,7 +874,7 @@ void RenderResponseSysMngm::generateLogServer() {
 
 
 void RenderResponseSysMngm::generateSendLogTest() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_SYSLOG_API + " service_syslog_send_test " +
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_syslog_send_test " +
                                       allParametersToString());
 }
 
