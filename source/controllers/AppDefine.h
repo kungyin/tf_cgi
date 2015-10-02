@@ -47,8 +47,8 @@ const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_RTC_API        =   "crtc";
 const QString SCRIPT_CHK_PWD        =   "ccpwd";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
-const QString SCRIPT_HOSTNAME       =   "hostname";
 
+const QString HOSTNAME_FILE         =   "/etc/hostname";
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
 const QString SYSTEM_PT_FILE        =   "/etc/systempt";
 const QString MY_FAVORITE_FOLDER    =   "/etc/sysconfig/config/myfavorite/";

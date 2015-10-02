@@ -24,7 +24,6 @@ protected:
     QString getSecretPath(QString);
     quint64 getSize(const QString &);
 
-
 private:
 
 };

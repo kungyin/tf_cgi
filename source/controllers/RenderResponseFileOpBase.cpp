@@ -70,13 +70,11 @@ quint64 dirSize(const QString &str)
         QDir dir(str);
         QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::Dirs
                         | QDir::Hidden | QDir::NoSymLinks | QDir::NoDotAndDotDot);
-        for (int i = 0; i < list.size(); ++i) {
-            QFileInfo fileInfo = list.at(i);
-
-            if(fileInfo.isDir())
-                sizex += dirSize(fileInfo.absoluteFilePath());
+        for(auto e : list) {
+            if(e.isDir())
+                sizex += dirSize(e.absoluteFilePath());
             else
-                sizex += fileInfo.size();
+                sizex += e.size();
         }
     }
     else
@@ -277,7 +275,7 @@ bool RenderResponseFileOpBase::mkdir(const QString &path, const QString &dirName
     return bMkdir;
 }
 
-quint64 getSize(const QString &path) {
+quint64 RenderResponseFileOpBase::getSize(const QString &path) {
     return dirSize(path);
 }
 

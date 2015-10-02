@@ -149,7 +149,7 @@ void RenderResponseMyDlink::generateSetDeviceName() {
                                          .arg(paraDeviceName)
                                          .arg(apiOutGet.value(1))
                                          .arg(apiOutGet.value(2)), true, ";");
-    QStringList apiOutHostname = getAPIStdOut(API_PATH + SCRIPT_HOSTNAME, true);
+    QStringList apiOutHostname = getAPIFileOut(HOSTNAME_FILE);
 
     QDomElement root = doc.documentElement();
     if(m_bLoginStatus) {
