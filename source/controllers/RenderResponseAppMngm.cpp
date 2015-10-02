@@ -1829,9 +1829,9 @@ void RenderResponseAppMngm::generateGetRsyncInfo() {
 }
 
 void RenderResponseAppMngm::generateSetRsyncServer() {
+    QFile::remove(RSYNC_SHARE_NODE);
     if (m_pReq->parameter("f_onoff").toInt() == 1)
     {
-        QFile::remove(RSYNC_SHARE_NODE);
         QStringList dirSystempt = getAPIFileOut(SYSTEM_PT_FILE, false, "");
         QDir dir(dirSystempt.value(0) + "/.systemfile/foldermount");
         dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
@@ -1902,19 +1902,26 @@ void RenderResponseAppMngm::generateGetBackupList() {
             REMOTE_BACKUP_INFO r_info;
             memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
             GetRemoteTaskXmlValue(taskList[i].task_name, TAG_R_ALL, &r_info);
-            if (schedule_mode == "2") schedule_mode_trans = QString(r_info.execat) + " Once";
+            if (schedule_mode == "2")
+            {
+                QString execatTmp = QString(r_info.execat);
+                schedule_mode_trans = execatTmp.mid(4, 2) + "/" + execatTmp.mid(6, 2) + " " + execatTmp.mid(8, 2) + ":" + execatTmp.mid(10, 2);
+            }
             else if (schedule_mode == "3")
             {
-                QString recur_type = QString(r_info.recur_type);
-                if (recur_type == "0") schedule_mode_trans = QString(r_info.execat) + " Schedule";
-                else if (recur_type == "1") schedule_mode_trans = QString(r_info.execat) + " Daily";
-                else if (recur_type == "2")
+                /*if (r_info.recur_type == 0) schedule_mode_trans = QString(r_info.execat) + " Schedule";
+                else */if (r_info.recur_type == 1)
+                {
+                    QString execatTmp = QString(r_info.execat);
+                    schedule_mode_trans = execatTmp.mid(0, 2) + ":" + execatTmp.mid(2, 2) + " Daily";
+                }
+                else if (r_info.recur_type == 2)
                 {
                     QStringList week;
                     week << "Sun" << "Mon" << "Tue" << "Wed" << "Thu" << "Fri" << "Sat";
                     if (r_info.recur_date >= 0 && r_info.recur_date <= 6) schedule_mode_trans = week.value(r_info.recur_date) + " Weekly";
                 }
-                else if (recur_type == "3") schedule_mode_trans = QString::number(r_info.recur_date) + " Monthly";
+                else if (r_info.recur_type == 3) schedule_mode_trans = QString::number(r_info.recur_date) + " Monthly";
             }
         }
         cellElement2.appendChild(doc.createTextNode(schedule_mode_trans));
@@ -2198,7 +2205,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     {
         r_info.recur_type = 0;
         r_info.recur_date = 0;
-        execat = QString("").toUtf8();
+        execat = "";
         if (m_pReq->parameter("backup_now") == "1")
         {
             QDateTime curDatetime = QDateTime::currentDateTime();
@@ -2210,10 +2217,13 @@ void RenderResponseAppMngm::generateSetSchedule() {
     {
         r_info.recur_type = 0;
         r_info.recur_date = 0;
-        QDateTime curDatetime = QDateTime::currentDateTime();
-        curDatetime.date().setDate(curDatetime.date().year(), m_pReq->parameter("month").toInt(), m_pReq->parameter("day").toInt());
-        curDatetime.time().setHMS(m_pReq->parameter("hour").toInt(), m_pReq->parameter("minute").toInt(), 0);
-        execat = curDatetime.toString("yyyyMMddhhmm").toUtf8();
+        QDateTime curDatetime(QDate(QDateTime::currentDateTime().date().year()
+                                    , m_pReq->parameter("month").toInt()
+                                    , m_pReq->parameter("day").toInt())
+                                    , QTime(m_pReq->parameter("hour").toInt()
+                                            , m_pReq->parameter("minute").toInt()
+                                            , 0));
+        execat = curDatetime.toString("yyyyMMddhhmm").toUtf8();tDebug("11111111111111111111111[%s]\n", execat.data());
         r_info.execat = execat.data();
     }
     else
@@ -2233,12 +2243,14 @@ void RenderResponseAppMngm::generateSetSchedule() {
             r_info.recur_type = 1;
             r_info.recur_date = m_pReq->parameter("day").toInt();
         }
-        execat = QString("%1%2").arg(m_pReq->parameter("hour")).arg(m_pReq->parameter("minute")).toUtf8();
+        QTime curTime;
+        curTime.setHMS(m_pReq->parameter("hour").toInt(), m_pReq->parameter("minute").toInt(), 0);
+        execat = curTime.toString("hhmm").toUtf8();
         r_info.execat = execat.data();
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
     QDateTime curDatetime = QDateTime::currentDateTime();
-    if (m_pReq->parameter("backup_now") == "1" || (r_info.recur_type == 0 && execat.length() > 0 && QString(execat) <= curDatetime.toString("yyyyMMddhhmm")))
+    if (m_pReq->parameter("backup_now") == "1" || (r_info.recur_type == 0 && execat.length() > 0 && execat != "" && QString(execat) <= curDatetime.toString("yyyyMMddhhmm")))
         StartRemoteTask(task_name.data());
 
     m_var = "N/A";
