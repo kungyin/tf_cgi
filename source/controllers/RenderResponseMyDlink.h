@@ -29,6 +29,11 @@ private:
     void generateRestart();
     void generateGetLog();
 
+    void getDevInfoType1(QDomDocument &);
+    void getDevInfoType2(QDomDocument &);
+    void getDevInfoType3(QDomDocument &);
+    void getDevInfoType4(QDomDocument &);
+
     bool isLogin();
     void generatePrefix(QDomDocument &);
     bool m_bLoginStatus;

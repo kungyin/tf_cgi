@@ -15,7 +15,6 @@ public:
 private:
     QString getFileDescription(QString &);
     bool unArchive(QString &, QString &, QString);
-    QString getSecretPath(QString);
 
     void generateOpenTree();
     void generateOpenNewFolder();

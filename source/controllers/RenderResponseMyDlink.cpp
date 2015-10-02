@@ -107,7 +107,7 @@ bool RenderResponseMyDlink::isLogin() {
             " " + QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD + " " + loginStr, true);
-    return apiOut.value(0) == "1" ? true : false;
+    return apiOut.value(0) == "OK" ? true : false;
 
 }
 
@@ -149,6 +149,7 @@ void RenderResponseMyDlink::generateSetDeviceName() {
                                          .arg(paraDeviceName)
                                          .arg(apiOutGet.value(1))
                                          .arg(apiOutGet.value(2)), true, ";");
+    QStringList apiOutHostname = getAPIStdOut(API_PATH + SCRIPT_HOSTNAME, true);
 
     QDomElement root = doc.documentElement();
     if(m_bLoginStatus) {
@@ -158,7 +159,7 @@ void RenderResponseMyDlink::generateSetDeviceName() {
     }
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
-    statusElement.appendChild(doc.createTextNode(apiOutSet.value(0)));
+    statusElement.appendChild(doc.createTextNode(apiOutHostname.value(0) == paraDeviceName ? "1" : "0"));
 
     m_var = doc.toString();
 
@@ -178,108 +179,23 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
 
-        if(paraType == "1") {
-            QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
-            QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
-            QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
-
-            QDomElement deviceNameElement = doc.createElement("device_name");
-            root.appendChild(deviceNameElement);
-            deviceNameElement.appendChild(doc.createTextNode(apiOutDevice.value(0)));
-            QDomElement modelNameElement = doc.createElement("model_name");
-            root.appendChild(modelNameElement);
-            modelNameElement.appendChild(doc.createTextNode(apiOutModel.value(0)));
-            QDomElement macElement = doc.createElement("mac");
-            root.appendChild(macElement);
-            macElement.appendChild(doc.createTextNode(apiOutMac.value(0)));
+        if(paraType == "0") {
+            getDevInfoType1(doc);
+            getDevInfoType2(doc);
+            getDevInfoType3(doc);
+            getDevInfoType4(doc);
+        }
+        else if(paraType == "1") {
+            getDevInfoType1(doc);
         }
         else if(paraType == "2") {
-            QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
-            QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
-            QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
-            QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
-            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
-            QMap<QString, QString> systemInfo = getNasCfg("system");
-
-            QDomElement memorySizeElement = doc.createElement("memroy_size");
-            root.appendChild(memorySizeElement);
-            memorySizeElement.appendChild(doc.createTextNode(apiOutDev.value(11)));
-            QDomElement sysTempElement = doc.createElement("system_temp");
-            root.appendChild(sysTempElement);
-            sysTempElement.appendChild(doc.createTextNode(apiOutTemp.value(0)));
-            QDomElement uptimeElement = doc.createElement("system_uptime");
-            root.appendChild(uptimeElement);
-            uptimeElement.appendChild(doc.createTextNode(apiOutSysStatus.value(27)));
-            QDomElement fwElement = doc.createElement("fw_ver");
-            root.appendChild(fwElement);
-            fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
-            QDomElement abnormalShutdownElement = doc.createElement("abnormal_shutdown");
-            root.appendChild(abnormalShutdownElement);
-            abnormalShutdownElement.appendChild(doc.createTextNode(apiOutFwStatus.value(0) == "1" ? "1" : "0"));
-
-            QDomElement disksElement = doc.createElement("disks");
-            root.appendChild(disksElement);
-
-            QStringList disksTagNames(QStringList()
-                << "device" << "manufacture" << "model" << "size" << "serial");
-            for(QString e : apiOutSmartList) {
-
-                QStringList disksContents(QStringList()
-                    << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
-                                          << e.split(";").value(5) << e.split(";").value(3));
-
-                QDomElement diskElement = doc.createElement("disk");
-                disksElement.appendChild(diskElement);
-                for(int i = 0; i < disksTagNames.size(); i++) {
-                    QDomElement element = doc.createElement(disksTagNames.value(i));
-                    diskElement.appendChild(element);
-                    element.appendChild(doc.createTextNode(disksContents.value(i)));
-                }
-            }
+            getDevInfoType2(doc);
         }
         else if(paraType == "3") {
-            QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info").value(0).split(";");
-
-            QDomElement rxElement = doc.createElement("rx");
-            root.appendChild(rxElement);
-            rxElement.appendChild(doc.createTextNode(apiOut.value(1)));
-            QDomElement txElement = doc.createElement("tx");
-            root.appendChild(txElement);
-            txElement.appendChild(doc.createTextNode(apiOut.value(2)));
-            QDomElement cpuLoadElement = doc.createElement("cpu_load");
-            root.appendChild(cpuLoadElement);
-            cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10)));
-
-            int iMemUsed = apiOut.value(5).toInt() - apiOut.value(6).toInt();
-            QDomElement memUsedElement = doc.createElement("memory_used");
-            root.appendChild(memUsedElement);
-            memUsedElement.appendChild(doc.createTextNode(QString::number(iMemUsed)));
+            getDevInfoType3(doc);
         }
         else if(paraType == "4") {
-            QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
-            QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
-
-            QDomElement servicesElement = doc.createElement("services");
-            root.appendChild(servicesElement);
-
-            QStringList serviceNames(QStringList()
-                << "Ftp" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
-            QString serviceName = "%1 Server";
-
-            QStringList serviceStatus(QStringList()
-                << apiOutServices.value(6) << apiOutServices.value(4) << apiOutItunes.value(0)
-                << apiOutServices.value(1) << apiOutServices.value(0) << apiOutServices.value(9));
-
-            for(int i = 0; i < serviceNames.size(); i++) {
-                QDomElement serviceElement = doc.createElement("service");
-                servicesElement.appendChild(serviceElement);
-                QDomElement nameElement = doc.createElement("name");
-                serviceElement.appendChild(nameElement);
-                nameElement.appendChild(doc.createTextNode(serviceName.arg(serviceNames.value(i))));
-                QDomElement statusElement = doc.createElement("status");
-                serviceElement.appendChild(statusElement);
-                statusElement.appendChild(doc.createTextNode(serviceStatus.value(0)));
-            }
+            getDevInfoType4(doc);
         }
         else if(paraType == "5") {
             QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
@@ -366,6 +282,122 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
     m_var = doc.toString();
 
 }
+
+void RenderResponseMyDlink::getDevInfoType1(QDomDocument &doc) {
+    QDomElement root = doc.documentElement();
+
+    QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
+    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
+
+    QDomElement deviceNameElement = doc.createElement("device_name");
+    root.appendChild(deviceNameElement);
+    deviceNameElement.appendChild(doc.createTextNode(apiOutDevice.value(0)));
+    QDomElement modelNameElement = doc.createElement("model_name");
+    root.appendChild(modelNameElement);
+    modelNameElement.appendChild(doc.createTextNode(apiOutModel.value(0)));
+    QDomElement macElement = doc.createElement("mac");
+    root.appendChild(macElement);
+    macElement.appendChild(doc.createTextNode(apiOutMac.value(0)));
+}
+
+void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
+    QDomElement root = doc.documentElement();
+
+    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+    QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
+    QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
+    QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
+    QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+    QMap<QString, QString> systemInfo = getNasCfg("system");
+
+    QDomElement memorySizeElement = doc.createElement("memory_size");
+    root.appendChild(memorySizeElement);
+    memorySizeElement.appendChild(doc.createTextNode(apiOutDev.value(11)));
+    QDomElement sysTempElement = doc.createElement("system_temp");
+    root.appendChild(sysTempElement);
+    sysTempElement.appendChild(doc.createTextNode(apiOutTemp.value(0)));
+    QDomElement uptimeElement = doc.createElement("system_uptime");
+    root.appendChild(uptimeElement);
+    uptimeElement.appendChild(doc.createTextNode(apiOutSysStatus.value(27)));
+    QDomElement fwElement = doc.createElement("fw_ver");
+    root.appendChild(fwElement);
+    fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
+    QDomElement abnormalShutdownElement = doc.createElement("abnormal_shutdown");
+    root.appendChild(abnormalShutdownElement);
+    abnormalShutdownElement.appendChild(doc.createTextNode(apiOutFwStatus.value(0) == "1" ? "1" : "0"));
+
+    QDomElement disksElement = doc.createElement("disks");
+    root.appendChild(disksElement);
+
+    QStringList disksTagNames(QStringList()
+        << "device" << "manufacture" << "model" << "size" << "serial");
+    for(QString e : apiOutSmartList) {
+
+        QStringList disksContents(QStringList()
+            << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
+                                  << e.split(";").value(5) << e.split(";").value(3));
+
+        QDomElement diskElement = doc.createElement("disk");
+        disksElement.appendChild(diskElement);
+        for(int i = 0; i < disksTagNames.size(); i++) {
+            QDomElement element = doc.createElement(disksTagNames.value(i));
+            diskElement.appendChild(element);
+            element.appendChild(doc.createTextNode(disksContents.value(i)));
+        }
+    }
+}
+
+void RenderResponseMyDlink::getDevInfoType3(QDomDocument &doc) {
+    QDomElement root = doc.documentElement();
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info").value(0).split(";");
+
+    QDomElement rxElement = doc.createElement("rx");
+    root.appendChild(rxElement);
+    rxElement.appendChild(doc.createTextNode(apiOut.value(1)));
+    QDomElement txElement = doc.createElement("tx");
+    root.appendChild(txElement);
+    txElement.appendChild(doc.createTextNode(apiOut.value(2)));
+    QDomElement cpuLoadElement = doc.createElement("cpu_load");
+    root.appendChild(cpuLoadElement);
+    cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10)));
+
+    int iMemUsed = apiOut.value(5).toInt() - apiOut.value(6).toInt();
+    QDomElement memUsedElement = doc.createElement("memory_used");
+    root.appendChild(memUsedElement);
+    memUsedElement.appendChild(doc.createTextNode(QString::number(iMemUsed)));
+}
+
+void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
+    QDomElement root = doc.documentElement();
+
+    QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
+
+    QDomElement servicesElement = doc.createElement("services");
+    root.appendChild(servicesElement);
+
+    QStringList serviceNames(QStringList()
+        << "Ftp" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
+    QString serviceName = "%1 Server";
+
+    QStringList serviceStatus(QStringList()
+        << apiOutServices.value(6) << apiOutServices.value(4) << apiOutItunes.value(0)
+        << apiOutServices.value(1) << apiOutServices.value(0) << apiOutServices.value(9));
+
+    for(int i = 0; i < serviceNames.size(); i++) {
+        QDomElement serviceElement = doc.createElement("service");
+        servicesElement.appendChild(serviceElement);
+        QDomElement nameElement = doc.createElement("name");
+        serviceElement.appendChild(nameElement);
+        nameElement.appendChild(doc.createTextNode(serviceName.arg(serviceNames.value(i))));
+        QDomElement statusElement = doc.createElement("status");
+        serviceElement.appendChild(statusElement);
+        statusElement.appendChild(doc.createTextNode(serviceStatus.value(0)));
+    }
+}
+
 
 void RenderResponseMyDlink::generateListVolume() {
 

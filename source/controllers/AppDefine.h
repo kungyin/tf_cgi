@@ -3,7 +3,7 @@
 
 #include <QString>
 
-const QString MYDLINK_VERSION       =   "1.8";
+const QString MYDLINK_VERSION       =   "1.11";
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_SCANDISK_API   =   "scandisk";
@@ -47,6 +47,7 @@ const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_RTC_API        =   "crtc";
 const QString SCRIPT_CHK_PWD        =   "ccpwd";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
+const QString SCRIPT_HOSTNAME       =   "hostname";
 
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
 const QString SYSTEM_PT_FILE        =   "/etc/systempt";
