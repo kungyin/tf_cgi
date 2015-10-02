@@ -1483,9 +1483,12 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     replaceVoltoRealPath(src);
     if (src.endsWith("/")) {if (taskInfo.is_file == 1) src.remove(src.length(), 1);}
     else {if (taskInfo.is_file == 0) src.append("/");}
-    bool user_wrong = true;
-    QFileInfo info(src);
-    if ((info.isDir() && taskInfo.is_file == 0) || (!info.isDir() && taskInfo.is_file == 1)) user_wrong = false;
+    bool user_wrong = (src.startsWith("//"))?false:true;
+    if (user_wrong)
+    {
+        QFileInfo info(src);
+        if ((info.isDir() && taskInfo.is_file == 0) || (!info.isDir() && taskInfo.is_file == 1)) user_wrong = false;
+    }
 
     QByteArray src_b = src.toUtf8();
     taskInfo.src = src_b.data();
