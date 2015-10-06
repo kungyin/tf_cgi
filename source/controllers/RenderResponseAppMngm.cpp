@@ -2082,7 +2082,7 @@ void RenderResponseAppMngm::generateServerTest() {
             //QProcess process;
             //process.start(arg);
             //process.waitForFinished();
-            QStringList remoteHddShareNodes = getAPIStdOut(arg, true, ":", true);
+            QStringList remoteHddShareNodes = getAPIStdOut(arg, false, "", true);
             //QString readAll = QString(process.readAllStandardOutput());
             //QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
             Q_FOREACH(QString n, remoteHddShareNodes)
