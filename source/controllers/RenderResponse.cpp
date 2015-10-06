@@ -68,6 +68,66 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     return ret;
 }
 
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, QStringList para, bool bOneLine, QString splitChar, bool bUseSystem) {
+    QStringList ret;
+    QString cmd;
+    QStringList input;
+
+#ifndef SIMULATOR_MODE
+    if(bUseSystem) {
+        input = QStringList() << "-c" << apiCmd;
+        Q_FOREACH (QString p, para) input.append(p.toUtf8().toBase64());
+        cmd = "sh";
+//        system(apiCmd.toLocal8Bit().data());
+//        return ret;
+    }
+#else
+    bUseSystem = false;
+#endif
+
+
+    if(!bUseSystem) {
+        cmd = apiCmd;
+        Q_FOREACH (QString p, para) input.append(p.toUtf8().toBase64());
+    }
+
+    QString strList;
+    for(QString e : input) {
+        if(strList.isEmpty())
+            strList += e;
+        else
+            strList += " " + e;
+    }
+
+    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList.toLocal8Bit().data());
+    if(input.isEmpty())
+        return ret;
+
+    QProcess process;
+    process.start(cmd, input);
+
+    process.waitForFinished(-1);
+    QString allOut = QString(process.readAllStandardOutput());
+    ret = allOut.split("\n");
+    tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
+
+    if(bOneLine) {
+        if(!ret.isEmpty()) {
+            ret = ret.at(0).split(splitChar);
+            if(ret.size() == 1 && ret.at(0).isEmpty())
+                ret = QStringList();
+        }
+        else
+            ret = QStringList();
+    }
+    else {
+        while(!ret.isEmpty() && ret.last().isEmpty())
+            ret.removeLast();
+    }
+
+    return ret;
+}
+
 bool RenderResponse::startDetached(QString name, QStringList &arguments) {
 
     QString apiCmd = name;

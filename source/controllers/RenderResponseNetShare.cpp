@@ -543,6 +543,8 @@ void RenderResponseNetShare::generateAddSession() {
 //    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
 //    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
+    //QStringList arg = QStringList() << "service_set_add_session" << allParametersToString();
+    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_add_session " +
                                       allParametersToString(), true);
 
