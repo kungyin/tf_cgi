@@ -119,6 +119,7 @@ void CgiController::cgiResponse() {
         return;
     }
     connect(pRrep, SIGNAL(typeChanged(RENDER_TYPE)), this, SLOT(renderTypeChanged(RENDER_TYPE)));
+    pRrep->setSession(session());
     pRrep->preRender();
 
     /* render */
@@ -126,13 +127,9 @@ void CgiController::cgiResponse() {
     case RENDER_TYPE_NULL:
         renderErrorResponse(Tf::OK);
         break;
-    case RENDER_TYPE_STRING: {
-        QString str = pRrep->getVar().toString();
-        if(cmd == CMD_UI_CHECK_WTO)
-            str = isValidClient(true) ? "success" : "fail";
-        renderText(str);
+    case RENDER_TYPE_STRING:
+        renderText(pRrep->getVar().toString());
         break;
-    }
     case RENDER_TYPE_XML:
     {
         QDomDocument doc;
@@ -371,11 +368,11 @@ void CgiController::renderTypeChanged(RENDER_TYPE type) {
 
 }
 
-bool CgiController::isValidClient(bool bCookiesOnly) {
+bool CgiController::isValidClient() {
 
     bool bValidClient = false;
 
-    if(!bCookiesOnly && httpRequest().cookie("username").isEmpty()) {
+    if(httpRequest().cookie("username").isEmpty()) {
         if(     httpRequest().header().hasRawHeader("Security-Token")
              && httpRequest().header().hasRawHeader("Client-ID")
              && httpRequest().header().hasRawHeader("Time-Stamp")) {

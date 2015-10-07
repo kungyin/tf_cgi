@@ -1,55 +1,43 @@
 #include <QProcess>
 #include <QFileInfo>
+#include <TWebApplication>
+#include <QDir>
+
 
 #include "RenderResponse.h"
 
-//RenderResponse::RenderResponse()
-//    : m_diffTime(0)
-//{
-//}
+RenderResponse::RenderResponse()
+    : m_pReq(NULL)
+    , m_pSession(NULL)
+{
+}
 
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSystem) {
     QStringList ret;
     QString cmd;
-    QStringList input;
+    QString args;
+    QString argsFmt = "\"%1\"";
 
-#ifndef SIMULATOR_MODE
+    QString fullCmd = apiCmd;
     if(bUseSystem) {
-        input = QStringList() << "-c" << apiCmd;
-        cmd = "sh";
+        args = argsFmt.arg(apiCmd);
+        cmd = "sh -c";
+        fullCmd = cmd + " " + args;
 //        system(apiCmd.toLocal8Bit().data());
 //        return ret;
     }
-#else
-    bUseSystem = false;
-#endif
 
-
-    if(!bUseSystem) {
-        input = apiCmd.split(" ");
-        cmd = input.value(0);
-        input.removeFirst();
-    }
-
-    QString strList;
-    for(QString e : input) {
-        if(strList.isEmpty())
-            strList += e;
-        else
-            strList += " " + e;
-    }
-
-    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList.toLocal8Bit().data());
-    if(input.isEmpty())
+    tDebug("Start fullCmd: %s", fullCmd.toLocal8Bit().data());
+    if(fullCmd.isEmpty())
         return ret;
 
     QProcess process;
-    process.start(cmd, input);
+    process.start(fullCmd);
 
     process.waitForFinished(-1);
     QString allOut = QString(process.readAllStandardOutput());
     ret = allOut.split("\n");
-    tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
+    tDebug("fullCmd: %s\napiOut: %s", fullCmd.toLocal8Bit().data(), allOut.toLocal8Bit().data());
 
     if(bOneLine) {
         if(!ret.isEmpty()) {
@@ -327,3 +315,27 @@ bool RenderResponse::replaceVoltoRealPath(QString &path, bool reverse)
     }
     return ret;
 }
+
+TSession RenderResponse::findSession(const QByteArray &id)
+{
+    QFileInfo fi(sessionDirPath() + id);
+
+    if (fi.exists()) {
+        QFile file(fi.filePath());
+
+        if (file.open(QIODevice::ReadOnly)) {
+            QDataStream ds(&file);
+            TSession result(id);
+            ds >> *static_cast<QVariantMap *>(&result);
+            if (ds.status() == QDataStream::Ok)
+                return result;
+        }
+    }
+    return TSession();
+}
+
+QString RenderResponse::sessionDirPath()
+{
+    return Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
+}
+

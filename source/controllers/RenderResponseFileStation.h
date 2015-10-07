@@ -15,6 +15,7 @@ public:
 private:
     QString getFileDescription(QString &);
     bool unArchive(QString &, QString &, QString);
+    bool convUnzipUniFmtToString(QString &);
 
     void generateOpenTree();
     void generateOpenNewFolder();

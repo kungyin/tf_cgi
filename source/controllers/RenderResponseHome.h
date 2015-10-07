@@ -33,6 +33,8 @@ private:
     void generateLogout();
     void generateGetLogItem();
 
+    bool isValidUser();
+
     QList<TCookie> m_cookies;
     QPair<QString, QString> m_session;
     bool m_bRedirect2Ssl;

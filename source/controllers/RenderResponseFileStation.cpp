@@ -90,7 +90,7 @@ QString RenderResponseFileStation::getFileDescription(QString &suffix) {
     QString ret;
     int iSize = sizeof(SUFFIX_DESCRIPTION_TABLE)/sizeof(SUFFIX_DESCRIPTION_TABLE[0]);
     for(int i = 0; i < iSize; i++) {
-        if(QString(SUFFIX_DESCRIPTION_TABLE[i][0]) == suffix) {
+        if( QString(SUFFIX_DESCRIPTION_TABLE[i][0]).compare(suffix, Qt::CaseInsensitive) == 0 ) {
             ret = SUFFIX_DESCRIPTION_TABLE[i][1];
             break;
         }
@@ -660,13 +660,66 @@ void RenderResponseFileStation::generateAddZip() {
 
 }
 
+bool RenderResponseFileStation::convUnzipUniFmtToString(QString &str) {
+    QString to;
+    bool ret = true;
+
+    for(int idx = 0; idx < str.size(); idx++) {
+        if(idx <= str.size()-6 &&
+            (str.at(idx) == '#' && str.at(idx+1) == 'U')) {
+            QString charHex = str.mid(idx + 2, 4);
+            tDebug("%s", charHex.toLocal8Bit().data());
+            bool ok = false;
+            uint c = charHex.toUInt(&ok, 16);
+            if(!ok) {
+                ret = false;
+                continue;
+            }
+            to += QString::fromUcs4(&c, 1);
+            idx += 5;
+        }
+        else
+            to += str.at(idx);
+    }
+    str = to;
+
+    return ret;
+}
+
+
 bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString cmd) {
     QDir dir(path);
     if(dir.exists()) {
         QString currentPath = QDir::currentPath();
         QDir::setCurrent(path);
         QString uncompressCmd = "%1 \"%2\"";
-        getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", true);
+        QStringList apiOut = getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", true);
+
+        for (int i = 1; i < apiOut.size(); i++) {
+            QString from = apiOut.value(i).remove("inflating:").trimmed();
+
+            if(!from.isEmpty()) {
+
+                QStringList nameList = from.split(QDir::separator());
+                QString path;
+
+                for(QString e : nameList) {
+                    if(path.isEmpty())
+                        path += e;
+                    else
+                        path += QDir::separator() + e;
+
+                    QString newPath = path;
+                    convUnzipUniFmtToString(newPath);
+
+                    QFileInfo fileInfo(newPath);
+                    if(!fileInfo.exists())
+                        if(QFile::rename(path, newPath))
+                            path = newPath;
+
+                }
+            }
+        }
         QDir::setCurrent(currentPath);
 
         return true;
@@ -681,7 +734,7 @@ void RenderResponseFileStation::generateUnzip() {
     QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
 
-    QString ret = unArchive(paraPath, paraName, "unzip -o") ? "ok" : "error";
+    QString ret = unArchive(paraPath, paraName, "unzip -U -o") ? "ok" : "error";
 
     QDomElement root = doc.createElement("result");
     doc.appendChild(root);
