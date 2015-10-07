@@ -569,7 +569,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode((isStart)?"1":"3"));
+    resElement.appendChild(doc.createTextNode((isStart)?QString::number(res):"3"));
 
     m_var = doc.toString();
 
