@@ -494,29 +494,35 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
     //                                  + allParametersToString(), true);
     int res = 1;
     QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
+    QStringList dirList = paraDir.split("*", QString::SkipEmptyParts);
     MediaDbDataProvider media;
     QStringList folderList = media.GetFolderAll();
-    Q_FOREACH(QString folder, folderList)
-    {
-        if (paraDir.startsWith(folder))
-        {
-            res = 2;
-            break;
-        }
-    }
-    replaceVoltoRealPath(paraDir, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
 
-    QDomElement resElement = doc.createElement("res");
-    itemElement.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(QString::number(res)));
-    QDomElement pathElement = doc.createElement("path");
-    itemElement.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode(paraDir));
+    Q_FOREACH(QString dir, dirList)
+    {
+        res = 1;
+        Q_FOREACH(QString folder, folderList)
+        {
+            if (dir.startsWith(folder))
+            {
+                res = 2;
+                break;
+            }
+        }
+        replaceVoltoRealPath(dir, true);
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
+
+        QDomElement resElement = doc.createElement("res");
+        itemElement.appendChild(resElement);
+        resElement.appendChild(doc.createTextNode(QString::number(res)));
+        QDomElement pathElement = doc.createElement("path");
+        itemElement.appendChild(pathElement);
+        pathElement.appendChild(doc.createTextNode(dir));
+    }
 
     m_var = doc.toString();
 
@@ -530,26 +536,32 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
     QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
     QString paraRefresh = m_pReq->parameter("f_refresh");
     int res = (paraRefresh == "0")?0:1;
-    QFileInfo info(paraDir);
-    if (info.isDir())
+    QStringList dirList = paraDir.split("*", QString::SkipEmptyParts);
+    bool isStart = false;
+    MediaDbDataProvider media;
+    QStringList folderList = media.GetFolderAll();
+    Q_FOREACH(QString dir, dirList)
     {
-        MediaDbDataProvider media;
-        QStringList folderList = media.GetFolderAll();
-        Q_FOREACH(QString folder, folderList)
+        QFileInfo info(dir);
+        if (info.isDir())
         {
-            if (paraDir.startsWith(folder))
+            Q_FOREACH(QString folder, folderList)
             {
-                res = 2;
-                break;
+                if (dir.startsWith(folder))
+                {
+                    res = 2;
+                    break;
+                }
             }
-        }
-    } else res = 2;
-    QStringList arg = QStringList() << "addfolder" << paraDir;
-    getAPIStdOut("ScanSender", arg);
-    if (res == 1)
-    {
-        arg = QStringList() << "start" << paraDir;
+        } else res = 2;
+        QStringList arg = QStringList() << "addfolder" << dir;
         getAPIStdOut("ScanSender", arg);
+        if (res == 1)
+        {
+            arg = QStringList() << "start" << dir;
+            getAPIStdOut("ScanSender", arg);
+            isStart = true;
+        }
     }
 
     QDomElement root = doc.createElement("config");
@@ -557,7 +569,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
 
     QDomElement resElement = doc.createElement("res");
     root.appendChild(resElement);
-    resElement.appendChild(doc.createTextNode(QString::number(res)));
+    resElement.appendChild(doc.createTextNode((isStart)?"1":"3"));
 
     m_var = doc.toString();
 
