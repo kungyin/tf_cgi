@@ -106,6 +106,9 @@ void RenderResponseDisk::preRender() {
     case CMD_VE_MOUNT_VOLUME:
         generateVeMountVolume();
         break;
+    case CMD_VE_MOUNT_UPLOAD_FILE:
+        generateVeMountUploadFile();
+        break;
 
     default:
         break;
@@ -834,7 +837,7 @@ void RenderResponseDisk::generateVePwdCheck() {
 
 void RenderResponseDisk::generateVeVerifyKeyfile() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_export_VE_keyfile " +
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_import_VE_keyfile " +
                                       allParametersToString(), true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -900,6 +903,21 @@ void RenderResponseDisk::generateVeLoadModuleState() {
 void RenderResponseDisk::generateVeMountVolume() {
     QDomDocument doc;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Volume " +
+                                      allParametersToString());
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseDisk::generateVeMountUploadFile() {
+    QDomDocument doc;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Upload_File " +
                                       allParametersToString());
 
     QDomElement root = doc.createElement("config");
