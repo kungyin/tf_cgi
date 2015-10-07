@@ -25,6 +25,7 @@ signals:
 protected:
 
     QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
+    QStringList getAPIStdOut(QString, QStringList, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
     bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
     bool setNasCfg(QString, QString, QString);

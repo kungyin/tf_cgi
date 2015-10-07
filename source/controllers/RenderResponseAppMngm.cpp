@@ -544,8 +544,13 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
             }
         }
     } else res = 2;
-    getAPIStdOut("ScanSender addfolder " + paraDir, true);
-    if (res == 1) getAPIStdOut("ScanSender start " + paraDir, true);
+    QStringList arg = QStringList() << "addfolder" << paraDir;
+    getAPIStdOut("ScanSender", arg);
+    if (res == 1)
+    {
+        arg = QStringList() << "start" << paraDir;
+        getAPIStdOut("ScanSender", arg);
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -589,9 +594,15 @@ void RenderResponseAppMngm::generateUpnpAvServerPrescan() {
     //                                  + allParametersToString(), true);
     QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
     if (paraDir == "all")
-        getAPIStdOut("ScanSender startall", true);
+    {
+        QStringList arg = QStringList() << "startall";
+        getAPIStdOut("ScanSender", arg);
+    }
     else
-        getAPIStdOut("ScanSender start " + paraDir, true);
+    {
+        QStringList arg = QStringList() << "start" << paraDir;
+        getAPIStdOut("ScanSender", arg);
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -617,7 +628,8 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
 
     Q_FOREACH(QString dir, dirList)
     {
-        getAPIStdOut("ScanSender delfolder " + dir, true);
+        QStringList arg = QStringList() << "delfolder" << dir;
+        getAPIStdOut("ScanSender", arg);
         QDomElement itemElement = doc.createElement("item");
         root.appendChild(itemElement);
 
@@ -639,7 +651,8 @@ void RenderResponseAppMngm::generateSqldbStop()
 {
     QDomDocument doc;
     QString paraType = QUrl::fromPercentEncoding(m_pReq->parameter("ftype").toLocal8Bit());
-    getAPIStdOut("ScanSender " + paraType, true);
+    QStringList arg = QStringList() << paraType;
+    getAPIStdOut("ScanSender", arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1829,9 +1842,9 @@ void RenderResponseAppMngm::generateGetRsyncInfo() {
 }
 
 void RenderResponseAppMngm::generateSetRsyncServer() {
+    QFile::remove(RSYNC_SHARE_NODE);
     if (m_pReq->parameter("f_onoff").toInt() == 1)
     {
-        QFile::remove(RSYNC_SHARE_NODE);
         QStringList dirSystempt = getAPIFileOut(SYSTEM_PT_FILE, false, "");
         QDir dir(dirSystempt.value(0) + "/.systemfile/foldermount");
         dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
@@ -1902,19 +1915,26 @@ void RenderResponseAppMngm::generateGetBackupList() {
             REMOTE_BACKUP_INFO r_info;
             memset(&r_info, 0, sizeof(REMOTE_BACKUP_INFO));
             GetRemoteTaskXmlValue(taskList[i].task_name, TAG_R_ALL, &r_info);
-            if (schedule_mode == "2") schedule_mode_trans = QString(r_info.execat) + " Once";
+            if (schedule_mode == "2")
+            {
+                QString execatTmp = QString(r_info.execat);
+                schedule_mode_trans = execatTmp.mid(4, 2) + "/" + execatTmp.mid(6, 2) + " " + execatTmp.mid(8, 2) + ":" + execatTmp.mid(10, 2);
+            }
             else if (schedule_mode == "3")
             {
-                QString recur_type = QString(r_info.recur_type);
-                if (recur_type == "0") schedule_mode_trans = QString(r_info.execat) + " Schedule";
-                else if (recur_type == "1") schedule_mode_trans = QString(r_info.execat) + " Daily";
-                else if (recur_type == "2")
+                QString execatTmp = QString(r_info.execat);
+                /*if (r_info.recur_type == 0) schedule_mode_trans = QString(r_info.execat) + " Schedule";
+                else */if (r_info.recur_type == 1)
+                {
+                    schedule_mode_trans = execatTmp.mid(0, 2) + ":" + execatTmp.mid(2, 2) + " Daily";
+                }
+                else if (r_info.recur_type == 2)
                 {
                     QStringList week;
                     week << "Sun" << "Mon" << "Tue" << "Wed" << "Thu" << "Fri" << "Sat";
-                    if (r_info.recur_date >= 0 && r_info.recur_date <= 6) schedule_mode_trans = week.value(r_info.recur_date) + " Weekly";
+                    if (r_info.recur_date >= 0 && r_info.recur_date <= 6) schedule_mode_trans = execatTmp.mid(0, 2) + ":" + execatTmp.mid(2, 2) + " " + week.value(r_info.recur_date) + " Weekly";
                 }
-                else if (recur_type == "3") schedule_mode_trans = QString::number(r_info.recur_date) + " Monthly";
+                else if (r_info.recur_type == 3) schedule_mode_trans = execatTmp.mid(0, 2) + ":" + execatTmp.mid(2, 2) + " " + QString::number(r_info.recur_date) + " Monthly";
             }
         }
         cellElement2.appendChild(doc.createTextNode(schedule_mode_trans));
@@ -2023,12 +2043,13 @@ void RenderResponseAppMngm::generateServerTest() {
 
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
-            QString arg = QString("bash -c \"%1 %2@%3 '%4 free_size'\"").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
-            QProcess process;
-            process.start(arg);
-            process.waitForFinished();
-            QString readAll = QString(process.readAllStandardOutput());
-            QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
+            QString arg = QString("%1 %2@%3 '%4 free_size'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            //QProcess process;
+            //process.start(arg);
+            //process.waitForFinished();
+            QStringList remoteHddFreeSize = getAPIStdOut(arg, true, ":", true);
+            //QString readAll = QString(process.readAllStandardOutput());
+            //QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
                 remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%1%2_free_size").arg(QChar(i + 97), "2"));
@@ -2057,12 +2078,13 @@ void RenderResponseAppMngm::generateServerTest() {
         }
         else
         {
-            QString arg = QString("bash -c \"%1 %2@%3 '%4 share_node'\"").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
-            QProcess process;
-            process.start(arg);
-            process.waitForFinished();
-            QString readAll = QString(process.readAllStandardOutput());
-            QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
+            QString arg = QString("%1 %2@%3 '%4 share_node'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            //QProcess process;
+            //process.start(arg);
+            //process.waitForFinished();
+            QStringList remoteHddShareNodes = getAPIStdOut(arg, false, "", true);
+            //QString readAll = QString(process.readAllStandardOutput());
+            //QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
                 QStringList remoteHddShareNode = n.split(":", QString::SkipEmptyParts);
@@ -2159,7 +2181,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     QByteArray task_name = QUrl::fromPercentEncoding(m_pReq->parameter("task").toLocal8Bit()).toUtf8();
     r_info.task_name = task_name.data();
     r_info.is_enable = 1;
-    r_info.state = 1;
+    r_info.state = 0;
     r_info.server_type = m_pReq->parameter("s_type").toInt();
     r_info.backup_type = m_pReq->parameter("direction").toInt();
     r_info.schedule_mode = m_pReq->parameter("schedule_type").toInt();
@@ -2198,7 +2220,7 @@ void RenderResponseAppMngm::generateSetSchedule() {
     {
         r_info.recur_type = 0;
         r_info.recur_date = 0;
-        execat = QString("").toUtf8();
+        execat = "";
         if (m_pReq->parameter("backup_now") == "1")
         {
             QDateTime curDatetime = QDateTime::currentDateTime();
@@ -2210,9 +2232,12 @@ void RenderResponseAppMngm::generateSetSchedule() {
     {
         r_info.recur_type = 0;
         r_info.recur_date = 0;
-        QDateTime curDatetime = QDateTime::currentDateTime();
-        curDatetime.date().setDate(curDatetime.date().year(), m_pReq->parameter("month").toInt(), m_pReq->parameter("day").toInt());
-        curDatetime.time().setHMS(m_pReq->parameter("hour").toInt(), m_pReq->parameter("minute").toInt(), 0);
+        QDateTime curDatetime(QDate(QDateTime::currentDateTime().date().year()
+                                    , m_pReq->parameter("month").toInt()
+                                    , m_pReq->parameter("day").toInt())
+                                    , QTime(m_pReq->parameter("hour").toInt()
+                                            , m_pReq->parameter("minute").toInt()
+                                            , 0));
         execat = curDatetime.toString("yyyyMMddhhmm").toUtf8();
         r_info.execat = execat.data();
     }
@@ -2233,12 +2258,14 @@ void RenderResponseAppMngm::generateSetSchedule() {
             r_info.recur_type = 1;
             r_info.recur_date = m_pReq->parameter("day").toInt();
         }
-        execat = QString("%1%2").arg(m_pReq->parameter("hour")).arg(m_pReq->parameter("minute")).toUtf8();
+        QTime curTime;
+        curTime.setHMS(m_pReq->parameter("hour").toInt(), m_pReq->parameter("minute").toInt(), 0);
+        execat = curTime.toString("hhmm").toUtf8();
         r_info.execat = execat.data();
     }
     SaveRemoteXml(r_info, (m_pReq->parameter("type") == "1")?1:0);
     QDateTime curDatetime = QDateTime::currentDateTime();
-    if (m_pReq->parameter("backup_now") == "1" || (r_info.recur_type == 0 && execat.length() > 0 && QString(execat) <= curDatetime.toString("yyyyMMddhhmm")))
+    if (m_pReq->parameter("backup_now") == "1" || (r_info.recur_type == 0 && execat.length() > 0 && execat != "" && QString(execat) <= curDatetime.toString("yyyyMMddhhmm")))
         StartRemoteTask(task_name.data());
 
     m_var = "N/A";

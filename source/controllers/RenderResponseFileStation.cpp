@@ -196,8 +196,11 @@ void RenderResponseFileStation::generateOpenTree() {
                     }
                 }
             }
+            // sabrina modify for bug 7758 20151002
             QString line1 = (paraChkFlag.compare("1") == 0) ?
-                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
+                        checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
+            /*QString line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;*/
             QString line2 = hrefLine.arg(e.absoluteFilePath()).arg(fileName);
             content += cssLiClassWithID.arg(line1).arg(line2);
         }
