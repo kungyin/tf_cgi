@@ -1,3 +1,6 @@
+#include <QDir>
+#include <TAppSettings>
+
 #include "RenderResponseHome.h"
 
 static QMap<QString, QString> lang_map {
@@ -148,8 +151,7 @@ void RenderResponseHome::generateGetSslInfo() {
 }
 
 void RenderResponseHome::generateUICheckWto() {
-    /* Return value is not decided here */
-    m_var = "success";
+    m_var = isValidUser() ? "success" : "fail";
 }
 
 void RenderResponseHome::generateFWStatus() {
@@ -279,3 +281,44 @@ void RenderResponseHome::generateGetLogItem() {
 
 }
 
+bool RenderResponseHome::isValidUser() {
+
+    if(!m_pSession) {
+        tError("RenderResponseHome::isValidUser() m_pSession is NULL");
+        return false;
+    }
+
+    bool bValidUser = false;
+
+    for(TCookie c : m_pReq->cookies()) {
+        if(c.name() == "username") {
+            if(m_pSession->value("user").toByteArray() == c.value()) {
+                bValidUser = true;
+                break;
+            }
+            else {
+                QDir dir(sessionDirPath());
+                QDir::Filters filters = QDir::Files;
+                QFileInfoList fileList = dir.entryInfoList(filters);
+                uint lifeTIme = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
+
+                QListIterator<QFileInfo> iter(fileList);
+                while (iter.hasNext()) {
+                    QFileInfo entry = iter.next();
+                    if(entry.fileName().length() == 40) {
+                        TSession session = findSession(entry.fileName().toLocal8Bit());
+                        if(session.value("user").toByteArray() == c.value()
+                                && (lifeTIme > (QDateTime::currentDateTime().toTime_t() - entry.lastModified().toTime_t())))
+                        {
+                            m_pSession->insert("user", c.value());
+                            bValidUser = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return bValidUser;
+}

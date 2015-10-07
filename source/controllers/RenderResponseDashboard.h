@@ -14,8 +14,7 @@ public:
 
 private:
     void generateGetDeviceDetailInfo();
-    TSession find(const QByteArray &id);
-    QString sessionDirPath();
+
 };
 
 #endif // RENDERRESPONSEDASHBOARD_H

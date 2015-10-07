@@ -28,7 +28,7 @@ private:
     void resetSessionTime();
     //bool modifySessionTime();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
-    bool isValidClient(bool bCookiesOnly = false);
+    bool isValidClient();
     bool isValidClientWithPwd();
     QMap<QString, QList<QDateTime>> map;
 

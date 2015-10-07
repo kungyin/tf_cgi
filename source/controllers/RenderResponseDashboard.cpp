@@ -45,7 +45,7 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     while (iter.hasNext()) {
         QFileInfo entry = iter.next();
         if(entry.fileName().length() == 40) {
-            usersSet.insert(find(entry.fileName().toLocal8Bit()).value("user").toString());
+            usersSet.insert(findSession(entry.fileName().toLocal8Bit()).value("user").toString());
         }
     }
 
@@ -56,6 +56,9 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
             split = ",";
         users += split + e;
     }
+
+    if(users.endsWith(","))
+        users.resize(users.size() - 1);
 
     QStringList deviceInfoContentElement(QStringList()
             << "hostname" << "modelname" << "fanspeed" << "high_speed_temp"
@@ -82,25 +85,3 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     m_var = doc.toString();
 }
 
-TSession RenderResponseDashboard::find(const QByteArray &id)
-{
-    QFileInfo fi(sessionDirPath() + id);
-
-    if (fi.exists()) {
-        QFile file(fi.filePath());
-
-        if (file.open(QIODevice::ReadOnly)) {
-            QDataStream ds(&file);
-            TSession result(id);
-            ds >> *static_cast<QVariantMap *>(&result);
-            if (ds.status() == QDataStream::Ok)
-                return result;
-        }
-    }
-    return TSession();
-}
-
-QString RenderResponseDashboard::sessionDirPath()
-{
-    return Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
-}

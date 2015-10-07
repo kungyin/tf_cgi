@@ -10,13 +10,14 @@ class T_CONTROLLER_EXPORT RenderResponse : public QObject {
 
 public:
 
-    //RenderResponse();
+    RenderResponse();
     virtual void preRender() = 0;
     virtual ~RenderResponse() {}
 
     QVariant &getVar() { return m_var; }
 //    int getSessionDiff() { return m_diffTime; }
 //    void setSessionDiff(int diff) { m_diffTime = diff; }
+    void setSession(TSession &session) { m_pSession = &session; }
 
 signals:
     void typeChanged(RENDER_TYPE);
@@ -34,6 +35,8 @@ protected:
     QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
     QString sizeHuman(qint64);
     bool replaceVoltoRealPath(QString &, bool reverse = false);
+    TSession findSession(const QByteArray &);
+    QString sessionDirPath();
 
     int getTotalPages(int, int);
 
@@ -41,6 +44,7 @@ protected:
     QVariant m_var;
 
     THttpRequest *m_pReq;
+    TSession *m_pSession;
 
 private:
 
