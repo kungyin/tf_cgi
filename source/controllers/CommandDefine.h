@@ -55,6 +55,7 @@ enum CGI_COMMAND {
     CMD_VE_LOAD_MODULE,             /* cgi_VE_Load_Module */
     CMD_VE_LOAD_MODULE_STATE,       /* cgi_VE_Load_Module_State */
     CMD_VE_MOUNT_VOLUME,            /* cgi_VE_Mount_Volume */
+    CMD_VE_MOUNT_UPLOAD_FILE,       /* cgi_VE_Mount_Upload_File */
     CMD_DISK_END,
 
     /**** Home Page ****/
@@ -602,6 +603,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_VE_Load_Module",
     "cgi_VE_Load_Module_State",
     "cgi_VE_Mount_Volume",
+    "cgi_VE_Mount_Upload_File",
     "",
 
     /**** Home Page ****/
@@ -1151,6 +1153,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_VE_LOAD_MODULE,               RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Load_Module */
     { CMD_VE_LOAD_MODULE_STATE,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Load_Module_State */
     { CMD_VE_MOUNT_VOLUME,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Mount_Volume */
+    { CMD_VE_MOUNT_UPLOAD_FILE,         RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_VE_Mount_Upload_File */
 
     //{ CMD_DISK_END,                     RENDER_TYPE_UNKNOWN,        COOKIE_REQ_CMDS      },
 

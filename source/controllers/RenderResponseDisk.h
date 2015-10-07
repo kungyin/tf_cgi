@@ -79,6 +79,7 @@ private:
     void generateVeLoadModule();
     void generateVeLoadModuleState();
     void generateVeMountVolume();
+    void generateVeMountUploadFile();
 
 };
 
