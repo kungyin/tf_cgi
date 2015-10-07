@@ -63,7 +63,8 @@ void RenderResponseSysStatus::preRender() {
 void RenderResponseSysStatus::generateGetStatus() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
+    QStringList arg = QStringList() << "system_get_system_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
@@ -181,7 +182,8 @@ void RenderResponseSysStatus::generateGetStatus() {
 void RenderResponseSysStatus::generateStatusVolumeInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_hdd_volume_info");
+    QStringList arg = QStringList() << "system_get_hdd_volume_info" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -226,7 +228,8 @@ void RenderResponseSysStatus::generateStatusVolumeInfo() {
 void RenderResponseSysStatus::generateUsbStorageInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_storage_info", false);
+    QStringList arg = QStringList() << "service_get_usb_storage_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, false);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -307,7 +310,8 @@ void RenderResponseSysStatus::generateUsbStorageInfo() {
 void RenderResponseSysStatus::generateMtpInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mtp_info");
+    QStringList arg = QStringList() << "service_get_mtp_info" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -344,7 +348,8 @@ void RenderResponseSysStatus::generateMtpInfo() {
 void RenderResponseSysStatus::generateUsbPrinterInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_usb_printer_info", true, ",");
+    QStringList arg = QStringList() << "system_get_usb_printer_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ",");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -399,7 +404,8 @@ void RenderResponseSysStatus::generateUsbPrinterInfo() {
 void RenderResponseSysStatus::generateUpsInfo2() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_ups_info2");
+    QStringList arg = QStringList() << "system_get_ups_info2";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -439,7 +445,8 @@ void RenderResponseSysStatus::generateSmartXmlCreateDeviceList() {
     QString paraPage = m_pReq->parameter("page");
     QString paraRp = m_pReq->parameter("rp");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+    QStringList arg = QStringList() << "system_get_device_smart_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -494,7 +501,8 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo() {
     QString paraRp = m_pReq->parameter("rp");
     QString paraField = m_pReq->parameter("f_field");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_list " + paraField);
+    QStringList arg = QStringList() << "system_get_device_smart_list" << paraField;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QStringList smartInfoList(apiOut);
     int rp = paraRp.toInt();
@@ -542,7 +550,8 @@ void RenderResponseSysStatus::generateSmartXmlCreateSmartInfo() {
 void RenderResponseSysStatus::generateResource() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info");
+    QStringList arg = QStringList() << "system_get_resource_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("xml");
     doc.appendChild(root);
@@ -597,7 +606,8 @@ void RenderResponseSysStatus::generateResource() {
 void RenderResponseSysStatus::generateGetService() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
+    QStringList arg = QStringList() << "system_get_system_services";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("service");
     doc.appendChild(root);
@@ -628,7 +638,8 @@ void RenderResponseSysStatus::generateModuleList() {
 
     QDomDocument doc;
     QString paraPage = m_pReq->parameter("page");
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_package_list");
+    QStringList arg = QStringList() << "service_get_package_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);

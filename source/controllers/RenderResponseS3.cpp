@@ -64,7 +64,8 @@ void RenderResponseS3::generateGetS3() {
     QString paraField = m_pReq->parameter("f_field");
     QString paraUser = m_pReq->parameter("user");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_info");
+    QStringList arg = QStringList() << "service_get_s3_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " ");
 
     QString cellContent0 = "<span style='display:none'>%1</span><span>%2</span>";
     QString cellContent3 = "<img border='0' src='/web/images/%1.png' width='27' height='17' onclick='parent.action_stop(\"%2\")'>";
@@ -143,15 +144,15 @@ void RenderResponseS3::generateGetS3() {
 
 void RenderResponseS3::generateS3() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_s3_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_add_s3_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseS3::generateS3Modify() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_mod_s3_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_mod_s3_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
@@ -159,8 +160,8 @@ void RenderResponseS3::generateS3GetModify() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_modify "
-                                      + allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "service_get_s3_modify" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("s3");
     doc.appendChild(root);
@@ -190,16 +191,16 @@ void RenderResponseS3::generateS3Del() {
 
     QString paraJobName = m_pReq->parameter("f_job_name");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_del_s3_account "
-                                      + paraJobName, true);
+    QStringList arg = QStringList() << "service_del_s3_account" << paraJobName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseS3::generateS3Start() {
 
     QString paraJobName = m_pReq->parameter("f_job_name");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_start_s3_account "
-                                      + paraJobName, true);
+    QStringList arg = QStringList() << "service_start_s3_account" << paraJobName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
@@ -207,15 +208,15 @@ void RenderResponseS3::generateS3Stop() {
 
     QString paraJobName = m_pReq->parameter("f_job_name");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_stop_s3_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_stop_s3_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
 void RenderResponseS3::generateS3Backup() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_s3_backup "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_s3_backup" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 
 }
@@ -223,7 +224,8 @@ void RenderResponseS3::generateS3Backup() {
 void RenderResponseS3::generateGetRecovery() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_restore_s3_account " + allParametersToString());
+    QStringList arg = QStringList() << "service_restore_s3_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("s3");
     doc.appendChild(root);
@@ -248,8 +250,8 @@ void RenderResponseS3::generateGetPercent() {
     QDomDocument doc;
 
     QString paraName = m_pReq->parameter("name");
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_progress "
-                                      + allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "service_get_s3_progress" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("s3");
     doc.appendChild(root);
@@ -282,7 +284,7 @@ void RenderResponseS3::generateClearPercent() {
 
     QString paraJobName = m_pReq->parameter("name");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_clear_s3_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_clear_s3_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }

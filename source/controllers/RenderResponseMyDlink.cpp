@@ -80,8 +80,10 @@ void RenderResponseMyDlink::preRender() {
 
 void RenderResponseMyDlink::generateInfo() {
 
-    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
-    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList arg = QStringList() << "system_get_lan_mac_info";
+    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    QStringList arg1 = QStringList() << "get";
+    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg1, true, ";");
     QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
     QMap<QString, QString> systemInfo = getNasCfg("system");
 
@@ -106,7 +108,8 @@ bool RenderResponseMyDlink::isLogin() {
     QString loginStr = QByteArray::fromBase64(paraName.toLocal8Bit()) +
             " " + QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD + " " + loginStr, true);
+    QStringList arg = QStringList() << loginStr;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD, arg, true);
     return apiOut.value(0) == "OK" ? true : false;
 
 }
@@ -142,13 +145,15 @@ void RenderResponseMyDlink::generateSetDeviceName() {
     generatePrefix(doc);
 
     QString paraDeviceName = QUrl::fromPercentEncoding(m_pReq->parameter("device_name").toLocal8Bit());
-    QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList arg = QStringList() << "get";
+    QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
 
-    QString paraToSet = " set %1 %2 %3";
-    QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + paraToSet
-                                         .arg(paraDeviceName)
-                                         .arg(apiOutGet.value(1))
-                                         .arg(apiOutGet.value(2)), true, ";");
+    QString paraToSet = QString("set %1 %2 %3")
+            .arg(paraDeviceName)
+            .arg(apiOutGet.value(1))
+            .arg(apiOutGet.value(2));
+    QStringList arg1 = QStringList() << paraToSet;
+    QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg1, true, ";");
     QStringList apiOutHostname = getAPIFileOut(HOSTNAME_FILE);
 
     QDomElement root = doc.documentElement();
@@ -198,7 +203,8 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
             getDevInfoType4(doc);
         }
         else if(paraType == "5") {
-            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+            QStringList arg = QStringList() << "system_get_device_smart_info";
+            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
             QDomElement disksElement = doc.createElement("new_disks");
             root.appendChild(disksElement);
@@ -237,7 +243,8 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
         }
         else if(paraType == "6") {
             QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
-            QStringList apiOutModule = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
+            QStringList arg = QStringList() << "Module_Get_Info";
+            QStringList apiOutModule = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
             QDomElement servicesElement = doc.createElement("services");
             root.appendChild(servicesElement);
@@ -286,9 +293,11 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
 void RenderResponseMyDlink::getDevInfoType1(QDomDocument &doc) {
     QDomElement root = doc.documentElement();
 
-    QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList arg = QStringList() << "get";
+    QStringList apiOutDevice = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
     QStringList apiOutModel = getAPIFileOut(MODEL_FILE);
-    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_lan_mac_info", true, ";");
+    QStringList arg1 = QStringList() << "system_get_lan_mac_info";
+    QStringList apiOutMac = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg1, true, ";");
 
     QDomElement deviceNameElement = doc.createElement("device_name");
     root.appendChild(deviceNameElement);
@@ -304,11 +313,16 @@ void RenderResponseMyDlink::getDevInfoType1(QDomDocument &doc) {
 void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
     QDomElement root = doc.documentElement();
 
-    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
-    QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
-    QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_status", true, ";");
-    QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
-    QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_smart_info");
+    QStringList arg = QStringList() << "system_get_device_detail_info";
+    QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    arg.clear(); arg = QStringList() << "system_get_system_temperature";
+    QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    arg.clear(); arg = QStringList() << "system_get_system_status";
+    QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    arg.clear(); arg = QStringList() << "service_home_api" << "cgi_get_fw_status";
+    QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    arg.clear(); arg = QStringList() << "system_get_device_smart_info";
+    QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QMap<QString, QString> systemInfo = getNasCfg("system");
 
     QDomElement memorySizeElement = doc.createElement("memory_size");
@@ -351,7 +365,8 @@ void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
 void RenderResponseMyDlink::getDevInfoType3(QDomDocument &doc) {
     QDomElement root = doc.documentElement();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_resource_info").value(0).split(";");
+    QStringList arg = QStringList() << "system_get_resource_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg).value(0).split(";");
 
     QDomElement rxElement = doc.createElement("rx");
     root.appendChild(rxElement);
@@ -372,8 +387,10 @@ void RenderResponseMyDlink::getDevInfoType3(QDomDocument &doc) {
 void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
     QDomElement root = doc.documentElement();
 
-    QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_services", true, ";");
-    QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
+    QStringList arg = QStringList() << "system_get_system_services";
+    QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    arg.clear(); arg = QStringList() << "media_get_itunes_config";
+    QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement servicesElement = doc.createElement("services");
     root.appendChild(servicesElement);
@@ -410,7 +427,8 @@ void RenderResponseMyDlink::generateListVolume() {
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
 
-        QStringList apiOutVolInfo = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_hdd_volume_info");
+        QStringList arg = QStringList() << "system_get_hdd_volume_info";
+        QStringList apiOutVolInfo = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
         QMap<QString, QString> map;
         QDomDocument readFileDoc;

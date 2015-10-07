@@ -41,7 +41,8 @@ void RenderResponseAirplay::preRender() {
 void RenderResponseAirplay::generateGetAirplayDevice() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_get_airplay_device", true, ";");
+    QStringList arg = QStringList() << "cgi_get_airplay_device";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
@@ -65,8 +66,8 @@ void RenderResponseAirplay::generateGetAirplayDevice() {
 void RenderResponseAirplay::generateSetAirplayDevice() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_set_airplay_device " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_set_airplay_device" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
@@ -81,7 +82,8 @@ void RenderResponseAirplay::generateSetAirplayDevice() {
 void RenderResponseAirplay::generateChkAirplayStatus() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_chk_airplay_status");
+    QStringList arg = QStringList() << "cgi_chk_airplay_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
@@ -95,16 +97,16 @@ void RenderResponseAirplay::generateChkAirplayStatus() {
 
 void RenderResponseAirplay::generateSetAirplaySource() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_set_airplay_source " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_set_airplay_source" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
 }
 
 void RenderResponseAirplay::generateAirplayStop() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_airplay_stop " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_airplay_stop" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);

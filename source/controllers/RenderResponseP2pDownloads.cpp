@@ -100,7 +100,8 @@ void RenderResponseP2pDownloads::generateP2PHomeState() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_p2p_home_stat");
+    QStringList arg = QStringList() << "service_p2p_home_stat";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -202,8 +203,8 @@ void RenderResponseP2pDownloads::generateP2pAddTorrentUrl() {
     QDomDocument doc;
 
     //QString url = QUrl::fromPercentEncoding(m_pReq->parameter("f_torrent_url").toLocal8Bit());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_url_torrent " +
-                                      allParametersToString() , true, ";");
+    QStringList arg = QStringList() << "service_set_p2p_url_torrent" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -240,7 +241,8 @@ void RenderResponseP2pDownloads::generateP2pCurrentSesState() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_p2p_current_state", true);
+    QStringList arg = QStringList() << "service_p2p_current_state";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " ", true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -297,8 +299,8 @@ void RenderResponseP2pDownloads::generateP2pGetTorrentScheduling() {
     QDomDocument doc;
 
     QString paraTorrentIndex = m_pReq->parameter("f_torrent_index");
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " service_get_p2p_torrent_schedue " +
-                                      paraTorrentIndex, true);
+    QStringList arg = QStringList() << "service_get_p2p_torrent_schedue" << paraTorrentIndex;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -357,8 +359,8 @@ void RenderResponseP2pDownloads::generateP2pTorrentSchedulingSet() {
 //    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_P2P_API +
 //                 " --set-schedule 1 " + paraTorrentIndex + " " + schedule, true);
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                     " service_set_p2p_torrent_schedule  " + allParametersToString());
+    QStringList arg = QStringList() << "service_set_p2p_torrent_schedule" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -372,8 +374,8 @@ void RenderResponseP2pDownloads::generateP2pTorrentSchedulingSet() {
 }
 
 void RenderResponseP2pDownloads::generateP2pDetailTorrent() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_Detail_info " +
-                                      allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "service_get_p2p_Detail_info" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QVariantMap listMap;
     listMap.insert("name", apiOut.value(0));
@@ -409,8 +411,8 @@ void RenderResponseP2pDownloads::generateP2pDelTorrent() {
 //    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_P2P_API + " --remove " +
 //                                      m_pReq->parameter("f_torrent_url"), true);
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_torrent_remove " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "service_set_p2p_torrent_remove" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -427,7 +429,8 @@ void RenderResponseP2pDownloads::generateP2pGetTorrentInfo() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_torrent_info", true, ";");
+    QStringList arg = QStringList() << "service_get_p2p_torrent_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -447,8 +450,8 @@ void RenderResponseP2pDownloads::generateP2pStartTorrent() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_torrent_start " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "service_set_p2p_torrent_start" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -465,8 +468,8 @@ void RenderResponseP2pDownloads::generateP2pPauseTorrent() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_torrent_pause " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "service_set_p2p_torrent_pause" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -481,7 +484,8 @@ void RenderResponseP2pDownloads::generateP2pPauseTorrent() {
 
 void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_setting_info", true, ";");
+    QStringList arg = QStringList() << "service_get_p2p_setting_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -530,7 +534,8 @@ void RenderResponseP2pDownloads::generateP2pGetSettingInfo() {
 */
 void RenderResponseP2pDownloads::generateP2pGetHd() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_p2p_save_device", true, ";");
+    QStringList arg = QStringList() << "service_get_p2p_save_device";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
 
     QStringList apiOutShared = apiOut.mid(1, 2);
@@ -568,8 +573,8 @@ void RenderResponseP2pDownloads::generateP2pGetHd() {
 
 void RenderResponseP2pDownloads::generateP2pSetConfig() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_setting " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "service_set_p2p_setting" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     m_var = "<script>location.href='/web/download_mgr/p2p_set.html?id=8401878'</script>";
 
 }

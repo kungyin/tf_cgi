@@ -38,8 +38,8 @@ void RenderResponseGoogleDrive::generateGd1() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_gdrive_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_add_gdrive_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
@@ -53,8 +53,8 @@ void RenderResponseGoogleDrive::generateGd2() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_mod_gdrive_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_mod_gdrive_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
@@ -68,8 +68,8 @@ void RenderResponseGoogleDrive::generateGd3() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_del_gdrive_account "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_del_gdrive_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
@@ -83,8 +83,8 @@ void RenderResponseGoogleDrive::generateGd4() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sync_now_gdrive "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_sync_now_gdrive" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("status");
     doc.appendChild(root);
