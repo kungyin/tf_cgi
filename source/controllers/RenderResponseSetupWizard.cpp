@@ -33,8 +33,8 @@ void RenderResponseSetupWizard::preRender() {
 void RenderResponseSetupWizard::generateChkAdminPw() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API
-                                      + " system_chk_admin_pw " + m_pReq->parameter("pw"), true);
+    QStringList arg = QStringList() << "system_chk_admin_pw" << m_pReq->parameter("pw");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("chk_info");
     doc.appendChild(root);

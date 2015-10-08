@@ -143,7 +143,8 @@ void RenderResponseAccount::generateChangeAdminPwd() {
     //QByteArray pwd = QByteArray::fromBase64(paraPwd.toLocal8Bit());
     //QByteArray oldPwd = QByteArray::fromBase64(paraOldPwd.toLocal8Bit());
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " admin " + paraOldPwd  + " " + paraPwd, true);
+    QStringList arg = QStringList() << "admin" << paraOldPwd << paraPwd;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
 
     QDomElement root = doc.createElement("modify_info");
     doc.appendChild(root);
@@ -165,7 +166,8 @@ void RenderResponseAccount::generateGetUserList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_get_user_list");
+    QStringList arg = QStringList() << "system_user_get_user_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -204,7 +206,8 @@ void RenderResponseAccount::generateGetUserList() {
 void RenderResponseAccount::generateGetUserInfo() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_get_user_info", true, ";");
+    QStringList arg = QStringList() << "system_user_get_user_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     QDomElement root = doc.createElement("user_info");
     doc.appendChild(root);
 
@@ -248,7 +251,8 @@ void RenderResponseAccount::generateGetSmbList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_get_smb_share_list");
+    QStringList arg = QStringList() << "system_user_get_smb_share_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QStringList userInfoList(apiOut);
     int rp = paraRp.toInt();
@@ -292,19 +296,20 @@ void RenderResponseAccount::generateGetSmbList() {
 
 void RenderResponseAccount::generateUserAdd() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " system_user_add_user " + allParametersToString(), true);
+    QStringList arg = QStringList() << "system_user_add_user" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
 /* todo: restart specified service*/
 void RenderResponseAccount::generateRestartService() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_service_restart", true);
+    QStringList arg = QStringList() << "system_user_set_service_restart";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseAccount::generateUserSetQuota() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_user_quota "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "system_user_set_user_quota" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
@@ -316,12 +321,13 @@ void RenderResponseAccount::generateAddUserToSession() {
 //    QString paraDeclineList = m_pReq->allParameters().value("decline_list").toString();
 //    QString paraUsername = m_pReq->allParameters().value("username").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_user_add_session "
-                + allParametersToString(), true);
+    QStringList arg = QStringList() << "system_user_set_user_add_session" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseAccount::generateCreateFtpLink() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_ftp_modify_share_config adduser", true);
+    QStringList arg = QStringList() << "service_ftp_modify_share_config" << "adduser";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseAccount::generateFtpService() {
@@ -341,8 +347,8 @@ void RenderResponseAccount::generateWebdavAccountMerge() {
 //    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 //    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_set_webdav_service "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "system_user_set_webdav_service" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -366,8 +372,8 @@ void RenderResponseAccount::generateUserBatchCreate() {
 //    QString paraQuota = m_pReq->allParameters().value("quota").toString();
 //    QString paraOverWrite = m_pReq->allParameters().value("f_overwrite").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " system_user_multi_add_user " + allParametersToString(), true);
+    QStringList arg = QStringList() << "system_user_multi_add_user" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
@@ -376,7 +382,8 @@ void RenderResponseAccount::generateGetModifyUserInfo() {
 
     QString paraName = m_pReq->allParameters().value("name").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " modinfo " + paraName, true, ";");
+    QStringList arg = QStringList() << "modinfo" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true, ";");
     QDomElement root = doc.createElement("user_info");
     doc.appendChild(root);
 
@@ -489,8 +496,8 @@ void RenderResponseAccount::generateUserModify() {
 //    if(paraAva4.compare("null") != 0)
 //        available.insert("volume_4");
 
-    QStringList apiOutUser = getAPIStdOut(API_PATH + SCRIPT_USER_MGR +
-                                      " modify " + allParametersToString(), true);
+    QStringList arg = QStringList() << "modify" << allParametersToString();
+    QStringList apiOutUser = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
@@ -504,7 +511,8 @@ void RenderResponseAccount::generateUserModify() {
 
 void RenderResponseAccount::generateUserDel() {
     QString paraName = QUrl::fromPercentEncoding(m_pReq->allParameters().value("name").toByteArray());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " del " + paraName, true);
+    QStringList arg = QStringList() << "del" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
 }
 
 /* the same API ?? */
@@ -513,7 +521,8 @@ void RenderResponseAccount::generateMyFavDelUser() {
 
     QString paraUserList = QUrl::fromPercentEncoding(m_pReq->allParameters().value("f_user_lst").toByteArray());
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " del " + paraUserList, true);
+    QStringList arg = QStringList() << "del" << paraUserList;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -538,7 +547,8 @@ void RenderResponseAccount::generateDownloadImportSample() {
 void RenderResponseAccount::generateGetAllSession() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_list");
+    QStringList arg = QStringList() << "service_get_tm_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
 
@@ -564,7 +574,8 @@ void RenderResponseAccount::generateGetAllSession() {
 void RenderResponseAccount::generateGetImportUsers() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " get_import_user");
+    QStringList arg = QStringList() << "get_import_user";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg);
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
 
@@ -582,8 +593,8 @@ void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize() {
     QDomDocument doc;
 
     QString paraName = m_pReq->allParameters().value("name").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " system_user_get_user_quota_maxsize " +
-                                      paraName, true);
+    QStringList arg = QStringList() << "system_user_get_user_quota_maxsize" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
     QDomElement maxSizeElement = doc.createElement("max_size");
@@ -595,14 +606,15 @@ void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize() {
 }
 
 void RenderResponseAccount::generateCreateImportUsers() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR + " create_import_user " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "create_import_user" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
 }
 
 void RenderResponseAccount::generateCreateStatus() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_user_get_create_import_status", true);
+    QStringList arg = QStringList() << "system_user_get_create_import_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
     QDomElement statusElement = doc.createElement("status");
@@ -621,7 +633,8 @@ void RenderResponseAccount::generateGetGroupList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " get_group_list");
+    QStringList arg = QStringList() << "get_group_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -659,7 +672,8 @@ void RenderResponseAccount::generateGetGroupList() {
 
 void RenderResponseAccount::generateGetGroupInfo() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " get_group_info", true, ";");
+    QStringList arg = QStringList() << "get_group_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true, ";");
 
     QDomElement root = doc.createElement("group_info");
     doc.appendChild(root);
@@ -696,15 +710,16 @@ void RenderResponseAccount::generateGetGroupInfo() {
 void RenderResponseAccount::generateGroupAdd() {
 //    QString paraGroup = m_pReq->allParameters().value("group").toString();
 //    QString paraMember = m_pReq->allParameters().value("member").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " add " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "add" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true);
 }
 
 
 void RenderResponseAccount::generateAddGroupGetGroupQuotaMinsize() {
     QDomDocument doc;
     QString paraName = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " get_group_quota_minsize " + paraName, true);
+    QStringList arg = QStringList() << "get_group_quota_minsize" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true);
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
@@ -723,14 +738,16 @@ void RenderResponseAccount::generateGroupSetQuota() {
 //    QString paraAva2 = m_pReq->allParameters().value("available2").toString();
 //    QString paraAva3 = m_pReq->allParameters().value("available3").toString();
 //    QString paraAva4 = m_pReq->allParameters().value("available4").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " groupset " + allParametersToString(), true);
+    QStringList arg = QStringList() << "groupset" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true);
 
 }
 
 void RenderResponseAccount::generateGetModifyGroupInfo() {
     QDomDocument doc;
     QString paraGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group").toByteArray());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " modify_group_info " + paraGroup, true, ";");
+    QStringList arg = QStringList() << "modify_group_info" << paraGroup;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true, ";");
 
     QDomElement root = doc.createElement("group_info");
     doc.appendChild(root);
@@ -829,19 +846,21 @@ void RenderResponseAccount::generateGroupModify() {
 //    QString paraUncheckList = m_pReq->allParameters().value("uncheck_list").toString();
 //    QString paraFtp = m_pReq->allParameters().value("ftp").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " modify " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "modify" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true);
 }
 
 void RenderResponseAccount::generateGroupDel() {
     QString paraGroup = QUrl::fromPercentEncoding(m_pReq->allParameters().value("group").toByteArray());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER + " delete " + paraGroup, true);
+    QStringList arg = QStringList() << "delete" << paraGroup;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg, true);
 }
 
 void RenderResponseAccount::generateGetQuotaInfo() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " quotainfo", true, ";");
+    QStringList arg = QStringList() << "quotainfo";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true, ";");
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
@@ -909,7 +928,8 @@ void RenderResponseAccount::generateGetUserQuotaList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " userlist", false, ";");
+    QStringList arg = QStringList() << "userlist";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, false, ";");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -972,7 +992,8 @@ void RenderResponseAccount::generateGetGroupQuotaList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " grouplist", false, ";");
+    QStringList arg = QStringList() << "grouplist";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, false, ";");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -1031,8 +1052,8 @@ void RenderResponseAccount::generateGetUserQuotaMaxSize() {
 //    QString paraName = m_pReq->allParameters().value("name").toString();
 //    QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR +
-                                      " get_user_quota_maxsize " + allParametersToString(), true);
+    QStringList arg = QStringList() << "get_user_quota_maxsize" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true);
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
@@ -1049,8 +1070,8 @@ void RenderResponseAccount::generateGetGroupQuotaMinSize() {
 //    QString paraName = m_pReq->allParameters().value("name").toString();
 //    QString paraHdd = m_pReq->allParameters().value("hdd").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR +
-                                      " get_group_quota_minsize " + allParametersToString(), true);
+    QStringList arg = QStringList() << "get_group_quota_minsize" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true);
 
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
@@ -1065,7 +1086,8 @@ void RenderResponseAccount::generateGetGroupQuotaMinSize() {
 void RenderResponseAccount::generateSetQuotaOnOff() {
     QString paraOnoff = m_pReq->allParameters().value("onoff").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR + " set_quota_onoff " + paraOnoff, true);
+    QStringList arg = QStringList() << "set_quota_onoff" << paraOnoff;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true);
     m_var = "/web/account_mgr/quota.html";
 }
 

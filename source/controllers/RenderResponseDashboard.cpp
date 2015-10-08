@@ -31,7 +31,8 @@ void RenderResponseDashboard::preRender() {
 
 void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_device_detail_info", true, ";");
+    QStringList arg = QStringList() << "system_get_device_detail_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);

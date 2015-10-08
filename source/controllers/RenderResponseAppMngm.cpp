@@ -421,7 +421,8 @@ void RenderResponseAppMngm::generateGuiCodepageGetList() {
 void RenderResponseAppMngm::generateItunesServerGetXml() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_config", true, ";");
+    QStringList arg = QStringList() << "media_get_itunes_config";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -456,7 +457,8 @@ void RenderResponseAppMngm::generateItunesServerGetXml() {
 void RenderResponseAppMngm::generateItunesServerReady() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_status", true, ";");
+    QStringList arg = QStringList() << "media_get_itunes_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -687,8 +689,8 @@ void RenderResponseAppMngm::generateUpnpAvServerSetting() {
 void RenderResponseAppMngm::generateGuiCodepageAdd() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_system_codepage "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "media_set_system_codepage" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -703,8 +705,8 @@ void RenderResponseAppMngm::generateGuiCodepageAdd() {
 void RenderResponseAppMngm::generateItunesServerSetting() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_itunes_config "
-                                      + allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "media_set_itunes_config" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -723,8 +725,8 @@ void RenderResponseAppMngm::generateItunesServerSetting() {
 void RenderResponseAppMngm::generateItunesServerCheckPs() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_prcess_status "
-                                      + allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "media_get_itunes_prcess_status" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -743,8 +745,8 @@ void RenderResponseAppMngm::generateItunesServerCheckPs() {
 void RenderResponseAppMngm::generateItunesServerRefresh() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_itunes_refresh "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "media_set_itunes_refresh" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -760,7 +762,8 @@ void RenderResponseAppMngm::generateItunesServerRefresh() {
 void RenderResponseAppMngm::generateItunesServerRefreshState() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_itunes_refresh_state", true, ";");
+    QStringList arg = QStringList() << "media_get_itunes_refresh_state";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -838,8 +841,8 @@ void RenderResponseAppMngm::generateChkRefreshStatus()
 
 void RenderResponseAppMngm::generateSyslogServerEnable() {
     QString paraEnable = m_pReq->parameter("f_syslog_enable");
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_syslog_server_enable " + paraEnable);
+    QStringList arg = QStringList() << "service_syslog_server_enable" << paraEnable;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
 }
 
@@ -952,7 +955,8 @@ void RenderResponseAppMngm::generateSyslogSearch() {
 void RenderResponseAppMngm::generateGetVolumeInfo() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_volume_info");
+    QStringList arg = QStringList() << "service_get_volume_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QStringList apiArgs;
     if (!apiOut.isEmpty()) apiArgs = apiOut.at(0).split(";");
 
@@ -1023,7 +1027,8 @@ void RenderResponseAppMngm::generateSyslogGetLogFileOption() {
 void RenderResponseAppMngm::generateSyslogGetConfig() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_log_cfg");
+    QStringList arg = QStringList() << "service_get_log_cfg";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QStringList apiArgs;
     if (!apiOut.isEmpty()) apiArgs = apiOut.at(0).split(";");
     QDomElement root = doc.createElement("config");
@@ -1214,7 +1219,7 @@ void RenderResponseAppMngm::generateSyslogSetConfig() {
     QString paraIsSendmail = m_pReq->allParameters().value("is_sendmail").toString();
     QString paraNewLogFolder = m_pReq->allParameters().value("f_new_log_folder").toString();
 
-    QString args = QString(" f_syslog_enable=%1#f_syslog_folder=%2#f_syslog_udp=%3#"
+    QString args = QString("f_syslog_enable=%1#f_syslog_folder=%2#f_syslog_udp=%3#"
                            "f_archive_size_en=%4#f_archive_size=%5#f_archive_num_en=%6#"
                            "f_archive_cycle_en=%7#f_archive_cycle=%8#f_folder_quota_size=%9#"
                            "f_email_severity=%10#f_email_enable=%11#is_sendmail=%12#f_new_log_folder=%13")
@@ -1231,7 +1236,8 @@ void RenderResponseAppMngm::generateSyslogSetConfig() {
             .arg(paraEmailEnable)
             .arg(paraIsSendmail)
             .arg(paraNewLogFolder);
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_log_cfg" + args);
+    QStringList arg = QStringList() << "service_set_log_cfg" << args;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     m_var = "<script>location.href='/web/app_mgr/log_server.html?id=8401878'</script>";
 
@@ -1279,7 +1285,8 @@ void RenderResponseAppMngm::generateSyslogGetExportStatus() {
 
 void RenderResponseAppMngm::generateSyslogClear() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_syslog_clear");
+    QStringList arg = QStringList() << "service_syslog_clear";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
 }
 
@@ -2056,12 +2063,7 @@ void RenderResponseAppMngm::generateServerTest() {
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
             QString arg = QString("%1 %2@%3 '%4 free_size'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
-            //QProcess process;
-            //process.start(arg);
-            //process.waitForFinished();
             QStringList remoteHddFreeSize = getAPIStdOut(arg, true, ":", true);
-            //QString readAll = QString(process.readAllStandardOutput());
-            //QStringList remoteHddFreeSize = readAll.split("\n").value(0).split(":", QString::SkipEmptyParts);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
                 remoteHdA2FreeSizeElement = doc.createElement(QString("remote_hd_%1%2_free_size").arg(QChar(i + 97), "2"));
@@ -2091,12 +2093,7 @@ void RenderResponseAppMngm::generateServerTest() {
         else
         {
             QString arg = QString("%1 %2@%3 '%4 share_node'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
-            //QProcess process;
-            //process.start(arg);
-            //process.waitForFinished();
             QStringList remoteHddShareNodes = getAPIStdOut(arg, false, "", true);
-            //QString readAll = QString(process.readAllStandardOutput());
-            //QStringList remoteHddShareNodes = readAll.split("\n", QString::SkipEmptyParts);
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
                 QStringList remoteHddShareNode = n.split(":", QString::SkipEmptyParts);
@@ -2381,7 +2378,8 @@ void RenderResponseAppMngm::generateEnableDisableSchedule() {
 void RenderResponseAppMngm::generateBackupNow() {
 
     QString name = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + name);
+    QStringList arg = QStringList() << name;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP, arg);
     m_var = "N/A";
 
 }
@@ -2389,9 +2387,8 @@ void RenderResponseAppMngm::generateBackupNow() {
 void RenderResponseAppMngm::generateMtpInfoGet() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_mtp_info",
-                                      true,
-                                      ";");
+    QStringList arg = QStringList() << "service_get_mtp_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
 
@@ -2417,9 +2414,8 @@ void RenderResponseAppMngm::generateMtpInfoGet() {
 void RenderResponseAppMngm::generateUsbBackupInfoGet() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_usb_backup_info",
-                                      true,
-                                      ";");
+    QStringList arg = QStringList() << "service_get_usb_backup_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -2454,10 +2450,8 @@ void RenderResponseAppMngm::generateMtpInfoSet() {
     QDomDocument doc;
 
     QString paraEnable = m_pReq->parameter("f_enable");
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                          " service_set_mtp_backups_cfg " + allParametersToString(),
-                                      true,
-                                      ";");
+    QStringList arg = QStringList() << "service_set_mtp_backups_cfg" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -2488,8 +2482,8 @@ void RenderResponseAppMngm::generateUsbBackupInfoSet() {
 //    QString paraDestDir = m_pReq->parameter("f_dest_dir");
 //    QString paraType = m_pReq->parameter("f_type");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_set_usb_backup_cfg " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_usb_backup_cfg" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

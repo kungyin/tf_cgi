@@ -84,7 +84,8 @@ void RenderResponseAddOn::preRender() {
 void RenderResponseAddOn::generateModuleShowInstallStatus() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_show_install_status", true, ";");
+    QStringList arg = QStringList() << "module_show_install_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -112,7 +113,8 @@ void RenderResponseAddOn::generateModuleShowInstallStatus() {
 void RenderResponseAddOn::generateGetAllApps() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_get_allapps", true, ";");
+    QStringList arg = QStringList() << "cgi_get_allapps";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("allapps");
     doc.appendChild(root);
@@ -161,8 +163,8 @@ void RenderResponseAddOn::generateGetApkgDetail() {
 void RenderResponseAddOn::generateMyFavCheckImg() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_myfavorite_check_img " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "cgi_myfavorite_check_img" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -177,7 +179,8 @@ void RenderResponseAddOn::generateMyFavCheckImg() {
 void RenderResponseAddOn::generateChkHddFreeSize() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_chk_hdd_free_size", true, ";");
+    QStringList arg = QStringList() << "cgi_chk_hdd_free_size";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -203,8 +206,8 @@ void RenderResponseAddOn::generateClearAddOnFiles() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " clear_addon_files " +
-                                      allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "clear_addon_files" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -223,16 +226,16 @@ void RenderResponseAddOn::generateClearAddOnFiles() {
 
 void RenderResponseAddOn::generateModuleReInstall() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_re_install " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "module_re_install" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     m_var = "<script>location.href='/web/addon_center/installed.html'</script>";
 }
 
 void RenderResponseAddOn::generateInstall3PartyApkg() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " install_3_party_apkg " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "install_3_party_apkg" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     m_var = "<script>location.href='/web/addon_center/installed.html?id=8401878'</script>";
 }
@@ -240,8 +243,8 @@ void RenderResponseAddOn::generateInstall3PartyApkg() {
 void RenderResponseAddOn::generateUninstallAddOn() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " uninstall_addon " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "uninstall_addon" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -256,8 +259,8 @@ void RenderResponseAddOn::generateUninstallAddOn() {
 void RenderResponseAddOn::generateModuleEnableDisable() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_enable_disable " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "module_enable_disable" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -272,8 +275,8 @@ void RenderResponseAddOn::generateModuleEnableDisable() {
 void RenderResponseAddOn::generateModuleUninstall() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_uninstall " +
-                                      allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "module_uninstall" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -299,7 +302,8 @@ void RenderResponseAddOn::generateApp() {
 void RenderResponseAddOn::generateApplication1st() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_application_lst");
+    QStringList arg = QStringList() << "cgi_application_lst";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -333,8 +337,8 @@ void RenderResponseAddOn::generateApplication1st() {
 void RenderResponseAddOn::generateModuleGetOneInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " module_Get_One_Info " +
-                                      allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "module_Get_One_Info" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

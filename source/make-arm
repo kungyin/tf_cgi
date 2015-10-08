@@ -1,0 +1,18 @@
+#!/bin/bash
+
+rm -rf lib/*
+/data/arm-2013.11_cppcms/bin/arm-linux-gnueabihf/bin/qmake -r "CONFIG+=release"
+make clean
+make
+rm -rf ../build/*
+cp -a config/ ../build/
+cp -a db/ ../build/
+cp -a lib/ ../build/
+#cp controllers/ext_libs/arm/* ../build/lib/
+cp -a plugin/ ../build/
+cp -a public/ ../build/
+cp -a sql/ ../build/
+cd ../build
+tar -cvf app.tar *
+cp -rf app.tar /media/RED/dlink/
+sync

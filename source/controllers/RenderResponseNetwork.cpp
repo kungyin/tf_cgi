@@ -128,7 +128,8 @@ void RenderResponseNetwork::generateLanXml() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_check_lan_speed", true);
+    QStringList arg = QStringList() << "network_check_lan_speed";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("info");
     doc.appendChild(root);
@@ -437,15 +438,16 @@ void RenderResponseNetwork::generateSetIPv6() {
     }
 
     /* wrong API */
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_set_ipv6");
+    QStringList arg = QStringList() << "network_set_ipv6";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
 }
 
 void RenderResponseNetwork::generateChkIPv6Addr() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_chk_ipv6_addr "
-                                      + m_pReq->parameter("addr"), true);
+    QStringList arg = QStringList() << "network_chk_ipv6_addr" << m_pReq->parameter("addr");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("ipv6");
     doc.appendChild(root);
@@ -463,8 +465,8 @@ void RenderResponseNetwork::generateChkIPv6Addr() {
 void RenderResponseNetwork::generateChkGwAddr() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " network_chk_ipv6_gateway_addr "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "network_chk_ipv6_gateway_addr" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("ipv6");
     doc.appendChild(root);
