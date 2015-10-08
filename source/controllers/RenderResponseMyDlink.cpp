@@ -108,8 +108,7 @@ bool RenderResponseMyDlink::isLogin() {
     QString loginStr = QByteArray::fromBase64(paraName.toLocal8Bit()) +
             " " + QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
 
-    QStringList arg = QStringList() << loginStr;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD + " " + loginStr, true);
     return apiOut.value(0) == "OK" ? true : false;
 
 }
