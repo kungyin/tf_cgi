@@ -171,7 +171,10 @@ void RenderResponseS3::generateS3GetModify() {
 
     if( s3Tags.size() == apiOut.size() ) {
         for(int i=0; i < apiOut.size(); i++) {
-            QDomElement element = doc.createElement(s3Tags.value(i));
+            QString tagName = s3Tags.value(i);
+            if(i == 8 && apiOut.value(7) == "0")
+                tagName = "date";
+            QDomElement element = doc.createElement(tagName);
             root.appendChild(element);
             element.appendChild(doc.createTextNode(apiOut.value(i)));
         }
@@ -251,27 +254,30 @@ void RenderResponseS3::generateGetPercent() {
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_s3_progress "
                                       + allParametersToString(), true, ";");
 
-    QDomElement root = doc.createElement("s3");
+    QDomElement root = doc.createElement("info");
     doc.appendChild(root);
-    QDomElement itemElement = doc.createElement("item");
-    root.appendChild(itemElement);
 
-    QList<QString> itemContentElement(QList<QString>()
-        << "fileName" << "time" << "percent");
+    if(!apiOut.value(0).isEmpty() || !apiOut.value(1).isEmpty() || !apiOut.value(2).isEmpty()) {
+        QDomElement itemElement = doc.createElement("item");
+        root.appendChild(itemElement);
 
-    if( itemContentElement.size() == apiOut.size() ) {
+        QStringList itemContentElement(QStringList()
+            << "fileName" << "time" << "percent");
 
-        for(int i=0; i < apiOut.size(); i++) {
+        for(int i=0; i < itemContentElement.size(); i++) {
             QDomElement element = doc.createElement(itemContentElement.value(i));
             itemElement.appendChild(element);
             element.appendChild(doc.createTextNode(apiOut.value(i)));
         }
     }
-    else {
-        //assert(0);
-        tError("RenderResponseS3::generateGetPercent() :"
-            "itemContentElement size is not equal to apiOut size.");
 
+    QStringList infoContentElement(QStringList()
+        << "state" << "time" << "total" << "tpercent");
+
+    for(int i=3; i < apiOut.size(); i++) {
+        QDomElement element = doc.createElement(infoContentElement.value(i-3));
+        root.appendChild(element);
+        element.appendChild(doc.createTextNode(apiOut.value(i)));
     }
 
     m_var = doc.toString();

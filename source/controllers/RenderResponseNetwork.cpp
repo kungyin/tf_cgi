@@ -477,12 +477,12 @@ void RenderResponseNetwork::generateChkGwAddr() {
 }
 
 void RenderResponseNetwork::generateSpeed() {
-    QString paraSpeed;
+    QString paraSpeed = m_pReq->parameter("lan0");
 
-    if(m_pReq->allParameters().contains("lan0"))
-        paraSpeed = m_pReq->allParameters().value("lan0").toString();
+    if(!paraSpeed.isEmpty())
+        setNasCfg("lan0", "speed", paraSpeed);
 
-    setNasCfg("lan0", "speed", paraSpeed);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NETWORK_SPEED + " -t");
 }
 
 void RenderResponseNetwork::generateLLTD() {

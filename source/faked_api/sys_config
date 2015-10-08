@@ -172,3 +172,6 @@ blockduration                  = 5
 
 [p2p]
 enable			       = 1
+
+[idle]
+time                           = 30

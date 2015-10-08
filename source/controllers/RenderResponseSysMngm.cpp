@@ -5,6 +5,9 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTimer>
+#include <QSettings>
+#include <TAppSettings>
+#include <TWebApplication>
 #include <unistd.h>
 
 RenderResponseSysMngm::RenderResponseSysMngm(THttpRequest &req, CGI_COMMAND cmd)
@@ -362,8 +365,9 @@ void RenderResponseSysMngm::generateDetectDangerous() {
 }
 
 void RenderResponseSysMngm::generateGetIdle() {
-    QMap<QString, QString> idleInfo = getNasCfg("idle");
-    m_var = idleInfo.value("time");
+    QSettings settings(Tf::app()->appSettingsFilePath(), QSettings::NativeFormat);
+    int idleTimeInMin = settings.value("Session.LifeTime").toInt() / 60;
+    m_var = QString::number(idleTimeInMin);
 }
 
 void RenderResponseSysMngm::generateGetTemperature() {
@@ -417,7 +421,11 @@ void RenderResponseSysMngm::generateShutdown() {
 
 void RenderResponseSysMngm::generateIdle() {
     QString paraIdle = m_pReq->allParameters().value("f_idle").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_IDLE_API + " set " + paraIdle);
+    int idleTimeInSec = paraIdle.toInt() * 60;
+    setNasCfg("General", "Session.LifeTime", QString::number(idleTimeInSec), Tf::app()->appSettingsFilePath());
+    daemonize();
+    if(!startDetached(API_PATH + SCRIPT_TREEFROG_CTL, QStringList() << "restart"))
+        ;
 }
 
 void RenderResponseSysMngm::generateTemperature() {

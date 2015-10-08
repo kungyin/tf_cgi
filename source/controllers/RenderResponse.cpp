@@ -165,10 +165,10 @@ QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QStri
     return ret;
 }
 
-bool RenderResponse::setNasCfg(QString title, QString key, QString value) {
+bool RenderResponse::setNasCfg(QString title, QString key, QString value, QString configFile) {
 
     QByteArray data;
-    QFile file(SYS_CONFIG_FILE);
+    QFile file(configFile);
     file.open(QIODevice::ReadWrite);
     data = file.readAll();
     QString fileData(data);

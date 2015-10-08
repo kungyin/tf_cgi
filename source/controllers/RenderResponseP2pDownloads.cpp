@@ -387,8 +387,8 @@ void RenderResponseP2pDownloads::generateP2pPrioritySet() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_P2P_API + " --priority " +
-                                      m_pReq->parameter("f_priority"), true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_p2p_torrent_priority " +
+                                      allParametersToString(), true, ";");
 
 
     QDomElement root = doc.createElement("config");

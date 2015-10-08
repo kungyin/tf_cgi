@@ -28,7 +28,7 @@ protected:
     QStringList getAPIStdOut(QString, QStringList, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
     bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
-    bool setNasCfg(QString, QString, QString);
+    bool setNasCfg(QString, QString, QString, QString configFile = SYS_CONFIG_FILE);
     bool setNasCfg(QString, QMap<QString, QString> &);
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);

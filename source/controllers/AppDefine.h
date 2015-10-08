@@ -42,10 +42,12 @@ const QString SCRIPT_AFP_CTL        =   "afpctl";
 const QString SCRIPT_SSH_CTL        =   "sshctl";
 const QString SCRIPT_TUXERA_API     =   "tuxera";
 const QString SCRIPT_GROUP_MANAGER  =   "groupmgr";
+const QString SCRIPT_NETWORK_SPEED  =   "net_speed";
 const QString SCRIPT_START_REMOTE_BACKUP = "StartRemoteBackup";
 const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_RTC_API        =   "crtc";
 const QString SCRIPT_CHK_PWD        =   "ccpwd";
+const QString SCRIPT_TREEFROG_CTL   =   "treefrogctl";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
 
 const QString HOSTNAME_FILE         =   "/etc/hostname";
