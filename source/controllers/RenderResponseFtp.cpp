@@ -49,8 +49,7 @@ void RenderResponseFtp::preRender() {
 
 void RenderResponseFtp::generateFtpServerGetConfig() {
     QDomDocument doc;
-    QStringList arg = QStringList() << "service_get_ftp_server_config";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_server_config", true, ";");
 
     QStringList configTagsElement(QStringList()
          << "maxclientsnumber" << "maxidletime" << "port" << "flowcontrol"
@@ -88,8 +87,7 @@ void RenderResponseFtp::generateFtpServerExipRenew() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_get_ftp_server_exip";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_server_exip", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -109,8 +107,7 @@ void RenderResponseFtp::generateP2pGetPort() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_check_ftp_port";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_check_ftp_port", true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -134,8 +131,7 @@ void RenderResponseFtp::generateFtpServerBlockIPList() {
 //    QString paraField = m_pReq->allParameters().value("f_field").toString();
 //    QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList arg = QStringList() << "service_get_ftp_blockip_list";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ftp_blockip_list ");
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -170,8 +166,8 @@ void RenderResponseFtp::generateFtpServerBlockIPAdd() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_set_ftp_blockip" << allParametersToString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_ftp_blockip " + allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -187,8 +183,8 @@ void RenderResponseFtp::generateFtpServerBlockIPDel() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "FTP_Server_BlockIP_Del" << allParametersToString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " FTP_Server_BlockIP_Del " + allParametersToString());
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -206,8 +202,8 @@ void RenderResponseFtp::generateFtpServerEnable() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_set_ftp_server_state" << paraStatus;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_ftp_server_state " + paraStatus);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -243,8 +239,8 @@ void RenderResponseFtp::generateFtpServerSetConfig() {
     if(!setNasCfg("ftp", map))
         tDebug("setNasCfg ftp failed");
 
-    QStringList arg = QStringList() << "service_set_modify_ftp_config";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " service_set_modify_ftp_config");
 
     m_var = "<script>location.href='/web/app_mgr/ftp_setting.html?id=8401878'</script>";
 

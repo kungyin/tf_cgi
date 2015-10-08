@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -rf source/lib/*
-/data/arm-2013.11_cppcms/arm-linux-gnueabihf/bin/qmake -r "CONFIG+=release"
+/usr/local/cross-tool/arm-linux-gnueabihf/bin/qmake -r "CONFIG+=release"
 make clean
 make
 rm -rf build/*

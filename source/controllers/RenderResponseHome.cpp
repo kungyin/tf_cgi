@@ -76,8 +76,7 @@ void RenderResponseHome::generateIsBuildInLanguage() {
     QDomElement root = doc.createElement("flag");
     doc.appendChild(root);
 
-    QStringList arg = QStringList() << "service_home_api" << "build_in_language";
-    QStringList val = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList val = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api build_in_language");
 
     root.appendChild(doc.createTextNode(val.value(0)));
     m_var = doc.toString();
@@ -102,8 +101,7 @@ void RenderResponseHome::generateGetUserLanguage() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_home_api" << "cgi_get_user_language";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_user_language", true, ";");
 
     QString ret = apiOut.value(0);
     QString retFormat = "%1,%2.xml";
@@ -138,8 +136,7 @@ void RenderResponseHome::generateGetUserLanguage() {
 
 void RenderResponseHome::generateGetSslInfo() {
     QDomDocument doc;
-    QStringList arg = QStringList() << "service_home_api" << "ssl_info";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api ssl_info", true);
 
     QDomElement root = doc.createElement("ssl_info");
     doc.appendChild(root);
@@ -158,8 +155,7 @@ void RenderResponseHome::generateUICheckWto() {
 }
 
 void RenderResponseHome::generateFWStatus() {
-    QStringList arg = QStringList() << "service_home_api" << "cgi_get_fw_status";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api cgi_get_fw_status", true);
     m_var = apiOut.value(0);
 }
 
@@ -194,8 +190,7 @@ void RenderResponseHome::generateLogin() {
         paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
 
     QString loginPara = "login#" + allParametersToString();
-    QStringList arg = QStringList() << "service_home_api" << loginPara;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_home_api " + loginPara, true);
 
     if(!paraSsl.isEmpty() && !paraSslPort.isEmpty()) {
         QMap<QString, QString> map;
@@ -256,8 +251,8 @@ void RenderResponseHome::generateGetLogItem() {
 
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "cgi_get_log_item" << allParametersToString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
+                                      " cgi_get_log_item " + allParametersToString());
 
     QDomElement root = doc.createElement("log");
     doc.appendChild(root);
