@@ -12,14 +12,14 @@ RenderResponse::RenderResponse()
 {
 }
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSystem) {
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSh) {
     QStringList ret;
     QString cmd;
     QString args;
     QString argsFmt = "\"%1\"";
 
     QString fullCmd = apiCmd;
-    if(bUseSystem) {
+    if(bUseSh) {
         args = argsFmt.arg(apiCmd);
         cmd = "sh -c";
         fullCmd = cmd + " " + args;
@@ -27,7 +27,7 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
 //        return ret;
     }
 
-    tDebug("Start fullCmd: %s", fullCmd.toLocal8Bit().data());
+    tDebug("Start command: %s", apiCmd.split(" ").value(0).toLocal8Bit().data());
     if(fullCmd.isEmpty())
         return ret;
 
@@ -56,68 +56,24 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     return ret;
 }
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, QStringList para, bool bOneLine, QString splitChar, bool bUseSystem) {
-    QStringList ret;
-    QString cmd;
-    QStringList input;
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, QStringList paraList, bool bOneLine, QString splitChar, bool bUseSh) {
+    QString paraB64, para;
 
-#ifndef SIMULATOR_MODE
-    if(bUseSystem) {
-        input = QStringList() << "-c" << apiCmd;
-        Q_FOREACH (QString p, para) input.append(p.toUtf8().toBase64());
-        cmd = "sh";
-//        system(apiCmd.toLocal8Bit().data());
-//        return ret;
-    }
+    for(QString e : paraList) {
+        QString blank;
+        if(!para.isEmpty())
+            blank = " ";
+#ifdef SIMULATOR_MODE
+        paraB64 += blank + e;
 #else
-    bUseSystem = false;
+        paraB64 += blank + e.toUtf8().toBase64();
 #endif
-
-
-    if(!bUseSystem) {
-        cmd = apiCmd;
-        Q_FOREACH (QString p, para) input.append(p.toUtf8().toBase64());
+        para += blank + e;
     }
 
-    QString strList, strList2;
-    for(QString e : input) {
-        if(strList.isEmpty()) {
-            strList += e;
-            strList2 += QByteArray::fromBase64(e.toUtf8());
-        } else {
-            strList += " " + e;
-            strList2 += " " + QByteArray::fromBase64(e.toUtf8());
-        }
-    }
+    tDebug("RenderResponse::getAPIStdOut() (before base64) -- apiCmd: %s %s", apiCmd.toLocal8Bit().data(), para.toLocal8Bit().data());
+    return getAPIStdOut(apiCmd + " " + paraB64, bOneLine, splitChar, bUseSh);
 
-    tDebug("RenderResponse::getAPIStdOut() ori -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList2.toLocal8Bit().data());
-    tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList.toLocal8Bit().data());
-    if(input.isEmpty())
-        return ret;
-
-    QProcess process;
-    process.start(cmd, input);
-
-    process.waitForFinished(-1);
-    QString allOut = QString(process.readAllStandardOutput());
-    ret = allOut.split("\n");
-    tDebug("RenderResponse::getAPIStdOut() -- apiOut: %s", allOut.toLocal8Bit().data());
-
-    if(bOneLine) {
-        if(!ret.isEmpty()) {
-            ret = ret.at(0).split(splitChar);
-            if(ret.size() == 1 && ret.at(0).isEmpty())
-                ret = QStringList();
-        }
-        else
-            ret = QStringList();
-    }
-    else {
-        while(!ret.isEmpty() && ret.last().isEmpty())
-            ret.removeLast();
-    }
-
-    return ret;
 }
 
 bool RenderResponse::startDetached(QString name, QStringList &arguments) {
