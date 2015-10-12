@@ -119,7 +119,8 @@ void RenderResponseDisk::preRender() {
 void RenderResponseDisk::generateVolumeStatus() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_disk_volume_status", true);
+    QStringList arg = QStringList() << "system_get_disk_volume_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -393,8 +394,8 @@ void RenderResponseDisk::generateFMTRemainDiskMGR() {
 void RenderResponseDisk::generateDiskRemount() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " system_set_disk_setting set_remount", true);
+    QStringList arg = QStringList() << "system_set_disk_setting" << "set_remount";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -407,8 +408,8 @@ void RenderResponseDisk::generateDiskRemount() {
 void RenderResponseDisk::generateFMTGuiLog() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting fmt_log " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "system_set_disk_setting" << "fmt_log" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -422,7 +423,8 @@ void RenderResponseDisk::generateFMTGuiLog() {
 void RenderResponseDisk::generateFMTRemountState() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting remount_status", true);
+    QStringList arg = QStringList() << "system_set_disk_setting" << "remount_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -435,7 +437,8 @@ void RenderResponseDisk::generateFMTRemountState() {
 void RenderResponseDisk::generateFMTDiskFinish() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_disk_setting cgi_FMT_Disk_Finish", true, ";");
+    QStringList arg = QStringList() << "system_set_disk_setting" << "cgi_FMT_Disk_Finish";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -468,7 +471,8 @@ void RenderResponseDisk::generateSmartHDList() {
     if(m_pReq->allParameters().contains("user"))
         paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_disk_list");
+    QStringList arg = QStringList() << "service_get_smart_disk_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     if(!apiOut.isEmpty())
         apiOut.removeLast();
     QString checkbox = "<input type=\"checkbox\" value=\"%1,%2,%3\" "
@@ -522,7 +526,8 @@ void RenderResponseDisk::generateSmartHDList() {
 void RenderResponseDisk::generateCreateTestList() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_list", true, ";");
+    QStringList arg = QStringList() << "service_get_smart_test_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement sendElement = doc.createElement("send_mail");
@@ -557,7 +562,8 @@ void RenderResponseDisk::generateSmartScheduleList() {
     if(m_pReq->allParameters().contains("user"))
         paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_schedule_list");
+    QStringList arg = QStringList() << "service_get_smart_schedule_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QString onClick = "<a href=javascript:onclick=create_schedule_wait(0)>"
             "<IMG border='0' src='/web/images/delete_over.png'></a>";
 
@@ -615,7 +621,8 @@ void RenderResponseDisk::generateSmartScheduleList() {
 
 void RenderResponseDisk::generateGetTestStatus() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_smart_test_status", true);
+    QStringList arg = QStringList() << "service_get_smart_test_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
@@ -629,8 +636,8 @@ void RenderResponseDisk::generateGetTestStatus() {
 void RenderResponseDisk::generateSmartSetSchedule() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_schedule " +
-                                      allParametersToString(true, " ", ","));
+    QStringList arg = QStringList() << "service_set_smart_schedule" << allParametersToString(true, " ", ",");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -660,7 +667,8 @@ void RenderResponseDisk::generateSmartTestStart() {
                 "f_type=" + paraType + "#" +
                 "f_mail_flag=" + paraMailFlag;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_smart_test_start " + allPara);
+    QStringList arg = QStringList() << "service_set_smart_test_start" << allPara;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -770,7 +778,8 @@ void RenderResponseDisk::generateVeList() {
     QDomDocument doc;
 
     QString paraPage = m_pReq->allParameters().value("page").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_VE_list");
+    QStringList arg = QStringList() << "system_get_VE_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QString cellContent3 = "<a href=\"javascript:parent.ve_mount_diag('%1')\"><IMG border='0'"
             " src='/web/images/mount.png'></a>";
@@ -824,8 +833,8 @@ void RenderResponseDisk::generateVeList() {
 
 void RenderResponseDisk::generateVePwdCheck() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_chk_VE_pwd " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "system_chk_VE_pwd" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -837,8 +846,8 @@ void RenderResponseDisk::generateVePwdCheck() {
 
 void RenderResponseDisk::generateVeVerifyKeyfile() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_import_VE_keyfile " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "system_import_VE_keyfile" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -850,8 +859,8 @@ void RenderResponseDisk::generateVeVerifyKeyfile() {
 
 void RenderResponseDisk::generateVeModify() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_set_VE_pwd " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "system_set_VE_pwd" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -862,8 +871,8 @@ void RenderResponseDisk::generateVeModify() {
 }
 
 void RenderResponseDisk::generateVeSaveFile() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_export_VE_keyfile " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "system_export_VE_keyfile" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QString filePath = VE_EXPORT_KEY_FILE;
     tDebug("file: %s", filePath.toLocal8Bit().data());
     QFileInfo file(filePath);
@@ -874,7 +883,8 @@ void RenderResponseDisk::generateVeSaveFile() {
 
 void RenderResponseDisk::generateVeLoadModule() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Load_Module");
+    QStringList arg = QStringList() << "system_cgi_VE_Load_Module";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -888,7 +898,8 @@ void RenderResponseDisk::generateVeLoadModule() {
 
 void RenderResponseDisk::generateVeLoadModuleState() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Load_Module_State");
+    QStringList arg = QStringList() << "system_cgi_VE_Load_Module_State";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -902,8 +913,8 @@ void RenderResponseDisk::generateVeLoadModuleState() {
 
 void RenderResponseDisk::generateVeMountVolume() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Volume " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "system_cgi_VE_Mount_Volume" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

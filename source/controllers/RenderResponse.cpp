@@ -79,14 +79,18 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, QStringList para, bool 
         Q_FOREACH (QString p, para) input.append(p.toUtf8().toBase64());
     }
 
-    QString strList;
+    QString strList, strList2;
     for(QString e : input) {
-        if(strList.isEmpty())
+        if(strList.isEmpty()) {
             strList += e;
-        else
+            strList2 += QByteArray::fromBase64(e.toUtf8());
+        } else {
             strList += " " + e;
+            strList2 += " " + QByteArray::fromBase64(e.toUtf8());
+        }
     }
 
+    tDebug("RenderResponse::getAPIStdOut() ori -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList2.toLocal8Bit().data());
     tDebug("RenderResponse::getAPIStdOut() -- apiCmd: %s %s", cmd.toLocal8Bit().data(), strList.toLocal8Bit().data());
     if(input.isEmpty())
         return ret;

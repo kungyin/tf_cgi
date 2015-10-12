@@ -78,7 +78,8 @@ void RenderResponseTimeMachine::generateTmGetList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_list");
+    QStringList arg = QStringList() << "service_get_tm_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -120,7 +121,8 @@ void RenderResponseTimeMachine::generateTmGetSmbList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_samba_list");
+    QStringList arg = QStringList() << "service_get_samba_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -176,7 +178,8 @@ void RenderResponseTimeMachine::generateTmSet() {
 void RenderResponseTimeMachine::generateTmGetShareName() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_tm_share_name", true, ";");
+    QStringList arg = QStringList() << "service_get_tm_share_name";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("tm_share");
     doc.appendChild(root);
@@ -194,21 +197,21 @@ void RenderResponseTimeMachine::generateTmGetShareName() {
 }
 
 void RenderResponseTimeMachine::generateTmSetShare() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-            " service_set_add_tm_share " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_add_tm_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     m_var = "N/A";
 }
 
 void RenderResponseTimeMachine::generateTmDelShare() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-            " service_set_del_tm_share " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_del_tm_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = "N/A";
 }
 
 void RenderResponseTimeMachine::generateTmDelAllShare() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-            " service_set_del_all_share", true);
+    QStringList arg = QStringList() << "service_set_del_all_share";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = "N/A";
 }
 

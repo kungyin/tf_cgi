@@ -55,7 +55,8 @@ void RenderResponseDropbox::preRender() {
 void RenderResponseDropbox::generateDropboxRefreshStatus() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_refresh_status");
+    QStringList arg = QStringList() << "cgi_Dropbox_refresh_status";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -70,7 +71,8 @@ void RenderResponseDropbox::generateDropboxRefreshStatus() {
 void RenderResponseDropbox::generateDropboxGetInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_get_info", true, ";");
+    QStringList arg = QStringList() << "cgi_Dropbox_get_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -103,8 +105,8 @@ void RenderResponseDropbox::generateDropboxGetInfo() {
 void RenderResponseDropbox::generateDropboxAPIChangePath() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_api_change_path " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_Dropbox_api_change_path" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("path");
     doc.appendChild(root);
@@ -117,8 +119,8 @@ void RenderResponseDropbox::generateDropboxAPIChangePath() {
 void RenderResponseDropbox::generateDropboxGetAccessUrl() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_get_access_url " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_Dropbox_get_access_url" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -133,7 +135,8 @@ void RenderResponseDropbox::generateDropboxGetAccessUrl() {
 void RenderResponseDropbox::generateDropboxEnable() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_enable");
+    QStringList arg = QStringList() << "cgi_Dropbox_enable";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -148,8 +151,8 @@ void RenderResponseDropbox::generateDropboxEnable() {
 void RenderResponseDropbox::generateDropboxNewFolderEncode() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_open_new_folder_encode " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_open_new_folder_encode" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("mkdir");
     doc.appendChild(root);
@@ -164,8 +167,8 @@ void RenderResponseDropbox::generateDropboxNewFolderEncode() {
 void RenderResponseDropbox::generateDropboxCheckFolderExist() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_check_folder_exist " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_Dropbox_check_folder_exist" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("exist");
     doc.appendChild(root);
@@ -178,8 +181,8 @@ void RenderResponseDropbox::generateDropboxCheckFolderExist() {
 void RenderResponseDropbox::generateDropboxSetInterval() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_set_interval " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "cgi_Dropbox_set_interval" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -194,7 +197,8 @@ void RenderResponseDropbox::generateDropboxSetInterval() {
 void RenderResponseDropbox::generateDropboxSyncNow() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_sync_now");
+    QStringList arg = QStringList() << "cgi_Dropbox_sync_now";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -209,7 +213,8 @@ void RenderResponseDropbox::generateDropboxSyncNow() {
 void RenderResponseDropbox::generateDropboxUnlink() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_Dropbox_unlink");
+    QStringList arg = QStringList() << "cgi_Dropbox_unlink";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

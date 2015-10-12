@@ -324,7 +324,8 @@ void RenderResponseSysMngm::generateGetTimeStatus() {
 void RenderResponseSysMngm::generateGetDeviceInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " get", true, ";");
+    QStringList arg = QStringList() << "get";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
 
     QDomElement root = doc.createElement("device_info");
     doc.appendChild(root);
@@ -346,8 +347,8 @@ void RenderResponseSysMngm::generateDevice() {
     QString paraHostname = m_pReq->allParameters().value("hostname").toString();
     QString paraWorkgroup = m_pReq->allParameters().value("workgroup").toString();
     QString paraDescription = m_pReq->allParameters().value("description").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API + " set " +
-                                      paraHostname + " " + paraWorkgroup + " " + paraDescription, true);
+    QStringList arg = QStringList() << "set" << paraHostname << paraWorkgroup << paraDescription;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true);
 }
 
 void RenderResponseSysMngm::generateDetectDangerous() {
@@ -375,7 +376,8 @@ void RenderResponseSysMngm::generateGetTemperature() {
     QDomDocument doc;
 
     if(m_pReq->header().path().contains("status_mgr.cgi")) {
-        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_get_system_temperature", true);
+        QStringList arg = QStringList() << "system_get_system_temperature";
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
         QDomElement root = doc.createElement("status");
         doc.appendChild(root);
@@ -469,7 +471,8 @@ void RenderResponseSysMngm::generateRestoreConf() {
 void RenderResponseSysMngm::generateGetPowerMgr() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_powermgr_info");
+    QStringList arg = QStringList() << "system_powermgr_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("power");
     doc.appendChild(root);
@@ -551,7 +554,10 @@ void RenderResponseSysMngm::generatePowerManagement() {
     if(!setNasCfg("power_management", map))
         tDebug("RenderResponseSysMngm::generatePowerManagement(): setNasCfg power_management failed");
     else
-        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_hdd_hibernation_setting", true);
+    {
+        QStringList arg = QStringList() << "system_hdd_hibernation_setting";
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    }
 
     m_var = "Location: /web/system_mgr/power_mgr.html";
 }
@@ -562,7 +568,10 @@ void RenderResponseSysMngm::generatePowerRecovery() {
     if(!setNasCfg("power_management", "recovery_enable", paraRecvEnable))
         tDebug("RenderResponseSysMngm::generatePowerRecovery(): setNasCfg power_management failed");
     else
-        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_recovery_setting", true);
+    {
+        QStringList arg = QStringList() << "system_power_recovery_setting";
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    }
 
 }
 
@@ -572,7 +581,10 @@ void RenderResponseSysMngm::generateFan() {
     if(!setNasCfg("power_management", "fan", paraFanType))
         tDebug("RenderResponseSysMngm::generateFan(): setNasCfg power_management failed");
     else
-        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_fan_control_setting", true);
+    {
+        QStringList arg = QStringList() << "system_fan_control_setting";
+        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    }
 }
 
 void RenderResponseSysMngm::generatePowerOffSchedule() {
@@ -594,13 +606,15 @@ void RenderResponseSysMngm::generatePowerOffSchedule() {
         return;
     }
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_power_onoff_schedule", true);
+    QStringList arg = QStringList() << "system_power_onoff_schedule";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseSysMngm::generateGetEmailXml() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_email_info", true, ";");
+    QStringList arg = QStringList() << "service_get_email_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("mail");
     doc.appendChild(root);
@@ -643,7 +657,8 @@ void RenderResponseSysMngm::generateGetEmailXml() {
 void RenderResponseSysMngm::generateGetEventXml() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_event_info", true, ";");
+    QStringList arg = QStringList() << "service_get_event_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("event");
     doc.appendChild(root);
@@ -737,8 +752,8 @@ void RenderResponseSysMngm::generateGetEventXml() {
 }
 
 void RenderResponseSysMngm::generateEmailEvent() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_event_setting "
-                                      + allParametersToString());
+    QStringList arg = QStringList() << "service_set_event_setting" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     m_var = "Content-type: text/html";
 }
 
@@ -761,14 +776,15 @@ void RenderResponseSysMngm::generateEmail() {
 }
 
 void RenderResponseSysMngm::generateEmailTest() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_send_email_test "
-                                      + allParametersToString());
+    QStringList arg = QStringList() << "service_set_send_email_test" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 }
 
 void RenderResponseSysMngm::generateEmailTestResult() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_send_email_test_result");
+    QStringList arg = QStringList() << "service_get_send_email_test_result";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("test");
     doc.appendChild(root);
@@ -780,29 +796,35 @@ void RenderResponseSysMngm::generateEmailTestResult() {
 }
 
 void RenderResponseSysMngm::generateEmailClear() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_email_save_config");
+    QStringList arg = QStringList() << "service_set_clear_email_save_config";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     m_var = "Content-type: text/html";
 }
 
 void RenderResponseSysMngm::generateSmsAdd() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_sms_config " + allParametersToString());
+    QStringList arg = QStringList() << "service_add_sms_config" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 }
 
 void RenderResponseSysMngm::generateSmsModify() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_save_sms_config " + allParametersToString());
+    QStringList arg = QStringList() << "service_save_sms_config" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 }
 
 void RenderResponseSysMngm::generateSmsTest() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_send test", true);
+    QStringList arg = QStringList() << "service_sms_send" << "test";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseSysMngm::generateSmsTestResult() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_sms_test_result", true);
+    QStringList arg = QStringList() << "service_sms_test_result";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseSysMngm::generateSmsDel() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_del_sms_config " + allParametersToString());
+    QStringList arg = QStringList() << "service_del_sms_config" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 }
 
 void RenderResponseSysMngm::generateLogSystem() {
@@ -882,8 +904,8 @@ void RenderResponseSysMngm::generateLogServer() {
 
 
 void RenderResponseSysMngm::generateSendLogTest() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_syslog_send_test " +
-                                      allParametersToString());
+    QStringList arg = QStringList() << "service_syslog_send_test" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 }
 
 void RenderResponseSysMngm::generateLogBackup() {
@@ -901,7 +923,8 @@ void RenderResponseSysMngm::generateLogClear() {
 void RenderResponseSysMngm::generateUpsInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_info", true, ",");
+    QStringList arg = QStringList() << "service_get_ups_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ",");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -936,7 +959,8 @@ void RenderResponseSysMngm::generateUpsMaterList() {
     QString paraPage = m_pReq->allParameters().value("page").toString();
     QString paraRp = m_pReq->allParameters().value("rp").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_master_list");
+    QStringList arg = QStringList() << "service_get_ups_master_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -969,7 +993,8 @@ void RenderResponseSysMngm::generateUpsMaterList() {
 void RenderResponseSysMngm::generateUpsStatusInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ups_status_info", true, ",");
+    QStringList arg = QStringList() << "service_get_ups_status_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ",");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1022,8 +1047,8 @@ void RenderResponseSysMngm::generateUpsAdd() {
 void RenderResponseSysMngm::generateUpsSlaveSetting() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_ups_slave "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_ups_slave" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1037,7 +1062,8 @@ void RenderResponseSysMngm::generateUpsSlaveSetting() {
 void RenderResponseSysMngm::generateUpsPs() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_check_ups_ps ", true);
+    QStringList arg = QStringList() << "service_get_check_ups_ps";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1051,8 +1077,8 @@ void RenderResponseSysMngm::generateUpsPs() {
 void RenderResponseSysMngm::generateUsbStorageUmount() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_usb_storage_umount "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_usb_storage_umount" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1066,7 +1092,8 @@ void RenderResponseSysMngm::generateUsbStorageUmount() {
 void RenderResponseSysMngm::generateUsbPrinterClear() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_clear_print_queue", true);
+    QStringList arg = QStringList() << "service_set_clear_print_queue";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -1157,7 +1184,8 @@ void RenderResponseSysMngm::generateGetLiveFirm() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " get_live_firm", true, ";");
+    QStringList arg = QStringList() << "get_live_firm";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("live_fw");
     doc.appendChild(root);
@@ -1187,7 +1215,8 @@ void RenderResponseSysMngm::generateCheckLiveFirm() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " check_live_firm");
+    QStringList arg = QStringList() << "check_live_firm";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("live_fw");
     doc.appendChild(root);
@@ -1203,7 +1232,8 @@ void RenderResponseSysMngm::generateGetLiveFirmVer() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " get_live_firm_ver");
+    QStringList arg = QStringList() << "get_live_firm_ver";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("live_fw");
     doc.appendChild(root);
@@ -1217,7 +1247,8 @@ void RenderResponseSysMngm::generateGetLiveFirmVer() {
 
 void RenderResponseSysMngm::generateFirmwareDownload() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " cgi_firmware_download");
+    QStringList arg = QStringList() << "cgi_firmware_download";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     m_var = "<script>location.href='/web/system_mgr/firmware_result.html'</script>";
 
 }

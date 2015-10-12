@@ -133,7 +133,8 @@ void RenderResponseNetShare::preRender() {
 void RenderResponseNetShare::generateModuleGetInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " Module_Get_Info");
+    QStringList arg = QStringList() << "Module_Get_Info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QStringList apkgList = apiOut;
     apkgList.removeFirst();
 
@@ -176,7 +177,8 @@ void RenderResponseNetShare::generateGetAdsInfo() {
 
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_ads_info", true, ";");
+    QStringList arg = QStringList() << "service_get_ads_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("ads");
     doc.appendChild(root);
@@ -210,7 +212,8 @@ void RenderResponseNetShare::generateGetSession() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_session_list");
+    QStringList arg = QStringList() << "service_get_session_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QString cellContentCifs =
             "<img src='../images/detail.png' onclick='show_cifs_detail(\"%1\");'>";
@@ -295,7 +298,8 @@ void RenderResponseNetShare::generateGetIsoShare() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_share", true);
+    QStringList arg = QStringList() << "service_iso_get_iso_share";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QString cellContentCifs =
             "<img src='../images/detail.png' onclick='show_iso_detail(\"%1\");'>";
@@ -380,7 +384,8 @@ void RenderResponseNetShare::generateGetAfpInfo() {
 void RenderResponseNetShare::generateGetNfsInfo() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_nfs_info", true);
+    QStringList arg = QStringList() << "service_get_nfs_info";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("nfs_info");
     doc.appendChild(root);
@@ -396,14 +401,14 @@ void RenderResponseNetShare::generateGetNfsInfo() {
 }
 
 void RenderResponseNetShare::generateIsoPrecentage() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_get_iso_percentage " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_get_iso_percentage" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseNetShare::generateClearIsoCreate() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_clear_iso_create " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_clear_iso_create" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseNetShare::generateUserList() {
@@ -416,7 +421,8 @@ void RenderResponseNetShare::generateUserList() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_user_list");
+    QStringList arg = QStringList() << "service_iso_get_user_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QString cellContent("<input type='checkbox' name='C_%1' value='%2' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
@@ -463,7 +469,8 @@ void RenderResponseNetShare::generateGroupList() {
     QString paraQType = m_pReq->allParameters().value("qtype").toString();
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_group_list");
+    QStringList arg = QStringList() << "service_iso_get_group_list";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QString cellContent("<input type='checkbox' name='C_%1' value='%2' rel='%3'>");
 
     QDomElement root = doc.createElement("rows");
@@ -505,7 +512,8 @@ void RenderResponseNetShare::generateGroupList() {
 void RenderResponseNetShare::generateGetAllIsoShare() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_all_iso_share");
+    QStringList arg = QStringList() << "service_iso_get_all_iso_share";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
@@ -545,15 +553,15 @@ void RenderResponseNetShare::generateAddSession() {
 
     //QStringList arg = QStringList() << "service_set_add_session" << allParametersToString();
     //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_add_session " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_add_session" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
 void RenderResponseNetShare::generateSetNfsShare() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_add_nfs_share "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_add_nfs_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
@@ -562,7 +570,8 @@ void RenderResponseNetShare::generateGetModifySession() {
     QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_modify_session " + paraName, true, ";");
+    QStringList arg = QStringList() << "service_get_modify_session" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
@@ -616,15 +625,15 @@ void RenderResponseNetShare::generateModifySession() {
 //    QString paraRecycle = m_pReq->allParameters().value("recycle").toString();
 //    QString paraFtpAnonymous = m_pReq->allParameters().value("ftp_anonymous").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_modify_session " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_modify_session" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
 void RenderResponseNetShare::generateModifyNfsShare() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_modify_nfs_share "
-                                      + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_modify_nfs_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
 }
 
@@ -638,8 +647,8 @@ void RenderResponseNetShare::generateWebdavAccountAdd() {
 //    QString paraUser = m_pReq->allParameters().value("f_user").toString();
 //    QString paraWebdav = m_pReq->allParameters().value("webdav").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_share_webdav_account_add " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "service_share_webdav_account_add" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -654,8 +663,8 @@ void RenderResponseNetShare::generateWebdavAccountAdd() {
 
 void RenderResponseNetShare::generateDeleteSession() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_set_del_session " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "service_set_del_session" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseNetShare::generateWebdavAccountDel() {
@@ -665,8 +674,8 @@ void RenderResponseNetShare::generateWebdavAccountDel() {
 //    QString paraFlag = m_pReq->allParameters().value("f_flag").toString();
 //    QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_share_webdav_account_del " +
-                                      allParametersToString(), true);
+    QStringList arg = QStringList() << "service_share_webdav_account_del" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -681,7 +690,8 @@ void RenderResponseNetShare::generateWebdavAccountDel() {
 
 void RenderResponseNetShare::generateResetSession() {
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_reset_session", true);
+    QStringList arg = QStringList() << "service_reset_session" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
@@ -691,7 +701,8 @@ void RenderResponseNetShare::generateGetShareInfo() {
     QString paraName = m_pReq->parameter("name");
 
     /* todo */
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_get_modify_session " + paraName, true, ";");
+    QStringList arg = QStringList() << "service_get_modify_session" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
@@ -806,8 +817,8 @@ void RenderResponseNetShare::generateWebdavAccountInfo() {
 void RenderResponseNetShare::generateSetIsoShare() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_set_iso_share " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_set_iso_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("iso_info");
     doc.appendChild(root);
@@ -824,7 +835,8 @@ void RenderResponseNetShare::generateGetIsoShareDetail() {
     QDomDocument doc;
 
     QString paraName = m_pReq->allParameters().value("name").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " service_iso_get_iso_detail_info " + paraName, true, ";");
+    QStringList arg = QStringList() << "service_iso_get_iso_detail_info" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
@@ -895,8 +907,8 @@ void RenderResponseNetShare::generateGetModifyIsoInfo() {
     QDomDocument doc;
 
     QString paraName = m_pReq->allParameters().value("name").toString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_modify_iso_info " + paraName, true, ";");
+    QStringList arg = QStringList() << "service_iso_modify_iso_info" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
@@ -931,15 +943,15 @@ void RenderResponseNetShare::generateGetModifyIsoInfo() {
 }
 
 void RenderResponseNetShare::generateModifyIsoShare() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_modify_iso_share " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_modify_iso_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseNetShare::generateDelIsoShare() {
 
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_del_iso_share " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_del_iso_share" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("iso_mount");
     doc.appendChild(root);
@@ -950,22 +962,22 @@ void RenderResponseNetShare::generateDelIsoShare() {
 }
 
 void RenderResponseNetShare::generateChkImgName() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_chk_iso_name " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_chk_iso_name" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseNetShare::generateChkHDSize() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_chk_hdd_size " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_chk_hdd_size" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseNetShare::generateIsoConfig() {
     QDomDocument doc;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_set_iso_config " + allParametersToString(), true, ";");
+    QStringList arg = QStringList() << "service_iso_set_iso_config" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QStringList isoMountTags(QStringList() << "status" << "name" << "path");
 
@@ -989,17 +1001,17 @@ void RenderResponseNetShare::generateIsoConfig() {
 }
 
 void RenderResponseNetShare::generateIsoCreatePath() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_create_iso_path " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_create_iso_path" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
 
 void RenderResponseNetShare::generateIsoSize() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_get_iso_use_size " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_get_iso_use_size" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 }
 
 void RenderResponseNetShare::generateIsoCreateImage() {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " service_iso_create_image " + allParametersToString(), true);
+    QStringList arg = QStringList() << "service_iso_create_image" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 }
