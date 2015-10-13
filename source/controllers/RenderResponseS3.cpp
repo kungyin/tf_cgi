@@ -39,6 +39,9 @@ void RenderResponseS3::preRender() {
     case CMD_S3_BACKUP:
         generateS3Backup();
         break;
+    case CMD_S3_ALL_NAME:
+        generateS3AllName();
+        break;
     case CMD_GET_RECOVERY:
         generateGetRecovery();
         break;
@@ -65,7 +68,7 @@ void RenderResponseS3::generateGetS3() {
     QString paraUser = m_pReq->parameter("user");
 
     QStringList arg = QStringList() << "service_get_s3_info";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " ");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QString cellContent0 = "<span style='display:none'>%1</span><span>%2</span>";
     QString cellContent3 = "<img border='0' src='/web/images/%1.png' width='27' height='17' onclick='parent.action_stop(\"%2\")'>";
@@ -219,6 +222,14 @@ void RenderResponseS3::generateS3Stop() {
 void RenderResponseS3::generateS3Backup() {
 
     QStringList arg = QStringList() << "service_s3_backup" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    m_var = apiOut.value(0);
+
+}
+
+void RenderResponseS3::generateS3AllName() {
+
+    QStringList arg = QStringList() << "service_s3_check_name" << allParametersToString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     m_var = apiOut.value(0);
 

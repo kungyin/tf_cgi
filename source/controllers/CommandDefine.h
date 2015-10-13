@@ -495,6 +495,7 @@ enum CGI_COMMAND {
     CMD_S3_START,                            /* cgi_s3_start */
     CMD_S3_STOP,                             /* cgi_s3_stop */
     CMD_S3_BACKUP,                           /* cgi_s3_backup */
+    CMD_S3_ALL_NAME,                         /* cgi_s3_all_name */
     CMD_GET_RECOVERY,                        /* get_recovery */
     CMD_GET_PERCENT,                         /* get_precent */
     CMD_CLEAR_PERCENT,                       /* clear_percent */
@@ -1055,6 +1056,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_s3_start",
     "cgi_s3_stop",
     "cgi_s3_backup",
+    "cgi_s3_all_name",
     "get_recovery",
     "get_precent",
     "clear_percent",
@@ -1618,6 +1620,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_S3_START,                      RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_start */
     { CMD_S3_STOP,                       RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* cgi_s3_stop */
     { CMD_S3_BACKUP,                     RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_backup */
+    { CMD_S3_ALL_NAME,                   RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* cgi_s3_all_name */
     { CMD_GET_RECOVERY,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* get_recovery */
     { CMD_GET_PERCENT,                   RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* get_precent */
     { CMD_CLEAR_PERCENT,                 RENDER_TYPE_NULL,          COOKIE_REQ_CMDS          },         /* clear_percent */

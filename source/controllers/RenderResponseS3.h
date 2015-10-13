@@ -21,6 +21,7 @@ private:
     void generateS3Start();
     void generateS3Stop();
     void generateS3Backup();
+    void generateS3AllName();
     void generateGetRecovery();
     void generateGetPercent();
     void generateClearPercent();

@@ -242,7 +242,7 @@ void RenderResponseP2pDownloads::generateP2pCurrentSesState() {
     QDomDocument doc;
 
     QStringList arg = QStringList() << "service_p2p_current_state";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " ", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
