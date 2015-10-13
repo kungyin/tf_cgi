@@ -529,7 +529,7 @@ enum CGI_COMMAND {
     CMD_AIRPLAY_STOP,                        /* cgi_airplay_stop */
     CMD_AIRPLAY_END,
 
-    /**** MyDlink Account ****/
+    /**** MyDlink ****/
     CMD_1,                                   /* 1 */
     CMD_2,                                   /* 2 */
     CMD_3,                                   /* 3 */
@@ -554,6 +554,16 @@ enum CGI_COMMAND {
     CMD_22,                                   /* 22 */
     CMD_MYDLINK_END,
 
+    /**** MyDlink Account ****/
+    CMD_MYDLINK_ACC_1,                                   /* 1 */
+    CMD_MYDLINK_ACC_2,                                   /* 2 */
+    CMD_MYDLINK_ACC_3,                                   /* 3 */
+    CMD_MYDLINK_ACC_4,                                   /* 4 */
+    CMD_MYDLINK_ACC_5,                                   /* 5 */
+    CMD_MYDLINK_ACC_6,                                   /* 6 */
+    CMD_MYDLINK_ACC_7,                                   /* 7 */
+    CMD_MYDLINK_ACC_END,
+
     CMD_SIZE
 
 };
@@ -561,7 +571,8 @@ enum CGI_COMMAND {
 enum SPECIAL_CMD_GROUP {
     CMD_GRP_NONE = 0,
     CMD_GRP_GOOGLE_DRIVE,
-    CMD_GRP_MYDLINK
+    CMD_GRP_MYDLINK,
+    CMD_GRP_MYDLINK_ACCOUNT
 };
 
 const int CMD_GROUP_SPACE[][3] {
@@ -569,6 +580,7 @@ const int CMD_GROUP_SPACE[][3] {
     { CMD_GRP_NONE,                 0,                      CMD_SIZE - 1        },
     { CMD_GRP_GOOGLE_DRIVE,         CMD_GD_1,               CMD_GD_END          },
     { CMD_GRP_MYDLINK,              CMD_1,                  CMD_MYDLINK_END     },
+    { CMD_GRP_MYDLINK_ACCOUNT,      CMD_MYDLINK_ACC_1,      CMD_MYDLINK_ACC_END },
 };
 
 const char CGI_PARA_COMMANDS[][255] = {
@@ -1077,7 +1089,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_airplay_stop",
     "",
 
-    /**** Mydlink Account ****/
+    /**** Mydlink ****/
     "1",
     "2",
     "3",
@@ -1100,6 +1112,16 @@ const char CGI_PARA_COMMANDS[][255] = {
     "20",
     "21",
     "22",
+    "",
+
+    /**** Mydlink Account ****/
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
     ""
 
 };
@@ -1628,6 +1650,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_AIRPLAY_STOP,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_airplay_stop */
     //CMD_AIRPLAY_END,
 
+    /**** Mydlink ****/
     { CMD_1,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 1 */
     { CMD_2,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 2 */
     { CMD_3,                             RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 3 */
@@ -1652,6 +1675,16 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_22,                            RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 22 */
 
     //CMD_MYDLINK_END,
+
+    /**** Mydlink Account ****/
+    { CMD_MYDLINK_ACC_1,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 1 */
+    { CMD_MYDLINK_ACC_2,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 2 */
+    { CMD_MYDLINK_ACC_3,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 3 */
+    { CMD_MYDLINK_ACC_4,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 4 */
+    { CMD_MYDLINK_ACC_5,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 5 */
+    { CMD_MYDLINK_ACC_6,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
+    { CMD_MYDLINK_ACC_7,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
+    //CMD_MYDLINK_ACC_END,
 
 //    CMD_SIZE
 

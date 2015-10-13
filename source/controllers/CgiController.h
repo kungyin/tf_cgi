@@ -19,6 +19,7 @@ public slots:
     void process();
     void processGoogleDrive();
     void processMydlink();
+    void processMydlinkAccount();
     void renderTypeChanged(RENDER_TYPE);
 
 private:

@@ -837,7 +837,7 @@ void RenderResponseSysMngm::generateLogSystem() {
 //    QString paraField = m_pReq ->parameter("f_field") ;
 //    QString paraUser = m_pReq ->parameter("user") ;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CLOG + " -g 0 | tac");
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CLOG + " -g 0 | tac", false, ",", true);
 
     QVariantMap listMap;
     listMap.insert("total", QString::number(apiOut.size()));

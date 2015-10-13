@@ -106,8 +106,9 @@ void RenderResponseFileStation::generateOpenTree() {
     QString paraChkFlag = m_pReq->parameter("chk_flag");
     QString paraFileType = m_pReq->parameter("file_type");
     QString paraFuncId = m_pReq->parameter("function_id");
-//    QString paraFilterFile = m_pReq->parameter("filter_file");
-//    QString paraRootPath = m_pReq->parameter("root_path");
+    /* If filter_file is not 0, only show it in root path. */
+    QString paraFilterFile = m_pReq->parameter("filter_file");
+    QString paraRootPath = m_pReq->parameter("root_path");
 
     QString cssUlClass = "<ul class=\"jqueryFileTree\" style=\"display: none;\">\n"
                             "%1"
@@ -116,16 +117,21 @@ void RenderResponseFileStation::generateOpenTree() {
                                 "%2%3"
                                 "    </li>\n";
     /* todo */
-    QString cssLiClassWithID =  "    <li id=\"eve_test_456\" class=\"file ext_zip\">\n"
-                                "%1%2"
+    QString cssLiClassWithID =  "    <li id=\"eve_test_456\" class=\"file ext_%1\">\n"
+                                "%2%3"
                                 "    </li>\n";
     QString checkboxLine = "        <input type='checkbox' name='folder_name' value=\"%1\" %2rel=\"%3\">\n";
     QString checkboxSrc = "src=\"%1\" ";
     QString hrefLine = "        <a href=\"#\" rel=\"%1\">%2</a>\n";
 
+    bool bShowFile = paraShowFile.compare("1") == 0 ? true : false;
+    /* In one of iso mount CGI, it has no file. But it has no proper parameter to adjudge it. */
+    if(paraDir.endsWith(QDir::separator()) && m_pReq->parameter("cmd") == "cgi_open_tree")
+        bShowFile = false;
+
     QDir dir(paraDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
-    if(paraShowFile.compare("1") == 0)
+    if(bShowFile)
         filters |= QDir::AllEntries;
     QFileInfoList fileList = dir.entryInfoList(filters);
 
@@ -141,13 +147,13 @@ void RenderResponseFileStation::generateOpenTree() {
             continue;
         }
 
-        if(paraShowFile == "0") {
+        if(!bShowFile) {
             if(!entry.isDir()) {
                 fileList.removeOne(entry);
                 continue;
             }
         }
-        else if(paraShowFile == "1") {
+        else {
             if(paraFuncId == "iso_mount") {
                 if(entry.isDir() || entry.suffix().compare("iso", Qt::CaseInsensitive) == 0)
                     continue;
@@ -158,6 +164,14 @@ void RenderResponseFileStation::generateOpenTree() {
                 if(entry.isDir() || entry.suffix().compare("zip", Qt::CaseInsensitive) == 0)
                     continue;
                 fileList.removeOne(entry);
+                continue;
+            }
+            else if(paraFuncId == "iso_create") {
+                if(paraFilterFile != "0") {
+                    if(entry.absolutePath().compare(dir.absolutePath()) == 0)
+                        if(!entry.isDir() || (entry.isDir() && entry.fileName() != paraFilterFile))
+                            fileList.removeOne(entry);
+                }
                 continue;
             }
         }
@@ -196,20 +210,29 @@ void RenderResponseFileStation::generateOpenTree() {
                     }
                 }
             }
-            // sabrina modify for bug 7758 20151002
-            QString line1 = (paraChkFlag.compare("1") == 0) ?
-                        checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
-            /*QString line1 = (paraChkFlag.compare("1") == 0) ?
-                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;*/
+
+            QString fileExt = "zip";
+            if(paraFuncId == "iso_mount")
+                fileExt = "iso";
+
+            QString line1;
+            if(paraFuncId == "iso_mount")
+                line1 = (paraChkFlag.compare("1") == 0) ?
+                            checkboxLine.arg(e.absoluteFilePath()).arg(checkboxSrc.arg(fileName)).arg(fileName) : QString::null;
+            else
+                line1 = (paraChkFlag.compare("1") == 0) ?
+                        checkboxLine.arg(e.absoluteFilePath()).arg(QString::null).arg(fileVolumePath) : QString::null;
             QString line2 = hrefLine.arg(e.absoluteFilePath()).arg(fileName);
-            content += cssLiClassWithID.arg(line1).arg(line2);
+            content += cssLiClassWithID.arg(fileExt).arg(line1).arg(line2);
         }
     }
 
+    QDir rootDir(paraRootPath);
     /* If it was not rooted path, we can add folder. */
     QString dirAbsolutePath(dir.absolutePath());
     if(     !(dirAbsolutePath.compare("/mnt/HD") == 0 ||
-             dirAbsolutePath.compare("/mnt/USB") == 0)) {
+              dirAbsolutePath.compare(rootDir.absolutePath()) == 0 ||
+              dirAbsolutePath.compare("/mnt/USB") == 0)) {
         QString line2 = hrefLine.arg(dirAbsolutePath + "/new/").arg("New");
         content += cssLiClass.arg(" add").arg("").arg(line2);
     }

@@ -26,6 +26,7 @@
 #include "RenderResponseDropbox.h"
 #include "RenderResponseAirplay.h"
 #include "RenderResponseMyDlink.h"
+#include "RenderResponseMyDlinkAccount.h"
 
 #include <TAppSettings>
 #include <TWebApplication>
@@ -79,6 +80,11 @@ void CgiController::processGoogleDrive() {
 
 void CgiController::processMydlink() {
     cgiInit(CMD_GRP_MYDLINK);
+    cgiResponse();
+}
+
+void CgiController::processMydlinkAccount() {
+    cgiInit(CMD_GRP_MYDLINK_ACCOUNT);
     cgiResponse();
 }
 
@@ -357,6 +363,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseAirplay(req, cmd);
     else if(cmd < CMD_MYDLINK_END)
         pRrep = new RenderResponseMyDlink(req, cmd);
+    else if(cmd < CMD_MYDLINK_ACC_END)
+        pRrep = new RenderResponseMyDlinkAccount(req, cmd);
 
     return pRrep;
 
