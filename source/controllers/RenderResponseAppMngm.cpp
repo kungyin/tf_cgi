@@ -661,7 +661,7 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
 
         int idxTitle = fileData.indexOf("MEDIA=" + dir);
         if(idxTitle != -1) {
-            fileData.replace(idxTitle, fileData.indexOf("\n", idxTitle), "\b");
+            fileData.replace(idxTitle, fileData.indexOf("\n", idxTitle), "");
             file.reset();
             file.write(fileData.toUtf8());
             file.resize(file.pos());
