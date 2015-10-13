@@ -818,6 +818,7 @@ void RenderResponseNetShare::generateSetIsoShare() {
 
     QDomDocument doc;
     QStringList arg = QStringList() << "service_iso_set_iso_share" << allParametersToString();
+    if (arg.length() == 2) arg.value(1).replace("+", " ");
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
 
     QDomElement root = doc.createElement("iso_info");
