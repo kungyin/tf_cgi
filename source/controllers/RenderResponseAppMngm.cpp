@@ -558,6 +558,14 @@ void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
         } else res = 2;
         QStringList arg = QStringList() << "addfolder" << dir;
         getAPIStdOut("ScanSender", arg);
+        QFile file(TUXERA_CONF);
+        if (file.open(QIODevice::Append))
+        {
+            QTextStream out(&file);
+            out << "MEDIA=" + dir <<  "\n";
+            file.close();
+        }
+        getAPIStdOut(API_PATH + SCRIPT_TUXERA_API + " restart");
         if (res == 1)
         {
             arg = QStringList() << "start" << dir;
@@ -644,6 +652,22 @@ void RenderResponseAppMngm::generateUpnpAvServerPathDel() {
     {
         QStringList arg = QStringList() << "delfolder" << dir;
         getAPIStdOut("ScanSender", arg);
+        QByteArray data;
+        QFile file(TUXERA_CONF);
+        file.open(QIODevice::ReadWrite);
+        data = file.readAll();
+        QString fileData(data);
+        //fileData.remove(QChar('\r'));
+
+        int idxTitle = fileData.indexOf("MEDIA=" + dir);
+        if(idxTitle != -1) {
+            fileData.replace(idxTitle, fileData.indexOf("\n", idxTitle), "");
+            file.reset();
+            file.write(fileData.toUtf8());
+            file.resize(file.pos());
+        }
+        file.close();
+        getAPIStdOut(API_PATH + SCRIPT_TUXERA_API + " restart");
         QDomElement itemElement = doc.createElement("item");
         root.appendChild(itemElement);
 
