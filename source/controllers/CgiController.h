@@ -36,6 +36,7 @@ private:
     ParseCmd *m_pParseCmd;
     //int m_diffTime;
     //QString m_sessionId;
+    bool m_bExitApp;
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);

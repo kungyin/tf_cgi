@@ -1,5 +1,5 @@
 #include <QProcess>
-#include <QFileInfo>
+#include <QDir>
 #include <cassert>
 
 #include "RenderResponseDisk.h"
@@ -847,7 +847,14 @@ void RenderResponseDisk::generateVePwdCheck() {
 void RenderResponseDisk::generateVeVerifyKeyfile() {
     QDomDocument doc;
     QStringList arg = QStringList() << "system_import_VE_keyfile" << allParametersToString();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+
+    QStringList apiOut;
+    if(!m_pReq->multipartFormData().isEmpty()) {
+        if(m_pReq->multipartFormData().renameUploadedFile("f_modify_ve_file", VE_EXPORT_KEY_FILE, true)) {
+            apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+        }
+    }
+
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
     QDomElement resElement = doc.createElement("res");
@@ -873,7 +880,7 @@ void RenderResponseDisk::generateVeModify() {
 void RenderResponseDisk::generateVeSaveFile() {
     QStringList arg = QStringList() << "system_export_VE_keyfile" << allParametersToString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
-    QString filePath = VE_EXPORT_KEY_FILE;
+    QString filePath = TMP_PATH + QDir::separator() + apiOut.value(0);
     tDebug("file: %s", filePath.toLocal8Bit().data());
     QFileInfo file(filePath);
     if(file.exists() && file.isFile())
@@ -928,8 +935,14 @@ void RenderResponseDisk::generateVeMountVolume() {
 
 void RenderResponseDisk::generateVeMountUploadFile() {
     QDomDocument doc;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Upload_File " +
-                                      allParametersToString());
+
+    QStringList apiOut;
+    if(!m_pReq->multipartFormData().isEmpty()) {
+        if(m_pReq->multipartFormData().renameUploadedFile("f_ve_file", VE_EXPORT_KEY_FILE, true)) {
+            apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " system_cgi_VE_Mount_Upload_File " +
+                    allParametersToString());
+        }
+    }
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);

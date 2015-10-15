@@ -9,6 +9,7 @@
 RenderResponse::RenderResponse()
     : m_pReq(NULL)
     , m_pSession(NULL)
+    , m_bExitApp(false)
 {
 }
 
@@ -125,7 +126,7 @@ QStringList RenderResponse::getAPIFileOut(QString filePath, bool bOneLine, QStri
     return ret;
 }
 
-bool RenderResponse::setNasCfg(QString title, QString key, QString value, QString configFile) {
+bool RenderResponse::setNasCfg(QString title, QString key, QString value, QString configFile, QString space) {
 
     QByteArray data;
     QFile file(configFile);
@@ -150,7 +151,7 @@ bool RenderResponse::setNasCfg(QString title, QString key, QString value, QStrin
     }
 
     int idxToSetValue = fileData.indexOf("=", idxKey + 1) + 1;
-    fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, " " + value);
+    fileData.replace(idxToSetValue, fileData.indexOf("\n", idxToSetValue) - idxToSetValue, space + value);
 
     file.reset();
     file.write(fileData.toUtf8());

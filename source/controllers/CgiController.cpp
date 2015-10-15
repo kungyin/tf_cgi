@@ -45,9 +45,9 @@ CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
     : m_pParseCmd(NULL)
     //, m_diffTime(0)
+    , m_bExitApp(false)
 {
 
-    tDebug("\n  --------------------------- start -----------------------------------");
 #ifdef SIMULATOR_MODE
     tDebug("** SIMULATOR_MODE is enabled. **");
 #endif
@@ -64,7 +64,8 @@ CgiController::~CgiController()
     if(m_pParseCmd)
         delete m_pParseCmd;
 
-    tDebug("\n  ---------------------------- end -------------------------------------\n");
+    if(m_bExitApp)
+        QCoreApplication::instance()->exit();
 }
 
 void CgiController::process()
@@ -209,7 +210,6 @@ void CgiController::cgiResponse() {
         break;
     case RENDER_TYPE_USER_LOGOUT:
     {
-        session().reset();
         redirect(QUrl(pRrep->getVar().toString()));
         break;
     }
@@ -238,6 +238,7 @@ void CgiController::cgiResponse() {
     //m_diffTime = pRrep->getSessionDiff();
     //m_sessionId = session().id();
 
+    m_bExitApp = pRrep->getIfExit();
     if(pRrep)
         delete pRrep;
 

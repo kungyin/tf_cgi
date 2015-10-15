@@ -34,8 +34,8 @@ void RenderResponseMyDlinkAccount::preRender() {
 }
 
 void RenderResponseMyDlinkAccount::generateMydlinkAcc(QString tagName) {
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API +
-                                      " mydlink_account " + allParametersToString());
+    QStringList arg = QStringList() << "mydlink_account" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomDocument doc;
     QDomElement root = doc.createElement("config");

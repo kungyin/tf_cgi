@@ -240,13 +240,31 @@ void RenderResponseHome::generateLogin() {
 
 void RenderResponseHome::generateLogout() {
 
-//    QString paraUsername;
-//    QString paraOS;
+    if(m_pSession) {
+        QString user = m_pSession->value("user").toString();
 
-//    if(m_pReq->allParameters().contains("name"))
-//        paraUsername = m_pReq->allParameters().value("name").toString();
-//    if(m_pReq->allParameters().contains("os"))
-//        paraOS = m_pReq->allParameters().value("os").toString();
+        QDir dir(sessionDirPath());
+        QDir::Filters filters = QDir::Files;
+        QFileInfoList fileList = dir.entryInfoList(filters);
+
+        QListIterator<QFileInfo> iter(fileList);
+        while (iter.hasNext()) {
+            QFileInfo entry = iter.next();
+            if(entry.fileName().length() == 40) {
+                TSession session = findSession(entry.fileName().toLocal8Bit());
+                if(session.value("user").toString() == user
+                        && m_pSession->id() != entry.fileName())
+                {
+                    QFile::remove(entry.absoluteFilePath());
+
+                    tDebug("remove %s", entry.absoluteFilePath().toLocal8Bit().data());
+                }
+            }
+        }
+
+        m_pSession->reset();
+
+    }
 
     m_var = "..";
 
@@ -305,7 +323,7 @@ bool RenderResponseHome::isValidUser() {
                 QDir dir(sessionDirPath());
                 QDir::Filters filters = QDir::Files;
                 QFileInfoList fileList = dir.entryInfoList(filters);
-                uint lifeTIme = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
+                uint lifeTime = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
 
                 QListIterator<QFileInfo> iter(fileList);
                 while (iter.hasNext()) {
@@ -313,7 +331,7 @@ bool RenderResponseHome::isValidUser() {
                     if(entry.fileName().length() == 40) {
                         TSession session = findSession(entry.fileName().toLocal8Bit());
                         if(session.value("user").toByteArray() == c.value()
-                                && (lifeTIme > (QDateTime::currentDateTime().toTime_t() - entry.lastModified().toTime_t())))
+                                && (lifeTime > (QDateTime::currentDateTime().toTime_t() - entry.lastModified().toTime_t())))
                         {
                             m_pSession->insert("user", c.value());
                             bValidUser = true;

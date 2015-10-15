@@ -18,6 +18,7 @@ public:
 //    int getSessionDiff() { return m_diffTime; }
 //    void setSessionDiff(int diff) { m_diffTime = diff; }
     void setSession(TSession &session) { m_pSession = &session; }
+    bool getIfExit() { return m_bExitApp; }
 
 signals:
     void typeChanged(RENDER_TYPE);
@@ -28,7 +29,7 @@ protected:
     QStringList getAPIStdOut(QString, QStringList, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
     bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
-    bool setNasCfg(QString, QString, QString, QString configFile = SYS_CONFIG_FILE);
+    bool setNasCfg(QString, QString, QString, QString configFile = SYS_CONFIG_FILE, QString space = " ");
     bool setNasCfg(QString, QMap<QString, QString> &);
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
@@ -45,6 +46,7 @@ protected:
 
     THttpRequest *m_pReq;
     TSession *m_pSession;
+    bool m_bExitApp;
 
 private:
 

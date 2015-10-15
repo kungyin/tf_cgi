@@ -62,6 +62,7 @@ const QString TUXERA_CONF           =   "/etc/sysconfig/config/tms.conf";
 
 const QString API_PATH = "";
 const QString ENV_PATH = "";
+const QString TMP_PATH = "/tmp";
 const QString FILE_TMP_PATH = "/var/upload";
 const QString MYDLINK_TMP_PATH = "/var/www/mydlink/tmp";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
@@ -87,6 +88,7 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 
 const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
+const QString TMP_PATH = "./tmp";
 const QString FILE_TMP_PATH = "./tmp";
 const QString MYDLINK_TMP_PATH = "./tmp";
 const QString SYS_CONFIG_FILE = API_PATH + "sys_config";
@@ -96,7 +98,7 @@ const QString FIRMWARE_PERCENTAGE_FILE = API_PATH + ".fw_percentage";
 const QString FIRMWARE_VERIFY_STATUS_FILE = API_PATH + ".verify_status";
 const QString FIRMWARE_RESULT_FILE = API_PATH + ".fw_result";
 const QString DWONLOAD_USER_IMPORT_FILE = API_PATH + "import_file.txt";
-const QString VE_EXPORT_KEY_FILE = API_PATH + "Encrypted-Volume_1.Key";
+const QString VE_EXPORT_KEY_FILE = API_PATH + "Encrypted-Volume.Key";
 const QString SENDOUT_LOGFILE = API_PATH + "log.txt";
 const QString P2P_STATE_FILE = API_PATH + "p2p_status";
 const QString TORRENT_UPLOAD_FILE = API_PATH + "torrent_file";

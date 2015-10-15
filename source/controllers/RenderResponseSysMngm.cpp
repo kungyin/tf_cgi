@@ -424,10 +424,11 @@ void RenderResponseSysMngm::generateShutdown() {
 void RenderResponseSysMngm::generateIdle() {
     QString paraIdle = m_pReq->allParameters().value("f_idle").toString();
     int idleTimeInSec = paraIdle.toInt() * 60;
-    setNasCfg("General", "Session.LifeTime", QString::number(idleTimeInSec), Tf::app()->appSettingsFilePath());
-    daemonize();
-    if(!startDetached(API_PATH + SCRIPT_TREEFROG_CTL, QStringList() << "restart"))
-        ;
+    setNasCfg("General", "Session.LifeTime", QString::number(idleTimeInSec), Tf::app()->appSettingsFilePath(), "");
+
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TREEFROG_CTL + " restart &", true, ",", true);
+    m_bExitApp = true;
+
 }
 
 void RenderResponseSysMngm::generateTemperature() {
