@@ -126,8 +126,8 @@ void RenderResponseFileStation::generateOpenTree() {
 
     bool bShowFile = paraShowFile.compare("1") == 0 ? true : false;
     /* In one of iso mount CGI, it has no file. But it has no proper parameter to adjudge it. */
-    if(paraDir.endsWith(QDir::separator()) && m_pReq->parameter("cmd") == "cgi_open_tree")
-        bShowFile = false;
+//    if(paraDir.endsWith(QDir::separator()) && m_pReq->parameter("cmd") == "cgi_open_tree")
+//        bShowFile = false;
 
     QDir dir(paraDir);
     QDir::Filters filters = QDir::NoDotAndDotDot | QDir::Dirs;
