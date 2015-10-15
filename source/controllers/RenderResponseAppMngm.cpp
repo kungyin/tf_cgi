@@ -2357,7 +2357,9 @@ void RenderResponseAppMngm::generateGetModifyInfo() {
 
     QDomElement localPathElement = doc.createElement("local_path");
     root.appendChild(localPathElement);
-    localPathElement.appendChild(doc.createTextNode(QString(r_info_ret.local_path)));
+    QString localPath = QString(r_info_ret.local_path);
+    replaceVoltoRealPath(localPath, true);
+    localPathElement.appendChild(doc.createTextNode(localPath));
 
     QDomElement rsyncUserElement = doc.createElement("rsync_user");
     root.appendChild(rsyncUserElement);
