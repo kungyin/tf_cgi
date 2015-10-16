@@ -64,8 +64,8 @@ CgiController::~CgiController()
     if(m_pParseCmd)
         delete m_pParseCmd;
 
-    if(m_bExitApp)
-        QCoreApplication::instance()->exit();
+//    if(m_bExitApp)
+//        QCoreApplication::instance()->exit();
 }
 
 void CgiController::process()

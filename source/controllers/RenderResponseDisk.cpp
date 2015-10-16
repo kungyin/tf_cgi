@@ -476,7 +476,7 @@ void RenderResponseDisk::generateSmartHDList() {
     if(!apiOut.isEmpty())
         apiOut.removeLast();
     QString checkbox = "<input type=\"checkbox\" value=\"%1,%2,%3\" "
-            "id=\"smart_hdd_num_0\" name=\"smart_hdd_num\" >";
+            "id=\"smart_hdd_num_0\" name=\"smart_hdd_num\" %4>";
 
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
@@ -490,12 +490,14 @@ void RenderResponseDisk::generateSmartHDList() {
         QString checkboxValue1 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(0);
         QString checkboxValue2 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(1);
         QString checkboxValue3 = checkboxValues.isEmpty() ? QString::null : checkboxValues.split(",").value(2);
+        QString checkboxValue4 = e.split(";").value(5).trimmed() == "-" ? QString::null : QString("disabled checked ");
 
         QDomElement cellElement1 = doc.createElement("cell");
         rowElement1.appendChild(cellElement1);
         cellElement1.appendChild(doc.createCDATASection(checkbox.arg(checkboxValue1)
-                                                            .arg(checkboxValue2)
-                                                            .arg(checkboxValue3)));
+                                            .arg(checkboxValue2)
+                                            .arg(checkboxValue3)
+                                            .arg(checkboxValue4)));
         QDomElement cellElement2 = doc.createElement("cell");
         rowElement1.appendChild(cellElement2);
         cellElement2.appendChild(doc.createTextNode(e.split(";").value(2)));
@@ -622,7 +624,7 @@ void RenderResponseDisk::generateSmartScheduleList() {
 void RenderResponseDisk::generateGetTestStatus() {
     QDomDocument doc;
     QStringList arg = QStringList() << "service_get_smart_test_status";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("Button");
     doc.appendChild(root);
