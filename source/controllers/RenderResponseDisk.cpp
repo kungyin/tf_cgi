@@ -70,6 +70,9 @@ void RenderResponseDisk::preRender() {
     case CMD_SMART_TEST_START:
         generateSmartTestStart();
         break;
+    case CMD_SMART_TEST_STOP:
+        generateSmartTestStop();
+        break;
     case CMD_CHECK_DISK_REMOUNT_STATUS:
         generateCheckDiskRemountState();
         break;
@@ -653,23 +656,7 @@ void RenderResponseDisk::generateSmartSetSchedule() {
 void RenderResponseDisk::generateSmartTestStart() {
     QDomDocument doc;
 
-    QString paraDevice;
-    QString paraType;
-    QString paraMailFlag;
-
-    if(m_pReq->allParameters().contains("f_device"))
-        paraDevice = m_pReq->allParameters().value("f_device").toString();
-    if(m_pReq->allParameters().contains("f_type"))
-        paraType = m_pReq->allParameters().value("f_type").toString();
-    if(m_pReq->allParameters().contains("f_mail_flag"))
-        paraMailFlag = m_pReq->allParameters().value("f_mail_flag").toString();
-
-    QString allPara;
-    allPara =   "f_device=" + paraDevice.replace(" ", ",") + "#" +
-                "f_type=" + paraType + "#" +
-                "f_mail_flag=" + paraMailFlag;
-
-    QStringList arg = QStringList() << "service_set_smart_test_start" << allPara;
+    QStringList arg = QStringList() << "service_set_smart_test_start" << allParametersToString(true, " ", ",");
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QDomElement root = doc.createElement("config");
@@ -679,6 +666,20 @@ void RenderResponseDisk::generateSmartTestStart() {
     resElement.appendChild(doc.createTextNode(apiOut.value(0)));
     m_var = doc.toString();
 
+}
+
+void RenderResponseDisk::generateSmartTestStop() {
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "service_set_smart_test_stop";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    m_var = doc.toString();
 }
 
 void RenderResponseDisk::generateScanDiskInfo() {

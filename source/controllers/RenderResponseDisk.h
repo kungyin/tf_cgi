@@ -66,6 +66,7 @@ private:
     void generateSmartSetSchedule();
     void generateSmartDelSchedule();
     void generateSmartTestStart();
+    void generateSmartTestStop();
     void generateScanDiskInfo();
     void generateCheckDiskRemountState();
     void generateScanDiskRunE2fsck();

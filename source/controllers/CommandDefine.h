@@ -42,6 +42,7 @@ enum CGI_COMMAND {
     CMD_SMART_GET_TEST_STATUS,      /* SMART_Get_Test_Status */
     CMD_SMART_SET_SCHEDULE,         /* SMART_Set_Schedule */
     CMD_SMART_TEST_START,           /* cgi_SMART_Test_Start */
+    CMD_SMART_TEST_STOP,            /* cgi_SMART_Test_Stop */
     CMD_SCANDISK_INFO,              /* ScanDisk_info */
     CMD_CHECK_DISK_REMOUNT_STATUS,  /* cgi_Check_Disk_Remount_State */
     CMD_SCANDISK_RUN_E2FSCK,        /* ScanDisk_run_e2fsck */
@@ -603,6 +604,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "SMART_Get_Test_Status",
     "SMART_Set_Schedule",
     "cgi_SMART_Test_Start",
+    "cgi_SMART_Test_Stop",
     "ScanDisk_info",
     "cgi_Check_Disk_Remount_State",
     "ScanDisk_run_e2fsck",
@@ -1164,6 +1166,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_SMART_GET_TEST_STATUS,        RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Get_Test_Status */
     { CMD_SMART_SET_SCHEDULE,           RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* SMART_Set_Schedule */
     { CMD_SMART_TEST_START,             RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_SMART_Test_Start */
+    { CMD_SMART_TEST_STOP,              RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_SMART_Test_Stop */
     { CMD_SCANDISK_INFO,                RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_info */
     { CMD_CHECK_DISK_REMOUNT_STATUS,    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* cgi_Check_Disk_Remount_State */
     { CMD_SCANDISK_RUN_E2FSCK,          RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },          /* ScanDisk_run_e2fsck */

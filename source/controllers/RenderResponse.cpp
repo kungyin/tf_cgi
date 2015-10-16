@@ -278,11 +278,6 @@ QString RenderResponse::allParametersToString(bool bDecode, QString before, QStr
         }
     }
 
-//    if(!ret.isEmpty()) {
-//        ret.prepend("\"");
-//        ret.append("\"");
-//    }
-
     return ret;
 }
 
