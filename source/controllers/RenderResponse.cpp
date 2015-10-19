@@ -9,24 +9,26 @@
 RenderResponse::RenderResponse()
     : m_pReq(NULL)
     , m_pSession(NULL)
-    , m_bExitApp(false)
 {
 }
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSh) {
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSh, bool bBackground) {
     QStringList ret;
+    QString fullCmd = apiCmd;
+
+#ifndef SIMULATOR_MODE
     QString cmd;
     QString args;
     QString argsFmt = "\"%1\"";
 
-    QString fullCmd = apiCmd;
     if(bUseSh) {
         args = argsFmt.arg(apiCmd);
-        cmd = "sh -c";
-        fullCmd = cmd + " " + args;
-//        system(apiCmd.toLocal8Bit().data());
-//        return ret;
+        cmd = "nohup sh -c";
+        fullCmd = cmd + " " + args + " < /dev/null 2>&1 > /dev/null";
+        if(bBackground)
+            fullCmd += " &";
     }
+#endif
 
     tDebug("Start command: %s", apiCmd.split(" ").value(0).toLocal8Bit().data());
     if(fullCmd.isEmpty())
@@ -57,6 +59,9 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     return ret;
 }
 
+/*
+ * Interface for base64 encoding
+ */
 QStringList RenderResponse::getAPIStdOut(QString apiCmd, QStringList paraList, bool bOneLine, QString splitChar, bool bUseSh) {
     QString paraB64, para;
 
