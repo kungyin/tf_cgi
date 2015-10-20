@@ -305,10 +305,11 @@ void RenderResponseNetShare::generateGetIsoShare() {
             "<img src='../images/detail.png' onclick='show_iso_detail(\"%1\");'>";
     QString cellContentFtp =
             "<img src='../images/detail.png' onclick='show_ftp_detail(\"%1\",\"#iso_tb\");'>";
-    // todo: 2 sessions.
     QString cellContentNfs =
             "<img src='../images/detail.png' onclick='show_iso_nfs_detail(\"%1\",\"#iso_tb\")'>"
             "<input type=\"hidden\" name=\"nfs_%2\" id=\"nfs_%2\" value=\"%3\">";
+    QString cellContentNfsEmpty =
+            "-<input type=\"hidden\" name=\"nfs_%1\" id=\"nfs_%1\" value=\"null:null\">";
     QString cellContentWebdav =
             "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#iso_tb\")'>"
             "<input type=\"hidden\" name=\"webdav_%2\" id=\"webdav_%2\" value=\"%3\">";
@@ -330,7 +331,7 @@ void RenderResponseNetShare::generateGetIsoShare() {
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createCDATASection(cellContentCifs.arg("1")));
+        cellElement3.appendChild(doc.createCDATASection(cellContentCifs.arg(QString::number(i))));
 
         QString cell4 = e.split(";").value(2) == "1" ? cellContentFtp.arg("1") : "-";
         QDomElement cellElement4 = doc.createElement("cell");
@@ -338,8 +339,9 @@ void RenderResponseNetShare::generateGetIsoShare() {
         cellElement4.appendChild(doc.createCDATASection(cell4));
 
         QString nfsInfo = e.split(";").value(3);
-        QString cell5 = (nfsInfo == "-") ? nfsInfo : cellContentNfs.arg(
-                 "1", QString::number(i), nfsInfo);
+        QString cell5 = (nfsInfo == "-") ?
+                    cellContentNfsEmpty.arg(QString::number(i)) :
+                    cellContentNfs.arg("1", QString::number(i), nfsInfo);
         QDomElement cellElement5 = doc.createElement("cell");
         rowElement.appendChild(cellElement5);
         cellElement5.appendChild(doc.createCDATASection(cell5));
@@ -409,6 +411,7 @@ void RenderResponseNetShare::generateIsoPrecentage() {
 void RenderResponseNetShare::generateClearIsoCreate() {
     QStringList arg = QStringList() << "service_clear_iso_create" << allParametersToString();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    m_var = apiOut.value(0);
 }
 
 void RenderResponseNetShare::generateUserList() {

@@ -1283,7 +1283,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_GET_AFP_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_afp_info */
     { CMD_GET_NFS_INFO,                 RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_get_nfs_info */
     { CMD_ISO_PERCENTAGE,               RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_iso_percentage */
-    { CMD_CLEAR_ISO_CREATE,             RENDER_TYPE_NULL,           COOKIE_REQ_CMDS      },         /* cgi_clear_iso_create */
+    { CMD_CLEAR_ISO_CREATE,             RENDER_TYPE_STRING,         COOKIE_REQ_CMDS      },         /* cgi_clear_iso_create */
     { CMD_USER_LIST,                    RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_user_list */
     { CMD_GROUP_LIST,                   RENDER_TYPE_XML,            COOKIE_REQ_CMDS      },         /* cgi_group_list */
     //CMD_GET_ALL_SESSION,                    /* cgi_get_all_session */
