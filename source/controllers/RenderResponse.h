@@ -18,14 +18,13 @@ public:
 //    int getSessionDiff() { return m_diffTime; }
 //    void setSessionDiff(int diff) { m_diffTime = diff; }
     void setSession(TSession &session) { m_pSession = &session; }
-    bool getIfExit() { return m_bExitApp; }
 
 signals:
     void typeChanged(RENDER_TYPE);
 
 protected:
 
-    QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
+    QStringList getAPIStdOut(QString, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false, bool bBackground = false);
     QStringList getAPIStdOut(QString, QStringList, bool bOneLine = false, QString splitChar = ",", bool bUseSh = false);
     bool startDetached(QString, QStringList&);
     QStringList getAPIFileOut(QString, bool bOneLine = false, QString splitChar = ",");
@@ -46,7 +45,6 @@ protected:
 
     THttpRequest *m_pReq;
     TSession *m_pSession;
-    bool m_bExitApp;
 
 private:
 

@@ -46,7 +46,6 @@ CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
     : m_pParseCmd(NULL)
     //, m_diffTime(0)
-    , m_bExitApp(false)
 {
 
 #ifdef SIMULATOR_MODE
@@ -65,8 +64,6 @@ CgiController::~CgiController()
     if(m_pParseCmd)
         delete m_pParseCmd;
 
-//    if(m_bExitApp)
-//        QCoreApplication::instance()->exit();
 }
 
 void CgiController::process()
@@ -239,7 +236,6 @@ void CgiController::cgiResponse() {
     //m_diffTime = pRrep->getSessionDiff();
     //m_sessionId = session().id();
 
-    m_bExitApp = pRrep->getIfExit();
     if(pRrep)
         delete pRrep;
 

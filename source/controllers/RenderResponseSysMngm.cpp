@@ -426,9 +426,7 @@ void RenderResponseSysMngm::generateIdle() {
     int idleTimeInSec = paraIdle.toInt() * 60;
     setNasCfg("General", "Session.LifeTime", QString::number(idleTimeInSec), Tf::app()->appSettingsFilePath(), "");
 
-    daemonize();
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TREEFROG_CTL + " restart &", true, ",", true);
-    m_bExitApp = true;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TREEFROG_CTL + " restart &", true, ",", true, true);
 
 }
 
