@@ -147,11 +147,7 @@ void RenderResponseMyDlink::generateSetDeviceName() {
     QStringList arg = QStringList() << "get";
     QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
 
-    QString paraToSet = QString("set %1 %2 %3")
-            .arg(paraDeviceName)
-            .arg(apiOutGet.value(1))
-            .arg(apiOutGet.value(2));
-    QStringList arg1 = QStringList() << paraToSet;
+    QStringList arg1 = QStringList() << "set" << paraDeviceName << apiOutGet.value(1) << apiOutGet.value(2);
     QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg1, true, ";");
     QStringList apiOutHostname = getAPIFileOut(HOSTNAME_FILE);
 
