@@ -426,7 +426,8 @@ void RenderResponseSysMngm::generateIdle() {
     int idleTimeInSec = paraIdle.toInt() * 60;
     setNasCfg("General", "Session.LifeTime", QString::number(idleTimeInSec), Tf::app()->appSettingsFilePath(), "");
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TREEFROG_CTL + " restart &", true, ",", true, true);
+    /* "nohup" */
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TREEFROG_CTL + " restart", true, ",", 2, true);
 
 }
 
@@ -837,7 +838,7 @@ void RenderResponseSysMngm::generateLogSystem() {
 //    QString paraField = m_pReq ->parameter("f_field") ;
 //    QString paraUser = m_pReq ->parameter("user") ;
 
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CLOG + " -g 0 | tac", false, ",", true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CLOG + " -g 0 | tac", false, ",", 1);
 
     QVariantMap listMap;
     listMap.insert("total", QString::number(apiOut.size()));

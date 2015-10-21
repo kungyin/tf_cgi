@@ -670,7 +670,8 @@ void RenderResponseFileStation::generateAddZip() {
         QDir::setCurrent(paraPath);
         QString compressCmd = "zip -r \"%1/%2\" \"%3\"";
 
-        getAPIStdOut(compressCmd.arg(paraPath).arg(zipFileName).arg(paraSelectName.replace("*", " ")), false, "", true);
+        /* "sh -c" */
+        getAPIStdOut(compressCmd.arg(paraPath).arg(zipFileName).arg(paraSelectName.replace("*", " ")), false, "", 1);
         QDir::setCurrent(currentPath);
 
         QFileInfo zipFileInfo(paraPath + QDir::separator() + zipFileName);
@@ -721,7 +722,8 @@ bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString 
         QString currentPath = QDir::currentPath();
         QDir::setCurrent(path);
         QString uncompressCmd = "%1 \"%2\"";
-        QStringList apiOut = getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", true);
+        /* "sh -c" */
+        QStringList apiOut = getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", 1);
 
         for (int i = 1; i < apiOut.size(); i++) {
             QString from = apiOut.value(i).remove("inflating:").trimmed();

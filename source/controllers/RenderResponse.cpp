@@ -12,7 +12,14 @@ RenderResponse::RenderResponse()
 {
 }
 
-QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, bool bUseSh, bool bBackground) {
+/*
+ * iUseSh
+ * 0: null
+ * 1: nohup sh -c
+ * 2: nohup
+ */
+
+QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString splitChar, int iUseSh, bool bBackground) {
     QStringList ret;
     QString fullCmd = apiCmd;
 
@@ -21,9 +28,11 @@ QStringList RenderResponse::getAPIStdOut(QString apiCmd, bool bOneLine, QString 
     QString args;
     QString argsFmt = "\"%1\"";
 
-    if(bUseSh) {
+    if(iUseSh > 0) {
         args = argsFmt.arg(apiCmd);
-        cmd = "nohup sh -c";
+        cmd = "nohup";
+        if(iUseSh == 1)
+            cmd = "nohup sh -c";
         fullCmd = cmd + " " + args + " < /dev/null 2>&1 > /dev/null";
         if(bBackground)
             fullCmd += " &";

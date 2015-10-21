@@ -155,7 +155,8 @@ bool RenderResponseFileOpBase::compress(const QString &path, const QString &name
             QString currentPath = QDir::currentPath();
             QDir::setCurrent(path);
             QString compressCmd = "zip -FSr \"%1%2%3\" \"%3\"";
-            getAPIStdOut(compressCmd.arg(tmpPath).arg(QDir::separator()).arg(name), false, "", true);
+            /* "sh -c" */
+            getAPIStdOut(compressCmd.arg(tmpPath).arg(QDir::separator()).arg(name), false, "", 1);
             QDir::setCurrent(currentPath);
         }
 
@@ -183,10 +184,11 @@ QString RenderResponseFileOpBase::compressTgz(const QString &path, const QString
         QFile::remove(targetFileInfo.absoluteFilePath());
 
         QString compressCmd = "tar zcf %1%2%3 -C %1 %4";
+        /* "sh -c" */
         getAPIStdOut(compressCmd.arg(dir.absolutePath())
                      .arg(QDir::separator())
                      .arg(outFileName)
-                     .arg(fileList), false, "", true);
+                     .arg(fileList), false, "", 1);
 
         if(targetFileInfo.exists())
             ret = targetFileInfo.absoluteFilePath();
