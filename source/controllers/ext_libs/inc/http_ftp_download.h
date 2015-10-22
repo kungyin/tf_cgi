@@ -142,6 +142,7 @@ typedef enum
     TAG_R_RSYNC_PWD,
     TAG_R_SSH_USER,
     TAG_R_SSH_PWD,
+    TAG_R_SSH_PORT,
     TAG_R_IP,
     TAG_R_PATH,
     TAG_R_LOCAL_PATH,
@@ -169,6 +170,7 @@ typedef struct
     char *rsync_pwd;
     char *ssh_user; // this value matters if is_use_ssh=1
     char *ssh_pwd; // this value matters if is_use_ssh=1
+    int ssh_port; // this value matters if is_use_ssh=1
     char *remote_ip;
     char *remote_path;
     char *local_path;
@@ -219,7 +221,7 @@ RESULT_STATUS SetRsyncInfo(int is_enable, char *pwd); // it will start rsync ser
 RESULT_STATUS SaveRemoteXml(REMOTE_BACKUP_INFO r_info, int is_add);
 RESULT_STATUS GetRemoteTaskXmlValue(char *task_name, REMOTE_BACKUP_TAG tag, REMOTE_BACKUP_INFO *r_info); // return value need free
 void FreeRemoteTask(REMOTE_BACKUP_INFO *r_info);
-RESULT_STATUS TestRemoteBackupTask(char *ip, int s_type, int direction, char *task, char *local_path, int encryption, int keep_exist_file, char *rsync_user, char *rsync_pw, char *ssh_user, char *ssh_pw, REMOTE_TEST_RESULT *result);
+RESULT_STATUS TestRemoteBackupTask(char *ip, int s_type, int direction, char *task, char *local_path, int encryption, int keep_exist_file, char *rsync_user, char *rsync_pw, char *ssh_user, char *ssh_pw, REMOTE_TEST_RESULT *result, int ssh_port);
 void StopRemoteTask(char *task_name);
 RESULT_STATUS DeleteRemoteTaskXml(char *task_name);
 RESULT_STATUS UpdateRemoteXmlStatus(char *task_name, char *state, char *comment, char *enable);
@@ -229,8 +231,8 @@ void FreeRsyncSharePath(int count, char ***name, char ***path);
 //void GetRsyncSharePath(char *name, char **path); // return values(*path) need free
 void GetRemoteRsyncSharePath(char *ip, int *count, char ***path); // return values(*path) need free
 void GetLocalDeviceSizeString(char *path, char *exclude_file_path, char **size_string); // return values need free
-int TestSSHConnect(char *ip, char *ssh_user, char *ssh_pwd); // nas to nas use ssh direct, remote share node and size need another api(use root default ssh login to get).
-int TestRsyncConnect(char *ip, int s_type, int direction, char *task, char *local_path, int encryption, int keep_exist_file, char *rsync_user, char *rsync_pw, char *ssh_user, char *ssh_pwd);
+int TestSSHConnect(char *ip, char *ssh_user, char *ssh_pwd, int ssh_port); // nas to nas use ssh direct, remote share node and size need another api(use root default ssh login to get).
+int TestRsyncConnect(char *ip, int s_type, int direction, char *task, char *local_path, int encryption, int keep_exist_file, char *rsync_user, char *rsync_pw, char *ssh_user, char *ssh_pwd, int ssh_port);
 void StartStopRemoteTask(char *task_name, char *enable);
 void StartRemoteTask(char *task_name);
 void UpdateRemoteTaskPercent(char *task_name);
