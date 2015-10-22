@@ -20,22 +20,18 @@ public slots:
     void processGoogleDrive();
     void processMydlink();
     void processMydlinkAccount();
+    void processNasSharing();
     void renderTypeChanged(RENDER_TYPE);
 
 private:
     void cgiInit(int group = CMD_GRP_NONE);
     void cgiResponse();
-    void getSessionTime();
-    void resetSessionTime();
-    //bool modifySessionTime();
     RenderResponse *getRenderResponseBaseInstance(THttpRequest &, CGI_COMMAND);
     bool isValidClient();
     bool isValidClientWithPwd();
-    QMap<QString, QList<QDateTime>> map;
 
     ParseCmd *m_pParseCmd;
-    //int m_diffTime;
-    //QString m_sessionId;
+
 };
 
 T_DECLARE_CONTROLLER(CgiController, cgicontroller);

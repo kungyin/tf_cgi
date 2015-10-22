@@ -62,7 +62,8 @@ HEADERS += applicationcontroller.h \
     RenderResponseDropbox.h \
     RenderResponseAirplay.h \
     RenderResponseFileOpBase.h \
-    RenderResponseMyDlinkAccount.h
+    RenderResponseMyDlinkAccount.h \
+    RenderResponseNasSharing.h
 SOURCES += applicationcontroller.cpp \
     CgiController.cpp \
     ParseCmd.cpp \
@@ -89,4 +90,5 @@ SOURCES += applicationcontroller.cpp \
     RenderResponseDropbox.cpp \
     RenderResponseAirplay.cpp \
     RenderResponseFileOpBase.cpp \
-    RenderResponseMyDlinkAccount.cpp
+    RenderResponseMyDlinkAccount.cpp \
+    RenderResponseNasSharing.cpp

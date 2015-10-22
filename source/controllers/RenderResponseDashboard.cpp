@@ -43,10 +43,13 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
 
     QSet<QString> usersSet;
     QListIterator<QFileInfo> iter(fileList);
+    uint lifeTime = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
     while (iter.hasNext()) {
         QFileInfo entry = iter.next();
         if(entry.fileName().length() == 40) {
-            usersSet.insert(findSession(entry.fileName().toLocal8Bit()).value("user").toString());
+            TSession session = findSession(entry.fileName().toLocal8Bit());
+            if(QDateTime::currentDateTime().toTime_t() - session.value("time").toDateTime().toTime_t() < lifeTime)
+                usersSet.insert(session.value("user").toString());
         }
     }
 

@@ -45,25 +45,19 @@ const char VALID_CLIENT_ID[][255] = {
 CgiController::CgiController(/*const CgiController &other*/)
     //: ApplicationController()
     : m_pParseCmd(NULL)
-    //, m_diffTime(0)
 {
 
 #ifdef SIMULATOR_MODE
     tDebug("** SIMULATOR_MODE is enabled. **");
 #endif
-    getSessionTime();
 
 }
 
 
 CgiController::~CgiController()
 {
-    resetSessionTime();
-    //modifySessionTime();
-
     if(m_pParseCmd)
         delete m_pParseCmd;
-
 }
 
 void CgiController::process()
@@ -84,6 +78,11 @@ void CgiController::processMydlink() {
 
 void CgiController::processMydlinkAccount() {
     cgiInit(CMD_GRP_MYDLINK_ACCOUNT);
+    cgiResponse();
+}
+
+void CgiController::processNasSharing() {
+    cgiInit(CMD_GRP_NAS_SHARING);
     cgiResponse();
 }
 
@@ -190,13 +189,6 @@ void CgiController::cgiResponse() {
             }
         }
 
-        QPair<QString, QString> s = pRrepHome->getSession();
-        if(!s.first.isEmpty()) {
-            if(session().contains(s.first))
-                session().remove(s.first);
-            session().insert(s.first, s.second);
-        }
-
         QString redirectUrl;
         QString protocol = "http://";
         if(pRrepHome->getIfRedirectSsl())
@@ -233,81 +225,10 @@ void CgiController::cgiResponse() {
         break;
     }
 
-    //m_diffTime = pRrep->getSessionDiff();
-    //m_sessionId = session().id();
-
     if(pRrep)
         delete pRrep;
 
 }
-
-void CgiController::getSessionTime() {
-
-    QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
-
-    if(paraCmd == "cgi_get_temperature" || paraCmd == "cgi_get_device_detail_info") {
-        QString dirPath = Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
-        QDir dir(dirPath);
-        QDir::Filters filters = QDir::Files;
-        QFileInfoList fileList = dir.entryInfoList(filters);
-
-        QListIterator<QFileInfo> iter(fileList);
-        while (iter.hasNext()) {
-            QFileInfo entry = iter.next();
-            QList<QDateTime> orginalTime = QList<QDateTime>() << entry.lastRead() << entry.lastModified();
-            map.insert(entry.fileName(), orginalTime);
-        }
-    }
-}
-
-void CgiController::resetSessionTime() {
-    QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
-
-    if(paraCmd == "cgi_get_temperature" || paraCmd == "cgi_get_device_detail_info") {
-        QString dirPath = Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
-        QDir dir(dirPath);
-        QDir::Filters filters = QDir::Files;
-        QFileInfoList fileList = dir.entryInfoList(filters);
-
-        QListIterator<QFileInfo> iter(fileList);
-        while (iter.hasNext()) {
-            QFileInfo entry = iter.next();
-            QList<QDateTime> orginalTime = map.value(entry.fileName());
-            if(!orginalTime.isEmpty()) {
-                struct timeval tvp[2];
-                tvp[0].tv_sec = orginalTime.value(0).toTime_t();
-                tvp[1].tv_sec = orginalTime.value(1).toTime_t();
-                utimes(entry.absoluteFilePath().toLocal8Bit().data(), tvp);
-            }
-        }
-    }
-}
-
-
-//bool CgiController::modifySessionTime()
-//{
-//     QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
-
-//    if((!m_sessionId.isEmpty() && m_diffTime != 0) || paraCmd == "ui_check_wto") {
-//        QFileInfo sessionFileInfo(Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator() + m_sessionId);
-//        if(sessionFileInfo.exists()) {
-
-//            struct timeval tvp[2];
-//            tvp[0].tv_sec = sessionFileInfo.lastRead().toTime_t();
-//            tvp[1].tv_sec = sessionFileInfo.lastModified().toTime_t() + m_diffTime;
-//            int r = utimes(sessionFileInfo.absoluteFilePath().toLocal8Bit().data(), tvp);
-
-//            if(r == -1) {
-//                tDebug("CgiController::modifySessionTime - failed, m_diffTime: %d", m_diffTime);
-//                return false;
-//            }
-//            tDebug("CgiController::modifySessionTime - successfully, m_diffTime: %d", m_diffTime);
-//            return true;
-//        }
-//    }
-
-//    return false;
-//}
 
 RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, CGI_COMMAND cmd)
 {

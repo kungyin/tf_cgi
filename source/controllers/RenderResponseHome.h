@@ -14,7 +14,6 @@ public:
     virtual void preRender();
 
     QList<TCookie> &getCookies() { return m_cookies; }
-    QPair<QString, QString> &getSession() { return m_session; }
     bool &getIfRedirectSsl() { return m_bRedirect2Ssl; }
     bool &getRemMe() { return m_bRemMe; }
 
@@ -36,7 +35,6 @@ private:
     bool isValidUser();
 
     QList<TCookie> m_cookies;
-    QPair<QString, QString> m_session;
     bool m_bRedirect2Ssl;
     bool m_bRemMe;
     //User m_loginUser;

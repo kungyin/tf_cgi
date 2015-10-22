@@ -223,9 +223,8 @@ void RenderResponseHome::generateLogin() {
         TCookie cookie("username", paraUsername.toLocal8Bit());
         cookie.setPath("/");
         m_cookies.append(cookie);
-
-        m_session.first = "user";
-        m_session.second = paraUsername;
+        m_pSession->insert("user", paraUsername);
+        m_pSession->insert("time", QDateTime::currentDateTime());
 
         if(apiOut.value(0).compare("1") == 0)
             m_var = "/web/home.html?v=8401878";
@@ -315,7 +314,12 @@ bool RenderResponseHome::isValidUser() {
 
     for(TCookie c : m_pReq->cookies()) {
         if(c.name() == "username") {
-            if(m_pSession->value("user").toByteArray() == c.value()) {
+            uint lifeTime = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
+
+            if(m_pSession->value("user").toByteArray() == c.value()
+                    && (lifeTime > (QDateTime::currentDateTime().toTime_t()
+                        - m_pSession->value("time").toDateTime().toTime_t()))) {
+                m_pSession->insert("time", QDateTime::currentDateTime());
                 bValidUser = true;
                 break;
             }
@@ -323,7 +327,6 @@ bool RenderResponseHome::isValidUser() {
                 QDir dir(sessionDirPath());
                 QDir::Filters filters = QDir::Files;
                 QFileInfoList fileList = dir.entryInfoList(filters);
-                uint lifeTime = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
 
                 QListIterator<QFileInfo> iter(fileList);
                 while (iter.hasNext()) {
@@ -331,9 +334,11 @@ bool RenderResponseHome::isValidUser() {
                     if(entry.fileName().length() == 40) {
                         TSession session = findSession(entry.fileName().toLocal8Bit());
                         if(session.value("user").toByteArray() == c.value()
-                                && (lifeTime > (QDateTime::currentDateTime().toTime_t() - entry.lastModified().toTime_t())))
+                                && (lifeTime > (QDateTime::currentDateTime().toTime_t()
+                                    - session.value("time").toDateTime().toTime_t())))
                         {
                             m_pSession->insert("user", c.value());
+                            m_pSession->insert("time", QDateTime::currentDateTime());
                             bValidUser = true;
                             break;
                         }

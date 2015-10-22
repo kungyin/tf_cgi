@@ -4,6 +4,7 @@
 #include <QString>
 
 const QString MYDLINK_VERSION       =   "1.11";
+const QString NAS_SHARING_VERSION   =   "2.20";
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_SCANDISK_API   =   "scandisk";

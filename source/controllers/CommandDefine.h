@@ -566,6 +566,19 @@ enum CGI_COMMAND {
     CMD_MYDLINK_ACC_7,                                   /* 7 */
     CMD_MYDLINK_ACC_END,
 
+    /**** Nas Sharing ****/
+    CMD_NAS_SHARING_1,                                   /* 1 */
+    CMD_NAS_SHARING_2,                                   /* 2 */
+    CMD_NAS_SHARING_4,                                   /* 4 */
+    CMD_NAS_SHARING_5,                                   /* 5 */
+    CMD_NAS_SHARING_6,                                   /* 6 */
+    CMD_NAS_SHARING_7,                                   /* 7 */
+    CMD_NAS_SHARING_9,                                   /* 9 */
+    CMD_NAS_SHARING_10,                                  /* 10 */
+    CMD_NAS_SHARING_16,                                  /* 16 */
+
+    CMD_NAS_SHARING_END,
+
     CMD_SIZE
 
 };
@@ -574,7 +587,8 @@ enum SPECIAL_CMD_GROUP {
     CMD_GRP_NONE = 0,
     CMD_GRP_GOOGLE_DRIVE,
     CMD_GRP_MYDLINK,
-    CMD_GRP_MYDLINK_ACCOUNT
+    CMD_GRP_MYDLINK_ACCOUNT,
+    CMD_GRP_NAS_SHARING
 };
 
 const int CMD_GROUP_SPACE[][3] {
@@ -583,6 +597,7 @@ const int CMD_GROUP_SPACE[][3] {
     { CMD_GRP_GOOGLE_DRIVE,         CMD_GD_1,               CMD_GD_END          },
     { CMD_GRP_MYDLINK,              CMD_1,                  CMD_MYDLINK_END     },
     { CMD_GRP_MYDLINK_ACCOUNT,      CMD_MYDLINK_ACC_1,      CMD_MYDLINK_ACC_END },
+    { CMD_GRP_NAS_SHARING,          CMD_NAS_SHARING_1,      CMD_NAS_SHARING_END },
 };
 
 const char CGI_PARA_COMMANDS[][255] = {
@@ -1126,6 +1141,18 @@ const char CGI_PARA_COMMANDS[][255] = {
     "5",
     "6",
     "7",
+    "",
+
+    /**** Nas Sharing ****/
+    "1",
+    "2",
+    "4",
+    "5",
+    "6",
+    "7",
+    "9",
+    "10",
+    "16",
     ""
 
 };
@@ -1691,6 +1718,19 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MYDLINK_ACC_6,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
     { CMD_MYDLINK_ACC_7,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
     //CMD_MYDLINK_ACC_END,
+
+    /**** Nas Sharing ****/
+    { CMD_NAS_SHARING_1,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 1 */
+    { CMD_NAS_SHARING_2,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 2 */
+    { CMD_NAS_SHARING_4,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 4 */
+    { CMD_NAS_SHARING_5,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 5 */
+    { CMD_NAS_SHARING_6,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
+    { CMD_NAS_SHARING_7,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
+    { CMD_NAS_SHARING_9,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 9 */
+    { CMD_NAS_SHARING_10,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 10 */
+    { CMD_NAS_SHARING_16,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 16 */
+
+    //CMD_NAS_SHARING_END,
 
 //    CMD_SIZE
 
