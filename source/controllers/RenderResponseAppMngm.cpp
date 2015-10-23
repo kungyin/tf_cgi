@@ -2061,6 +2061,8 @@ void RenderResponseAppMngm::generateServerTest() {
     QString paraRsyncPw = m_pReq->parameter("rsync_pw");
     QString paraSshUser = m_pReq->parameter("ssh_user");
     QString paraSshPw = m_pReq->parameter("ssh_pw");
+    int paraSshPort = 22;
+    if (m_pReq->parameter("ssh_port") != "") paraSshPort = m_pReq->parameter("ssh_port").toInt();
     QString paraIncNum = m_pReq->parameter("inc_num");
 
     REMOTE_TEST_RESULT result;
@@ -2069,7 +2071,7 @@ void RenderResponseAppMngm::generateServerTest() {
                          paraTask.toLocal8Bit().data(), paraLocalPath.toLocal8Bit().data(),
                          paraEncryption.toInt(), paraKeepExistFile.toInt(), paraRsyncUser.toLocal8Bit().data(),
                          paraRsyncPw.toLocal8Bit().data(), paraSshUser.toLocal8Bit().data(),
-                         paraSshPw.toLocal8Bit().data(), &result);
+                         paraSshPw.toLocal8Bit().data(), &result, paraSshPort);
 
     QDomElement root = doc.createElement("test_info");
     doc.appendChild(root);
@@ -2086,7 +2088,7 @@ void RenderResponseAppMngm::generateServerTest() {
 
         if(paraType == "1") {
             QDomElement remoteHdA2FreeSizeElement;
-            QString arg = QString("%1 %2@%3 '%4 free_size'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QString arg = QString("%1 -p %2 %3@%4 '%5 free_size'").arg(SSH_AUTO_ROOT, QString::number(paraSshPort), paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
             QStringList remoteHddFreeSize = getAPIStdOut(arg, true, ":", true);
             for (int i = 0; i < remoteHddFreeSize.size(); i++)
             {
@@ -2116,7 +2118,7 @@ void RenderResponseAppMngm::generateServerTest() {
         }
         else
         {
-            QString arg = QString("%1 %2@%3 '%4 share_node'").arg(SSH_AUTO_ROOT, paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
+            QString arg = QString("%1 -p %2 %3@%4 '%5 share_node'").arg(SSH_AUTO_ROOT, QString::number(paraSshPort), paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
             QStringList remoteHddShareNodes = getAPIStdOut(arg, false, "", true);
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
@@ -2188,6 +2190,8 @@ void RenderResponseAppMngm::generateCheckRsyncRw() {
     QByteArray paraRsyncPw = m_pReq->parameter("rsync_pw").toLocal8Bit();
     QByteArray paraSshUser = m_pReq->parameter("ssh_user").toLocal8Bit();
     QByteArray paraSshPw = m_pReq->parameter("ssh_pw").toLocal8Bit();
+    int paraSshPort = 22;
+    if (m_pReq->parameter("ssh_port") != "") paraSshPort = m_pReq->parameter("ssh_port").toInt();
     QByteArray paraIncNum = m_pReq->parameter("inc_num").toLocal8Bit();
     QByteArray paraRemotePath = m_pReq->parameter("remote_path").toLocal8Bit();
 
@@ -2195,7 +2199,7 @@ void RenderResponseAppMngm::generateCheckRsyncRw() {
                                     paraTask.data(), paraLocalPath.data(),
                                     paraEncryption.toInt(), paraKeepExistFile.toInt(),
                                     paraRsyncUser.data(), paraRsyncPw.data(),
-                                    paraSshUser.data(), paraSshPw.data());
+                                    paraSshUser.data(), paraSshPw.data(), paraSshPort);
 
     QDomElement root = doc.createElement("rsync_info");
     doc.appendChild(root);
@@ -2232,6 +2236,10 @@ void RenderResponseAppMngm::generateSetSchedule() {
     r_info.ssh_user = ssh_user.data();
     QByteArray ssh_pwd = QUrl::fromPercentEncoding(m_pReq->parameter("ssh_pw").toLocal8Bit()).toUtf8();
     r_info.ssh_pwd = ssh_pwd.data();
+    if (m_pReq->parameter("ssh_port") != "")
+        r_info.ssh_port = m_pReq->parameter("ssh_port").toInt();
+    else
+        r_info.ssh_port = 22;
     QByteArray remote_ip = QUrl::fromPercentEncoding(m_pReq->parameter("ip").toLocal8Bit()).toUtf8();
     r_info.remote_ip = remote_ip.data();
     QByteArray remote_path = QUrl::fromPercentEncoding(m_pReq->parameter("remote_path").toLocal8Bit()).toUtf8();
@@ -2347,9 +2355,22 @@ void RenderResponseAppMngm::generateGetModifyInfo() {
     root.appendChild(incNumberElement);
     incNumberElement.appendChild(doc.createTextNode(QString::number(r_info_ret.inc_number)));
 
+    QString schedule_mode_trans = "";
+    QString execatTmp = QString(r_info_ret.execat);
+    if (r_info_ret.schedule_mode == 2)
+        schedule_mode_trans = "6:" + execatTmp.mid(10, 2) + ":" + execatTmp.mid(8, 2) + ":" + execatTmp.mid(6, 2) + ":" + execatTmp.mid(4, 2) + ":0";
+    else if (r_info_ret.schedule_mode == 3)
+    {
+        if (r_info_ret.recur_type == 1)
+            schedule_mode_trans = "3:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:0";
+        else if (r_info_ret.recur_type == 2)
+            schedule_mode_trans = "2:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:" + QString::number(r_info_ret.recur_date);
+        else
+            schedule_mode_trans = "1:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":" + QString::number(r_info_ret.recur_date) + ":0:0";
+    }
     QDomElement scheduleElement = doc.createElement("schedule");
     root.appendChild(scheduleElement);
-    scheduleElement.appendChild(doc.createTextNode(""));
+    scheduleElement.appendChild(doc.createTextNode(schedule_mode_trans));
 
     QDomElement remoteIpElement = doc.createElement("remote_ip");
     root.appendChild(remoteIpElement);
@@ -2376,6 +2397,10 @@ void RenderResponseAppMngm::generateGetModifyInfo() {
     QDomElement sshPwElement = doc.createElement("ssh_pw");
     root.appendChild(sshPwElement);
     sshPwElement.appendChild(doc.createTextNode(QString(r_info_ret.ssh_pwd)));
+
+    QDomElement sshPortElement = doc.createElement("ssh_port");
+    root.appendChild(sshPortElement);
+    sshPortElement.appendChild(doc.createTextNode(QString::number(r_info_ret.ssh_port)));
 
     QDomElement remotePathElement = doc.createElement("remote_path");
     root.appendChild(remotePathElement);
