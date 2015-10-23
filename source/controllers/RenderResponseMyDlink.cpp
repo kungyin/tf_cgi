@@ -198,42 +198,42 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
             getDevInfoType4(doc);
         }
         else if(paraType == "5") {
-            QStringList arg = QStringList() << "system_get_device_smart_info";
-            QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+            //QStringList arg = QStringList() << "system_get_device_smart_info";
+            //QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
             QDomElement disksElement = doc.createElement("new_disks");
             root.appendChild(disksElement);
 
-            QStringList disksTagNames(QStringList()
-                << "device" << "manufacture" << "model" << "size");
-            for(QString e : apiOutSmartList) {
+//            QStringList disksTagNames(QStringList()
+//                << "device" << "manufacture" << "model" << "size");
+//            for(QString e : apiOutSmartList) {
 
-                QStringList disksContents(QStringList()
-                    << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
-                                          << e.split(";").value(5));
+//                QStringList disksContents(QStringList()
+//                    << e.split(";").value(6) << e.split(";").value(1) << e.split(";").value(2)
+//                                          << e.split(";").value(5));
 
-                QDomElement diskElement = doc.createElement("disk");
-                disksElement.appendChild(diskElement);
-                for(int i = 0; i < disksTagNames.size(); i++) {
-                    QDomElement element = doc.createElement(disksTagNames.value(i));
-                    diskElement.appendChild(element);
-                    element.appendChild(doc.createTextNode(disksContents.value(i)));
-                }
-            }
+//                QDomElement diskElement = doc.createElement("disk");
+//                disksElement.appendChild(diskElement);
+//                for(int i = 0; i < disksTagNames.size(); i++) {
+//                    QDomElement element = doc.createElement(disksTagNames.value(i));
+//                    diskElement.appendChild(element);
+//                    element.appendChild(doc.createTextNode(disksContents.value(i)));
+//                }
+//            }
 
-            QStringList typeTagNames(QStringList()
-                << "standard" << "jbod" << "raid0" << "raid1" << "raid5" << "raid5_spare"
-                << "raid10"  << "raid0_jbod" << "raid1_jbod" << "raid5_jbod"
-                << "raid5_spare_jbod" << "raid10_jbod");
-            QStringList typeContents(QStringList()
-                << "1" << "1" << "1" << "1" << "0" << "0"
-                << "0"  << "1" << "1" << "0"
-                << "0" << "0");
-            for(int i = 0; i < typeTagNames.size(); i++) {
-                QDomElement element = doc.createElement(typeTagNames.value(i));
-                root.appendChild(element);
-                element.appendChild(doc.createTextNode(typeContents.value(i)));
-            }
+//            QStringList typeTagNames(QStringList()
+//                << "standard" << "jbod" << "raid0" << "raid1" << "raid5" << "raid5_spare"
+//                << "raid10"  << "raid0_jbod" << "raid1_jbod" << "raid5_jbod"
+//                << "raid5_spare_jbod" << "raid10_jbod");
+//            QStringList typeContents(QStringList()
+//                << "1" << "1" << "1" << "1" << "0" << "0"
+//                << "0"  << "1" << "1" << "0"
+//                << "0" << "0");
+//            for(int i = 0; i < typeTagNames.size(); i++) {
+//                QDomElement element = doc.createElement(typeTagNames.value(i));
+//                root.appendChild(element);
+//                element.appendChild(doc.createTextNode(typeContents.value(i)));
+//            }
 
         }
         else if(paraType == "6") {
