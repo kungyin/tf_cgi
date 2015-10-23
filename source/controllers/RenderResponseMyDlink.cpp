@@ -1,4 +1,5 @@
 #include <QDir>
+#include <sys/sysinfo.h>
 
 #include "RenderResponseMyDlink.h"
 
@@ -144,19 +145,21 @@ void RenderResponseMyDlink::generateSetDeviceName() {
     generatePrefix(doc);
 
     QString paraDeviceName = QUrl::fromPercentEncoding(m_pReq->parameter("device_name").toLocal8Bit());
-    QStringList arg = QStringList() << "get";
-    QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
-
-    QStringList arg1 = QStringList() << "set" << paraDeviceName << apiOutGet.value(1) << apiOutGet.value(2);
-    QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg1, true, ";");
-    QStringList apiOutHostname = getAPIFileOut(HOSTNAME_FILE);
 
     QDomElement root = doc.documentElement();
     if(m_bLoginStatus) {
         QDomElement versionElement = doc.createElement("version");
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+
+        QStringList arg = QStringList() << "get";
+        QStringList apiOutGet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg, true, ";");
+        QStringList arg1 = QStringList() << "set" << paraDeviceName << apiOutGet.value(1) << apiOutGet.value(2);
+        QStringList apiOutSet = getAPIStdOut(API_PATH + SCRIPT_DEVICE_API, arg1, true, ";");
     }
+
+    QStringList apiOutHostname = getAPIFileOut(HOSTNAME_FILE, true);
+
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(apiOutHostname.value(0) == paraDeviceName ? "1" : "0"));
@@ -312,13 +315,14 @@ void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
     QStringList apiOutDev = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     arg.clear(); arg = QStringList() << "system_get_system_temperature";
     QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
-    arg.clear(); arg = QStringList() << "system_get_system_status";
-    QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     arg.clear(); arg = QStringList() << "service_home_api" << "cgi_get_fw_status";
     QStringList apiOutFwStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     arg.clear(); arg = QStringList() << "system_get_device_smart_info";
     QStringList apiOutSmartList = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
-    QMap<QString, QString> systemInfo = getNasCfg("system");
+    QStringList apiOutFwVer = getAPIStdOut(API_PATH + SCRIPT_MDB + " get fw_version", true);
+
+    struct sysinfo info;
+    sysinfo(&info);
 
     QDomElement memorySizeElement = doc.createElement("memory_size");
     root.appendChild(memorySizeElement);
@@ -328,10 +332,10 @@ void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
     sysTempElement.appendChild(doc.createTextNode(apiOutTemp.value(0)));
     QDomElement uptimeElement = doc.createElement("system_uptime");
     root.appendChild(uptimeElement);
-    uptimeElement.appendChild(doc.createTextNode(apiOutSysStatus.value(27)));
+    uptimeElement.appendChild(doc.createTextNode(QString::number(info.uptime)));
     QDomElement fwElement = doc.createElement("fw_ver");
     root.appendChild(fwElement);
-    fwElement.appendChild(doc.createTextNode(systemInfo.value("sw_ver")));
+    fwElement.appendChild(doc.createTextNode(apiOutFwVer.value(0)));
     QDomElement abnormalShutdownElement = doc.createElement("abnormal_shutdown");
     root.appendChild(abnormalShutdownElement);
     abnormalShutdownElement.appendChild(doc.createTextNode(apiOutFwStatus.value(0) == "1" ? "1" : "0"));
@@ -371,7 +375,7 @@ void RenderResponseMyDlink::getDevInfoType3(QDomDocument &doc) {
     txElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement cpuLoadElement = doc.createElement("cpu_load");
     root.appendChild(cpuLoadElement);
-    cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10)));
+    cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10).remove('%')));
 
     int iMemUsed = apiOut.value(5).toInt() - apiOut.value(6).toInt();
     QDomElement memUsedElement = doc.createElement("memory_used");
@@ -406,7 +410,7 @@ void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
         nameElement.appendChild(doc.createTextNode(serviceName.arg(serviceNames.value(i))));
         QDomElement statusElement = doc.createElement("status");
         serviceElement.appendChild(statusElement);
-        statusElement.appendChild(doc.createTextNode(serviceStatus.value(0)));
+        statusElement.appendChild(doc.createTextNode(serviceStatus.value(i)));
     }
 }
 

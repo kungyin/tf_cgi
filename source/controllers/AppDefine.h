@@ -49,6 +49,7 @@ const QString SCRIPT_P2P_API        =   "cp2p";
 const QString SCRIPT_RTC_API        =   "crtc";
 const QString SCRIPT_CHK_PWD        =   "ccpwd";
 const QString SCRIPT_TREEFROG_CTL   =   "treefrogctl";
+const QString SCRIPT_MDB            =   "mdb";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
 
 const QString HOSTNAME_FILE         =   "/etc/hostname";
