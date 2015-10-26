@@ -74,9 +74,9 @@ void RenderResponseNasSharing::generatePrefix(QDomDocument &doc) {
     doc.appendChild(root);
     QDomElement nasSharingElement = doc.createElement("nas_sharing");
     root.appendChild(nasSharingElement);
-    QDomElement authStatusElement = doc.createElement("auth_status");
-    nasSharingElement.appendChild(authStatusElement);
-    authStatusElement.appendChild(doc.createTextNode(m_bLoginStatus ? "1" : "0"));
+    QDomElement authStateElement = doc.createElement("auth_state");
+    nasSharingElement.appendChild(authStateElement);
+    authStateElement.appendChild(doc.createTextNode(m_bLoginStatus ? "1" : "0"));
 
 }
 
