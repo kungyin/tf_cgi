@@ -280,6 +280,9 @@ void RenderResponseSysMngm::generateManualTime() {
 
     tDebug("set date/time: %s", manualTime.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data());
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_DATE_API + " set " + manualTime.toString("yyyy-MM-dd hh:mm:ss"), true);
+    if(m_pSession)
+        m_pSession->insert("time", QDateTime::currentDateTime());
+
 
 }
 
@@ -287,12 +290,11 @@ void RenderResponseSysMngm::generateTimezone() {
 
     QString paraTimezone = m_pReq->allParameters().value("f_timezone").toString();
 
-    //QDateTime currentTimeBefore = QDateTime::currentDateTime();
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_TIMEZONE_API + " " + paraTimezone, true);
-    //QDateTime currentTimeAfter = QDateTime::currentDateTime();
-
     //setSessionDiff(currentTimeBefore.toTime_t() - currentTimeAfter.toTime_t());
 
+    if(m_pSession)
+        m_pSession->insert("time", QDateTime::currentDateTime());
 }
 
 void RenderResponseSysMngm::generateNtpTime() {
@@ -301,6 +303,9 @@ void RenderResponseSysMngm::generateNtpTime() {
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_NTP_API +
                                       " set " + paraNtpEnable + " " + paraNtpServer, true);
+
+    if(m_pSession)
+        m_pSession->insert("time", QDateTime::currentDateTime());
 }
 
 void RenderResponseSysMngm::generateGetTimeStatus() {
