@@ -348,14 +348,14 @@ bool GetFreeTotalSpace(const QString& dirPath, QString& total, QString& free)
     struct stat stst;
     struct statfs stfs;
 
-    if ( ::stat(sDirPath.toLocal8Bit(), &stst) == -1 )
+    if ( ::stat(dirPath.toLocal8Bit(), &stst) == -1 )
         return false;
 
-    if ( ::statfs(sDirPath.toLocal8Bit(), &stfs) == -1 )
+    if ( ::statfs(dirPath.toLocal8Bit(), &stfs) == -1 )
         return false;
 
     free = QString::number(stfs.f_bavail * stst.st_blksize);
-    fTotal = QString::number(stfs.f_blocks * stst.st_blksize);
+    total = QString::number(stfs.f_blocks * stst.st_blksize);
 
     return true;
 }
