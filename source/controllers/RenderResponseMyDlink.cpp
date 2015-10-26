@@ -519,10 +519,7 @@ void RenderResponseMyDlink::generateListFolder() {
             while (iter.hasNext()) {
                 QFileInfo entry = iter.next();
 
-                if(            entry.fileName() == "lost+found"
-                               || entry.fileName() == "Nas_Prog"
-                               || entry.fileName() == "aMule"
-                               || entry.fileName() == "ShareCenter_Sync") {
+                if(No_Display_File_Set.contains(entry.fileName())) {
                     fileList.removeOne(entry);
                     continue;
                 }

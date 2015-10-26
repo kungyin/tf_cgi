@@ -1,6 +1,9 @@
 #include <QFileInfo>
 #include <QCryptographicHash>
 #include <QProcess>
+#include <TAppSettings>
+#include <TWebApplication>
+#include <QDir>
 
 #include "AppDefine.h"
 #include "CgiController.h"
@@ -27,10 +30,7 @@
 #include "RenderResponseAirplay.h"
 #include "RenderResponseMyDlink.h"
 #include "RenderResponseMyDlinkAccount.h"
-
-#include <TAppSettings>
-#include <TWebApplication>
-#include <QDir>
+#include "RenderResponseNasSharing.h"
 
 
 const QString CGI_PARA_CMD_NAME = "cmd";
@@ -284,6 +284,8 @@ RenderResponse *CgiController::getRenderResponseBaseInstance(THttpRequest &req, 
         pRrep = new RenderResponseMyDlink(req, cmd);
     else if(cmd < CMD_MYDLINK_ACC_END)
         pRrep = new RenderResponseMyDlinkAccount(req, cmd);
+    else if(cmd < CMD_NAS_SHARING_END)
+        pRrep = new RenderResponseNasSharing(req, cmd);
 
     return pRrep;
 

@@ -62,7 +62,7 @@ void RenderResponseDashboard::generateGetDeviceDetailInfo() {
     }
 
     if(users.endsWith(","))
-        users.resize(users.size() - 1);
+        users.chop(1);
 
     QStringList deviceInfoContentElement(QStringList()
             << "hostname" << "modelname" << "fanspeed" << "high_speed_temp"

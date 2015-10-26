@@ -1,7 +1,16 @@
 #ifndef RENDERRESPONSEFILEOPBASE_H
 #define RENDERRESPONSEFILEOPBASE_H
 
+#include <QDir>
+
 #include "RenderResponse.h"
+
+static QSet<QString> No_Display_File_Set {
+    { "lost+found" },
+    { "Nas_Prog" },
+    { "aMule" },
+    { "ShareCenter_Sync" }
+};
 
 class T_CONTROLLER_EXPORT RenderResponseFileOpBase : public RenderResponse {
     Q_OBJECT
@@ -23,6 +32,8 @@ protected:
 
     QString getSecretPath(QString);
     quint64 getSize(const QString &);
+    bool recursiveSearch(const QString&, QFileInfoList &);
+
 
 private:
 

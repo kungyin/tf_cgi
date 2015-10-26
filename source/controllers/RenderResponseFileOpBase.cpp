@@ -1,9 +1,10 @@
-#include <QDir>
 #include <QCryptographicHash>
 
 #include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
+#include <sys/stat.h>
+#include <sys/statfs.h>
 
 #include "RenderResponseFileOpBase.h"
 
@@ -57,6 +58,36 @@ bool copyDirRecursive(QString fromDir, QString toDir, bool replaceOnConflit = tr
 
         if (!copyDirRecursive(from, to, replaceOnConflit))
             return false;
+    }
+
+    return true;
+}
+
+bool dirSearchRecursively(const QString &path, QFileInfoList &fileList)
+{
+    QFileInfo parentInfo(path);
+    if (parentInfo.isDir()) {
+        QDir dir(path);
+        fileList = dir.entryInfoList(QDir::Files | QDir::Dirs
+                        | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+
+        QListIterator<QFileInfo> iter(fileList);
+        while (iter.hasNext()) {
+            QFileInfo entry = iter.next();
+
+            if( No_Display_File_Set.contains(entry.fileName()) ) {
+                fileList.removeOne(entry);
+                continue;
+            }
+        }
+
+        for(auto e : fileList) {
+            if(e.isDir()) {
+                QFileInfoList subFileList;
+                dirSearchRecursively(e.absoluteFilePath(), subFileList);
+                fileList += subFileList;
+            }
+        }
     }
 
     return true;
@@ -305,4 +336,26 @@ QString RenderResponseFileOpBase::getSecretPath(QString filePath) {
     }
 
     return secDownloadPath;
+}
+
+bool RenderResponseFileOpBase::recursiveSearch(const QString &path, QFileInfoList &fileList) {
+    dirSearchRecursively(path, fileList);
+    return true;
+}
+
+bool GetFreeTotalSpace(const QString& dirPath, QString& total, QString& free)
+{
+    struct stat stst;
+    struct statfs stfs;
+
+    if ( ::stat(sDirPath.toLocal8Bit(), &stst) == -1 )
+        return false;
+
+    if ( ::statfs(sDirPath.toLocal8Bit(), &stfs) == -1 )
+        return false;
+
+    free = QString::number(stfs.f_bavail * stst.st_blksize);
+    fTotal = QString::number(stfs.f_blocks * stst.st_blksize);
+
+    return true;
 }

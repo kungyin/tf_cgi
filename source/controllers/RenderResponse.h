@@ -33,6 +33,7 @@ protected:
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
     QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
+    QString addPoundSign(QString, QString splitSign = ",");
     QString sizeHuman(qint64);
     bool replaceVoltoRealPath(QString &, bool reverse = false);
     TSession findSession(const QByteArray &);

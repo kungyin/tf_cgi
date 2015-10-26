@@ -129,6 +129,8 @@
 [ $1 == 'service_iso_chk_iso_name' ] && echo -e "0"
 [ $1 == 'service_iso_chk_hdd_size' ] && echo -e "ok"
 [ $1 == 'service_iso_get_iso_use_size' ] && echo -e "874.0k"
+[ $1 == 'service_get_share_folder_ftp_info' ] && echo -e "ffff;Volume_1/ffff;w;;user1,user2,user3,@group1,@group2,@Grpup3;"
+[ $1 == 'service_get_webdav_account_info' ] && echo -e "Volume_1;/mnt/HD/HD_a2/;1;1;jerry,@aaaa"
 [ $1 == 'mydlink_account' ] && echo -e "1"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"

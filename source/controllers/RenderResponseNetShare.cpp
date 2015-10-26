@@ -580,7 +580,7 @@ void RenderResponseNetShare::generateGetModifySession() {
     doc.appendChild(root);
 
     QStringList sessionTagNames(QStringList()
-        << "Name" << "path" << "oplocks" << "map_archive" << "comment" << "read_list"
+        << "name" << "path" << "oplocks" << "map_archive" << "comment" << "read_list"
         << "write_list" << "invalid_users" << "recycle" << "recycle_tree" << "ftp"
         << "ftp_anonymous" << "nfs" << "webdav" << "webdav_rw" << "webdav_user" << "mycloud");
 
@@ -703,7 +703,6 @@ void RenderResponseNetShare::generateGetShareInfo() {
     QDomDocument doc;
     QString paraName = m_pReq->parameter("name");
 
-    /* todo */
     QStringList arg = QStringList() << "service_get_modify_session" << paraName;
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
@@ -746,48 +745,54 @@ void RenderResponseNetShare::generateGetShareInfo() {
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateGetFtp() {
 
     QDomDocument doc;
     QString paraName = m_pReq->allParameters().value("name").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList arg = QStringList() << "service_get_share_folder_ftp_info" << paraName;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
 
     QDomElement nameElement = doc.createElement("name");
     root.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode("Volume_1"));
+    nameElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement pathElement = doc.createElement("path");
     root.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("Volume_1"));
+    pathElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement anonymousElement = doc.createElement("anonymous");
     root.appendChild(anonymousElement);
-    anonymousElement.appendChild(doc.createTextNode("n"));
+    anonymousElement.appendChild(doc.createTextNode(apiOut.value(2)));
 
     QDomElement readListElement = doc.createElement("read_list");
     root.appendChild(readListElement);
-    readListElement.appendChild(doc.createTextNode("test"));
+    readListElement.appendChild(doc.createTextNode(apiOut.value(3).isEmpty() ? " - " : apiOut.value(3)));
+
+    QString writeListFmt = "<b>%1</b><br>%2";
     QDomElement writeListElement = doc.createElement("write_list");
     root.appendChild(writeListElement);
-    writeListElement.appendChild(doc.createTextNode("<b>aaaa</b><br>jerry"));
+    int sectionSize = apiOut.value(4).split(",").size();
+    QString writeListContent = apiOut.value(4).isEmpty() ? " - " :
+        writeListFmt.arg(apiOut.value(4).section(",", sectionSize/2, sectionSize - 1)
+                       , apiOut.value(4).section(",", 0, sectionSize/2 - 1));
+    writeListElement.appendChild(doc.createCDATASection(writeListContent));
     QDomElement denyAccessListElement = doc.createElement("deny_access_list");
     root.appendChild(denyAccessListElement);
-    denyAccessListElement.appendChild(doc.createTextNode(" - "));
+    denyAccessListElement.appendChild(doc.createTextNode(apiOut.value(5).isEmpty() ? " - " : apiOut.value(5)));
 
     m_var = doc.toString();
 
 }
 
-/* todo: need API */
 void RenderResponseNetShare::generateWebdavAccountInfo() {
 
     QDomDocument doc;
     QString paraPath = m_pReq->allParameters().value("f_path").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_API + " -s user_add", true);
+    QStringList arg = QStringList() << "service_get_webdav_account_info" << paraPath;
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
 
     QDomElement root = doc.createElement("config");
     doc.appendChild(root);
@@ -799,19 +804,19 @@ void RenderResponseNetShare::generateWebdavAccountInfo() {
 
     QDomElement sharedNameElement = doc.createElement("shared_name");
     itemElement.appendChild(sharedNameElement);
-    sharedNameElement.appendChild(doc.createTextNode("Volume_1"));
+    sharedNameElement.appendChild(doc.createTextNode(apiOut.value(0)));
     QDomElement pathElement = doc.createElement("path");
     itemElement.appendChild(pathElement);
-    pathElement.appendChild(doc.createTextNode("/mnt/HD/HD_a2/"));
+    pathElement.appendChild(doc.createTextNode(apiOut.value(1)));
     QDomElement enableElement = doc.createElement("enable");
     itemElement.appendChild(enableElement);
-    enableElement.appendChild(doc.createTextNode("1"));
+    enableElement.appendChild(doc.createTextNode(apiOut.value(2)));
     QDomElement rwElement = doc.createElement("RW");
     itemElement.appendChild(rwElement);
-    rwElement.appendChild(doc.createTextNode("1"));
+    rwElement.appendChild(doc.createTextNode(apiOut.value(3)));
     QDomElement userElement = doc.createElement("user");
     itemElement.appendChild(userElement);
-    userElement.appendChild(doc.createTextNode("#jerry#,#@aaaa#"));
+    userElement.appendChild(doc.createTextNode(addPoundSign(apiOut.value(4))));
 
     m_var = doc.toString();
 

@@ -14,6 +14,14 @@ public:
 
 private:
     void generateLogin();
+    void generateScanFolder();
+    void generateCreateFolder();
+    void generateDelete();
+    void generateRename();
+    void generateDownload();
+    void generateDiskInfo();
+    void generateListAll();
+    void generateCheckVolume();
 
     bool isLogin();
     void generatePrefix(QDomDocument &);

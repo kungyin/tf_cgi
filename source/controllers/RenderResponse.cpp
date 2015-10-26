@@ -295,6 +295,19 @@ QString RenderResponse::allParametersToString(bool bDecode, QString before, QStr
     return ret;
 }
 
+QString RenderResponse::addPoundSign(QString before, QString splitSign) {
+
+    QString ret;
+
+    for(QString e : before.split(splitSign)) {
+        if(!ret.isEmpty())
+            ret += splitSign;
+        ret += "#" + e.trimmed() + "#";
+    }
+
+    return ret;
+}
+
 int RenderResponse::getTotalPages(int perPage, int itemNumber) {
     int iTotals = 1;
     if(perPage > 0 && itemNumber > 0)
