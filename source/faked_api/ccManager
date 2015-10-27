@@ -94,7 +94,7 @@
 [ $1 == 'service_get_pkg_list_info' ] && echo -e "Transmission,Transmission,1,index.html,0,0,0,1.00,20140710,/mnt/HD/HD_a2/Nas_Prog/Transmission#elephantdrive,D-Link Vault,0,index.php,0,0,0,2.7.20140709d,20140709,/mnt/HD/HD_a2/Nas_Prog/elephantdrive;1"
 [ $1 == 'service_get_ads_info' ] && echo -e "0;;;;;;192.168.100.5;192.168.100.5"
 [ $1 == 'service_get_session_list' ] && echo -e "volume_2;volume_2;1;1;NFSHost1:/mnt/HD/HD_a2;/mnt/HD/HD_a2:Volume_1;" && echo -e "Test;Volume_1/Test;1;;;;"
-[ $1 == 'service_iso_get_iso_share' ] && echo -e "New2_ISO;Volume_1/New_ISO/New2_ISO.iso;1;New2-ISO-NFS:/mnt/HD/HD_a2/New_ISO/New2_ISO.iso;/mnt/HD/HD_a2/New_ISO/New2_ISO.iso:Volume_1/New_ISO/New2_ISO.iso"
+[ $1 == 'service_iso_get_iso_share' ] && echo -e "New2_ISO;Volume_1/New_ISO/New2_ISO.iso;1;New2-ISO-NFS:/mnt/HD/HD_a2/New_ISO/New2_ISO.iso;/mnt/HD/HD_a2/New_ISO/New2_ISO.iso:Volume_1/New_ISO/New2_ISO.iso" && echo -e "Test;Volume_1/test/Test.iso;-;-;-"
 [ $1 == 'service_iso_get_iso_percentage' ] && echo -e "100"
 [ $1 == 'service_iso_get_user_list' ] && echo -e "user01" && echo -e "user02" && echo -e "user03" && echo -e "jjfj"
 [ $1 == 'service_get_modify_session' ] && echo -e "Volume_1;/mnt/HD/HD_a2;no;no;;;#nobody#,#@allaccount#;;0;1;1;w;0,/mnt/HD/HD_a2;1;1;#@allaccount#;0"

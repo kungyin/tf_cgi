@@ -636,13 +636,13 @@ void RenderResponseAccount::generateGetGroupList() {
     QStringList arg = QStringList() << "get_group_list";
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_GROUP_MANAGER, arg);
 
-    QDomElement root = doc.createElement("rows");
-    doc.appendChild(root);
-
     QStringList groupInfoList(apiOut);
     int rp = paraRp.toInt();
     if(groupInfoList.size() > rp)
         groupInfoList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
 
     int i = 0;
     for(QString e : groupInfoList) {
@@ -931,11 +931,16 @@ void RenderResponseAccount::generateGetUserQuotaList() {
     QStringList arg = QStringList() << "userlist";
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, false, ";");
 
+    QStringList userQuotaList(apiOut);
+    int rp = paraRp.toInt();
+    if(userQuotaList.size() > rp)
+        userQuotaList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    for(int i=0; i < apiOut.size(); i++) {
-        QStringList data = apiOut.at(i).split(";");
+    for(int i=0; i < userQuotaList.size(); i++) {
+        QStringList data = userQuotaList.at(i).split(";");
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
@@ -995,11 +1000,16 @@ void RenderResponseAccount::generateGetGroupQuotaList() {
     QStringList arg = QStringList() << "grouplist";
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, false, ";");
 
+    QStringList groupQuotaList(apiOut);
+    int rp = paraRp.toInt();
+    if(groupQuotaList.size() > rp)
+        groupQuotaList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    for(int i=0; i < apiOut.size(); i++) {
-        QStringList data = apiOut.at(i).split(";");
+    for(int i=0; i < groupQuotaList.size(); i++) {
+        QStringList data = groupQuotaList.at(i).split(";");
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
@@ -1038,7 +1048,7 @@ void RenderResponseAccount::generateGetGroupQuotaList() {
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);

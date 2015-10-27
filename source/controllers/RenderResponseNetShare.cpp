@@ -299,7 +299,7 @@ void RenderResponseNetShare::generateGetIsoShare() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
     QStringList arg = QStringList() << "service_iso_get_iso_share";
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
 
     QString cellContentCifs =
             "<img src='../images/detail.png' onclick='show_iso_detail(\"%1\");'>";
@@ -314,11 +314,16 @@ void RenderResponseNetShare::generateGetIsoShare() {
             "<img src='../images/detail.png' onclick='show_webdav_detail(\"%1\",\"#iso_tb\")'>"
             "<input type=\"hidden\" name=\"webdav_%2\" id=\"webdav_%2\" value=\"%3\">";
 
+    QStringList isoShareList(apiOut);
+    int rp = paraRp.toInt();
+    if(isoShareList.size() > rp)
+        isoShareList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
     int i = 0;
-    for(QString e : apiOut) {
+    for(QString e : isoShareList) {
 
         QDomElement rowElement = doc.createElement("row");
         root.appendChild(rowElement);
@@ -353,7 +358,7 @@ void RenderResponseNetShare::generateGetIsoShare() {
         rowElement.appendChild(cellElement6);
         cellElement6.appendChild(doc.createCDATASection(cell6));
 
-        rowElement.setAttribute("id", i+1);
+        rowElement.setAttribute("id", ++i);
     }
 
     QDomElement pageElement = doc.createElement("page");
