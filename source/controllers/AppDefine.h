@@ -52,6 +52,8 @@ const QString SCRIPT_TREEFROG_CTL   =   "treefrogctl";
 const QString SCRIPT_MDB            =   "mdb";
 const QString SCRIPT_REMOTE_HD_SIZE =   "get_remote_hd";
 
+const QString TREEFROG_MANAGER      =   "treefrog";
+
 const QString HOSTNAME_FILE         =   "/etc/hostname";
 const QString RSYNC_SHARE_NODE      =   "/etc/sysconfig/config/NetworkShareRsync";
 const QString SYSTEM_PT_FILE        =   "/etc/systempt";

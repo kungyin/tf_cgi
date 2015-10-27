@@ -315,12 +315,13 @@ bool RenderResponseHome::isValidUser() {
     for(TCookie c : m_pReq->cookies()) {
         if(c.name() == "username") {
             uint lifeTime = Tf::appSettings()->value(Tf::SessionLifeTime).toInt();
-
-            if(m_pSession->value("user").toByteArray() == c.value()
-                    && (lifeTime > (QDateTime::currentDateTime().toTime_t()
-                        - m_pSession->value("time").toDateTime().toTime_t()))) {
-                m_pSession->insert("time", QDateTime::currentDateTime());
-                bValidUser = true;
+            tDebug("lifeTime: %d", lifeTime);
+            if(m_pSession->value("user").toByteArray() == c.value()) {
+                if(lifeTime > (QDateTime::currentDateTime().toTime_t()
+                             - m_pSession->value("time").toDateTime().toTime_t())) {
+                    m_pSession->insert("time", QDateTime::currentDateTime());
+                    bValidUser = true;
+                }
                 break;
             }
             else {
