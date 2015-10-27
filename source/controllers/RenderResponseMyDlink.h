@@ -28,6 +28,8 @@ private:
     void generateMkdir();
     void generateRestart();
     void generateGetLog();
+    void generateSetAppOrder();
+    void generateGetAppOrder();
 
     void getDevInfoType1(QDomDocument &);
     void getDevInfoType2(QDomDocument &);

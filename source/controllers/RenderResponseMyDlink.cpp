@@ -71,6 +71,12 @@ void RenderResponseMyDlink::preRender() {
         case CMD_20:
             generateGetLog();
             break;
+        case CMD_21:
+            generateSetAppOrder();
+            break;
+        case CMD_22:
+            generateGetAppOrder();
+            break;
         default:
             break;
         }
@@ -807,6 +813,67 @@ void RenderResponseMyDlink::generateGetLog() {
     QDomElement statusElement = doc.createElement("status");
     root.appendChild(statusElement);
     statusElement.appendChild(doc.createTextNode(status));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseMyDlink::generateSetAppOrder() {
+
+    QString paraAppOrder = QUrl::fromPercentEncoding(m_pReq->parameter("apporder").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+
+    QDomElement root = doc.documentElement();
+
+    if(m_bLoginStatus) {
+        int status = 0;
+        if(status = setNasCfg("mydlink", "mydlk_app_order", paraAppOrder)) {
+            QDomElement versionElement = doc.createElement("version");
+            root.appendChild(versionElement);
+            versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+        }
+        QDomElement statusElement = doc.createElement("status");
+        root.appendChild(statusElement);
+        statusElement.appendChild(doc.createTextNode(QString::number(status)));
+
+    }
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseMyDlink::generateGetAppOrder() {
+
+    QDomDocument doc;
+    generatePrefix(doc);
+
+    QDomElement root = doc.documentElement();
+
+    if(m_bLoginStatus) {
+        QDomElement versionElement = doc.createElement("version");
+        root.appendChild(versionElement);
+        versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+
+        QDomElement authStateElement = doc.createElement("auth_state");
+        root.appendChild(authStateElement);
+        authStateElement.appendChild(doc.createTextNode("1"));
+
+        QStringList appOrder = getNasCfg("mydlink").value("mydlk_app_order").split(",");
+        for(int i = 0; i < appOrder.size(); i++) {
+            QDomElement itemElement = doc.createElement("item");
+            root.appendChild(itemElement);
+
+            QDomElement appNameElement = doc.createElement("appname");
+            itemElement.appendChild(appNameElement);
+            appNameElement.appendChild(doc.createTextNode(appOrder.value(i).trimmed()));
+            QDomElement orderElement = doc.createElement("order");
+            itemElement.appendChild(orderElement);
+            orderElement.appendChild(doc.createTextNode(QString::number(i+1)));
+        }
+
+    }
 
     m_var = doc.toString();
 

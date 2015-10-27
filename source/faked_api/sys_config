@@ -173,5 +173,5 @@ blockduration                  = 5
 [p2p]
 enable			       = 1
 
-[idle]
-time                           = 30
+[mydlink]
+mydlk_app_order		       = My Music, My Files, My Photos, P2P download, My Surveillance
