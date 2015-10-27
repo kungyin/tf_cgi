@@ -68,7 +68,7 @@ const QString API_PATH = "";
 const QString ENV_PATH = "";
 const QString TMP_PATH = "/tmp";
 const QString FILE_TMP_PATH = "/var/upload";
-const QString MYDLINK_TMP_PATH = "/var/www/mydlink/tmp";
+const QString MYDLINK_TMP_PATH = "/var/www/mydlink";
 const QString SYS_CONFIG_FILE = "/etc/sysconfig/config/sys_config";
 const QString USER_IMPORT_FILE = "/tmp/backup.tgz";
 const QString FIRMWARE_FILE = "/mnt/HD_a4/genius_fw.bin";
@@ -115,7 +115,7 @@ const QString PACKAGE_FILE = API_PATH + "pkg.bin";
 
 #endif
 
-const QString MYDLINK_LOG_FILE = MYDLINK_TMP_PATH + "/upload_log.txt";
+const QString MYDLINK_LOG_FILE = MYDLINK_TMP_PATH + "/log.txt";
 
 
 #endif // APPDEFINE_H

@@ -44,9 +44,9 @@ void RenderResponseMyDlink::preRender() {
         case CMD_6:
             generateDownload();
             break;
-//        case CMD_7:
-//            generateUpload();
-//            break;
+        case CMD_8:
+            generateDelete();
+            break;
         case CMD_9:
             generateMove();
             break;
@@ -401,7 +401,7 @@ void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
     root.appendChild(servicesElement);
 
     QStringList serviceNames(QStringList()
-        << "Ftp" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
+        << "FTP" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
     QString serviceName = "%1 Server";
 
     QStringList serviceStatus(QStringList()
@@ -467,11 +467,12 @@ void RenderResponseMyDlink::generateListVolume() {
             QString volumeName = QString("Volume_%1").arg(volItem.value(0));
             QString realPath = volumeName;
             replaceVoltoRealPath(realPath);
+            QString fmtType = volItem.value(1).replace("standard", "Single Disk");
             QString scandiskStatus = "0";
             if(map.value("scanned_volume") == volumeName)
                 scandiskStatus = map.value("result");
             QStringList volContents(QStringList()
-                << volumeName << realPath << volItem.value(1) << volItem.value(3) << volItem.value(4)
+                << volumeName << realPath << fmtType << volItem.value(3) << volItem.value(4)
                 << volItem.value(5) << "2" << scandiskStatus);
 
             QDomElement volumeElement = doc.createElement("volume");
@@ -617,6 +618,27 @@ void RenderResponseMyDlink::generateDownload() {
             emit typeChanged(RENDER_TYPE_XML);
         }
     }
+}
+
+void RenderResponseMyDlink::generateDelete() {
+    QString paraPath = QUrl::fromPercentEncoding(m_pReq->parameter("path").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+
+    QDomElement root = doc.documentElement();
+    bool bRemove = remove(paraPath);
+    QDomElement statusElement = doc.createElement("status");
+    root.appendChild(statusElement);
+    statusElement.appendChild(doc.createTextNode(QString::number(bRemove)));
+
+    if(m_bLoginStatus && bRemove) {
+        QDomElement versionElement = doc.createElement("version");
+        root.appendChild(versionElement);
+        versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
+    }
+    m_var = doc.toString();
+
 }
 
 void RenderResponseMyDlink::generateMove() {
@@ -779,7 +801,6 @@ void RenderResponseMyDlink::generateRestart() {
 
 }
 
-/* todo */
 void RenderResponseMyDlink::generateGetLog() {
     QString paraType = QUrl::fromPercentEncoding(m_pReq->parameter("type").toLocal8Bit());
 
@@ -789,24 +810,27 @@ void RenderResponseMyDlink::generateGetLog() {
     QDomElement root = doc.documentElement();
 
     QString status = QDir(MYDLINK_TMP_PATH).exists() ? "1" : "0";
-    if(status == "1") {
-        QString paraForLog = "-c";
-        if(paraType == "0")
-            paraForLog = "-o " + MYDLINK_LOG_FILE;
 
-        QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CLOG + " " + paraForLog);
-
+    QString paraForLog = "-c";
+    if(paraType == "0") {
+        paraForLog = "-o " + MYDLINK_LOG_FILE;
+        if(status == "0")
+            status = QDir().mkpath(MYDLINK_TMP_PATH) ? "1" : "0";
     }
+    if(m_bLoginStatus && status == "1") {
+        getAPIStdOut(API_PATH + SCRIPT_CLOG + " " + paraForLog);
 
-    if(m_bLoginStatus) {
+        QString pathFormat = "http:://%1/%2";
+        QString localIP = getNasCfg(getNasCfg("network").value("default_gw")).value("ip");
+        QString filePath = MYDLINK_LOG_FILE;
+        filePath.remove("/var/www/");
 
         QDomElement versionElement = doc.createElement("version");
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
-        /* todo */
         QDomElement pathElement = doc.createElement("path");
         root.appendChild(pathElement);
-        pathElement.appendChild(doc.createTextNode(MYDLINK_TMP_PATH));
+        pathElement.appendChild(doc.createTextNode(pathFormat.arg(localIP, filePath)));
 
     }
 

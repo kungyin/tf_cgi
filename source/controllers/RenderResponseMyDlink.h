@@ -20,6 +20,7 @@ private:
     void generateListVolume();
     void generateListFolder();
     void generateDownload();
+    void generateDelete();
     void generateMove();
     void generateCopy();
     void generateRename();

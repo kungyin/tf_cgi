@@ -1,152 +1,348 @@
-[web]
-language = TW
-
-[quota]
-enable = 0
-
-[samba]
-workgroup = workgroup
-netbios_name = dlink-8B21F7
-server_string = DNS-340L
-dfs_enable = 0
-ads_enable = 0
-ads_workgroup = 0
-ads_username = 0
-ads_password = 0
-ads_realm = 0
-ads_pwd_server =
-
-[afp]
-enable = 0
-
-[iso_mount]
-enable = 00000
-
-[nfs]
-enable = 0
-
-[crond]
-list_count = 3
-id_1=user.log
-id_2=:stime
-id_3=mdn
-
-[power_management]
-hdd_hibernation_enable = 1
-turn_off_time = 300
-recovery_enable = 1
-fan = 0
-power_off_scheduling_enable= 0
-
-[power_on_sch]
-schedule = 1,3,10;1,15,3;0,0,1;0,0,0;1,0,0;0,0,3;0,2,0
-
-[power_off_sch]
-off_schedule= 0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0
-
-[mail] 
-auth= 1
-username= jerryhsieh0530@gmail.com
-pwd= 05111031
-smtp= smtp.gmail.com
-sender= jerryhsieh0530@gmail.com
-receiver= jerryhsieh0530@gmail.com
-port= 465
-smtp_auth= 0
-
-[lan0]                      
-speed=0                                  
-dhcp_enable= 1
-dns_manual= 0
-ip= 192.168.100.202
-netmask= 255.255.255.0
-gateway= 192.168.100.5
-jumbo_enable=0                          
-jumbo_mtu=1500                          
-lan_speed=100                           
-partener_speed=100                      
-dns1= 192.168.100.9
-dns2= 192.168.100.9
-vlan_enable= 1
-vlan_id= 22
-
-[lan1]
-speed=0
-dhcp_enable= 1
-dns_manual= 1
-ip= 192.168.100.188
-netmask= 255.255.255.0
-gateway= 192.168.100.54
-jumbo_enable=0
-jumbo_mtu=1500
-lan_speed=100
-partener_speed=100
-dns1= 192.168.100.8
-dns2= 192.168.100.8
-vlan_enable= 1
-vlan_id= 22
-
-[bonding]
-enable=0                                 
-mode=1                                   
-
-[lan0_ipv6]                                 
-local_ipv6address= 2001:db8:abcd:123::1
-mode= static
-local_prefix_length= 1
-ipv6address= addr1                            
-prefix_length= prefix1                          
-gateway= 3ffe:ffff:0:f101::1
-dns1= 
-dns2= 
-count=0
-dhcp_ipv6address=                       
-dhcp_prefix_length=
-dns_manual=0
-
-[lan1_ipv6] 
-local_ipv6address= v6addr2                      
-mode=off                                 
-local_prefix_length=
-ipv6address= addr2                            
-prefix_length= prefix2                          
-gateway= gw2                                
-dns1= dns12                                   
-dns2= dns22                                   
-count=0
-dhcp_ipv6address=                       
-dhcp_prefix_length=
-dns_manual=0
-
-[ddns]                                   
-enable=0
-username=s77310788899
-pwd=qqddeerr22667
-domain=josen-hung.no-ip.org
-server=no-ip.DDNS
-timeout=2073600  
-timestamp=
-ip=
-
-[upnp] 
-upnp_test = Not Found  
 
 [system]
-sw_ver = 0.0.7.0616.2015
+sw_ver                         = 1.00.1016.2015
+sw_ver2                        = 1.00b74
+hw_ver                         = 
+location                       = US
+company                        = D-LINK
+wizard_mgr                     = 
+status_mgr                     = 
+raccess_mgr                    = 
+bayquantity                    = 2
+safe_mode                      = 1
+
+
+[web]
+language                       = Auto
+ssl_enable                     = 0
+ssl_port                       = 443
+c1                             = 
+
+
+[bonding]
+enable                         = 0
+mode                           = 1
+
+
+[network]
+default_gw                     = lan0
+
+
+[lan0]
+speed                          = 0
+dhcp_enable                    = 1
+dns_manual                     = 0
+ip                             = 169.254.0.253
+netmask                        = 255.255.0.0
+gateway                        = 169.254.0.1
+jumbo_enable                   = 0
+jumbo_mtu                      = 1500
+lan_speed                      = 1100
+partener_speed                 = 1000
+dns1                           = 169.254.0.253
+dns2                           = 
+vlan_enable                    = 0
+vlan_id                        = 1
+
+
+[lan1]
+speed                          = 0
+dhcp_enable                    = 1
+dns_manual                     = 0
+ip                             = 169.254.0.253
+netmask                        = 255.255.0.0
+gateway                        = 169.254.0.1
+broadcast                      = 169.254.255.255
+jumbo_enable                   = 0
+jumbo_mtu                      = 1500
+lan_speed                      = 100
+partener_speed                 = 100
+dns1                           = 169.254.0.253
+dns2                           = 
+vlan_enable                    = 0
+vlan_id                        = 2
+
+
+[def_lan0]
+speed                          = 0
+dhcp_enable                    = 1
+dns_manual                     = 0
+ip                             = 169.254.0.253
+netmask                        = 255.255.0.0
+gateway                        = 169.254.0.1
+broadcast                      = 169.254.255.255
+jumbo_enable                   = 0
+jumbo_mtu                      = 1500
+lan_speed                      = 100
+partener_speed                 = 100
+dns1                           = 169.254.0.253
+dns2                           = 
+vlan_enable                    = 0
+vlan_id                        = 1
+
+
+[lan0_ipv6]
+mode                           = off
+local_ipv6address              = 
+local_prefix_length            = 
+dhcp_ipv6address               = 
+dhcp_prefix_length             = 
+gateway                        = 
+dns1                           = 
+dns2                           = 
+count                          = 0
+ipv6address                    = 
+prefix_length                  = 
+dns_manual                     = 0
+
+
+[lan1_ipv6]
+mode                           = off
+local_ipv6address              = 
+local_prefix_length            = 
+dhcp_ipv6address               = 
+dhcp_prefix_length             = 
+gateway                        = 
+dns1                           = 
+dns2                           = 
+count                          = 0
+ipv6address                    = 
+prefix_length                  = 
+dns_manual                     = 0
+
+
+[lan0_ipv6_tunnel]
+enable                         = 0
+username                       = 
+password                       = 
+server                         = anonymous.freenet6.net
+ipv6address                    = 
+
+
+[dhcp_server]
+status                         = 0
+s_ip                           = 192.168.100.200
+e_ip                           = 192.168.100.230
+lease                          = 604800
+
+
+[ddns]
+enable                         = 0
+username                       = 
+pwd                            = 
+domain                         = 
+server                         = 
+timeout                        = 2073600
+timestamp                      = 
+ip                             = 
+
+
+[lltd]
+enable                         = 0
+
+
+[snmp]
+enable                         = 0
+comm                           = public
+
+
+[snmp_trap]
+enable                         = 0
+comm                           = public
+server                         = 
+
+
+[upnp]
+upnp_test                      = 
+upnp_list_count                = 0
+
+
+[iscsi]
+enable                         = 0
+
+
+[isns]
+enable                         = 0
+ip                             = 0.0.0.0
+
+
+[quota]
+enable                         = 0
+
+
+[samba]
+enable                         = 1
+workgroup                      = workgroup
+netbios_name                   = dlink-D4D0FD
+server_string                  = DNS-327L
+dfs_enable                     = 0
+ads_enable                     = 0
+ads_workgroup                  = 
+ads_username                   = 
+ads_password                   = 
+ads_realm                      = 
+ads_pwd_server                 = 
+
+
+[afp]
+enable                         = 1
+
+
+[iso_mount]
+enable                         = 1
+
+
+[nfs]
+enable                         = 0
+
+
+[crond]
+list_count                     = 3
+id_1                           = user.log
+id_2                           = stime
+id_3                           = mdn
+id_4                           = smart
+
+
+[userlog]
+count                          = 1
+method                         = 1
+1                              = */10
+2                              = *
+3                              = *
+4                              = *
+5                              = *
+run                            = /usr/sbin/rlog -s /usr/local/modules/files/syslog_rotate.conf
+
+
+[stime]
+count                          = 1
+method                         = 3
+1                              = 30
+2                              = 2
+3                              = *
+4                              = *
+5                              = *
+run                            = /usr/sbin/stime&amp
+
+
+[mdn]
+count                          = 1
+method                         = 3
+1                              = 0
+2                              = 12
+3                              = *
+4                              = *
+5                              = *
+run                            = send_mail_event_at_cron --mdn_space_status &amp
+
+
+[time]
+timezone                       = 34
+ntp_enable                     = 0
+ntp_server                     = 
+
+
+[idle]
+time                           = 30
+
+
+[power_management]
+hdd_hibernation_enable         = 1
+turn_off_time                  = 5
+recovery_enable                = 0
+fan                            = 0
+power_off_scheduling_enable    = 0
+led_enable                     = 0
+led_sleep                      = 0
+
+
+[power_on_sch]
+schedule                       = 0,0,0^0,0,0^0,0,0^0,0,0^0,0,0^0,0,0^0,0,0
+
+
+[power_off_sch]
+off_schedule                   = 0,0,0^0,0,0^0,0,0^0,0,0^0,0,0^0,0,0^0,0,0
+
 
 [sshd]
-enable= 1
-port= 1
+enable                         = 0
+port                           = 22
 
-[time_machine]
-enable= 0
+
+[mail]
+auth                           = 1
+username                       = 
+pwd                            = 
+smtp                           = 
+sender                         = 
+receiver                       = 
+port                           = 25
+smtp_auth                      = 0
+result                         = 0
+
 
 [mail_event]
-hdd_temperature_temperature= 72
-hdd_temperature_kot= C
+name_pwd                       = 0
+hd_space                       = 0
+hd_full                        = 0
+hd_crash                       = 0
+hd_degrad                      = 0
+hd_rebuilt                     = 0
+hd_rebuilting                  = 0
+hd_remove                      = 0
+hd_insert                      = 0
+hd_temperature                 = 0
+firmware_update                = 0
+log_schedule                   = 0
+log_full                       = 0
+hd_space_schedule              = 
+system_log_schedule            = 
+bt                             = 0
+config_update                  = 0
+smart_test                     = 0
+recover_power_fail             = 0
+ups                            = 0
+hdd_temperature_temperature    = 145
+hdd_temperature_kot            = F
+hdd_space_status_interval      = 0
+hdd_full_define_full_percentage = 95
+limit_temperature              = 63
 
-[tuxera]
-enable = 0
+
+[rsyslog]
+enable                         = 0
+udp_port                       = 514
+log_file_max_enable            = 0
+log_file_max                   = 500
+log_items_enable               = 0
+log_items                      = 1000000
+log_rotate_enable              = 0
+log_rotate_time                = 0
+folder_quota_size              = 50
+email_notify_enable            = 0
+email_severity                 = 4
+syslog_db_rotate               = 1
+
+
+[ups_management]
+ups_mode                       = 0
+ups_network                    = 0
+ups_slave_ip                   = none
+ups_slave_drive                = none
+master_allow_ip1               = none
+master_allow_ip2               = none
+master_allow_ip3               = none
+
+
+[app_mgr]
+
+
+[itunes]
+enable                         = 0
+mp3_dir                        = /mnt/HD
+rescan_interval                = 180
+
 
 [ftp]
 enable                         = 1
@@ -155,23 +351,186 @@ maxclientsnumber               = 10
 maxidletime                    = 10
 port                           = 21
 flowcontrol                    = 0
-filesystemcharset              = 
+filesystemcharset              = UTF-8
 clientcharset                  = ISO-8859-1
 passiveportrange               = 55536:55663
-externalip                     = 0.0.0.0
-externalip                     =              
+externalip                     = 
+state                          = 0
 tlsencryption                  = 1
-forcepasvmode                  = 
+forcepasvmode                  = 0
 blockipstatus                  = 1
-anonymous_access               = 
+anonymous_access               = 1
 connectionperip                = 5
 monitorduration                = 5
 retryfails                     = 5
 fxpaccess                      = 0
 blockduration                  = 5
 
+
+[mydlink_sync]
+enable                         = 0
+volume                         = Volume_1
+
+
+[backup_mgr]
+
+
+[time_machine]
+enable                         = 0
+
+
+[rsyncd]
+enable                         = 0
+rsyncd_pwd                     = 
+rsyncd_port                    = 873
+
+
+[disk_mgr]
+raid_auto_sync                 = 0
+volume_1_encryption            = 0
+volume_2_encryption            = 0
+volume_1_automount             = 0
+volume_2_automount             = 0
+serial_1                       = 
+serial_2                       = 
+state                          = 1
+
+
+[smart]
+hd_a_sn                        = 
+hd_b_sn                        = W4J00916
+hd_c_sn                        = 
+hd_d_sn                        = 
+
+
+[smart_test]
+hd_a                           = 
+hd_b                           = 
+hd_c                           = 
+hd_d                           = 
+sda_now_status                 = 1
+sdb_now_status                 = 1
+
+
+[smart_schedule]
+hour                           = 0
+min                            = 0
+monthly                        = *
+daily                          = *
+weekly                         = *
+run                            = /usr/sbin/smart_test
+slot                           = 
+
+
+[account_mgr]
+users                          = 
+
+
+[download_mgr]
+
+
 [p2p]
-enable			       = 1
+enable                         = 0
+download_path                  = /mnt/HD/HD_a2
+save_path                      = /mnt/HD/HD_a2/P2P/incomplete
+complete_path                  = /mnt/HD/HD_a2/P2P/complete
+port                           = 6881
+allocation_mode                = full
+max_download_rate              = -1
+max_upload_rate                = -1
+stop_ratio                     = 0
+stop_time                      = 0
+max_conn                       = 50
+encryptio                      = 2
+dhtstate                       = 1
+autodownload                   = 1
+scheduleflow                   = 0
+scheflowrate                   = -1:-1
+scandirectory                  = 1
+monitor_dir                    = /mnt/HD/HD_a2/P2P/Torrent
+
+
+[usb_backup]
+enable                         = 0
+direction                      = 0
+sour_dir                       = 
+dest_dir                       = 
+type                           = 0
+
+
+[mtp_backup]
+enable                         = 0
+dst                            = 
+
+
+[media]
+media                          = 
+
+
+[scandisk]
+scandisk_info                  = 
+scan_enable                    = 0
+scanned_volume                 = 
+now_volume                     = 
+result                         = 0
+now_bar                        = 0
+scan_result                    = 
+
+
+[tuxera]
+enable                         = 0
+
+
+[sms]
+enable                         = 0
+name                           = 
+telco                          = 
+username                       = 
+password                       = 
+api_id                         = 
+api_name                       = 
+phone                          = 
+url                            = 
+phone2                         = 
+
+
+[syslog]
+enable                         = 0
+ip                             = 
+udp                            = 514
+
 
 [mydlink]
-mydlk_app_order		       = My Music, My Files, My Photos, P2P download, My Surveillance
+time_zone                      = 44
+register_st                    = 0
+attr_0                         = 
+attr_1                         = 
+attr_2                         = 
+attr_3                         = 
+attr_4                         = 
+attr_5                         = 
+attr_6                         = 
+attr_7                         = 
+attr_8                         = 
+attr_9                         = 
+
+
+[dropbox]
+enable                         = 0
+local_path                     = 
+appkey                         = 7r4dg56h3yz3fmy
+appsecret                      = tf6pwe4t01f7ylg
+
+
+[air_play]
+dev_name                       = 
+dev_type                       = 
+dev_pwd                        = 
+type                           = 
+dev_ip                         = 
+
+
+[live_fwup]
+last_time                      = 
+
+
