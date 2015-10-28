@@ -92,7 +92,7 @@ const QString NETWORK_SCRIPT = API_PATH + "network";
 
 const QString API_PATH = "./faked_api/";
 const QString ENV_PATH = API_PATH;
-const QString TMP_PATH = "./tmp";
+const QString TMP_PATH = "./tmp/mydlink";
 const QString FILE_TMP_PATH = "./tmp";
 const QString MYDLINK_TMP_PATH = "./tmp";
 const QString SYS_CONFIG_FILE = API_PATH + "sys_config";

@@ -254,27 +254,28 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
             root.appendChild(servicesElement);
 
             QStringList serviceNames(QStringList()
-                << "My Photos" << "My Music" << "My Files" << "P2P Download" /*<< "My Surveillance"*/);
+                << "My Photos" << "My Music" << "My Files" << "P2P Download" << "My Surveillance");
 
             // todo : My Surveillance
             QString hasHdd = shareInfo.isEmpty() ? "0" : "1";
             QStringList serviceStatus(QStringList()
                 << hasHdd << hasHdd << hasHdd
-                << apiOutModule.value(0).split(";").value(0) /*<< "0"*/);
+                << apiOutModule.value(0).split(";").value(0) << "0");
 
             QStringList servicePort(QStringList()
-                << "80" << "80" << "80" << "" /*<< "8080"*/);
+                << "80" << "80" << "80" << "" << "8080");
 
             QStringList servicePage(QStringList()
                 << "photo_center/index.html" << "MyMusic/index.html"
                 << "web/web_file/web_file_server.html" << "web/download_mgr/p2p_main.html"
-                /*<< "MySurveillance/index.html"*/);
+                << "MySurveillance/index.html");
 
             QMap<QString, QVariant> idxMap;
             idxMap.insert("My Photos", 0);
             idxMap.insert("My Music", 1);
             idxMap.insert("My Files", 2);
             idxMap.insert("P2P Download", 3);
+            idxMap.insert("My Surveillance", 4);
             QStringList appOrder = getNasCfg("mydlink").value("mydlk_app_order").split(",");
 
             for(int i = 0; i < appOrder.size(); i++) {
@@ -414,19 +415,22 @@ void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
     root.appendChild(servicesElement);
 
     QStringList serviceNames(QStringList()
-        << "FTP" << "UPnP" << "iTune" << "NFS" << "AFP" << "Log");
-    QString serviceName = "%1 Server";
+        << "FTP Server" << "NFS Server" << "AFP Server" << "Syslog Server" << "UPnP AV Server"
+        << "DDNS Server" << "Time Machine" << "iTune Server" << "Quota Server" << "SNMP Server"
+        << "P2P Server");
 
     QStringList serviceStatus(QStringList()
-        << apiOutServices.value(6) << apiOutServices.value(4) << apiOutItunes.value(0)
-        << apiOutServices.value(1) << apiOutServices.value(0) << apiOutServices.value(9));
+        << apiOutServices.value(6) << apiOutServices.value(1) << apiOutServices.value(0)
+        << apiOutServices.value(8) << apiOutServices.value(4) << apiOutServices.value(3)
+        << apiOutServices.value(5) << apiOutItunes.value(0) << apiOutServices.value(99)
+        << "0" << apiOutServices.value(7));
 
     for(int i = 0; i < serviceNames.size(); i++) {
         QDomElement serviceElement = doc.createElement("service");
         servicesElement.appendChild(serviceElement);
         QDomElement nameElement = doc.createElement("name");
         serviceElement.appendChild(nameElement);
-        nameElement.appendChild(doc.createTextNode(serviceName.arg(serviceNames.value(i))));
+        nameElement.appendChild(doc.createTextNode(serviceNames.value(i)));
         QDomElement statusElement = doc.createElement("status");
         serviceElement.appendChild(statusElement);
         statusElement.appendChild(doc.createTextNode(serviceStatus.value(i)));
@@ -830,20 +834,27 @@ void RenderResponseMyDlink::generateGetLog() {
         if(status == "0")
             status = QDir().mkpath(MYDLINK_TMP_PATH) ? "1" : "0";
     }
-    if(m_bLoginStatus && status == "1") {
-        getAPIStdOut(API_PATH + SCRIPT_CLOG + " " + paraForLog);
+    else if(paraType == "1")
+        status = remove(MYDLINK_TMP_PATH) ? "1" : "0";
 
-        QString pathFormat = "http:://%1/%2";
-        QString localIP = getNasCfg(getNasCfg("network").value("default_gw")).value("ip");
-        QString filePath = MYDLINK_LOG_FILE;
-        filePath.remove("/var/www/");
+    if(m_bLoginStatus && status == "1") {
 
         QDomElement versionElement = doc.createElement("version");
         root.appendChild(versionElement);
         versionElement.appendChild(doc.createTextNode(MYDLINK_VERSION));
-        QDomElement pathElement = doc.createElement("path");
-        root.appendChild(pathElement);
-        pathElement.appendChild(doc.createTextNode(pathFormat.arg(localIP, filePath)));
+
+        getAPIStdOut(API_PATH + SCRIPT_CLOG + " " + paraForLog);
+
+        if(paraType == "0") {
+            QString pathFormat = "http:://%1/%2";
+            QString localIP = getNasCfg(getNasCfg("network").value("default_gw")).value("ip");
+            QString filePath = MYDLINK_LOG_FILE;
+            filePath.remove("/var/www/");
+
+            QDomElement pathElement = doc.createElement("path");
+            root.appendChild(pathElement);
+            pathElement.appendChild(doc.createTextNode(pathFormat.arg(localIP, filePath)));
+        }
 
     }
 
