@@ -1531,7 +1531,9 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
     taskInfo.is_src_login = paraLoginMethod.toInt() ? 0 : 1;
     taskInfo.is_dst_login = 0;
     taskInfo.is_file = (m_pReq->parameter("f_type").toInt() == 1) ? 0 : 1;
-    QByteArray execat = QUrl::fromPercentEncoding(m_pReq->parameter("f_at").toLocal8Bit()).toUtf8();
+    QString execat_s = QUrl::fromPercentEncoding(m_pReq->parameter("f_at").toLocal8Bit());tDebug("111111111111111111[%s]\n", execat_s.toLocal8Bit().data());
+    if (execat_s.startsWith("00000000")) execat_s.remove(0, 8);
+    tDebug("2222222222222222222222222[%s]\n", execat_s.toLocal8Bit().data());QByteArray execat = execat_s.toUtf8();tDebug("3333333333333333333333333333333333[%s]\n", execat.data());
     taskInfo.execat = execat.data();
     QByteArray login_id = QUrl::fromPercentEncoding(m_pReq->parameter("f_login_user").toLocal8Bit()).toUtf8();
     taskInfo.login_id = login_id.data();
@@ -2098,6 +2100,15 @@ void RenderResponseAppMngm::generateServerTest() {
             }
         }
 
+        char *size = NULL;
+        //GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
+        GetLocalDeviceSizeString(paraLocalPath.toLocal8Bit().data(), NULL, &size);
+        QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
+        root.appendChild(localDirectoryUsedSizeElement);
+        localDirectoryUsedSizeElement.appendChild(doc.createTextNode(QString(size)));
+        if(size)
+            free(size);
+
         if(paraType == "2") {
             int count = 0;
             char **node = NULL;
@@ -2146,15 +2157,6 @@ void RenderResponseAppMngm::generateServerTest() {
             shareNodeMap.insert(QString(name[i]), QString(path[i]));
         }
         FreeRsyncSharePath(volCount, &name, &path);*/
-
-        char *size = NULL;
-        //GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
-        GetLocalDeviceSizeString(paraLocalPath.toLocal8Bit().data(), NULL, &size);
-        QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
-        root.appendChild(localDirectoryUsedSizeElement);
-        localDirectoryUsedSizeElement.appendChild(doc.createTextNode(QString(size)));
-        if(size)
-            free(size);
 
         /*if(paraType == "1") {
             for(QString e : shareNodeMap.keys()) {
@@ -2358,15 +2360,15 @@ void RenderResponseAppMngm::generateGetModifyInfo() {
     QString schedule_mode_trans = "";
     QString execatTmp = QString(r_info_ret.execat);
     if (r_info_ret.schedule_mode == 2)
-        schedule_mode_trans = "6:" + execatTmp.mid(10, 2) + ":" + execatTmp.mid(8, 2) + ":" + execatTmp.mid(6, 2) + ":" + execatTmp.mid(4, 2) + ":0";
+        schedule_mode_trans = "6:" + QString::number(execatTmp.mid(10, 2).toInt()) + ":" + QString::number(execatTmp.mid(8, 2).toInt()) + ":" + QString::number(execatTmp.mid(6, 2).toInt()) + ":" + QString::number(execatTmp.mid(4, 2).toInt()) + ":0";
     else if (r_info_ret.schedule_mode == 3)
     {
         if (r_info_ret.recur_type == 1)
-            schedule_mode_trans = "3:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:0";
+            schedule_mode_trans = "3:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":0:0:0";
         else if (r_info_ret.recur_type == 2)
-            schedule_mode_trans = "2:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:" + QString::number(r_info_ret.recur_date);
+            schedule_mode_trans = "2:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":0:0:" + QString::number(r_info_ret.recur_date);
         else
-            schedule_mode_trans = "1:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":" + QString::number(r_info_ret.recur_date) + ":0:0";
+            schedule_mode_trans = "1:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":" + QString::number(r_info_ret.recur_date) + ":0:0";
     }
     QDomElement scheduleElement = doc.createElement("schedule");
     root.appendChild(scheduleElement);
@@ -2429,8 +2431,7 @@ void RenderResponseAppMngm::generateEnableDisableSchedule() {
 void RenderResponseAppMngm::generateBackupNow() {
 
     QString name = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QStringList arg = QStringList() << name;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + name);
     m_var = "N/A";
 
 }
