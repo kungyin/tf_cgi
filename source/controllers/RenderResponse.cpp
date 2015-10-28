@@ -2,6 +2,7 @@
 #include <QFileInfo>
 #include <TWebApplication>
 #include <QDir>
+#include <QSettings>
 
 
 #include "RenderResponse.h"
@@ -271,6 +272,16 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
             ret.insert(fields.at(0).trimmed(), fields.at(1).trimmed());
     }
     file.close();
+
+//    QSettings sysConfig(SYS_CONFIG_FILE, QSettings::NativeFormat);
+//    sysConfig.beginGroup(title);
+
+//    for(QString e : sysConfig.allKeys()) {
+//        ret.insert(e, sysConfig.value(e).toString());
+//        tDebug("UUUUU %s %s", e.toLocal8Bit().data(), sysConfig.value(e).toByteArray().data());
+//    }
+//    sysConfig.endGroup();
+
     return ret;
 }
 

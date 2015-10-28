@@ -254,37 +254,50 @@ void RenderResponseMyDlink::generateGetDeviceInfo() {
             root.appendChild(servicesElement);
 
             QStringList serviceNames(QStringList()
-                << "My Photos" << "My Music" << "My Files" << "P2P Download" << "My Surveillance");
+                << "My Photos" << "My Music" << "My Files" << "P2P Download" /*<< "My Surveillance"*/);
 
             // todo : My Surveillance
             QString hasHdd = shareInfo.isEmpty() ? "0" : "1";
             QStringList serviceStatus(QStringList()
                 << hasHdd << hasHdd << hasHdd
-                << apiOutModule.value(0).split(";").value(0) << "0");
+                << apiOutModule.value(0).split(";").value(0) /*<< "0"*/);
 
             QStringList servicePort(QStringList()
-                << "80" << "80" << "80" << "" << "8080");
+                << "80" << "80" << "80" << "" /*<< "8080"*/);
 
             QStringList servicePage(QStringList()
                 << "photo_center/index.html" << "MyMusic/index.html"
                 << "web/web_file/web_file_server.html" << "web/download_mgr/p2p_main.html"
-                << "MySurveillance/index.html");
+                /*<< "MySurveillance/index.html"*/);
 
-            for(int i = 0; i < serviceNames.size(); i++) {
-                QDomElement serviceElement = doc.createElement("service");
-                servicesElement.appendChild(serviceElement);
-                QDomElement nameElement = doc.createElement("name");
-                serviceElement.appendChild(nameElement);
-                nameElement.appendChild(doc.createTextNode(serviceNames.value(i)));
-                QDomElement statusElement = doc.createElement("status");
-                serviceElement.appendChild(statusElement);
-                statusElement.appendChild(doc.createTextNode(serviceStatus.value(i)));
-                QDomElement portElement = doc.createElement("port");
-                serviceElement.appendChild(portElement);
-                portElement.appendChild(doc.createTextNode(servicePort.value(i)));
-                QDomElement pageElement = doc.createElement("page");
-                serviceElement.appendChild(pageElement);
-                pageElement.appendChild(doc.createTextNode(servicePage.value(i)));
+            QMap<QString, QVariant> idxMap;
+            idxMap.insert("My Photos", 0);
+            idxMap.insert("My Music", 1);
+            idxMap.insert("My Files", 2);
+            idxMap.insert("P2P Download", 3);
+            QStringList appOrder = getNasCfg("mydlink").value("mydlk_app_order").split(",");
+
+            for(int i = 0; i < appOrder.size(); i++) {
+                int index = -1;
+                QString key = appOrder.value(i).trimmed();
+                if(idxMap.contains(key)) {
+                    index = idxMap.value(key).toInt();
+
+                    QDomElement serviceElement = doc.createElement("service");
+                    servicesElement.appendChild(serviceElement);
+                    QDomElement nameElement = doc.createElement("name");
+                    serviceElement.appendChild(nameElement);
+                    nameElement.appendChild(doc.createTextNode(serviceNames.value(index)));
+                    QDomElement statusElement = doc.createElement("status");
+                    serviceElement.appendChild(statusElement);
+                    statusElement.appendChild(doc.createTextNode(serviceStatus.value(index)));
+                    QDomElement portElement = doc.createElement("port");
+                    serviceElement.appendChild(portElement);
+                    portElement.appendChild(doc.createTextNode(servicePort.value(index)));
+                    QDomElement pageElement = doc.createElement("page");
+                    serviceElement.appendChild(pageElement);
+                    pageElement.appendChild(doc.createTextNode(servicePage.value(index)));
+                }
             }
 
         }

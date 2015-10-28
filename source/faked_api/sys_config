@@ -513,7 +513,7 @@ attr_6                         =
 attr_7                         = 
 attr_8                         = 
 attr_9                         = 
-
+mydlk_app_order		       = My Photos, My Files
 
 [dropbox]
 enable                         = 0

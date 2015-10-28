@@ -660,15 +660,20 @@ void RenderResponseNetwork::generatePortForwardingGet() {
 
      ********************** */
 
+    QStringList pfList(apiOutList);
+    int rp = paraRp.toInt();
+    if(pfList.size() > rp)
+        pfList = apiOutList.mid((paraPage.toInt()-1) * rp, rp);
+
     QString strCheckboxEnable = "<input type='checkbox' checked disabled class='scan'>";
     QString strCheckboxDisable = "<input type='checkbox' disabled class='scan'>";
     QDomElement root = doc.createElement("rows");
     doc.appendChild(root);
 
-    for(int i=0; i<apiOutList.size(); i++) {
-        if(apiOutList.at(i).isEmpty())
+    for(int i = 0; i < pfList.size(); i++) {
+        if(pfList.at(i).isEmpty())
             continue;
-        QStringList line = apiOutList.at(i).split(",");
+        QStringList line = pfList.at(i).split(",");
         if(line.size() < 6)
             continue;
 
@@ -708,7 +713,7 @@ void RenderResponseNetwork::generatePortForwardingGet() {
     }
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
-    pageElement.appendChild(doc.createTextNode("1"));
+    pageElement.appendChild(doc.createTextNode(paraPage));
 
     QDomElement totalElement = doc.createElement("total");
     root.appendChild(totalElement);
