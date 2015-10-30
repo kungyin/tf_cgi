@@ -187,6 +187,7 @@ typedef struct
     char *schedule_mode;
     char *state;
     char *enable;
+    char *percent;
 } REMOTE_LIST;
 
 typedef struct

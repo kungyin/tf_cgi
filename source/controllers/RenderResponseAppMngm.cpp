@@ -1425,7 +1425,8 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         if (speed == "0") speed += "KB";
         cellElement5.appendChild(doc.createTextNode(speed));
 
-        QDateTime execat = QDateTime::fromString(QString(taskList[i].execat), "yyyyMMddhhmm");
+        QString execat_s = QString(taskList[i].execat);
+        QDateTime execat = QDateTime::fromString(execat_s, "yyyyMMddhhmm");
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);
         cellElement6.appendChild(doc.createTextNode(execat.toString("MM/dd/yy hh:mm")));
@@ -1979,16 +1980,26 @@ void RenderResponseAppMngm::generateGetBackupList() {
                 }
                 else if (r_info.recur_type == 3) schedule_mode_trans = execatTmp.mid(0, 2) + ":" + execatTmp.mid(2, 2) + " " + QString::number(r_info.recur_date) + " Monthly";
             }
+            FreeRemoteTask(&r_info);
         }
         cellElement2.appendChild(doc.createTextNode(schedule_mode_trans));
 
         QDomElement cellElement3 = doc.createElement("cell");
         rowElement.appendChild(cellElement3);
-        cellElement3.appendChild(doc.createTextNode(QString(taskList[i].state)));
+        QString enable = QString(taskList[i].enable);
+        QString state = QString(taskList[i].state);
+        QString state_s = (enable == "0")?"Disable":"Ready";
+        if (schedule_mode == "1" && state == "0") state_s = "";
+        else
+        {
+            if (state == "3") state_s = "Finish";
+            else if (state == "4") state_s = "Failed";
+            else if (state == "2") state_s = "Backup Now:" + QString(taskList[i].percent) + "%";
+        }
+        cellElement3.appendChild(doc.createTextNode(state_s));
 
         QDomElement cellElement4 = doc.createElement("cell");
         rowElement.appendChild(cellElement4);
-        QString enable = QString(taskList[i].enable);
         cellElement4.appendChild(doc.createCDATASection(cellcontent3.arg((enable == "0")?"start":"stop", task_name, (enable == "0")?"1":"0")));
 
         QDomElement cellElement5 = doc.createElement("cell");
@@ -2086,7 +2097,7 @@ void RenderResponseAppMngm::generateServerTest() {
 
     if(result.rsync_test_result == 101 ) {
 
-        if(paraType == "1") {
+        if(paraType == "1" && paraDirection == "1") {
             QDomElement remoteHdA2FreeSizeElement;
             QString arg = QString("%1 -p %2 %3@%4 '%5 free_size'").arg(SSH_AUTO_ROOT, QString::number(paraSshPort), paraRsyncUser, paraIp, SCRIPT_REMOTE_HD_SIZE);
             QStringList remoteHddFreeSize = getAPIStdOut(arg, true, ":", true);
@@ -2096,6 +2107,25 @@ void RenderResponseAppMngm::generateServerTest() {
                 root.appendChild(remoteHdA2FreeSizeElement);
                 remoteHdA2FreeSizeElement.appendChild(doc.createTextNode(remoteHddFreeSize.value(i)));
             }
+        }
+
+        if (paraDirection == "1")
+        {
+            char *size = NULL;
+            GetLocalDeviceSizeString(paraLocalPath.toLocal8Bit().data(), NULL, &size);
+            QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
+            root.appendChild(localDirectoryUsedSizeElement);
+            localDirectoryUsedSizeElement.appendChild(doc.createTextNode(QString(size)));
+            if(size)
+                free(size);
+        }
+        else
+        {
+            QString arg = QString("%5 free_size").arg(SCRIPT_REMOTE_HD_SIZE);
+            QStringList remoteHddFreeSize = getAPIStdOut(arg, true, ":", true);
+            QDomElement localDirectoryUsedSizeElement = doc.createElement("local_free_size");
+            root.appendChild(localDirectoryUsedSizeElement);
+            localDirectoryUsedSizeElement.appendChild(doc.createTextNode(remoteHddFreeSize.value(paraLocalPath.at(11).toLatin1() - 97)));
         }
 
         if(paraType == "2") {
@@ -2123,7 +2153,7 @@ void RenderResponseAppMngm::generateServerTest() {
             Q_FOREACH(QString n, remoteHddShareNodes)
             {
                 QStringList remoteHddShareNode = n.split(":", QString::SkipEmptyParts);
-                if (remoteHddShareNode.size() == 2) {
+                if (remoteHddShareNode.size() >= 2) {
                     QDomElement shareNodeElement = doc.createElement("share_node");
                     root.appendChild(shareNodeElement);
 
@@ -2133,6 +2163,12 @@ void RenderResponseAppMngm::generateServerTest() {
                     QDomElement pathElement = doc.createElement("path");
                     shareNodeElement.appendChild(pathElement);
                     pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(1)));
+                    if (paraDirection == "2" && remoteHddShareNode.size() > 2)
+                    {
+                        QDomElement pathElement = doc.createElement("du_size");
+                        shareNodeElement.appendChild(pathElement);
+                        pathElement.appendChild(doc.createTextNode(remoteHddShareNode.value(2)));
+                    }
                 }
             }
         }
@@ -2146,15 +2182,6 @@ void RenderResponseAppMngm::generateServerTest() {
             shareNodeMap.insert(QString(name[i]), QString(path[i]));
         }
         FreeRsyncSharePath(volCount, &name, &path);*/
-
-        char *size = NULL;
-        //GetLocalDeviceSizeString(shareNodeMap.value("Volume_1").toLocal8Bit().data(), NULL, &size);
-        GetLocalDeviceSizeString(paraLocalPath.toLocal8Bit().data(), NULL, &size);
-        QDomElement localDirectoryUsedSizeElement = doc.createElement("local_directory_used_size");
-        root.appendChild(localDirectoryUsedSizeElement);
-        localDirectoryUsedSizeElement.appendChild(doc.createTextNode(QString(size)));
-        if(size)
-            free(size);
 
         /*if(paraType == "1") {
             for(QString e : shareNodeMap.keys()) {
@@ -2358,15 +2385,15 @@ void RenderResponseAppMngm::generateGetModifyInfo() {
     QString schedule_mode_trans = "";
     QString execatTmp = QString(r_info_ret.execat);
     if (r_info_ret.schedule_mode == 2)
-        schedule_mode_trans = "6:" + execatTmp.mid(10, 2) + ":" + execatTmp.mid(8, 2) + ":" + execatTmp.mid(6, 2) + ":" + execatTmp.mid(4, 2) + ":0";
+        schedule_mode_trans = "6:" + QString::number(execatTmp.mid(10, 2).toInt()) + ":" + QString::number(execatTmp.mid(8, 2).toInt()) + ":" + QString::number(execatTmp.mid(6, 2).toInt()) + ":" + QString::number(execatTmp.mid(4, 2).toInt()) + ":0";
     else if (r_info_ret.schedule_mode == 3)
     {
         if (r_info_ret.recur_type == 1)
-            schedule_mode_trans = "3:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:0";
+            schedule_mode_trans = "3:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":0:0:0";
         else if (r_info_ret.recur_type == 2)
-            schedule_mode_trans = "2:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":0:0:" + QString::number(r_info_ret.recur_date);
+            schedule_mode_trans = "2:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":0:0:" + QString::number(r_info_ret.recur_date);
         else
-            schedule_mode_trans = "1:" + execatTmp.mid(2, 2) + ":" + execatTmp.mid(0, 2) + ":" + QString::number(r_info_ret.recur_date) + ":0:0";
+            schedule_mode_trans = "1:" + QString::number(execatTmp.mid(2, 2).toInt()) + ":" + QString::number(execatTmp.mid(0, 2).toInt()) + ":" + QString::number(r_info_ret.recur_date) + ":0:0";
     }
     QDomElement scheduleElement = doc.createElement("schedule");
     root.appendChild(scheduleElement);
@@ -2429,8 +2456,7 @@ void RenderResponseAppMngm::generateEnableDisableSchedule() {
 void RenderResponseAppMngm::generateBackupNow() {
 
     QString name = QUrl::fromPercentEncoding(m_pReq->parameter("name").toLocal8Bit());
-    QStringList arg = QStringList() << name;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP, arg);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_START_REMOTE_BACKUP + " " + name);
     m_var = "N/A";
 
 }
