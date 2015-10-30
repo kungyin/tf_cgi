@@ -576,6 +576,24 @@ enum CGI_COMMAND {
     CMD_NAS_SHARING_9,                                   /* 9 */
     CMD_NAS_SHARING_10,                                  /* 10 */
     CMD_NAS_SHARING_16,                                  /* 16 */
+    CMD_NAS_SHARING_55,                                  /* 55 */
+    CMD_NAS_SHARING_70,                                  /* 70 */
+    CMD_NAS_SHARING_73,                                  /* 73 */
+    CMD_NAS_SHARING_74,                                  /* 74 */
+    CMD_NAS_SHARING_75,                                  /* 75 */
+    CMD_NAS_SHARING_76,                                  /* 76 */
+    CMD_NAS_SHARING_77,                                  /* 77 */
+    CMD_NAS_SHARING_78,                                  /* 78 */
+    CMD_NAS_SHARING_79,                                  /* 79 */
+    CMD_NAS_SHARING_81,                                  /* 81 */
+    CMD_NAS_SHARING_82,                                  /* 82 */
+    CMD_NAS_SHARING_83,                                  /* 83 */
+    CMD_NAS_SHARING_84,                                  /* 84 */
+    CMD_NAS_SHARING_85,                                  /* 85 */
+    CMD_NAS_SHARING_86,                                  /* 86 */
+    CMD_NAS_SHARING_87,                                  /* 87 */
+    CMD_NAS_SHARING_88,                                  /* 88 */
+    CMD_NAS_SHARING_89,                                  /* 89 */
 
     CMD_NAS_SHARING_END,
 
@@ -1153,6 +1171,24 @@ const char CGI_PARA_COMMANDS[][255] = {
     "9",
     "10",
     "16",
+    "55",
+    "70",
+    "73",
+    "74",
+    "75",
+    "76",
+    "77",
+    "78",
+    "79",
+    "81",
+    "82",
+    "83",
+    "84",
+    "85",
+    "86",
+    "87",
+    "88",
+    "89",
     ""
 
 };
@@ -1729,6 +1765,24 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_NAS_SHARING_9,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 9 */
     { CMD_NAS_SHARING_10,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 10 */
     { CMD_NAS_SHARING_16,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 16 */
+    { CMD_NAS_SHARING_55,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 55 */
+    { CMD_NAS_SHARING_70,                RENDER_TYPE_STRING,        PASSWD_REQ_CMDS          },         /* 70 */
+    { CMD_NAS_SHARING_73,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 73 */
+    { CMD_NAS_SHARING_74,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 74 */
+    { CMD_NAS_SHARING_75,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 75 */
+    { CMD_NAS_SHARING_76,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 76 */
+    { CMD_NAS_SHARING_77,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 77 */
+    { CMD_NAS_SHARING_78,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 78 */
+    { CMD_NAS_SHARING_79,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 79 */
+    { CMD_NAS_SHARING_81,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 81 */
+    { CMD_NAS_SHARING_82,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 82 */
+    { CMD_NAS_SHARING_83,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 83 */
+    { CMD_NAS_SHARING_84,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 84 */
+    { CMD_NAS_SHARING_85,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 85 */
+    { CMD_NAS_SHARING_86,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 86 */
+    { CMD_NAS_SHARING_87,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 87 */
+    { CMD_NAS_SHARING_88,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 88 */
+    { CMD_NAS_SHARING_89,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 89 */
 
     //CMD_NAS_SHARING_END,
 

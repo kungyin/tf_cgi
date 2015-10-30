@@ -13,6 +13,7 @@ public:
     virtual void preRender();
 
 private:
+    /* 1~16 */
     void generateLogin();
     void generateScanFolder();
     void generateCreateFolder();
@@ -22,6 +23,14 @@ private:
     void generateDiskInfo();
     void generateListAll();
     void generateCheckVolume();
+
+    /* 55 */
+    void generateDeviceInfo();
+
+    void generateCheckDiskFreeSize();
+    void generateGetHdInfo();
+
+    void generateGetVolumeInfo();
 
     bool isLogin();
     void generatePrefix(QDomDocument &);

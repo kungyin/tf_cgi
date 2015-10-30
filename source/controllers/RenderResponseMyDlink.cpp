@@ -410,6 +410,9 @@ void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
     QStringList apiOutServices = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
     arg.clear(); arg = QStringList() << "media_get_itunes_config";
     QStringList apiOutItunes = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+    arg.clear(); arg = QStringList() << "quotainfo";
+    QStringList apiOutQuota = getAPIStdOut(API_PATH + SCRIPT_QUOTA_MGR, arg, true, ";");
+
 
     QDomElement servicesElement = doc.createElement("services");
     root.appendChild(servicesElement);
@@ -422,7 +425,7 @@ void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {
     QStringList serviceStatus(QStringList()
         << apiOutServices.value(6) << apiOutServices.value(1) << apiOutServices.value(0)
         << apiOutServices.value(8) << apiOutServices.value(4) << apiOutServices.value(3)
-        << apiOutServices.value(5) << apiOutItunes.value(0) << apiOutServices.value(99)
+        << apiOutServices.value(5) << apiOutItunes.value(0) << apiOutQuota.value(4)
         << "0" << apiOutServices.value(7));
 
     for(int i = 0; i < serviceNames.size(); i++) {
@@ -454,24 +457,10 @@ void RenderResponseMyDlink::generateListVolume() {
 
         QMap<QString, QString> map;
         QDomDocument readFileDoc;
-        QFile file(SCANDISK_PROGRESS_FILE);
-        if (file.open(QIODevice::ReadOnly)) {
-            if (!readFileDoc.setContent(&file)) {
-                tError("RenderResponseAddOn::generateListVolume(): file %s is not XML.",
-                       SCANDISK_PROGRESS_FILE.toLocal8Bit().data());
-            }
-            else {
-                QDomElement readFileDocRoot;
-                readFileDocRoot = readFileDoc.documentElement();
-                QDomNodeList list = readFileDocRoot.childNodes();
-                for(int i = 0; i < list.size(); i++)
-                    map.insert(list.at(i).toElement().tagName(), list.at(i).toElement().text());
-            }
-            file.close();
-        }
-        else
-            tError("RenderResponseAddOn::generateListVolume(): file %s does not exist.",
-                   SCANDISK_PROGRESS_FILE.toLocal8Bit().data());
+        readXml(SCANDISK_PROGRESS_FILE, readFileDoc);
+        QDomNodeList list = readFileDoc.documentElement().childNodes();
+        for(int i = 0; i < list.size(); i++)
+            map.insert(list.at(i).toElement().tagName(), list.at(i).toElement().text());
 
         QDomElement volumesElement = doc.createElement("volumes");
         root.appendChild(volumesElement);

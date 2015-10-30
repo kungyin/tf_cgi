@@ -164,34 +164,17 @@ void RenderResponseHome::generateFWStatus() {
 }
 
 void RenderResponseHome::generateLogin() {
-    QString paraUsername;
-    QString paraPwd;
-    QString paraPort;
-    QString paraType;
-    QString paraFUsername;
-    QString paraPrePwd;
-    QString paraSsl;
-    QString paraC1;
-    QString paraSslPort;
-
-    if(m_pReq->allParameters().contains("username"))
-        paraUsername = m_pReq->allParameters().value("username").toString();
-    if(m_pReq->allParameters().contains("pwd"))
-        paraPwd = QUrl::fromPercentEncoding(m_pReq->allParameters().value("pwd").toByteArray());
-    if(m_pReq->allParameters().contains("port"))
-        paraPort = m_pReq->allParameters().value("port").toString();
-    if(m_pReq->allParameters().contains("f_type"))
-        paraType = m_pReq->allParameters().value("f_type").toString();
-    if(m_pReq->allParameters().contains("f_username"))
-        paraFUsername = m_pReq->allParameters().value("f_username").toString();
-    if(m_pReq->allParameters().contains("pre_pwd"))
-        paraPrePwd = m_pReq->allParameters().value("pre_pwd").toString();
-    if(m_pReq->allParameters().contains("ssl"))
-        paraSsl = m_pReq->allParameters().value("ssl").toString();
-    if(m_pReq->allParameters().contains("C1"))
-        paraC1 = m_pReq->allParameters().value("C1").toString();
-    if(m_pReq->allParameters().contains("ssl_port"))
-        paraSslPort = m_pReq->allParameters().value("ssl_port").toString();
+    QString paraUsername = m_pReq->parameter("username");
+    QString paraPwd = QUrl::fromPercentEncoding(m_pReq->parameter("pwd").toLocal8Bit());
+    QString paraPort = m_pReq->parameter("port");
+    QString paraType = m_pReq->parameter("f_type");
+    QString paraFUsername = m_pReq->parameter("f_username");
+    QString paraPrePwd = m_pReq->parameter("pre_pwd");
+    QString paraSsl = m_pReq->parameter("ssl");
+    QString paraC1 = m_pReq->parameter("C1");
+    QString paraSslPort = m_pReq->parameter("ssl_port");
+    QString paraLPage = m_pReq->parameter("lpage");
+    QString paraLPagePortHttp = m_pReq->parameter("lpage_port_http");
 
     QString loginPara = "login#" + allParametersToString();
     QStringList arg = QStringList() << "service_home_api" << loginPara;
@@ -226,8 +209,20 @@ void RenderResponseHome::generateLogin() {
         m_pSession->insert("user", paraUsername);
         m_pSession->insert("time", QDateTime::currentDateTime());
 
-        if(apiOut.value(0).compare("1") == 0)
-            m_var = "/web/home.html?v=8401878";
+        if(apiOut.value(0).compare("1") == 0) {
+            if(paraLPage.isEmpty())
+                m_var = "/web/home.html?v=8401878";
+            else {
+                if(paraLPage == "2")
+                    m_var = "/photo_center/index.html?v=4389165&lpage_port_http=" + paraLPagePortHttp;
+                else if(paraLPage == "3")
+                    m_var = "/MyMusic/index.html?v=4745396&lpage_port_http=" + paraLPagePortHttp;
+                else if(paraLPage == "4")
+                    m_var = "/web/web_file/web_file_server.html?v=1529718&lpage_port_http=" + paraLPagePortHttp;
+                else if(paraLPage == "5")
+                    m_var = "/web/download_mgr/p2p_main.html?v=9476204&lpage_port_http=" + paraLPagePortHttp;
+            }
+        }
         else
             m_var = "/web/set_passwd.html";
     }

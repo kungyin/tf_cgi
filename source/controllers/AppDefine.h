@@ -4,7 +4,7 @@
 #include <QString>
 
 const QString MYDLINK_VERSION       =   "1.11";
-const QString NAS_SHARING_VERSION   =   "2.20";
+const QString NAS_SHARING_VERSION   =   "2.23";
 
 const QString SCRIPT_DISK_API       =   "sysapi_dsk";
 const QString SCRIPT_SCANDISK_API   =   "scandisk";
@@ -84,6 +84,9 @@ const QString USB_SHARE_INFO_FILE = "/etc/usbshare_info";
 const QString SHARE_INFO_FILE = "/etc/share_info";
 const QString MODEL_FILE = "/etc/model";
 const QString SCANDISK_PROGRESS_FILE = "/var/www/xml/scandisk.xml";
+const QString CURRENT_HD_INFO_FILE = "/var/www/xml/current_hd_info.xml";
+const QString USED_VOLUME_INFO_FILE = "/var/www/xml/used_volume_info.xml";
+const QString FIRMWARE_VERSION_FILE = "/etc/sysconfig/config/version";
 const QString PACKAGE_FILE = "/var/upload/pkg.bin";
 
 const QString NETWORK_SCRIPT = API_PATH + "network";
@@ -110,6 +113,9 @@ const QString USB_SHARE_INFO_FILE = API_PATH + "usbshare_info";
 const QString SHARE_INFO_FILE = API_PATH + "share_info";
 const QString MODEL_FILE = API_PATH + "model";
 const QString SCANDISK_PROGRESS_FILE = API_PATH + "scandisk.xml";
+const QString CURRENT_HD_INFO_FILE = API_PATH + "current_hd_info.xml";
+const QString USED_VOLUME_INFO_FILE = API_PATH + "used_volume_info.xml";
+const QString FIRMWARE_VERSION_FILE = API_PATH + "version";
 const QString PACKAGE_FILE = API_PATH + "pkg.bin";
 
 

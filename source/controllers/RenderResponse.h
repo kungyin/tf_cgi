@@ -32,6 +32,8 @@ protected:
     bool setNasCfg(QString, QMap<QString, QString> &);
     bool setNasCfg(QMap<QString, QMap<QString, QString>> &);
     QMap<QString, QString> getNasCfg(QString);
+    bool readXml(const QString &, QDomDocument &);
+
     QString allParametersToString(bool bDecode = true, QString before = QString::null, QString after = QString::null);
     QString addPoundSign(QString, QString splitSign = ",");
     QString sizeHuman(qint64);

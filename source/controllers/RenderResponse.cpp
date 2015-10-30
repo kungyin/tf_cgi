@@ -285,6 +285,25 @@ QMap<QString, QString> RenderResponse::getNasCfg(QString title) {
     return ret;
 }
 
+bool RenderResponse::readXml(const QString &filePath, QDomDocument &readFileDoc) {
+
+    bool ret = false;
+    QFile file(filePath);
+    if (file.open(QIODevice::ReadOnly)) {
+        if (!readFileDoc.setContent(&file)) {
+            tError("RenderResponse::readXml: file %s is not XML.",
+                   filePath.toLocal8Bit().data());
+        }
+        else ret = true;
+        file.close();
+    }
+    else
+        tError("RenderResponse::readXml: file %s does not exist.",
+               filePath.toLocal8Bit().data());
+
+    return ret;
+}
+
 QString RenderResponse::allParametersToString(bool bDecode, QString before, QString after) {
 
     QString ret;
@@ -392,4 +411,6 @@ QString RenderResponse::sessionDirPath()
 {
     return Tf::app()->tmpPath() + QLatin1String("session") + QDir::separator();
 }
+
+
 

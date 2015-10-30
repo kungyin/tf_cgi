@@ -3,6 +3,23 @@
 #include "RenderResponseNasSharing.h"
 #include "Databaseobject.h"
 
+static QMap<QString, QString> raid_mode_map {
+
+    { "standard",    "1"    },
+    { "linear"  ,    "2"    },
+    { "raid0"   ,    "3"    },
+    { "raid1"   ,    "4"    },
+
+};
+
+static QMap<QString, QString> file_type_map {
+
+    { "ext2",    "1"    },
+    { "ext3",    "2"    },
+    { "ext4",    "3"    },
+
+};
+
 RenderResponseNasSharing::RenderResponseNasSharing(THttpRequest &req, CGI_COMMAND cmd)
     : m_bLoginStatus(false)
 {
@@ -47,6 +64,62 @@ void RenderResponseNasSharing::preRender() {
         break;
     case CMD_NAS_SHARING_16:
         generateCheckVolume();
+        break;
+
+    case CMD_NAS_SHARING_55:
+        generateDeviceInfo();
+        break;
+
+    case CMD_NAS_SHARING_70:
+        generateCheckDiskFreeSize();
+        break;
+    case CMD_NAS_SHARING_73:
+        generateGetHdInfo();
+        break;
+    case CMD_NAS_SHARING_74:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_75:
+        generateGetVolumeInfo();
+        break;
+    case CMD_NAS_SHARING_76:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_77:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_78:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_79:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_81:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_82:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_83:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_84:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_85:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_86:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_87:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_88:
+        //generateCheckVolume();
+        break;
+    case CMD_NAS_SHARING_89:
+        //generateCheckVolume();
         break;
 
     default:
@@ -364,4 +437,288 @@ void RenderResponseNasSharing::generateCheckVolume() {
 
     m_var = doc.toString();
 
+}
+
+void RenderResponseNasSharing::generateDeviceInfo() {
+    QDomDocument doc;
+    QStringList arg = QStringList() << "system_get_system_status";
+    QStringList apiOutSysStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QDomElement lanElement = doc.createElement("lan");
+    root.appendChild(lanElement);
+
+    QStringList itemTagNames(QStringList()
+        << "ip" << "netmask" << "gateway" << "dns1" << "dns2" << "mac");
+
+    QList<QStringList> itemList;
+    itemList << (QStringList()
+        << apiOutSysStatus.value(3) << apiOutSysStatus.value(4) << apiOutSysStatus.value(5)
+        << apiOutSysStatus.value(6) << apiOutSysStatus.value(7) << apiOutSysStatus.value(19));
+    if(!apiOutSysStatus.value(10).isEmpty())
+        itemList << (QStringList()
+            << apiOutSysStatus.value(10) << apiOutSysStatus.value(11) << apiOutSysStatus.value(12)
+            << apiOutSysStatus.value(13) << apiOutSysStatus.value(14)  << apiOutSysStatus.value(20));
+
+    for(QStringList item : itemList) {
+        QDomElement itemElement = doc.createElement("item");
+        lanElement.appendChild(itemElement);
+        for(int i=0; i < itemTagNames.size(); i++) {
+            QDomElement element = doc.createElement(itemTagNames.value(i));
+            itemElement.appendChild(element);
+            element.appendChild(doc.createTextNode(item.value(i)));
+        }
+    }
+
+    arg.clear(); arg = QStringList() << "system_get_system_temperature";
+    QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    QString uptime = QDateTime::fromTime_t(apiOutSysStatus.value(27).toInt()).toUTC().toString("d,h,s");
+    QStringList deviceTagNames(QStringList()
+        << "workgroup" << "name" << "description" << "temperature" << "uptime");
+    QStringList deviceContent(QStringList()
+        << apiOutSysStatus.value(17) << apiOutSysStatus.value(16) << apiOutSysStatus.value(18)
+        << apiOutTemp.value(0) << uptime);
+
+    QDomElement deviceElement = doc.createElement("device");
+    root.appendChild(deviceElement);
+    for(int i=0; i < deviceTagNames.size(); i++) {
+        QDomElement element = doc.createElement(deviceTagNames.value(i));
+        deviceElement.appendChild(element);
+        element.appendChild(doc.createTextNode(deviceContent.value(i)));
+    }
+
+    QList<QMap<QString, QByteArray>> diskItemList;
+    QDomDocument readFileDoc;
+    readXml(USED_VOLUME_INFO_FILE, readFileDoc);
+    QDomNode n = readFileDoc.documentElement().firstChild().firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull() && e.tagName() == "item") {
+            QDomNodeList list = e.childNodes();
+            QMap<QString, QByteArray> map;
+
+            for(int i = 0; i < list.size(); i++) {
+                QDomElement childElement = list.at(i).toElement();
+                map.insert(childElement.tagName(), childElement.text().toLocal8Bit());
+            }
+            diskItemList << map;
+        }
+        n = n.nextSibling();
+    }
+    QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
+
+    QStringList diskItemTagNames(QStringList()
+        << "volume_num" << "raid_mode" << "raidStatus" << "my_mdx" << "sync_perct" << "sync_time"
+        << "total_size" << "use_size" << "free_size" << "used_rate");
+
+    QDomElement volumeElement = doc.createElement("volume");
+    root.appendChild(volumeElement);
+    for(QMap<QString, QByteArray> e : diskItemList) {
+        bool bFound = false;
+        QString volName = "Volume_" + e.value("volume");
+        QString realPath = volName;
+        for(auto shareInfoEntry : shareInfo) {
+            if(shareInfoEntry.contains(volName)) {
+                bFound = true;
+                replaceVoltoRealPath(realPath);
+                break;
+            }
+        }
+        if(!bFound)
+            continue;
+
+        QStringList apiOutDf = getAPIStdOut("df " + realPath, false, "", 1).value(1)
+                .split(" ", QString::SkipEmptyParts);
+
+        QString mdx = e.value("mount").right(e.value("mount").length()
+                                             - (e.value("mount").lastIndexOf(QDir::separator()) + 1));
+        /* todo: disk encryption rule */
+        QStringList itemContent(QStringList() << e.value("volume")
+            << e.value("raid_mode") << e.value("raid_status") << mdx << "0" << "0"
+            << apiOutDf.value(1) << apiOutDf.value(2) << apiOutDf.value(3) << apiOutDf.value(4).remove("%")
+            );
+
+        QDomElement itemElement = doc.createElement("item");
+        volumeElement.appendChild(itemElement);
+        for(int i=0; i < diskItemTagNames.size(); i++) {
+            QDomElement element = doc.createElement(diskItemTagNames.value(i));
+            itemElement.appendChild(element);
+            element.appendChild(doc.createTextNode(itemContent.value(i)));
+        }
+    }
+
+    QStringList apiOutFwVer = getAPIStdOut(API_PATH + SCRIPT_MDB + " get fw_version", true);
+    QString fwDate = getAPIFileOut(FIRMWARE_VERSION_FILE).value(0).section('.', 2, 3);
+
+    QDomElement firmwareElement = doc.createElement("firmware");
+    root.appendChild(firmwareElement);
+    QDomElement versionElement = doc.createElement("version");
+    firmwareElement.appendChild(versionElement);
+    versionElement.appendChild(doc.createTextNode(apiOutFwVer.value(0)));
+
+    QDomElement dateElement = doc.createElement("date");
+    firmwareElement.appendChild(dateElement);
+    dateElement.appendChild(doc.createTextNode(QDateTime::fromString(fwDate, "MMdd.yyyy").toString("MM/dd/yyyy")));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateCheckDiskFreeSize() {
+    QString paraPath = QByteArray::fromBase64(m_pReq->parameter("path").toLocal8Bit());
+
+    m_var = "0";
+    if(m_bLoginStatus) {
+        QStringList apiOut = getAPIStdOut("df " + paraPath, false, "", 1).value(1)
+                .split(" ", QString::SkipEmptyParts);
+        m_var = apiOut.value(3);
+    }
+
+}
+
+void RenderResponseNasSharing::generateGetHdInfo() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QList<QMap<QString, QByteArray>> itemList;
+        QDomDocument readFileDoc;
+        readXml(CURRENT_HD_INFO_FILE, readFileDoc);
+        QDomNode n = readFileDoc.documentElement().firstChild().firstChild().firstChild();
+        n = n.nextSibling();
+        while(!n.isNull()) {
+            QDomElement e = n.toElement();
+            if(!e.isNull() && e.tagName() == "item") {
+                QDomNodeList list = e.childNodes();
+                QMap<QString, QByteArray> map;
+
+                for(int i = 0; i < list.size(); i++) {
+                    QDomElement childElement = list.at(i).toElement();
+                    map.insert(childElement.tagName(), childElement.text().toLocal8Bit());
+                }
+                itemList << map;
+            }
+            n = n.nextSibling();
+        }
+
+        QStringList apiOutParti = getAPIFileOut("/proc/partitions");
+        QStringList arg = QStringList() << "system_get_disk_volume_status";
+        QStringList apiOutVolStatus = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+
+        QDomElement countElement = doc.createElement("count");
+        nasSharingNode.appendChild(countElement);
+        countElement.appendChild(doc.createTextNode(QString::number(itemList.size())));
+
+        QStringList itemTagNames(QStringList()
+            << "name" << "vendor" << "model" << "serial" << "scsi" << "size" << "block_all"
+                                 << "block_p1" << "block_p2" << "block_p3" << "block_p4");
+
+        for(QMap<QString, QByteArray> e : itemList) {
+
+            QStringList blockList;
+            for(QString line : apiOutParti) {
+                QStringList factor = line.split(" ", QString::SkipEmptyParts);
+                if(factor.value(3).startsWith(e.value("device_name")))
+                    blockList << factor.value(2);
+            }
+            QStringList itemContent(QStringList() << e.value("device_name").toBase64()
+                << e.value("vendor").toBase64() << e.value("model").toBase64() << e.value("hd_serial").toBase64()
+                << e.value("scsi") << e.value("hd_GiB_size"));
+            itemContent += blockList;
+
+            QDomElement itemElement = doc.createElement("item");
+            nasSharingNode.appendChild(itemElement);
+            for(int i=0; i < itemTagNames.size(); i++) {
+                QDomElement element = doc.createElement(itemTagNames.value(i));
+                itemElement.appendChild(element);
+                element.appendChild(doc.createTextNode(itemContent.value(i)));
+            }
+
+        }
+
+        QDomElement formattingElement = doc.createElement("formatting");
+        nasSharingNode.appendChild(formattingElement);
+        formattingElement.appendChild(doc.createTextNode(apiOutVolStatus.value(0)));
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateGetVolumeInfo() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QList<QMap<QString, QByteArray>> itemList;
+        QDomDocument readFileDoc;
+        readXml(USED_VOLUME_INFO_FILE, readFileDoc);
+        QDomNode n = readFileDoc.documentElement().firstChild().firstChild();
+        while(!n.isNull()) {
+            QDomElement e = n.toElement();
+            if(!e.isNull() && e.tagName() == "item") {
+                QDomNodeList list = e.childNodes();
+                QMap<QString, QByteArray> map;
+
+                for(int i = 0; i < list.size(); i++) {
+                    QDomElement childElement = list.at(i).toElement();
+                    map.insert(childElement.tagName(), childElement.text().toLocal8Bit());
+                }
+                itemList << map;
+            }
+            n = n.nextSibling();
+        }
+        QStringList shareInfo = getAPIFileOut(SHARE_INFO_FILE);
+
+        QDomElement countElement = doc.createElement("count");
+        nasSharingNode.appendChild(countElement);
+
+        QStringList itemTagNames(QStringList()
+            << "volume" << "raid_mode" << "raid_status" << "file_type" << "total_size" << "free_size"
+            << "dev_used" << "dev_spare" << "dev_count" << "todo" << "encrypt" << "mount_status"
+            << "roaming_flag");
+
+        int count = 0;
+        for(QMap<QString, QByteArray> e : itemList) {
+            bool bFound = false;
+            QString volName = "Volume_" + e.value("volume");
+            QString realPath = volName;
+            for(auto shareInfoEntry : shareInfo) {
+                if(shareInfoEntry.contains(volName)) {
+                    bFound = true;
+                    count++;
+                    replaceVoltoRealPath(realPath);
+                    break;
+                }
+            }
+            if(!bFound)
+                continue;
+
+            QStringList apiOut = getAPIStdOut("df " + realPath, false, "", 1).value(1)
+                    .split(" ", QString::SkipEmptyParts);
+
+            /* todo: disk encryption rule */
+            QStringList itemContent(QStringList() << e.value("volume")
+                << raid_mode_map.value(e.value("raid_mode")) << e.value("raid_status")
+                << file_type_map.value(e.value("file_type")) << apiOut.value(1) << apiOut.value(3)
+                << e.value("device").toBase64() << "" << e.value("dev_num") << ""
+                << e.value("volume_encrypt") << e.value("mount_status") << "0");
+
+            QDomElement itemElement = doc.createElement("item");
+            nasSharingNode.appendChild(itemElement);
+            for(int i=0; i < itemTagNames.size(); i++) {
+                QDomElement element = doc.createElement(itemTagNames.value(i));
+                itemElement.appendChild(element);
+                element.appendChild(doc.createTextNode(itemContent.value(i)));
+            }
+        }
+        countElement.appendChild(doc.createTextNode(QString::number(count)));
+
+    }
+
+    m_var = doc.toString();
 }
