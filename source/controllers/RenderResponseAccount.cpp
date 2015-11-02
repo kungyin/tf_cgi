@@ -547,7 +547,7 @@ void RenderResponseAccount::generateDownloadImportSample() {
 void RenderResponseAccount::generateGetAllSession() {
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_get_tm_list";
+    QStringList arg = QStringList() << "service_get_all_session";
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
