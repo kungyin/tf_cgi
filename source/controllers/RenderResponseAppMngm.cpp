@@ -1419,6 +1419,46 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         cellElement5.appendChild(doc.createTextNode(speed));
 
         QString execat_s = QString(taskList[i].execat);
+        DOWNLOAD_TASK task;
+        memset(&task, 0, sizeof(DOWNLOAD_TASK));
+        GetTaskXmlValue(taskList[i].task_id, TAG_ALL, &task);
+        if (QString(task.period) != "0")
+        {
+            QDateTime curDatetime = QDateTime::currentDateTime();
+            QString curDatetime_s = curDatetime.toString("yyyyMMddhhmm");
+            execat_s.replace(0, 8, curDatetime_s.mid(0, 8));
+            if (QString(task.period) == "2")
+            {
+                int trans_week_day = QString(task.recur_date).toInt();
+                if (trans_week_day == 0) trans_week_day = 7; else trans_week_day++;
+                if (curDatetime.date().dayOfWeek() >= trans_week_day)
+                    curDatetime = curDatetime.addDays(curDatetime.date().dayOfWeek() - trans_week_day);
+                else
+                    curDatetime = curDatetime.addDays(trans_week_day - curDatetime.date().dayOfWeek());
+            }
+            else if (QString(task.period) == "3")
+            {
+                QDate date(curDatetime.date().year(), curDatetime.date().month(), QString(task.recur_date).toInt());
+                curDatetime.setDate(date);
+            }
+            curDatetime_s = curDatetime.toString("yyyyMMddhhmm");
+            if (QString(task.period) == "1")
+            if (QString(task.period) != "1" && execat_s > curDatetime_s)
+            {
+                if (QString(task.period) == "3")
+                    curDatetime = curDatetime.addMonths(1);
+                else
+                    curDatetime = curDatetime.addDays((QString(task.period) == "1")?1:7);
+                curDatetime_s = curDatetime.toString("yyyyMMddhhmm");
+            }
+            else if (QString(task.period) == "1")
+            {
+                if (execat_s < curDatetime_s)
+                    curDatetime = curDatetime.addDays(1);
+            }
+            execat_s.replace(0, 8, curDatetime_s.mid(0, 8));
+        }
+        FreeTask(&task);
         QDateTime execat = QDateTime::fromString(execat_s, "yyyyMMddhhmm");
         QDomElement cellElement6 = doc.createElement("cell");
         rowElement1.appendChild(cellElement6);

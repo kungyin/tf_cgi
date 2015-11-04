@@ -266,8 +266,8 @@ QSqlError MediaDbDataProvider::SelectFolderList(QString paraPage, QString paraRp
         int offset = (paraPage.toInt() - 1) * paraRp.toInt();
         limit = QString("limit %1,%2 ").arg(QString::number(offset), paraRp);
     }
-    *totalCnt = DbDataProvider::GetTotalSize("", "tbl_multimedia_folder");
-    return DbDataProvider::SelectData("*", "", "", "", limit, "tbl_multimedia_folder");
+    *totalCnt = DbDataProvider::GetTotalSize("where folder_path not like '%/.dlink'", "tbl_multimedia_folder");
+    return DbDataProvider::SelectData("*", "where folder_path not like '%/.dlink'", "", "", limit, "tbl_multimedia_folder");
 }
 
 QSqlError MediaDbDataProvider::GetServerStatus(int *status)

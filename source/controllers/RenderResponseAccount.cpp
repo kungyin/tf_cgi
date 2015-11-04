@@ -547,7 +547,7 @@ void RenderResponseAccount::generateDownloadImportSample() {
 void RenderResponseAccount::generateGetAllSession() {
     QDomDocument doc;
 
-    QStringList arg = QStringList() << "service_get_tm_list";
+    QStringList arg = QStringList() << "service_get_all_session";
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
     QDomElement root = doc.createElement("session");
     doc.appendChild(root);
@@ -594,7 +594,7 @@ void RenderResponseAccount::generateAddUserGetUserQuotaMaxsize() {
 
     QString paraName = m_pReq->allParameters().value("name").toString();
     QStringList arg = QStringList() << "system_user_get_user_quota_maxsize" << paraName;
-    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_USER_MGR, arg, true);
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
     QDomElement root = doc.createElement("quota_info");
     doc.appendChild(root);
     QDomElement maxSizeElement = doc.createElement("max_size");
