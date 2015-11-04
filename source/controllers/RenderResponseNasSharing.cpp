@@ -1,4 +1,5 @@
 #include <QDir>
+#include <sys/sysinfo.h>
 
 #include "RenderResponseNasSharing.h"
 #include "Databaseobject.h"
@@ -77,49 +78,52 @@ void RenderResponseNasSharing::preRender() {
         generateGetHdInfo();
         break;
     case CMD_NAS_SHARING_74:
-        //generateCheckVolume();
+        generateGetHddokInfo();
         break;
     case CMD_NAS_SHARING_75:
         generateGetVolumeInfo();
         break;
     case CMD_NAS_SHARING_76:
-        //generateCheckVolume();
+        generateUnusedVolInfo();
         break;
     case CMD_NAS_SHARING_77:
-        //generateCheckVolume();
+        generateSetDiskVolume();
         break;
     case CMD_NAS_SHARING_78:
-        //generateCheckVolume();
+        generateGetVolProgressBar();
         break;
     case CMD_NAS_SHARING_79:
-        //generateCheckVolume();
+        generateRemountVolume();
+        break;
+    case CMD_NAS_SHARING_80:
+        generateRaidRoaming();
         break;
     case CMD_NAS_SHARING_81:
-        //generateCheckVolume();
+        generateGetDbStatus();
         break;
     case CMD_NAS_SHARING_82:
-        //generateCheckVolume();
+        generateControlDb();
         break;
     case CMD_NAS_SHARING_83:
-        //generateCheckVolume();
+        generateGetServerState();
         break;
     case CMD_NAS_SHARING_84:
-        //generateCheckVolume();
+        generateSetServerState();
         break;
     case CMD_NAS_SHARING_85:
-        //generateCheckVolume();
+        generateGetMediaPathList();
         break;
     case CMD_NAS_SHARING_86:
-        //generateCheckVolume();
+        generateAddMediaPath();
         break;
     case CMD_NAS_SHARING_87:
-        //generateCheckVolume();
+        generateDelMediaPath();
         break;
     case CMD_NAS_SHARING_88:
-        //generateCheckVolume();
+        generateRefreshMediaPath();
         break;
     case CMD_NAS_SHARING_89:
-        //generateCheckVolume();
+        generateGetMediaProgress();
         break;
 
     default:
@@ -216,8 +220,6 @@ void RenderResponseNasSharing::generateScanFolder() {
             }
         }
 
-        QDomElement itemsElement = doc.createElement("items");
-        nasSharingNode.appendChild(itemsElement);
         QStringList itemTagNames(QStringList()
             << "file_path" << "file_name" << "file_date" << "file_size" << "file_type" << "sm" << "tn");
 
@@ -228,7 +230,7 @@ void RenderResponseNasSharing::generateScanFolder() {
 
             QStringList itemContent;
             QDomElement itemElement = doc.createElement("item");
-            itemsElement.appendChild(itemElement);
+            nasSharingNode.appendChild(itemElement);
 
             itemContent << e.absoluteFilePath().toLocal8Bit().toBase64()
                         << e.fileName().toLocal8Bit().toBase64()
@@ -474,12 +476,20 @@ void RenderResponseNasSharing::generateDeviceInfo() {
 
     arg.clear(); arg = QStringList() << "system_get_system_temperature";
     QStringList apiOutTemp = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
-    QString uptime = QDateTime::fromTime_t(apiOutSysStatus.value(27).toInt()).toUTC().toString("d,h,s");
+
+    struct sysinfo info;
+    sysinfo(&info);
+    QTime timeInDay(0, 0, 0);
+    timeInDay = timeInDay.addSecs(info.uptime % 86400);
+    QString uptimeValue = QString("%1,%2,%3").arg(QString::number((int)info.uptime/86400),
+                                                timeInDay.toString("h"),
+                                                timeInDay.toString("m"));
+
     QStringList deviceTagNames(QStringList()
         << "workgroup" << "name" << "description" << "temperature" << "uptime");
     QStringList deviceContent(QStringList()
         << apiOutSysStatus.value(17) << apiOutSysStatus.value(16) << apiOutSysStatus.value(18)
-        << apiOutTemp.value(0) << uptime);
+        << apiOutTemp.value(0) << uptimeValue);
 
     QDomElement deviceElement = doc.createElement("device");
     root.appendChild(deviceElement);
@@ -647,6 +657,41 @@ void RenderResponseNasSharing::generateGetHdInfo() {
     m_var = doc.toString();
 }
 
+void RenderResponseNasSharing::generateGetHddokInfo() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        QStringList apiOut = getAPIFileOut(SHARE_INFO_FILE);
+        bool hddokAll = 0;
+        bool hddok[2] = { 0, 0 };
+        for(int i = 0; i < 2; i++) {
+            for(auto e : apiOut)
+                if(e.contains("Volume_" + QString::number(i+1))) {
+                    hddok[i] = true;
+                    hddokAll = true;
+                    break;
+                }
+        }
+
+        QStringList sharingTagNames(QStringList()
+            << "hddok" << "hddok_a" << "hddok_b");
+
+        QStringList sharingContent(QStringList() << QString::number(hddokAll)
+                                   << QString::number(hddok[0]) << QString::number(hddok[1]));
+
+        for(int i=0; i < sharingTagNames.size(); i++) {
+            QDomElement element = doc.createElement(sharingTagNames.value(i));
+            nasSharingNode.appendChild(element);
+            element.appendChild(doc.createTextNode(sharingContent.value(i)));
+        }
+    }
+
+    m_var = doc.toString();
+
+}
+
 void RenderResponseNasSharing::generateGetVolumeInfo() {
     QDomDocument doc;
     generatePrefix(doc);
@@ -718,6 +763,395 @@ void RenderResponseNasSharing::generateGetVolumeInfo() {
         }
         countElement.appendChild(doc.createTextNode(QString::number(count)));
 
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateUnusedVolInfo() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        QDomDocument readFileDoc;
+        readXml(UNUSED_VOLUME_INFO_FILE, readFileDoc);
+        QDomNode n = readFileDoc.documentElement().firstChild();
+        QDomNodeList children = n.nextSibling().childNodes();
+        for(int i = 0; i < children.size(); i++) {
+            nasSharingNode.appendChild(children.item(i).cloneNode());
+        }
+    }
+
+    m_var = doc.toString();
+}
+
+/* todo */
+void RenderResponseNasSharing::generateSetDiskVolume() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+    }
+
+    m_var = doc.toString();
+}
+
+/* todo: /var/www/xml/dm_read_state.xml */
+void RenderResponseNasSharing::generateGetVolProgressBar() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateRemountVolume() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        QStringList arg = QStringList() << "system_set_disk_setting" << "set_remount";
+        /*QStringList apiOut = */getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true);
+    }
+
+    m_var = doc.toString();
+}
+
+/* todo */
+void RenderResponseNasSharing::generateRaidRoaming() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateGetDbStatus() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        int ret = 0;
+        MediaDbDataProvider media;
+        QSqlError err = media.GetServerStatus(&ret);
+        if (err.isValid())
+            tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+
+        QDomElement element = doc.createElement("db_status");
+        nasSharingNode.appendChild(element);
+        element.appendChild(doc.createTextNode(QString::number(ret)));
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateControlDb() {
+    QString paraFType = QByteArray::fromBase64(m_pReq->parameter("ftype").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QStringList arg = QStringList() << paraFType;
+        getAPIStdOut("ScanSender", arg);
+
+        QDomElement element = doc.createElement("status");
+        nasSharingNode.appendChild(element);
+        element.appendChild(doc.createTextNode("1"));
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateGetServerState() {
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QDomElement element = doc.createElement("enable");
+        nasSharingNode.appendChild(element);
+        element.appendChild(doc.createTextNode("0"));
+
+    }
+
+    m_var = doc.toString();
+}
+
+/* todo */
+void RenderResponseNasSharing::generateSetServerState() {
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QDomElement element = doc.createElement("enable");
+        nasSharingNode.appendChild(element);
+        element.appendChild(doc.createTextNode("0"));
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateGetMediaPathList() {
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        int totalCnt = 0;
+        MediaDbDataProvider media;
+        QSqlError err = media.SelectFolderList(QString::null, QString::null, &totalCnt);
+        if (err.isValid())
+            tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+        int count = media.GetSize();
+
+        QStringList itemTagNames(QStringList()
+            << "id" << "hd_path" << "volume_path" << "path_state");
+
+        QSqlQuery *query = media.GetSelectedData();
+        if(query) {
+            while (query->next()) {
+                QByteArray path = query->value("folder_path").toByteArray();
+                QString volName = path;
+                replaceVoltoRealPath(volName, true);
+                QString status = QFile(path).exists() ? "1" : "0";
+
+                QStringList itemContent(QStringList() << query->value("folder_id").toString()
+                      << path.toBase64() << volName.toLocal8Bit().toBase64() << status);
+
+                QDomElement itemElement = doc.createElement("item");
+                nasSharingNode.appendChild(itemElement);
+                for(int i=0; i < itemTagNames.size(); i++) {
+                    QDomElement element = doc.createElement(itemTagNames.value(i));
+                    itemElement.appendChild(element);
+                    element.appendChild(doc.createTextNode(itemContent.value(i)));
+                }
+            }
+        }
+        QDomElement countElement = doc.createElement("count");
+        nasSharingNode.appendChild(countElement);
+        countElement.appendChild(doc.createTextNode(QString::number(count)));
+
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateAddMediaPath() {
+    QString paraFDir = QByteArray::fromBase64(m_pReq->parameter("f_dir").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+
+        QStringList dirList = paraFDir.split("*");
+        QString status = "0";
+        if(dirList.isEmpty())
+            status = "3";
+        else {
+            for(QString e : dirList) {
+                if(QFileInfo(e).isDir()) {
+                    status = "1";
+                    break;
+                }
+            }
+        }
+
+        QDomElement statusElement = doc.createElement("status");
+        nasSharingNode.appendChild(statusElement);
+        statusElement.appendChild(doc.createTextNode(status));
+
+        if(status == "0") {
+
+            QDomElement countElement = doc.createElement("count");
+            nasSharingNode.appendChild(countElement);
+            countElement.appendChild(doc.createTextNode(QString::number(dirList.size())));
+
+//            MediaDbDataProvider media;
+//            QStringList folderList = media.GetFolderAll();
+            Q_FOREACH(QString dir, dirList)
+            {
+//                bool bHasParent = false;
+//                QFileInfo info(dir);
+//                if (info.isDir())
+//                {
+//                    Q_FOREACH(QString folder, folderList)
+//                    {
+//                        if (dir.startsWith(folder))
+//                        {
+//                            bHasParent = true;
+//                            break;
+//                        }
+//                    }
+//                }
+
+                QStringList arg = QStringList() << "addfolder" << dir;
+                getAPIStdOut("ScanSender", arg);
+                QFile file(TUXERA_CONF);
+                if (file.open(QIODevice::Append))
+                {
+                    QTextStream out(&file);
+                    out << "MEDIA=" + dir <<  "\n";
+                    file.close();
+                }
+
+                QDomElement itemElement = doc.createElement("item");
+                nasSharingNode.appendChild(itemElement);
+                QDomElement pathElement = doc.createElement("hd_path");
+                itemElement.appendChild(pathElement);
+                pathElement.appendChild(doc.createTextNode(dir.toLocal8Bit().toBase64()));
+
+                QDomElement invalidElement = doc.createElement("invalid");
+                itemElement.appendChild(invalidElement);
+                invalidElement.appendChild(doc.createTextNode("0"));
+            }
+            getAPIStdOut(API_PATH + SCRIPT_TUXERA_API + " restart");
+            /* todo: reflash? */
+#if 0
+            arg = QStringList() << "start" << dir;
+            getAPIStdOut("ScanSender", arg);
+            isStart = true;
+#endif
+
+        }
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateDelMediaPath() {
+    QString paraFDir = QByteArray::fromBase64(m_pReq->parameter("f_dir").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        QStringList dirList = paraFDir.split("*");
+
+        QDomElement countElement = doc.createElement("count");
+        nasSharingNode.appendChild(countElement);
+        countElement.appendChild(doc.createTextNode(QString::number(dirList.size())));
+
+        Q_FOREACH(QString dir, dirList)
+        {
+            QStringList arg = QStringList() << "delfolder" << dir;
+            getAPIStdOut("ScanSender", arg);
+            QByteArray data;
+            QFile file(TUXERA_CONF);
+            file.open(QIODevice::ReadWrite);
+            data = file.readAll();
+            QString fileData(data);
+
+            int idxTitle = fileData.indexOf("MEDIA=" + dir);
+            if(idxTitle != -1) {
+                fileData.replace(idxTitle, fileData.indexOf("\n", idxTitle), "");
+                file.reset();
+                file.write(fileData.toUtf8());
+                file.resize(file.pos());
+            }
+            file.close();
+
+            QDomElement itemElement = doc.createElement("item");
+            nasSharingNode.appendChild(itemElement);
+            QDomElement pathElement = doc.createElement("hd_path");
+            itemElement.appendChild(pathElement);
+            pathElement.appendChild(doc.createTextNode(dir.toLocal8Bit().toBase64()));
+
+            QDomElement stateElement = doc.createElement("state");
+            itemElement.appendChild(stateElement);
+            stateElement.appendChild(doc.createTextNode("1"));
+
+            QString volPath = dir;
+            replaceVoltoRealPath(volPath, true);
+            QDomElement invalidElement = doc.createElement("invalid");
+            itemElement.appendChild(invalidElement);
+            invalidElement.appendChild(doc.createTextNode(volPath.toLocal8Bit().toBase64()));
+        }
+    }
+
+    m_var = doc.toString();
+}
+
+
+void RenderResponseNasSharing::generateRefreshMediaPath() {
+    QString paraFDir = QByteArray::fromBase64(m_pReq->parameter("f_dir").toLocal8Bit());
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        QStringList dirList = paraFDir.split("*");
+
+        if (paraFDir == "all") {
+            QStringList arg = QStringList() << "startall";
+            getAPIStdOut("ScanSender", arg);
+        }
+        else {
+            for(QString e : dirList) {
+                QStringList arg = QStringList() << "start" << e;
+                getAPIStdOut("ScanSender", arg);
+            }
+        }
+
+        QDomElement statusElement = doc.createElement("status");
+        nasSharingNode.appendChild(statusElement);
+        statusElement.appendChild(doc.createTextNode("0"));
+    }
+
+    m_var = doc.toString();
+}
+
+
+void RenderResponseNasSharing::generateGetMediaProgress() {
+
+    QDomDocument doc;
+    generatePrefix(doc);
+    QDomNode nasSharingNode = doc.documentElement().firstChild();
+
+    if(m_bLoginStatus) {
+        int percent = -1;
+        QString filePath = "";
+        MediaDbDataProvider media;
+        QSqlError err = media.GetPercentAndFile(&percent, &filePath);
+        if (err.isValid())
+            tDebug("MYSQL ERROR: [%s]", err.text().toLocal8Bit().data());
+
+        QDomElement dbStateElement = doc.createElement("db_state");
+        nasSharingNode.appendChild(dbStateElement);
+        dbStateElement.appendChild(doc.createTextNode(QString::number(percent)));
+
+        QDomElement dbFileElement = doc.createElement("db_file");
+        nasSharingNode.appendChild(dbFileElement);
+        dbFileElement.appendChild(doc.createTextNode(filePath.toLocal8Bit().toBase64()));
     }
 
     m_var = doc.toString();

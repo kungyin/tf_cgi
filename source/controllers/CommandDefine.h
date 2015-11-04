@@ -585,6 +585,7 @@ enum CGI_COMMAND {
     CMD_NAS_SHARING_77,                                  /* 77 */
     CMD_NAS_SHARING_78,                                  /* 78 */
     CMD_NAS_SHARING_79,                                  /* 79 */
+    CMD_NAS_SHARING_80,                                  /* 80 */
     CMD_NAS_SHARING_81,                                  /* 81 */
     CMD_NAS_SHARING_82,                                  /* 82 */
     CMD_NAS_SHARING_83,                                  /* 83 */
@@ -1180,6 +1181,7 @@ const char CGI_PARA_COMMANDS[][255] = {
     "77",
     "78",
     "79",
+    "80",
     "81",
     "82",
     "83",
@@ -1774,6 +1776,7 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_NAS_SHARING_77,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 77 */
     { CMD_NAS_SHARING_78,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 78 */
     { CMD_NAS_SHARING_79,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 79 */
+    { CMD_NAS_SHARING_80,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 80 */
     { CMD_NAS_SHARING_81,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 81 */
     { CMD_NAS_SHARING_82,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 82 */
     { CMD_NAS_SHARING_83,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 83 */

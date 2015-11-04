@@ -27,10 +27,27 @@ private:
     /* 55 */
     void generateDeviceInfo();
 
+    /* 70~80 */
     void generateCheckDiskFreeSize();
     void generateGetHdInfo();
-
+    void generateGetHddokInfo();
     void generateGetVolumeInfo();
+    void generateUnusedVolInfo();
+    void generateSetDiskVolume();
+    void generateGetVolProgressBar();
+    void generateRemountVolume();
+    void generateRaidRoaming();
+
+    /* 81~89 */
+    void generateGetDbStatus();
+    void generateControlDb();
+    void generateGetServerState();
+    void generateSetServerState();
+    void generateGetMediaPathList();
+    void generateAddMediaPath();
+    void generateDelMediaPath();
+    void generateRefreshMediaPath();
+    void generateGetMediaProgress();
 
     bool isLogin();
     void generatePrefix(QDomDocument &);

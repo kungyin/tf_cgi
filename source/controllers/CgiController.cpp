@@ -90,6 +90,7 @@ void CgiController::cgiInit(int group) {
     /* Parse command */
     QString paraCmd = httpRequest().parameter(CGI_PARA_CMD_NAME);
     tDebug("<< %s >>", paraCmd.toLocal8Bit().data());
+    //tDebug("header:\n%s", httpRequest().header().toByteArray().data());
     m_pParseCmd = new ParseCmd(paraCmd, group);
 
 #ifndef SIMULATOR_MODE

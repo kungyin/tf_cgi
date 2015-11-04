@@ -247,7 +247,6 @@ void RenderResponseAppMngm::generateUpnpAvServerPathList() {
     QString paraField = m_pReq->allParameters().value("f_field").toString();
     QString paraUser = m_pReq->allParameters().value("user").toString();
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_share_folder_list");
     int totalCnt = 0;
     MediaDbDataProvider media;
     QSqlError err = media.SelectFolderList(paraPage, paraRp, &totalCnt);
@@ -327,7 +326,6 @@ void RenderResponseAppMngm::generateUpnpAvServerGetConfig() {
 void RenderResponseAppMngm::generateUpnpAvServer() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_av_server");
     int ret = 0;
     MediaDbDataProvider media;
     QSqlError err = media.GetServerStatus(&ret);
@@ -349,7 +347,6 @@ void RenderResponseAppMngm::generateUpnpAvServer() {
 void RenderResponseAppMngm::generateUpnpAvServerGetSqldbState() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_get_upnp_sqldb_state");
     int percent = -1;
     QString filePath = "";
     MediaDbDataProvider media;
@@ -492,8 +489,6 @@ void RenderResponseAppMngm::generateItunesServerReady() {
 void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_check_path "
-    //                                  + allParametersToString(), true);
     int res = 1;
     QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
     QStringList dirList = paraDir.split("*", QString::SkipEmptyParts);
@@ -533,8 +528,6 @@ void RenderResponseAppMngm::generateUpnpAvServerCheckPath() {
 void RenderResponseAppMngm::generateUpnpAvServerPathSetting() {
     QDomDocument doc;
 
-    //QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API + " media_set_share_folder "
-    //                                  + allParametersToString(), true);
     QString paraDir = QUrl::fromPercentEncoding(m_pReq->parameter("f_dir").toLocal8Bit());
     QString paraRefresh = m_pReq->parameter("f_refresh");
     int res = (paraRefresh == "0")?0:1;
