@@ -718,9 +718,16 @@ bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString 
         QString uncompressCmd = "%1 \"%2\"";
         /* "sh -c" */
         QStringList apiOut = getAPIStdOut(uncompressCmd.arg(cmd).arg(name), false, "", 1);
+        QStringList unZipList = apiOut;
+        unZipList.removeFirst();
+//        if(unZipList.value(1).split("inflating:").size() > 1) {
+//            unZipList.clear();
+//            unZipList << apiOut.value(1);
+//            unZipList = apiOut.value(2).split(" ", QString::SkipEmptyParts);
+//        }
 
-        for (int i = 1; i < apiOut.size(); i++) {
-            QString from = apiOut.value(i).remove("inflating:").trimmed();
+        for (int i = 0; i < unZipList.size(); i++) {
+            QString from = unZipList.value(i).remove("inflating:").remove("creating:").trimmed();
 
             if(!from.isEmpty()) {
 
@@ -737,10 +744,14 @@ bool RenderResponseFileStation::unArchive(QString &path, QString &name, QString 
                     convUnzipUniFmtToString(newPath);
 
                     QFileInfo fileInfo(newPath);
-                    if(!fileInfo.exists())
+                    if(!fileInfo.exists()) {
                         if(QFile::rename(path, newPath))
                             path = newPath;
-
+                        else
+                            tDebug("RenderResponseFileStation::unArchive: fail to rename %s", path.toLocal8Bit().data());
+                    }
+                    else
+                        path = newPath;
                 }
             }
         }
