@@ -49,9 +49,14 @@ private:
     void generateRefreshMediaPath();
     void generateGetMediaProgress();
 
+    void generateCgiProxy();
+
     bool isLogin();
     void generatePrefix(QDomDocument &);
+
+private:
     bool m_bLoginStatus;
+    QByteArray m_responseData;
 
 };
 

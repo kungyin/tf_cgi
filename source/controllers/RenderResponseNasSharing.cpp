@@ -3,6 +3,7 @@
 
 #include "RenderResponseNasSharing.h"
 #include "Databaseobject.h"
+#include "AssKicking.h"
 
 static QMap<QString, QString> raid_mode_map {
 
@@ -20,6 +21,8 @@ static QMap<QString, QString> file_type_map {
     { "ext4",    "3"    },
 
 };
+
+const char PHP_CGI_URL[] = "http://127.0.0.1/api/nas_sharing.cgi";
 
 RenderResponseNasSharing::RenderResponseNasSharing(THttpRequest &req, CGI_COMMAND cmd)
     : m_bLoginStatus(false)
@@ -124,6 +127,40 @@ void RenderResponseNasSharing::preRender() {
         break;
     case CMD_NAS_SHARING_89:
         generateGetMediaProgress();
+        break;
+
+    case CMD_NAS_SHARING_21:
+    case CMD_NAS_SHARING_22:
+    case CMD_NAS_SHARING_23:
+    case CMD_NAS_SHARING_27:
+    case CMD_NAS_SHARING_28:
+    case CMD_NAS_SHARING_29:
+    case CMD_NAS_SHARING_31:
+    case CMD_NAS_SHARING_32:
+    case CMD_NAS_SHARING_33:
+    case CMD_NAS_SHARING_34:
+    case CMD_NAS_SHARING_35:
+    case CMD_NAS_SHARING_36:
+    case CMD_NAS_SHARING_37:
+    case CMD_NAS_SHARING_38:
+    case CMD_NAS_SHARING_39:
+    case CMD_NAS_SHARING_51:
+
+    case CMD_NAS_SHARING_90:
+    case CMD_NAS_SHARING_91:
+    case CMD_NAS_SHARING_92:
+    case CMD_NAS_SHARING_93:
+    case CMD_NAS_SHARING_94:
+    case CMD_NAS_SHARING_95:
+    case CMD_NAS_SHARING_96:
+    case CMD_NAS_SHARING_97:
+    case CMD_NAS_SHARING_98:
+    case CMD_NAS_SHARING_99:
+    case CMD_NAS_SHARING_100:
+    case CMD_NAS_SHARING_101:
+    case CMD_NAS_SHARING_102:
+    case CMD_NAS_SHARING_103:
+        generateCgiProxy();
         break;
 
     default:
@@ -1155,4 +1192,12 @@ void RenderResponseNasSharing::generateGetMediaProgress() {
     }
 
     m_var = doc.toString();
+}
+
+void RenderResponseNasSharing::generateCgiProxy() {
+
+    AssKicking ass;
+    ass.startKickAss(QUrl(PHP_CGI_URL), m_pReq);
+    m_var = ass.getAssData();
+
 }
