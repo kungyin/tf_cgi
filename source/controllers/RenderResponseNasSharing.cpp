@@ -22,7 +22,7 @@ static QMap<QString, QString> file_type_map {
 
 };
 
-const char PHP_CGI_URL[] = "http://127.0.0.1/api/nas_sharing.cgi";
+const char PHP_CGI_URL[] = "http://127.0.0.1/api/nas_sharing.php";
 
 RenderResponseNasSharing::RenderResponseNasSharing(THttpRequest &req, CGI_COMMAND cmd)
     : m_bLoginStatus(false)
