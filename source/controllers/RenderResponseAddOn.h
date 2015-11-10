@@ -32,6 +32,20 @@ private:
     void generateMyFavGetSortInfo();
     void generateMyFavCompareApkg();
 
+    void generateIcePlaylist();
+    void generateIceIsPlaylistFull();
+    void generateIcePlaylistName();
+    void generateIceHasPlaylistName();
+    void generateIcePlaylistNew();
+    void generateIcePlaylistDel();
+    void generateIceModInfo();
+    void generateIcePlaylistRenew();
+    void generateIceIsActiveFull();
+    void generateIcePlaylistEnable();
+    void generateIcePlaylistDisable();
+    void generateIceGet();
+    void generateIceSet();
+
 };
 
 #endif // RENDERRESPONSEADDON_H

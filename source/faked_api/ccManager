@@ -132,6 +132,8 @@
 [ $1 == 'service_get_share_folder_ftp_info' ] && echo -e "ffff;Volume_1/ffff;w;;user1,user2,user3,@group1,@group2,@Grpup3;"
 [ $1 == 'service_get_webdav_account_info' ] && echo -e "Volume_1;/mnt/HD/HD_a2/;1;1;jerry,@aaaa"
 [ $1 == 'mydlink_account' ] && echo -e "1"
+[ $1 == 'GUI_ice_playlist' ] && echo -e "-;123456789;555555;111111;Yes;start" && echo -e "49999/Playlist-01.m3u;Playlist-01;Default Genre;My MP3 Streaming;Yes;stop"
+[ $1 == 'GUI_ice_playlist_name' ] && echo -e "1;Playlist-01"
 [[ $2 =~ ^login* ]] && echo -e "1"
 [[ $2 == build_in_language ]] && echo -e "1"
 [[ $2 == cgi_get_user_language ]] && echo -e "TC,TC.xml"

@@ -420,6 +420,20 @@ enum CGI_COMMAND {
     CMD_MYFAV_SET,                           /* cgi_myfavorite_set */
     CMD_MYFAV_GET_SORT_INFO,                 /* cgi_myfavorite_get_sort_info */
     CMD_MYFAV_COMPARE_APKG,                  /* cgi_myfavorite_compare_apkg */
+
+    CMD_ICE_PLAYLIST,                        /* GUI_ice_playlist */
+    CMD_ICE_IS_PLAYLIST_FULL,                /* GUI_ice_is_playlist_full */
+    CMD_ICE_PLAYLIST_NAME,                   /* GUI_ice_playlist_name */
+    CMD_ICE_HAS_PLAYLIST_NAME,               /* GUI_ice_has_playlist_name */
+    CMD_ICE_PLAYLIST_NEW,                    /* GUI_ice_playlist_new */
+    CMD_ICE_PLAYLIST_DEL,                    /* GUI_ice_playlist_del */
+    CMD_ICE_MOD_INFO,                        /* GUI_ice_modify_info */
+    CMD_ICE_PLAYLIST_RENEW,                  /* GUI_ice_playlist_renew */
+    CMD_ICE_IS_ACTIVE_FULL,                  /* GUI_ice_is_active_full */
+    CMD_ICE_PLAYLIST_ENABLE,                 /* GUI_ice_playlist_enable */
+    CMD_ICE_PLAYLIST_DISABLE,                /* GUI_ice_playlist_disable */
+    CMD_ICE_GET,                             /* GUI_ice_get */
+    CMD_ICE_SET,                             /* GUI_ice_set */
     CMD_ADD_ON_END,
 
     /**** Dashboard ****/
@@ -1049,6 +1063,20 @@ const char CGI_PARA_COMMANDS[][255] = {
     "cgi_myfavorite_set",
     "cgi_myfavorite_get_sort_info",
     "cgi_myfavorite_compare_apkg",
+
+    "GUI_ice_playlist",
+    "GUI_ice_is_playlist_full",
+    "GUI_ice_playlist_name",
+    "GUI_ice_has_playlist_name",
+    "GUI_ice_playlist_new",
+    "GUI_ice_playlist_del",
+    "GUI_ice_modify_info",
+    "GUI_ice_playlist_renew",
+    "GUI_ice_is_active_full",
+    "GUI_ice_playlist_enable",
+    "GUI_ice_playlist_disable",
+    "GUI_ice_get",
+    "GUI_ice_set",
     "",
 
     /**** Dashboard ****/
@@ -1674,13 +1702,26 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_MODULE_UNINSTALL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_uninstall */
     { CMD_APP,                           RENDER_TYPE_STRING,        COOKIE_REQ_CMDS          },         /* app */
     { CMD_APPLICATION_1ST,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_application_lst */
-    { CMD_MODULE_GET_ONE_INFO,               RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_Get_One_Info */
+    { CMD_MODULE_GET_ONE_INFO,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* module_Get_One_Info */
     { CMD_MYFAV_SET,                     RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_set */
     { CMD_MYFAV_GET_SORT_INFO,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_get_sort_info */
-    { CMD_MYFAV_COMPARE_APKG,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_compare_apkg */
+    { CMD_MYFAV_COMPARE_APKG,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_myfavorite_compare_apkg */
+
+    { CMD_ICE_PLAYLIST,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist */
+    { CMD_ICE_IS_PLAYLIST_FULL,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_is_playlist_full */
+    { CMD_ICE_PLAYLIST_NAME,             RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_name */
+    { CMD_ICE_HAS_PLAYLIST_NAME,         RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_has_playlist_name */
+    { CMD_ICE_PLAYLIST_NEW,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_new */
+    { CMD_ICE_PLAYLIST_DEL,              RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_del */
+    { CMD_ICE_MOD_INFO,                  RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_modify_info */
+    { CMD_ICE_PLAYLIST_RENEW,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_renew */
+    { CMD_ICE_IS_ACTIVE_FULL,            RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_is_active_full */
+    { CMD_ICE_PLAYLIST_ENABLE,           RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_enable */
+    { CMD_ICE_PLAYLIST_DISABLE,          RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_playlist_disable */
+    { CMD_ICE_GET,                       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_get */
+    { CMD_ICE_SET,                       RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* GUI_ice_set */
 
     //CMD_ADD_ON_END,
-
 
     { CMD_GET_DEVICE_DETAIL_INFO,        RENDER_TYPE_XML,           COOKIE_REQ_CMDS          },         /* cgi_get_device_detail_info */
 

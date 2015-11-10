@@ -75,6 +75,46 @@ void RenderResponseAddOn::preRender() {
         generateMyFavCompareApkg();
         break;
 
+    case CMD_ICE_PLAYLIST:
+        generateIcePlaylist();
+        break;
+    case CMD_ICE_IS_PLAYLIST_FULL:
+        generateIceIsPlaylistFull();
+        break;
+    case CMD_ICE_PLAYLIST_NAME:
+        generateIcePlaylistName();
+        break;
+    case CMD_ICE_HAS_PLAYLIST_NAME:
+        generateIceHasPlaylistName();
+        break;
+    case CMD_ICE_PLAYLIST_NEW:
+        generateIcePlaylistNew();
+        break;
+    case CMD_ICE_PLAYLIST_DEL:
+        generateIcePlaylistDel();
+        break;
+    case CMD_ICE_MOD_INFO:
+        generateIceModInfo();
+        break;
+    case CMD_ICE_PLAYLIST_RENEW:
+        generateIcePlaylistRenew();
+        break;
+    case CMD_ICE_IS_ACTIVE_FULL:
+        generateIceIsActiveFull();
+        break;
+    case CMD_ICE_PLAYLIST_ENABLE:
+        generateIcePlaylistEnable();
+        break;
+    case CMD_ICE_PLAYLIST_DISABLE:
+        generateIcePlaylistDisable();
+        break;
+    case CMD_ICE_GET:
+        generateIceGet();
+        break;
+    case CMD_ICE_SET:
+        generateIceSet();
+        break;
+
     default:
         break;
     }
@@ -465,3 +505,266 @@ void RenderResponseAddOn::generateMyFavCompareApkg()
     m_var = doc.toString();
 }
 
+void RenderResponseAddOn::generateIcePlaylist() {
+
+    QDomDocument doc;
+    QString paraPage = m_pReq->parameter("page");
+    QString paraRp = m_pReq->parameter("rp");
+
+    QStringList arg = QStringList() << "GUI_ice_playlist";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("rows");
+    doc.appendChild(root);
+
+    QString uiContent1 = "<a href=javascript:ices_playlist('%1')><IMG border='0' width='20' "
+            "src='/audiostreamer/tunein.png'></a>";
+    QString uiContent2 = "<a href=javascript:isplaylist_%1('%2')>"
+            "<IMG border='0' src='/web/images/%3.png'></a>";
+
+    QStringList playList(apiOut);
+    int rp = paraRp.toInt();
+    if(playList.size() > rp)
+        playList = apiOut.mid((paraPage.toInt()-1) * rp, rp);
+
+    int i = 0;
+    for(QString e : playList) {
+        QDomElement rowElement = doc.createElement("row");
+        root.appendChild(rowElement);
+
+        QStringList rowContents;
+        QString playListEnable = "disable";
+        if(e.split(";").value(5) == "start")
+            playListEnable = "enable";
+
+        rowContents << (e.split(";").value(0) == "-" ? "-" : uiContent1.arg(e.split(";").value(0)))
+                    << e.split(";").value(1) << e.split(";").value(2) << e.split(";").value(3)
+                    << e.split(";").value(4)
+                    << uiContent2.arg(playListEnable, e.split(";").value(1), e.split(";").value(5));
+
+        for(int j = 0; j < rowContents.size(); j++ ) {
+            QDomElement cellElement = doc.createElement("cell");
+            rowElement.appendChild(cellElement);
+            if(j == 0 || j == rowContents.size() - 1)
+                cellElement.appendChild(doc.createCDATASection(rowContents.value(j)));
+            else
+                cellElement.appendChild(doc.createTextNode(rowContents.value(j)));
+        }
+
+        rowElement.setAttribute("id", QString::number(++i));
+    }
+
+    QDomElement pageElement = doc.createElement("page");
+    root.appendChild(pageElement);
+    pageElement.appendChild(doc.createTextNode(paraPage));
+
+    QDomElement totalElement = doc.createElement("total");
+    root.appendChild(totalElement);
+    totalElement.appendChild(doc.createTextNode(QString::number(apiOut.size())));
+
+    m_var = doc.toString();
+
+}
+
+void RenderResponseAddOn::generateIceIsPlaylistFull()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_is_playlist_full";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistName()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_name";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement playlistNameElement = doc.createElement("playlist_name");
+    root.appendChild(playlistNameElement);
+    playlistNameElement.appendChild(doc.createTextNode(apiOut.value(1)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIceHasPlaylistName()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_has_playlist_name"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistNew()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_new"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistDel()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_del"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIceModInfo()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_modify_info" << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+
+    QStringList configTagNames(QStringList() << "res" << "genre" << "desc" << "rand");
+
+    for(int i = 0; i < configTagNames.size(); i++) {
+        QDomElement element = doc.createElement(configTagNames.value(i));
+        root.appendChild(element);
+        element.appendChild(doc.createTextNode(apiOut.value(i)));
+    }
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistRenew()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_renew"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIceIsActiveFull()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_is_active_full";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistEnable()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_enable"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIcePlaylistDisable()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_playlist_disable"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIceGet()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_get";
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg, true, ";");
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+    QDomElement portElement = doc.createElement("port");
+    root.appendChild(portElement);
+    portElement.appendChild(doc.createTextNode(apiOut.value(1)));
+
+    m_var = doc.toString();
+}
+
+void RenderResponseAddOn::generateIceSet()
+{
+    QDomDocument doc;
+
+    QStringList arg = QStringList() << "GUI_ice_set"  << allParametersToString();
+    QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_MANAGER_API, arg);
+
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
+    QDomElement resElement = doc.createElement("res");
+    root.appendChild(resElement);
+    resElement.appendChild(doc.createTextNode(apiOut.value(0)));
+
+    m_var = doc.toString();
+}
