@@ -346,13 +346,14 @@ void RenderResponseMyDlink::getDevInfoType2(QDomDocument &doc) {
 
     QDomElement memorySizeElement = doc.createElement("memory_size");
     root.appendChild(memorySizeElement);
-    memorySizeElement.appendChild(doc.createTextNode(apiOutDev.value(11)));
+    memorySizeElement.appendChild(doc.createTextNode(QString::number((size_t)info.totalram
+                                                                     * (size_t)info.mem_unit)));
     QDomElement sysTempElement = doc.createElement("system_temp");
     root.appendChild(sysTempElement);
     sysTempElement.appendChild(doc.createTextNode(apiOutTemp.value(0)));
     QDomElement uptimeElement = doc.createElement("system_uptime");
     root.appendChild(uptimeElement);
-    uptimeElement.appendChild(doc.createTextNode(QString::number(info.uptime)));
+    uptimeElement.appendChild(doc.createTextNode(QString::number((size_t)info.uptime)));
     QDomElement fwElement = doc.createElement("fw_ver");
     root.appendChild(fwElement);
     fwElement.appendChild(doc.createTextNode(apiOutFwVer.value(0)));
@@ -397,10 +398,13 @@ void RenderResponseMyDlink::getDevInfoType3(QDomDocument &doc) {
     root.appendChild(cpuLoadElement);
     cpuLoadElement.appendChild(doc.createTextNode(apiOut.value(10).remove('%')));
 
-    int iMemUsed = apiOut.value(5).toInt() - apiOut.value(6).toInt();
+    struct sysinfo info;
+    sysinfo(&info);
+
     QDomElement memUsedElement = doc.createElement("memory_used");
     root.appendChild(memUsedElement);
-    memUsedElement.appendChild(doc.createTextNode(QString::number(iMemUsed)));
+    memUsedElement.appendChild(doc.createTextNode(QString::number(((size_t)info.totalram - (size_t)info.freeram)
+                                                                  * (size_t)info.mem_unit)));
 }
 
 void RenderResponseMyDlink::getDevInfoType4(QDomDocument &doc) {

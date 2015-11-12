@@ -517,7 +517,7 @@ void RenderResponseNasSharing::generateDeviceInfo() {
     struct sysinfo info;
     sysinfo(&info);
     QTime timeInDay(0, 0, 0);
-    timeInDay = timeInDay.addSecs(info.uptime % 86400);
+    timeInDay = timeInDay.addSecs((size_t)info.uptime % 86400);
     QString uptimeValue = QString("%1,%2,%3").arg(QString::number((int)info.uptime/86400),
                                                 timeInDay.toString("h"),
                                                 timeInDay.toString("m"));
