@@ -1502,6 +1502,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         FreeList(&taskList[i]);
 
     }
+    free(taskList);
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
@@ -1651,7 +1652,14 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         else
         {
             if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") <= curDatetime.toString("yyyyMMddhhmm"))
-                StartTask(taskId);
+            {
+                if (StartTask(taskId) == RET_START_TASK_ERR)
+                {
+                    QString status = "4";
+                    QString comment = status + curDatetime.toString("yyyyMMddhhmm");
+                    UpdateXmlStatus(taskId, status.toUtf8().data(), comment.toUtf8().data());
+                }
+            }
         }
     }
 
