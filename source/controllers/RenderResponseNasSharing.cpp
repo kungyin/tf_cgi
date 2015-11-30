@@ -174,8 +174,10 @@ void RenderResponseNasSharing::preRender() {
 bool RenderResponseNasSharing::isLogin() {
 
     QString paraUser = QUrl::fromPercentEncoding(m_pReq->parameter("user").toLocal8Bit());
-    QString loginStr = paraUser.toLocal8Bit() +
-            " " + QUrl::fromPercentEncoding(m_pReq->parameter("passwd").toLocal8Bit());
+    QByteArray passwd = QByteArray::fromBase64(
+                QUrl::fromPercentEncoding(m_pReq->parameter("passwd").toLocal8Bit()).toLocal8Bit());
+
+    QString loginStr = paraUser.toLocal8Bit() + " " + passwd.toBase64();
 
     QStringList apiOut = getAPIStdOut(API_PATH + SCRIPT_CHK_PWD + " " + loginStr, true);
     return apiOut.value(0) == "OK" ? true : false;
