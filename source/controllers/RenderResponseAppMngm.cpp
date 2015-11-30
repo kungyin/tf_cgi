@@ -1430,11 +1430,8 @@ void RenderResponseAppMngm::generateLocalBackupList() {
             if (QString(task.period) == "2")
             {
                 int trans_week_day = QString(task.recur_date).toInt();
-                if (trans_week_day == 0) trans_week_day = 7; else trans_week_day++;
-                if (curDatetime.date().dayOfWeek() >= trans_week_day)
-                    curDatetime = curDatetime.addDays(curDatetime.date().dayOfWeek() - trans_week_day);
-                else
-                    curDatetime = curDatetime.addDays(trans_week_day - curDatetime.date().dayOfWeek());
+                if (trans_week_day == 0) trans_week_day = 7;
+                curDatetime = curDatetime.addDays(trans_week_day - curDatetime.date().dayOfWeek());
             }
             else if (QString(task.period) == "3")
             {
@@ -1442,19 +1439,13 @@ void RenderResponseAppMngm::generateLocalBackupList() {
                 curDatetime.setDate(date);
             }
             curDatetime_s = curDatetime.toString("yyyyMMddhhmm");
-            if (QString(task.period) == "1")
-            if (QString(task.period) != "1" && execat_s > curDatetime_s)
+            if (execat_s < curDatetime_s)
             {
                 if (QString(task.period) == "3")
                     curDatetime = curDatetime.addMonths(1);
                 else
                     curDatetime = curDatetime.addDays((QString(task.period) == "1")?1:7);
                 curDatetime_s = curDatetime.toString("yyyyMMddhhmm");
-            }
-            else if (QString(task.period) == "1")
-            {
-                if (execat_s < curDatetime_s)
-                    curDatetime = curDatetime.addDays(1);
             }
             execat_s.replace(0, 8, curDatetime_s.mid(0, 8));
         }
@@ -1511,6 +1502,7 @@ void RenderResponseAppMngm::generateLocalBackupList() {
         FreeList(&taskList[i]);
 
     }
+    free(taskList);
 
     QDomElement pageElement = doc.createElement("page");
     root.appendChild(pageElement);
@@ -1660,7 +1652,14 @@ void RenderResponseAppMngm::renewOrAdd(bool bAdd) {
         else
         {
             if (taskInfo.recur_type == 0 && m_pReq->parameter("f_at") <= curDatetime.toString("yyyyMMddhhmm"))
-                StartTask(taskId);
+            {
+                if (StartTask(taskId) == RET_START_TASK_ERR)
+                {
+                    QString status = "4";
+                    QString comment = status + curDatetime.toString("yyyyMMddhhmm");
+                    UpdateXmlStatus(taskId, status.toUtf8().data(), comment.toUtf8().data());
+                }
+            }
         }
     }
 
