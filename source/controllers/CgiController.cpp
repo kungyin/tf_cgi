@@ -4,6 +4,7 @@
 #include <TAppSettings>
 #include <TWebApplication>
 #include <QDir>
+#include <QMimeDatabase>
 
 #include "AppDefine.h"
 #include "CgiController.h"
@@ -152,9 +153,12 @@ void CgiController::cgiResponse() {
         if(m_pParseCmd->getCGICmd() == CMD_DOWNLOAD)
             bRemoveFile = true;
         QFileInfo file(pRrep->getVar().toString());
-        contentType();
-        if(file.exists() && file.isFile())
-            sendFile(pRrep->getVar().toString(), "application/octet-stream", file.fileName(), bRemoveFile);
+
+        if(file.exists() && file.isFile()) {
+            QMimeDatabase db;
+            QMimeType mime = db.mimeTypeForFile(file.absoluteFilePath());
+            sendFile(pRrep->getVar().toString(), mime.name().toLocal8Bit(), file.fileName(), bRemoveFile);
+        }
         else
             tDebug("file %s doesn't exist.", pRrep->getVar().toByteArray().data());
     }
