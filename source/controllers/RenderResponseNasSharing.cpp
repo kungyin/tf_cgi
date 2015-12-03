@@ -381,7 +381,7 @@ void RenderResponseNasSharing::generateDownload() {
                    , paraPath.toLocal8Bit().data());
     }
 
-    m_var = doc.toString();
+    //m_var = doc.toString();
 
 }
 

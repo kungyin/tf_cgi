@@ -1869,8 +1869,8 @@ const int CGI_COMMAND_TYPE_FILTER[][3] {
     { CMD_NAS_SHARING_2,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 2 */
     { CMD_NAS_SHARING_4,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 4 */
     { CMD_NAS_SHARING_5,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 5 */
-    { CMD_NAS_SHARING_6,                 RENDER_TYPE_FILE,          PASSWD_REQ_CMDS          },         /* 6 */
-    { CMD_NAS_SHARING_7,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 7 */
+    { CMD_NAS_SHARING_6,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 6 */
+    { CMD_NAS_SHARING_7,                 RENDER_TYPE_FILE,          PASSWD_REQ_CMDS          },         /* 7 */
     { CMD_NAS_SHARING_9,                 RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 9 */
     { CMD_NAS_SHARING_10,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 10 */
     { CMD_NAS_SHARING_16,                RENDER_TYPE_XML,           PASSWD_REQ_CMDS          },         /* 16 */
