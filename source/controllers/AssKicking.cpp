@@ -66,6 +66,8 @@ void AssKicking::onBadAssArrived(QNetworkReply::NetworkError badAss) {
     tDebug("AssKicking::onBadAssArrived: %d %s", badAss, assData->errorString().toLocal8Bit().data());
     tDebug("AssKicking::onBadAssArrived: %s", assData->readAll().data());
 
+    assData->deleteLater();
+    emit sigAssWithBullShit();
 }
 
 QByteArray AssKicking::buildRequestBody(const QVariantMap &parameters) {
